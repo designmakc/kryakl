@@ -18,6 +18,10 @@ Word dictionary (media/dict/*.json; other languages downloaded from the cc-trans
 
 Icons: @vscode/codicons, Creative Commons Attribution 4.0 (fonts) / MIT (code).
 
+Layout switch sounds (media/switch): glass and pluck are glass_002 and pluck_002 of Interface Sounds
+by Kenney (https://kenney.nl/assets/interface-sounds), Creative Commons CC0 1.0 (public domain),
+made quieter and pitched lower for the other layouts; string and duck are Krya's own, synthesized.
+
 Common words (media/common-en.txt: the 3000 most frequent English words, for the dotted line under the others;
 media/layout/{en,ru,uk}.txt: the most frequent English, Russian and Ukrainian words, which tell the keyboard layout a word was meant for;
 media/lang-words.json: the 200 most frequent words of 25 languages, which tell the language of a text)

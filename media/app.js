@@ -1274,6 +1274,14 @@
     "kb.onPause": "Also fix after a pause",
     "kb.onPauseNote": "a clearly wrong word is fixed about a second after you stop typing",
     "kb.sound": "Play a quiet click when a word is fixed",
+    "kb.chime": "Play a sound when the layout switches",
+    "kb.chimeNote": "when you switch it, with Krya\u2019s keys or Windows\u2019 own; English sounds higher than your other layouts",
+    "kb.chimeName": "Sound",
+    "kb.chimePick": "tap one to hear it: English, then another layout",
+    "kb.chime.glass": "Glass",
+    "kb.chime.pluck": "Pluck",
+    "kb.chime.string": "String",
+    "kb.chime.duck": "Duck",
     "kb.shortWords": "Short words are fixed together with the word after them: z rfr \u2192 \u044F \u043A\u0430\u043A. After you switch the layout yourself, the next word is left as typed.",
     "kb.addProgram": "Add a program",
     "kb.addProgramNote": "The name of its .exe. It starts with fixing as you type left out; open it to choose more.",
@@ -2709,6 +2717,14 @@
     "kb.onPause": "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0442\u0430\u043A\u0436\u0435 \u043F\u043E\u0441\u043B\u0435 \u043F\u0430\u0443\u0437\u044B",
     "kb.onPauseNote": "\u044F\u0432\u043D\u043E \u043D\u0435\u0432\u0435\u0440\u043D\u043E\u0435 \u0441\u043B\u043E\u0432\u043E \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043F\u0440\u0438\u043C\u0435\u0440\u043D\u043E \u0447\u0435\u0440\u0435\u0437 \u0441\u0435\u043A\u0443\u043D\u0434\u0443 \u043F\u043E\u0441\u043B\u0435 \u0442\u043E\u0433\u043E, \u043A\u0430\u043A \u0432\u044B \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043B\u0438 \u043F\u0435\u0447\u0430\u0442\u0430\u0442\u044C",
     "kb.sound": "\u0422\u0438\u0445\u043E \u0449\u0451\u043B\u043A\u0430\u0442\u044C, \u043A\u043E\u0433\u0434\u0430 \u0441\u043B\u043E\u0432\u043E \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E",
+    "kb.chime": "\u0417\u0432\u0443\u043A, \u043A\u043E\u0433\u0434\u0430 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0430",
+    "kb.chimeNote": "\u043A\u043E\u0433\u0434\u0430 \u0432\u044B \u0435\u0451 \u043C\u0435\u043D\u044F\u0435\u0442\u0435, \u043A\u043B\u0430\u0432\u0438\u0448\u0430\u043C\u0438 Krya \u0438\u043B\u0438 Windows; \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0430\u044F \u0437\u0432\u0443\u0447\u0438\u0442 \u0432\u044B\u0448\u0435 \u043E\u0441\u0442\u0430\u043B\u044C\u043D\u044B\u0445",
+    "kb.chimeName": "\u0417\u0432\u0443\u043A",
+    "kb.chimePick": "\u043D\u0430\u0436\u043C\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u043F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C: \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0430\u044F, \u043F\u043E\u0442\u043E\u043C \u0434\u0440\u0443\u0433\u0430\u044F \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0430",
+    "kb.chime.glass": "\u0421\u0442\u0435\u043A\u043B\u043E",
+    "kb.chime.pluck": "\u0429\u0438\u043F\u043E\u043A",
+    "kb.chime.string": "\u0421\u0442\u0440\u0443\u043D\u0430",
+    "kb.chime.duck": "\u0423\u0442\u043E\u0447\u043A\u0430",
     "kb.shortWords": "\u041A\u043E\u0440\u043E\u0442\u043A\u0438\u0435 \u0441\u043B\u043E\u0432\u0430 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0432\u043C\u0435\u0441\u0442\u0435 \u0441\u043E \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u043C \u0441\u043B\u043E\u0432\u043E\u043C: z rfr \u2192 \u044F \u043A\u0430\u043A. \u041F\u043E\u0441\u043B\u0435 \u0442\u043E\u0433\u043E \u043A\u0430\u043A \u0432\u044B \u0441\u0430\u043C\u0438 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0443, \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0435 \u0441\u043B\u043E\u0432\u043E \u043E\u0441\u0442\u0430\u0451\u0442\u0441\u044F \u043A\u0430\u043A \u043D\u0430\u0431\u0440\u0430\u043D\u043E.",
     "kb.addProgram": "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0443",
     "kb.addProgramNote": "\u0418\u043C\u044F \u0435\u0451 .exe. \u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432 \u043D\u0435\u0439 \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u043E \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u0440\u0438 \u043D\u0430\u0431\u043E\u0440\u0435; \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0435\u0451, \u0447\u0442\u043E\u0431\u044B \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u0431\u043E\u043B\u044C\u0448\u0435.",
@@ -4144,6 +4160,14 @@
     "kb.onPause": "\u0412\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438 \u0442\u0430\u043A\u043E\u0436 \u043F\u0456\u0441\u043B\u044F \u043F\u0430\u0443\u0437\u0438",
     "kb.onPauseNote": "\u044F\u0432\u043D\u043E \u0445\u0438\u0431\u043D\u0435 \u0441\u043B\u043E\u0432\u043E \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454\u0442\u044C\u0441\u044F \u043F\u0440\u0438\u0431\u043B\u0438\u0437\u043D\u043E \u0447\u0435\u0440\u0435\u0437 \u0441\u0435\u043A\u0443\u043D\u0434\u0443 \u043F\u0456\u0441\u043B\u044F \u0442\u043E\u0433\u043E, \u044F\u043A \u0432\u0438 \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043B\u0438 \u0434\u0440\u0443\u043A\u0443\u0432\u0430\u0442\u0438",
     "kb.sound": "\u0422\u0438\u0445\u043E \u043A\u043B\u0430\u0446\u0430\u0442\u0438, \u043A\u043E\u043B\u0438 \u0441\u043B\u043E\u0432\u043E \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E",
+    "kb.chime": "\u0417\u0432\u0443\u043A, \u043A\u043E\u043B\u0438 \u0437\u043C\u0456\u043D\u044E\u0454\u0442\u044C\u0441\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0430",
+    "kb.chimeNote": "\u043A\u043E\u043B\u0438 \u0432\u0438 \u0457\u0457 \u0437\u043C\u0456\u043D\u044E\u0454\u0442\u0435, \u043A\u043B\u0430\u0432\u0456\u0448\u0430\u043C\u0438 Krya \u0430\u0431\u043E Windows; \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0430 \u0437\u0432\u0443\u0447\u0438\u0442\u044C \u0432\u0438\u0449\u0435 \u0437\u0430 \u0456\u043D\u0448\u0456",
+    "kb.chimeName": "\u0417\u0432\u0443\u043A",
+    "kb.chimePick": "\u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C, \u0449\u043E\u0431 \u043F\u043E\u0441\u043B\u0443\u0445\u0430\u0442\u0438: \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0430, \u043F\u043E\u0442\u0456\u043C \u0456\u043D\u0448\u0430 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0430",
+    "kb.chime.glass": "\u0421\u043A\u043B\u043E",
+    "kb.chime.pluck": "\u0429\u0438\u043F\u043E\u043A",
+    "kb.chime.string": "\u0421\u0442\u0440\u0443\u043D\u0430",
+    "kb.chime.duck": "\u041A\u0430\u0447\u0435\u0447\u043A\u0430",
     "kb.shortWords": "\u041A\u043E\u0440\u043E\u0442\u043A\u0456 \u0441\u043B\u043E\u0432\u0430 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u044C\u0441\u044F \u0440\u0430\u0437\u043E\u043C \u0456\u0437 \u043D\u0430\u0441\u0442\u0443\u043F\u043D\u0438\u043C \u0441\u043B\u043E\u0432\u043E\u043C: z zr \u2192 \u044F \u044F\u043A. \u041F\u0456\u0441\u043B\u044F \u0442\u043E\u0433\u043E \u044F\u043A \u0432\u0438 \u0441\u0430\u043C\u0456 \u043F\u0435\u0440\u0435\u043C\u043A\u043D\u0435\u0442\u0435 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0443, \u043D\u0430\u0441\u0442\u0443\u043F\u043D\u0435 \u0441\u043B\u043E\u0432\u043E \u043B\u0438\u0448\u0430\u0454\u0442\u044C\u0441\u044F \u044F\u043A \u043D\u0430\u0431\u0440\u0430\u043D\u0435.",
     "kb.addProgram": "\u0414\u043E\u0434\u0430\u0442\u0438 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0443",
     "kb.addProgramNote": "\u041D\u0430\u0437\u0432\u0430 \u0457\u0457 .exe. \u0421\u043F\u043E\u0447\u0430\u0442\u043A\u0443 \u0432 \u043D\u0456\u0439 \u0432\u0438\u043C\u043A\u043D\u0435\u043D\u043E \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u043F\u0456\u0434 \u0447\u0430\u0441 \u043D\u0430\u0431\u043E\u0440\u0443; \u0432\u0456\u0434\u043A\u0440\u0438\u0439\u0442\u0435 \u0457\u0457, \u0449\u043E\u0431 \u0432\u0438\u0431\u0440\u0430\u0442\u0438 \u0431\u0456\u043B\u044C\u0448\u0435.",
@@ -4648,6 +4672,7 @@
 
   // src/settings.ts
   var RATES = [0.75, 0.9, 1, 1.15, 1.3, 1.5];
+  var SWITCH_SOUNDS = ["glass", "pluck", "string", "duck"];
   var TALK_LEVELS = ["A2", "B1", "B2"];
   var TALK_ABOUT_MAX = 500;
   var DEFAULTS = {
@@ -4682,6 +4707,8 @@
     keepCaps: false,
     fixOnPause: false,
     fixSound: false,
+    switchSound: false,
+    switchSoundName: "glass",
     learn: true,
     fixKey: "",
     fixKeyOn: true,
@@ -9329,6 +9356,11 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
       ...cycle.map((l) => layoutKeyRow(l, l.name, [t("kb.straight")]))
     ].filter((n) => n !== null);
   }
+  function hearSwitch(name) {
+    for (const [note, at] of [[1, 0], [2, 320]]) {
+      setTimeout(() => void new Audio(`switch/${name}-${note}.wav`).play().catch(() => void 0), at);
+    }
+  }
   function fixingPage(v) {
     const s = v.settings;
     return [
@@ -9487,6 +9519,17 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
       s.autoFix ? navCard("type", t("kb.fixing"), t("kb.fixingNote"), null, () => openSub("fixing"), "fixing") : null,
       toggleCard("type", t("tray.layoutBadge"), s.layoutBadge, (layoutBadge) => save({ layoutBadge }), t("kb.badgeNote")),
       toggleCard("keyboard", t("tray.trayLayout"), s.trayLayout, (trayLayout) => save({ trayLayout }), t("kb.trayNote")),
+      toggleCard("volume-2", t("kb.chime"), s.switchSound, (switchSound) => (switchSound && hearSwitch(s.switchSoundName), save({ switchSound })), t("kb.chimeNote")),
+      s.switchSound ? card(
+        "volume-2",
+        t("kb.chimeName"),
+        [t("kb.chimePick")],
+        seg(
+          s.switchSoundName,
+          SWITCH_SOUNDS.map((n) => [n, t(`kb.chime.${n}`)]),
+          (switchSoundName) => (hearSwitch(switchSoundName), save({ switchSoundName }))
+        )
+      ) : null,
       toggleCard("monitor", t("kb.fullScreen"), s.quietFullScreen, (quietFullScreen) => save({ quietFullScreen }), t("kb.fullScreenNote")),
       grp(t("kb.lists")),
       navCard("keyboard", t("kb.layouts"), ownKeys ? t("kb.layoutsOwn", { n: ownKeys }) : t("kb.layoutsNote"), cycleOf(v).map((l) => l.short).join(" \xB7 "), () => go("layouts"), "layouts"),

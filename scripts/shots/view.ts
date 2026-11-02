@@ -118,6 +118,7 @@ function full(over: Partial<AppView['settings']>, plan: AppView['speech']['plan'
       keepWords: ['lol'],
       autoFix: true,
       layoutBadge: true,
+      switchSound: true,
       translateKey: 'LeftControl*2',
       switchKey: 'LeftControl',
       fixKey: 'Pause',

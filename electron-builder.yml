@@ -37,6 +37,9 @@ asarUnpack:
   - dist/field-worker.js
   - node_modules/koffi/**
   - vendor/**
+  # Windows plays a sound from a file of its own, never from inside the archive.
+  - media/fix.wav
+  - media/switch/**
   - engine/**
   - extension/**
 # koffi ships prebuilt for Node-API; nothing to rebuild for Electron.

@@ -128,6 +128,10 @@ const typist = new Typist(
     click: () => {
       if (config?.clickFile) PlaySoundW(config.clickFile, 0, SND_FILENAME | SND_ASYNC | SND_NODEFAULT)
     },
+    chime: note => {
+      const file = config?.switchFiles[note]
+      if (file) PlaySoundW(file, 0, SND_FILENAME | SND_ASYNC | SND_NODEFAULT)
+    },
     caretOf,
     capsOf: capsLockOf,
     send,

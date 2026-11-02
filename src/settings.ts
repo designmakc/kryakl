@@ -20,6 +20,10 @@ export const RATES: readonly number[] = [0.75, 0.9, 1, 1.15, 1.3, 1.5]
 
 export type ThemeMode = 'system' | 'light' | 'dark'
 
+/** The sounds of a layout switch, media/switch/<name>-<1|2|3>.wav (English's note, then the others' lower): glass and pluck are Kenney's (CC0), string and duck Krya's own. */
+export const SWITCH_SOUNDS = ['glass', 'pluck', 'string', 'duck'] as const
+export type SwitchSound = (typeof SWITCH_SOUNDS)[number]
+
 /** Krya's local language models (llmfiles.ts): Accurate is Gemma 4 E4B, Most accurate Gemma 4 12B; each translates and checks English. */
 export type LlmModel = 'accurate' | 'most'
 export type TranslationLevel = 'fast' | LlmModel
@@ -101,6 +105,9 @@ export type Settings = {
   fixOnPause: boolean
   /** A quiet click when a word is fixed by itself. */
   fixSound: boolean
+  /** A sound when the person switches the layout (Krya's keys or Windows' own), `switchSoundName`, a note of its own for each layout. */
+  switchSound: boolean
+  switchSoundName: SwitchSound
   /** Krya learns from the person's typing (learning.ts): words fixed by hand, words of theirs. */
   learn: boolean
   /** A key that types the words at the end, typed in the wrong layout, again in the right one (again: the next layout), or converts the selection; empty for none. `fixKeyOn` turns it off without forgetting it. */
@@ -223,6 +230,8 @@ export const DEFAULTS: Settings = {
   keepCaps: false,
   fixOnPause: false,
   fixSound: false,
+  switchSound: false,
+  switchSoundName: 'glass',
   learn: true,
   fixKey: '',
   fixKeyOn: true,
@@ -397,6 +406,8 @@ export function normalize(raw: unknown, native = DEFAULTS.native): Settings {
     keepCaps: flag(r.keepCaps, DEFAULTS.keepCaps),
     fixOnPause: flag(r.fixOnPause, DEFAULTS.fixOnPause),
     fixSound: flag(r.fixSound, DEFAULTS.fixSound),
+    switchSound: flag(r.switchSound, DEFAULTS.switchSound),
+    switchSoundName: SWITCH_SOUNDS.find(n => n === r.switchSoundName) ?? DEFAULTS.switchSoundName,
     learn: flag(r.learn, DEFAULTS.learn),
     fixKey: key(r.fixKey, DEFAULTS.fixKey),
     fixKeyOn: flag(r.fixKeyOn, DEFAULTS.fixKeyOn),

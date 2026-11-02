@@ -40,6 +40,10 @@ export type KeyboardEvents = {
   /** The person fixed a word by hand; a word of theirs was typed right again (learning.ts). */
   fixedByHand(learned: Learned): void
   tally(hash: string, count: number, word?: Learned): void
+  /** A learned fix that makes no word of a word, to forget. */
+  unlearn(word: string): void
+  /** A fix by hand was not learned: the field said it is a password or would not say; or it made no word of a word. */
+  notLearned(why: 'field' | 'noWord'): void
   /** The fix key with a selection: convert it into the next of `cycle`; `layout` is the window's now. */
   selection(cycle: string[], layout: string): void
   /** A key Electron's shortcuts cannot hold, for selecting, snipping or a snip's text, was pressed. */
@@ -78,6 +82,8 @@ export class KeyboardHelper {
   constructor(
     private readonly workerPath: string,
     private readonly wordsDir: string,
+    /** The sounds, out of the app's archive: Windows plays them from a file of its own. */
+    private readonly soundsDir: string,
     private readonly events: KeyboardEvents,
   ) {}
 
@@ -120,7 +126,7 @@ export class KeyboardHelper {
     const on = !s.paused
     const layoutKeys = on && s.switchOn ? s.layoutKeys : {}
     const apps = Object.fromEntries(s.apps.map(a => [a.exe, { off: a.off, layout: a.layout }]))
-    const watched = on && (s.autoFix || s.layoutBadge || s.trayLayout || Object.keys(layoutKeys).length > 0 || s.apps.some(a => a.layout))
+    const watched = on && (s.autoFix || s.layoutBadge || s.trayLayout || s.switchSound || Object.keys(layoutKeys).length > 0 || s.apps.some(a => a.layout))
     if (Object.keys(keys).length === 0 && !watched) return this.stop()
     const config: KbdConfig = {
       keys,
@@ -131,7 +137,9 @@ export class KeyboardHelper {
       keepCaps: s.keepCaps,
       fixOnPause: s.fixOnPause,
       fixSound: s.fixSound,
-      clickFile: path.join(path.dirname(this.wordsDir), 'fix.wav'),
+      clickFile: path.join(this.soundsDir, 'fix.wav'),
+      switchSound: on && s.switchSound,
+      switchFiles: [1, 2, 3].map(n => path.join(this.soundsDir, 'switch', `${s.switchSoundName}-${n}.wav`)),
       badge: on && s.layoutBadge,
       trayLayout: on && s.trayLayout,
       cycle: s.layouts,
@@ -228,6 +236,12 @@ export class KeyboardHelper {
         return
       case 'tally':
         this.events.tally(message.hash, message.count, message.word)
+        return
+      case 'unlearn':
+        this.events.unlearn(message.word)
+        return
+      case 'notLearned':
+        this.events.notLearned(message.why)
         return
       case 'selection':
         this.events.selection(message.cycle, message.layout)

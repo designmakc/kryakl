@@ -18,7 +18,7 @@ import { DOUBLE_MS, HotkeyRecorder, hotkeyLabel, type Recorded } from '../hotkey
 import type { AppTab, AppView, DiffPart, Feature, KeyboardLayout, MistakeEntry, SavedWord, Settings, StorageId, StoragePart, StorageView, ToView, TutorHost } from '../protocol'
 import { LANGUAGES } from '../languages'
 import { translationAdvice, type LevelFit } from '../hardware'
-import { DEFAULTS, keptForm, myLanguages, RATES, TALK_ABOUT_MAX, TALK_LEVELS, type AppRule, type LlmModel, type TalkLevel, type ThemeMode, type TranslationLevel } from '../settings'
+import { DEFAULTS, keptForm, myLanguages, RATES, SWITCH_SOUNDS, TALK_ABOUT_MAX, TALK_LEVELS, type AppRule, type LlmModel, type TalkLevel, type ThemeMode, type TranslationLevel } from '../settings'
 import type { AppPart } from '../typist'
 // app.ts has a languageName of its own (a code's English name); the interface's is langName here.
 import { formatDate, languageName as langName, levelName, setUiLanguage, t, uiLanguage, type Key } from '../i18n'
@@ -2534,6 +2534,13 @@ function layoutsPage(v: AppView): HTMLElement[] {
   ].filter((n): n is HTMLElement => n !== null)
 }
 
+/** A switch's sound, heard here: English's note, then another layout's (the keyboard thread plays them as you switch). */
+function hearSwitch(name: string): void {
+  for (const [note, at] of [[1, 0], [2, 320]] as const) {
+    setTimeout(() => void new Audio(`switch/${name}-${note}.wav`).play().catch(() => undefined), at)
+  }
+}
+
 /** What fixing as one types also sets right, and how. */
 function fixingPage(v: AppView): HTMLElement[] {
   const s = v.settings
@@ -2721,6 +2728,19 @@ function keyboardPage(v: AppView): HTMLElement[] {
     s.autoFix ? navCard('type', t('kb.fixing'), t('kb.fixingNote'), null, () => openSub('fixing'), 'fixing') : null,
     toggleCard('type', t('tray.layoutBadge'), s.layoutBadge, layoutBadge => save({ layoutBadge }), t('kb.badgeNote')),
     toggleCard('keyboard', t('tray.trayLayout'), s.trayLayout, trayLayout => save({ trayLayout }), t('kb.trayNote')),
+    toggleCard('volume-2', t('kb.chime'), s.switchSound, switchSound => (switchSound && hearSwitch(s.switchSoundName), save({ switchSound })), t('kb.chimeNote')),
+    s.switchSound
+      ? card(
+          'volume-2',
+          t('kb.chimeName'),
+          [t('kb.chimePick')],
+          seg(
+            s.switchSoundName,
+            SWITCH_SOUNDS.map(n => [n, t(`kb.chime.${n}`)]),
+            switchSoundName => (hearSwitch(switchSoundName), save({ switchSoundName })),
+          ),
+        )
+      : null,
     toggleCard('monitor', t('kb.fullScreen'), s.quietFullScreen, quietFullScreen => save({ quietFullScreen }), t('kb.fullScreenNote')),
     grp(t('kb.lists')),
     navCard('keyboard', t('kb.layouts'), ownKeys ? t('kb.layoutsOwn', { n: ownKeys }) : t('kb.layoutsNote'), cycleOf(v).map(l => l.short).join(' · '), () => go('layouts'), 'layouts'),

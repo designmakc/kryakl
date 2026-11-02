@@ -105,6 +105,11 @@ export class LearnStore {
 
   /** A word kept as typed is fixed no more. True when the lists the thread uses changed. */
   kept(word: string): boolean {
+    return this.unlearn(word)
+  }
+
+  /** A learned fix found wrong is forgotten, noted once or always. True when something went. */
+  unlearn(word: string): boolean {
     const before = this.data.alwaysFix.length + this.data.fixedOnce.length
     this.data.alwaysFix = this.data.alwaysFix.filter(l => l.word !== word)
     this.data.fixedOnce = this.data.fixedOnce.filter(l => l.word !== word)

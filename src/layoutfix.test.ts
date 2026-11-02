@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 
 import { EN, LEXICONS, RU, strokes, TABLES, UK } from './layouts.fixture'
-import { bestLayout, caseSlip, chooseFix, convertText, coreOf, layoutsAfter, meantThere, nextLayout, sourceLayout, typeIn, wordsMeant, type KeyTable, type Reading } from './layoutfix'
+import { bestLayout, caseSlip, chooseFix, convertText, coreOf, layoutsAfter, learnable, meantThere, nextLayout, sourceLayout, typeIn, wordsMeant, type KeyTable, type Reading } from './layoutfix'
 
 /** How the keys typed as `text` in `lang` read in each layout of `cycle`. */
 function readings(text: string, lang: string, cycle = ['en', 'ru', 'uk']): { typed: Reading; others: Reading[] } {
@@ -91,6 +91,20 @@ describe('fixing as one types', () => {
     const { typed, others } = readings('vs', 'en', ['en', 'ru'])
     expect(chooseFix(typed, others, LEXICONS, new Set())).toBeUndefined()
     expect(chooseFix(typed, others, LEXICONS, new Set(), new Map([['vs', 'ru']]))?.text).toBe('мы')
+  })
+
+  test('a learned fix that makes no word of a word is not used, nor learned', () => {
+    const word = readings('привет', 'ru', ['en', 'ru'])
+    expect(chooseFix(word.typed, word.others, LEXICONS, new Set(), new Map([['привет', 'en']]))).toBeUndefined()
+    expect(learnable(word.typed, word.others[0] as Reading, LEXICONS)).toBe(false)
+    // No word as typed, a word or no word there: the person's to teach.
+    const keys = readings('ghbdtn', 'en', ['en', 'ru'])
+    expect(learnable(keys.typed, keys.others[0] as Reading, LEXICONS)).toBe(true)
+    expect(learnable(readings('kryf', 'en', ['en', 'ru']).typed, readings('kryf', 'en', ['en', 'ru']).others[0] as Reading, LEXICONS)).toBe(true)
+    // A word into a word: "f" → "а".
+    const f = readings('f', 'en', ['en', 'ru'])
+    expect(learnable(f.typed, f.others[0] as Reading, LEXICONS)).toBe(true)
+    expect(chooseFix(f.typed, f.others, LEXICONS, new Set(), new Map([['f', 'ru']]))?.text).toBe('а')
   })
 
   test('not words, but not to touch: names in camel case, digits, mail, links, kept words', () => {

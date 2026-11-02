@@ -15,6 +15,8 @@ const KBD_DEFAULTS: KbdConfig = {
   fixOnPause: false,
   fixSound: false,
   clickFile: '',
+  switchSound: false,
+  switchFiles: [],
   badge: false,
   trayLayout: false,
   cycle: [],
@@ -46,6 +48,8 @@ class Desk {
   text = ''
   layout = 'en'
   exe = 'notepad.exe'
+  /** The window in front. */
+  hwnd = 1n
   /** Caps Lock as Windows has it. */
   caps = false
   /** How many more times Windows names the layout the window had before its last switch (it answers late). */
@@ -56,6 +60,8 @@ class Desk {
   password = false
   fullScreen = false
   clicks = 0
+  /** The switch's sounds, by note. */
+  chimes: number[] = []
   /** Alt or Win taps let go behind a key that types nothing. */
   masked: number[] = []
   /** Run a fix as soon as it is due, as the thread's loop does; false holds it, for keys typed meanwhile. */
@@ -70,7 +76,7 @@ class Desk {
     this.typist = new Typist(
       {
         now: () => this.time,
-        foreground: () => ({ hwnd: 1n, tid: 1, pid: 1 }),
+        foreground: () => ({ hwnd: this.hwnd, tid: 1, pid: 1 }),
         layoutOf: () => {
           if (this.late > 0) {
             this.late--
@@ -98,6 +104,7 @@ class Desk {
         click: () => {
           this.clicks++
         },
+        chime: note => this.chimes.push(note),
         caretOf: () => undefined,
         capsOf: () => this.caps,
         send: m => this.sent.push(m),
@@ -729,6 +736,38 @@ describe('learning from the person\'s typing', () => {
     expect(desk.text).toBe('altype altype altype x привет ')
   })
 
+  test('the fix key on a word typed right teaches nothing: it would make no word of a word', () => {
+    const desk = new Desk({ learn: true, keys: { fix: 'Pause' } })
+    desk.layout = 'ru'
+    desk.keys('привет', 'ru')
+    desk.tap(VK_PAUSE)
+    desk.keys(' x')
+    expect(desk.text).toBe('ghbdtn x')
+    expect(desk.sent.find(m => m.type === 'fixedByHand')).toBeUndefined()
+    expect(desk.sent).toContainEqual({ type: 'notLearned', why: 'noWord' })
+  })
+
+  test('a learned fix that makes no word of a word is forgotten, and the word typed stays', () => {
+    const desk = new Desk({ autoFix: true, learn: true, alwaysFix: [{ word: 'привет', lang: 'en' }, { word: 'ghbdtn', lang: 'ru' }] })
+    expect(desk.sent).toContainEqual({ type: 'unlearn', word: 'привет' })
+    expect(desk.sent).not.toContainEqual({ type: 'unlearn', word: 'ghbdtn' })
+    desk.layout = 'ru'
+    desk.keys('привет ', 'ru')
+    expect(desk.text).toBe('привет ')
+  })
+
+  test('a fix by hand in a field that would not say is not learned, and says so', () => {
+    const desk = new Desk({ learn: true, keys: { fix: 'Pause' } })
+    desk.auto = false
+    desk.keys('lheu')
+    desk.tap(VK_PAUSE)
+    desk.typist.typeFix()
+    desk.keys(' и', 'ru')
+    desk.typist.fieldIs('unknown')
+    expect(desk.sent.find(m => m.type === 'fixedByHand')).toBeUndefined()
+    expect(desk.sent).toContainEqual({ type: 'notLearned', why: 'field' })
+  })
+
   test('a word learned to fix always is fixed even when it is a word as typed', () => {
     const desk = new Desk({ autoFix: true, alwaysFix: [{ word: 'vs', lang: 'ru' }] })
     desk.keys('vs ')
@@ -778,6 +817,41 @@ describe('the switch key', () => {
     const desk = new Desk({ keys: { switch: 'CapsLock' } })
     desk.tap(0x14)
     expect(desk.layout).toBe('ru')
+  })
+
+  test('a switch sounds in the layout\'s note: English\'s, then lower in the cycle\'s order; off, it is silent', () => {
+    const desk = new Desk({ switchSound: true, cycle: ['en', 'ru', 'uk'], layoutKeys: { en: 'LeftControl', ru: 'RightControl', uk: 'Pause' } })
+    desk.tick(150)
+    desk.tap(0xa3)
+    desk.tick(150)
+    desk.wait(600)
+    desk.tap(VK_PAUSE)
+    desk.tick(150)
+    desk.wait(600)
+    desk.tap(VK_LCONTROL)
+    desk.tick(150)
+    expect(desk.chimes).toEqual([1, 2, 0])
+    const quiet = new Desk({ keys: { switch: 'LeftControl' } })
+    quiet.tap(VK_LCONTROL)
+    expect(quiet.layout).toBe('ru')
+    expect(quiet.chimes).toEqual([])
+  })
+
+  test('Windows\' own switch sounds too; a word fixed by itself and another window in front do not', () => {
+    const desk = new Desk({ autoFix: true, switchSound: true })
+    desk.tick(150)
+    desk.switchBySystem('ru', 0)
+    desk.tick(150)
+    desk.switchBySystem('en', 0)
+    desk.tick(150)
+    expect(desk.chimes).toEqual([1, 0])
+    desk.keys('ghbdtn ')
+    desk.tick(150)
+    expect(desk.text).toBe('привет ')
+    desk.hwnd = 2n
+    desk.layout = 'en'
+    desk.tick(150)
+    expect(desk.chimes).toEqual([1, 0])
   })
 })
 

@@ -27,7 +27,9 @@ import {
   caseSlip,
   charOf,
   chooseFix,
+  convertText,
   coreOf,
+  learnable,
   layoutsAfter,
   nextLayout,
   plausibility,
@@ -106,6 +108,9 @@ export type KbdConfig = {
   /** A quiet click when a word is fixed by itself (`clickFile`, a .wav). */
   fixSound: boolean
   clickFile: string
+  /** A sound when the person switches the layout (`switchFiles`: English's note, then the other layouts' lower ones). */
+  switchSound: boolean
+  switchFiles: string[]
   badge: boolean
   /** The layout in front is reported for the tray's icon too. */
   trayLayout: boolean
@@ -150,6 +155,10 @@ export type KbdOut =
   | { type: 'fixedByHand'; word: string; lang: string }
   /** A word of the person's, in no list, was typed right once more (`count` times by its fingerprint); at `LEARN_AFTER`, the word itself. */
   | { type: 'tally'; hash: string; count: number; word?: Learned }
+  /** A learned fix that turns a word of its list into no word ("привет" → "ghbdtn"): forgotten, as typed. */
+  | { type: 'unlearn'; word: string }
+  /** Something learned was dropped, for the log: `field`, the field said it is a password or would not say; `noWord`, the fix made no word of a word. */
+  | { type: 'notLearned'; why: 'field' | 'noWord' }
   /** The fix key with a selection: the main process copies it, converts it into the next layout and pastes it; `layout` is the window's now. */
   | { type: 'selection'; cycle: string[]; layout: string }
   /** The program in front, by its .exe name, when it changes; `elevated`: it runs as administrator, so its keys never reach the hooks. */
@@ -190,6 +199,8 @@ export type TypistEnv = {
   fullScreen(): boolean
   /** The quiet click of a word fixed by itself. */
   click(): void
+  /** The sound of a layout switch, in a note: 0 English's, then lower. */
+  chime(note: number): void
   caretOf(tid: number): Caret | undefined
   /** Whether Caps Lock is on, as the window in front sees it. */
   capsOf(front: Front): boolean
@@ -271,6 +282,8 @@ export class Typist {
     fixOnPause: false,
     fixSound: false,
     clickFile: '',
+    switchSound: false,
+    switchFiles: [],
     badge: false,
     trayLayout: false,
     cycle: [],
@@ -352,6 +365,9 @@ export class Typist {
   private capsAt = Number.NEGATIVE_INFINITY
   /** The layout Krya last switched a window to, trusted over Windows' late answer. */
   private expected: { hwnd: bigint; layout: string; until: number } | undefined
+  /** For the switch's sound: the layout last heard in front, and the last switch Krya made (silent, or sounded already). */
+  private heard: { hwnd: bigint; layout: string } | undefined
+  private made: { hwnd: bigint; layout: string } | undefined
 
   constructor(private readonly env: TypistEnv) {}
 
@@ -374,6 +390,26 @@ export class Typist {
     const mine = new Map<string, string[]>()
     for (const { word, lang } of config.myWords) mine.set(lang, [...(mine.get(lang) ?? []), word])
     this.lexicons = Object.fromEntries(Object.entries(lexicons).map(([lang, lexicon]) => [lang, withWords(lexicon, mine.get(lang) ?? [])]))
+    this.forgetNoWords()
+  }
+
+  /** Learned fixes that turn a word of its list into no word are dropped here and forgotten (learned before `learnable` held them back). */
+  private forgetNoWords(): void {
+    const layouts = this.cycle().flatMap(id => {
+      const info = this.env.layout(id)
+      return info ? [{ id, ...info }] : []
+    })
+    for (const [word, lang] of this.always) {
+      const typing = layouts.filter(l => l.lang !== lang && [...word].every(c => !/\p{L}/u.test(c) || l.table.keys.has(c)))
+      const from = typing.find(l => rankOf(this.lexicons[l.lang], word) !== undefined) ?? typing[0]
+      const to = layouts.find(l => l.lang === lang)
+      if (!from || !to) continue
+      const typed: Reading = { layout: from.id, lang: from.lang, text: word }
+      const there: Reading = { layout: to.id, lang, text: convertText(word, from.table, to.table) }
+      if (learnable(typed, there, this.lexicons)) continue
+      this.always.delete(word)
+      this.env.send({ type: 'unlearn', word })
+    }
   }
 
   /**
@@ -1067,7 +1103,33 @@ export class Typist {
     const front = this.env.foreground()
     if (layout === this.layoutNow(front)) return
     this.switchWindow(front.hwnd, layout)
+    this.chime(layout)
     if (front.hwnd === this.runWindow) this.markSwitch()
+  }
+
+  /** The switch's sound, in the layout's note: English's first, the others lower in the order of the cycle. */
+  private chime(layout: string): void {
+    if (!this.config.switchSound) return
+    if (this.env.layout(layout)?.lang === 'en') return this.env.chime(0)
+    const others = this.cycle().filter(id => this.env.layout(id)?.lang !== 'en')
+    this.env.chime(Math.min(2, 1 + Math.max(0, others.indexOf(layout))))
+  }
+
+  /**
+   * The layout in front changed in the same window, and not by Krya: the
+   * person switched with Windows' own keys (or the language bar), and it
+   * sounds too. Another window's layout is no switch.
+   */
+  private listenForSwitch(front: Front): void {
+    if (!front.hwnd || !front.tid || this.quiet()) return
+    const layout = this.layoutNow(front)
+    const before = this.heard
+    this.heard = { hwnd: front.hwnd, layout }
+    if (!before || before.hwnd !== front.hwnd || before.layout === layout) return
+    const made = this.made
+    this.made = undefined
+    if (made && made.hwnd === front.hwnd && made.layout === layout) return
+    if (!this.offHere('switch', front)) this.chime(layout)
   }
 
   /** Switches the window in front to a layout (after a selection was converted). */
@@ -1079,6 +1141,7 @@ export class Typist {
   /** Switches a window's layout, and trusts that layout until Windows names it too. */
   private switchWindow(hwnd: bigint, layout: string): void {
     this.env.switchLayout(hwnd, layout)
+    this.made = { hwnd, layout }
     this.expected = { hwnd, layout, until: this.env.now() + SWITCH_TRUST_MS }
   }
 
@@ -1111,6 +1174,7 @@ export class Typist {
     const core = coreOf(this.reading(gone, was).text)
     const lang = this.env.layout(now)?.lang
     if (!core || !lang || !/^\p{L}+$/u.test(core)) return
+    if (!learnable(this.reading(gone, was), this.reading(word, now), this.lexicons)) return this.env.send({ type: 'notLearned', why: 'noWord' })
     this.learnLater({ type: 'fixedByHand', word: core, lang })
   }
 
@@ -1121,8 +1185,12 @@ export class Typist {
     const lang = this.env.layout(c.to)?.lang
     if (!lang) return
     for (const w of c.words) {
-      const core = coreOf(this.reading(this.run.slice(w.start, w.end), c.from).text)
-      if (core && /^\p{L}+$/u.test(core)) this.learnLater({ type: 'fixedByHand', word: core, lang })
+      const strokes = this.run.slice(w.start, w.end)
+      const typed = this.reading(strokes, c.from)
+      const core = coreOf(typed.text)
+      if (!core || !/^\p{L}+$/u.test(core)) continue
+      if (!learnable(typed, this.reading(strokes, c.to), this.lexicons)) this.env.send({ type: 'notLearned', why: 'noWord' })
+      else this.learnLater({ type: 'fixedByHand', word: core, lang })
     }
     this.cycling = undefined
   }
@@ -1161,13 +1229,18 @@ export class Typist {
 
   /** Learning sent once the field is known to be no password (asked when it is not known yet). */
   private learnLater(message: KbdOut): void {
-    if (this.secret === true || this.secret === 'unknown') return
+    if (this.secret === true || this.secret === 'unknown') return this.notLearned([message])
     if (this.secret === false) return this.env.send(message)
     this.toLearn.push(message)
     if (!this.asking) {
       this.asking = { since: this.env.now() }
       this.env.askField(this.env.foreground())
     }
+  }
+
+  /** A fix by hand dropped for the field is said, for the log (a word typed right is not: that is every word). */
+  private notLearned(dropped: readonly KbdOut[]): void {
+    if (dropped.some(m => m.type === 'fixedByHand')) this.env.send({ type: 'notLearned', why: 'field' })
   }
 
   // ---------------------------------------------------------------- typing the fix
@@ -1194,6 +1267,7 @@ export class Typist {
     const learn = this.toLearn
     this.toLearn = []
     if (secret === false) for (const m of learn) this.env.send(m)
+    else this.notLearned(learn)
     if (!this.pending) return
     if (secret === true && this.pending.auto) this.callOff()
     else this.env.later()
@@ -1260,6 +1334,7 @@ export class Typist {
       }
     }
     if (this.config.badge || this.config.trayLayout) this.lookAtLayout(front)
+    if (this.config.switchSound) this.listenForSwitch(front)
     if (this.config.autoFix && this.config.fixOnPause && !this.pauseChecked && !this.pending && now - this.typedAt >= PAUSE_MS) this.pauseFix(front)
   }
 

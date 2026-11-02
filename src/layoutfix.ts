@@ -145,7 +145,8 @@ function lettersOf(text: string): number {
  * fixed only when keys that are signs in its layout are letters of a much
  * commoner word in another (";t" → "же"; "it." stays). A word the person
  * fixed by hand often enough (`always`: the word as typed → the language it
- * goes into) is fixed whatever it is; a capital inside is left alone unless
+ * goes into) is fixed whatever it is, unless that makes no word of a word of
+ * its list (`learnable`); a capital inside is left alone unless
  * another layout makes a word the person taught of it (`mine`, "lang\nword":
  * "ыКПИ" → "sRGB"), and so are two capitals (NB, KB: an abbreviation). The
  * same word in two languages goes into the layout of the one first in
@@ -175,7 +176,8 @@ export function chooseFix(
   const word = core ?? t.toLowerCase()
   if (keep.has(word) || keep.has(t.toLowerCase())) return undefined
   const learned = always.get(word)
-  if (learned) return others.find(o => o.lang === learned && coreOf(o.text))
+  const there = learned ? others.find(o => o.lang === learned && coreOf(o.text)) : undefined
+  if (there && learnable(typed, there, lexicons)) return there
   if (/^\p{Lu}{2}$/u.test([...t].filter(c => /\p{L}/u.test(c)).join(''))) return undefined
   const rank = core === undefined ? undefined : rankOf(own, core)
   if (rank !== undefined) {
@@ -184,6 +186,21 @@ export function chooseFix(
     return fits[0] && ownFirst(fits[0], fits, prefer)
   }
   return bestReading(others, lexicons, core === undefined ? 0 : plausibility(core, own), prefer)
+}
+
+/**
+ * Whether a fix by hand may be learned, and a learned one used: never one
+ * that turns a word of its own list into no word ("привет" → "ghbdtn": the
+ * fix key pressed on a word typed right, or a fix erased and typed again).
+ * Without both word lists there is nothing to judge by, and it may.
+ */
+export function learnable(typed: Reading, there: Reading, lexicons: Readonly<Record<string, Lexicon>>): boolean {
+  const own = lexicons[typed.lang]
+  const other = lexicons[there.lang]
+  const core = coreOf(typed.text)
+  if (!own || !other || core === undefined || rankOf(own, core) === undefined) return true
+  const wanted = coreOf(there.text)
+  return wanted !== undefined && rankOf(other, wanted) !== undefined
 }
 
 function trustedReading(reading: Reading, lexicons: Readonly<Record<string, Lexicon>>): boolean {

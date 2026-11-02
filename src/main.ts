@@ -176,6 +176,8 @@ const KEYBOARD_SETTINGS: readonly (keyof Settings)[] = [
   'keepCaps',
   'fixOnPause',
   'fixSound',
+  'switchSound',
+  'switchSoundName',
   'learn',
   'fixKeyOn',
   'apps',
@@ -3436,7 +3438,7 @@ function start(): void {
   trayPanel = createTrayPanel()
   refreshTray()
   registerShortcuts()
-  keyboard = new KeyboardHelper(unpacked('dist', 'kbd-worker.js'), path.join(app.getAppPath(), 'media', 'layout'), {
+  keyboard = new KeyboardHelper(unpacked('dist', 'kbd-worker.js'), path.join(app.getAppPath(), 'media', 'layout'), unpacked('media'), {
     keep: word => {
       learned.kept(word)
       saveSettings({ keepWords: [...settings.keepWords, word] })
@@ -3447,9 +3449,16 @@ function start(): void {
       sendTrayView()
     },
     // A word fixed by hand twice is fixed by itself from then on, and kept as typed no more.
+    // krya.log says each step, never the word.
     fixedByHand: word => {
-      if (!learned.fixedByHand(word)) return
-      if (settings.keepWords.includes(word.word)) saveSettings({ keepWords: settings.keepWords.filter(w => w !== word.word) })
+      const kept = settings.keepWords.includes(word.word)
+      const already = learned.alwaysFix.some(l => l.word === word.word && l.lang === word.lang)
+      if (!learned.fixedByHand(word)) {
+        log(`learn: a word fixed by hand ${already ? 'is fixed by itself already' : `noted, once more and it is fixed by itself${kept ? ' (it is kept as typed until then)' : ''}`}`)
+        return
+      }
+      log(`learn: a word fixed by hand twice is fixed by itself from now on${kept ? ', kept as typed no more' : ''}`)
+      if (kept) saveSettings({ keepWords: settings.keepWords.filter(w => w !== word.word) })
       else applyKeyboard()
       postApp()
     },
@@ -3458,6 +3467,14 @@ function start(): void {
       applyKeyboard()
       postApp()
     },
+    unlearn: word => {
+      if (!learned.unlearn(word)) return
+      log('learn: forgot a learned fix that made no word of a word')
+      applyKeyboard()
+      postApp()
+    },
+    notLearned: why =>
+      log(why === 'field' ? 'learn: a word fixed by hand, not learned: the field said it is a password, or would not say' : 'learn: a word fixed by hand, not learned: it made no word of a word'),
     selection: (cycle, layout) => void convertSelection(cycle, layout).catch(error => console.warn('Krya: could not convert the selection', error)),
     hotkey: action => {
       if (action === 'pause') return togglePause()
