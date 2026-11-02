@@ -176,8 +176,9 @@ class FakeTranscriber:
         self.loaded_with = (name, device, compute, threads)
         self.name, self.device, self.compute = name, device, compute or "int8"
 
-    def unload(self):
-        self.loaded_with = None
+    def unload(self, name=None):
+        if name is None or name == self.name:
+            self.loaded_with = None
 
     @property
     def loaded(self):
@@ -199,6 +200,19 @@ def test_worker_follows_the_plan_and_shares_one_model(s, monkeypatch):
     s.update({"plan": {"threads": 6, "cuda": {"dictation": {"model": "large-v3-turbo"}, "transcripts": {"model": "large-v3-turbo"}}, "cpu": {"dictation": {"model": "base"}, "transcripts": {"model": "small"}}}})
     t, entry = w.dictation_model()
     assert t is w.transcriber and t.loaded_with == ("large-v3-turbo", "cuda", None, 6)
+
+
+def test_a_model_no_plan_names_is_let_go_at_once(s, monkeypatch):
+    w = make_worker(s, monkeypatch)
+    s.update({"plan": {"cuda": {"dictation": {"model": "small"}, "transcripts": {"model": "large-v3-turbo"}}, "cpu": {"dictation": {"model": "base"}, "transcripts": {"model": "base"}}}})
+    w.dictation_model()
+    assert w.dictator.loaded
+    # A phrase under way keeps it.
+    w.dictating = lambda: True
+    s.update({"plan": {"cuda": {"dictation": {"model": "large-v3-turbo"}, "transcripts": {"model": "large-v3-turbo"}}, "cpu": {"dictation": {"model": "base"}, "transcripts": {"model": "base"}}}})
+    assert w.drop_unplanned() == [] and w.dictator.loaded
+    w.dictating = lambda: False
+    assert w.drop_unplanned() == ["small"] and not w.dictator.loaded
 
 
 def test_parakeet_in_the_cards_plan_dictates_on_the_processor(s, monkeypatch):
@@ -229,7 +243,7 @@ def test_a_model_on_the_card_goes_after_three_idle_minutes(s, monkeypatch):
 
     w = make_worker(s, monkeypatch)
     w.get_store = NoRecordings
-    s.update({"plan": {"cuda": {"dictation": {"model": "parakeet-tdt-0.6b-v3"}, "transcripts": {"model": "large-v3-turbo", "compute": "float16"}}}})
+    s.update({"plan": {"cuda": {"dictation": {"model": "parakeet-tdt-0.6b-v3"}, "transcripts": {"model": "large-v3-turbo", "compute": "float16"}}, "cpu": {"dictation": {"model": "small"}}}})
     w.transcriber.load("large-v3-turbo", "cuda", "float16")
     w.dictator.load("small", "cpu")
     w.last_work = w.last_dictation = time.monotonic() - 120

@@ -286,7 +286,9 @@ export type StorageId = 'fast' | 'dict' | 'voice' | 'accurate' | 'most' | 'unuse
  * `unused`: nothing uses it, Clean up removes it; `reserve`: kept for when the graphics card fails ("Dictate"), not cleaned up.
  */
 export type StoragePart = { id: StorageId; item?: string; path: string; bytes: number; shared: number; away?: boolean; users?: string[]; unused?: boolean; reserve?: string }
-export type StorageView = { measuring: boolean; root: string; drive: string; freeMb: number; parts: StoragePart[]; old?: OldFolder }
+/** `refused`: the parts the last removal or Clean up could not take off the disk, each with why, in the interface's language. */
+export type StorageView = { measuring: boolean; root: string; drive: string; freeMb: number; parts: StoragePart[]; old?: OldFolder; refused?: Refused[] }
+export type Refused = { id: StorageId; item?: string; why: string }
 export type OldFolder = { dir: string; why?: string; moving: boolean }
 
 /** What the tray's panel shows, sent whole whenever any of it changes. */

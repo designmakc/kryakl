@@ -74,7 +74,7 @@ import { pickLines } from './ocrpick'
 import { adoptLocalFolder, adoptOldFolders, freeFolder, hasToMove, leftIn, moveDownloads, partDir, removeOldUpdaterCaches, type LeftPart, type Warn } from './oldfolder'
 import { paragraphsOf } from './ocrtext'
 import { placeByTray, placeNear, resize, type Point } from './placement'
-import type { AppTab, AppView, BusyPart, CardKind, CardState, CheckResult, DictationMode, DictionaryStatus, GlossMissing, HostCall, HostVoice, StorageId, StoragePart, StorageView, TalkWindowView, TextResult, ToHost, ToView, TranslationState, TrayCommand, TrayView, ViewConfig } from './protocol'
+import type { AppTab, AppView, BusyPart, CardKind, CardState, CheckResult, DictationMode, DictionaryStatus, GlossMissing, HostCall, HostVoice, Refused, StorageId, StoragePart, StorageView, TalkWindowView, TextResult, ToHost, ToView, TranslationState, TrayCommand, TrayView, ViewConfig } from './protocol'
 import { draftsIn, englishHtml, textOutHtml, translationHtml } from './render'
 import { issueUrl, mailUrl, makeReport, namesHere, reportName, type ReportFacts } from './report'
 import { addKept, CARD_WIDTH, DEFAULTS, keptForm, LEVEL_NAMES, myLanguages, normalize, TARGET, type LlmModel, type Settings, type TranslationLevel } from './settings'
@@ -1084,7 +1084,16 @@ function useContext(): UseContext {
 }
 
 /** The storage as measured, each part told what it serves now: a changed setting shows at once, with no walk of the disk. */
-const storageView = (s: StorageView): StorageView => ({ ...s, parts: withUse(s.parts, useContext()) })
+const storageView = (s: StorageView): StorageView => ({ ...s, parts: withUse(s.parts, useContext()), ...(refused.length ? { refused } : {}) })
+
+/** What the last removal or Clean up could not remove, and why: the page says it instead of staying silent. */
+let refused: Refused[] = []
+
+function noteRefused(id: StorageId, item: string | undefined, error: unknown): void {
+  console.warn(`Krya: could not remove ${id}${item ? ` ${item}` : ''}`, error)
+  const why = engineMessage(error instanceof Error ? error.message : String(error))
+  refused.push({ id, ...(item ? { item } : {}), why })
+}
 
 /** One part off the disk (the Models and Storage pages' ×, Clean up); each downloads again when wanted. */
 async function removeStored(id: StorageId, item?: string): Promise<void> {
@@ -1140,11 +1149,12 @@ async function removeStored(id: StorageId, item?: string): Promise<void> {
 /** Clean up: every part nothing uses off the disk, one after another; one that will not go is logged and the next goes on. */
 async function cleanUp(): Promise<void> {
   if (!storage) return
+  refused = []
   for (const p of cleanable(withUse(storage.parts, useContext()))) {
     try {
       await removeStored(p.id, p.item)
     } catch (error) {
-      console.warn(`Krya: could not clean up ${p.id}${p.item ? ` ${p.item}` : ''}`, error)
+      noteRefused(p.id, p.item, error)
     }
   }
 }
@@ -1538,8 +1548,9 @@ function onMessage(message: ToHost, page: Page): void {
       })
       return
     case 'removeStored':
+      refused = []
       void removeStored(message.id, message.item)
-        .catch(error => console.warn(`Krya: could not remove ${message.id}${message.item ? ` ${message.item}` : ''}`, error))
+        .catch(error => noteRefused(message.id, message.item, error))
         .finally(() => (postApp(), remeasure()))
       return
     case 'cleanUp':

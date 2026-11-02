@@ -967,7 +967,7 @@ export const uk: Record<Key, Phrase> = {
   'engine.notRemoved': 'Не вдалося видалити {name}: {why}',
   'engine.usedByTranscripts': 'Використовується: модель розшифровок',
   'engine.usedByDictation': 'Використовується: модель диктування',
-  'engine.usedLoaded': 'Використовується: завантажена в пам’ять',
+  'engine.usedLoaded': 'Зараз використовується: спробуйте за хвилину',
   'engine.usedDownloading': 'Використовується: завантажується',
   'engine.usedTest': 'Використовується: іде перевірка швидкості',
   'engine.pasteKey': 'Спершу вставте ключ Hugging Face',

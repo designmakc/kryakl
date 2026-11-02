@@ -971,7 +971,7 @@ export const en = {
   'engine.notRemoved': 'Could not remove {name}: {why}',
   'engine.usedByTranscripts': 'In use: the transcripts model',
   'engine.usedByDictation': 'In use: the dictation model',
-  'engine.usedLoaded': 'In use: loaded',
+  'engine.usedLoaded': 'In use right now: try again in a minute',
   'engine.usedDownloading': 'In use: downloading',
   'engine.usedTest': 'In use: the speed test runs',
   'engine.pasteKey': 'Paste a Hugging Face key first',

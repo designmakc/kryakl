@@ -258,8 +258,11 @@ class Transcriber:
             self.device = device
             self._key = key
 
-    def unload(self) -> None:
+    def unload(self, name: str | None = None) -> None:
+        """Out of memory; with `name`, only while it still holds that model (a job may have loaded another meanwhile)."""
         with self._lock:
+            if name is not None and self.name != name:
+                return
             self._model = None
             self._key = None
             self._warm = None
@@ -440,8 +443,10 @@ class Parakeet:
             self.name = name
             self._key = key
 
-    def unload(self) -> None:
+    def unload(self, name: str | None = None) -> None:
         with self._lock:
+            if name is not None and self.name != name:
+                return
             self._model = None
             self._key = None
             self._warm = None

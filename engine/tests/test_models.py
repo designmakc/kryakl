@@ -35,12 +35,22 @@ def test_the_planned_model_stays(client, models):
     assert asr.downloaded(planned)
 
 
-def test_a_loaded_model_stays(client, models, monkeypatch):
+def test_a_loaded_model_planned_nowhere_is_let_go_and_removed(client, models, monkeypatch):
+    folder, _ = whisper_here("tiny")
+    monkeypatch.setattr(engine.worker.dictator, "_model", object())
+    monkeypatch.setattr(engine.worker.dictator, "name", "tiny")
+    assert client.request("DELETE", "/models/tiny", headers=KEY).status_code == 200
+    assert not engine.worker.dictator.loaded and not folder.exists()
+
+
+def test_a_loaded_model_stays_while_a_phrase_is_recognized(client, models, monkeypatch):
     whisper_here("tiny")
     monkeypatch.setattr(engine.worker.dictator, "_model", object())
     monkeypatch.setattr(engine.worker.dictator, "name", "tiny")
-    assert client.request("DELETE", "/models/tiny", headers=KEY).status_code == 409
-    assert asr.downloaded("tiny")
+    monkeypatch.setattr(engine.worker, "dictating", lambda: True)
+    answer = client.request("DELETE", "/models/tiny", headers=KEY)
+    assert answer.status_code == 409 and answer.json()["detail"] == "In use: loaded"
+    assert engine.worker.dictator.loaded and asr.downloaded("tiny")
 
 
 def test_a_model_being_fetched_stays(client, models, monkeypatch):
@@ -62,6 +72,7 @@ def test_a_failed_removal_says_so(client, models, monkeypatch):
         raise PermissionError(13, "in use")
 
     monkeypatch.setattr(engine.shutil, "rmtree", refuse)
+    monkeypatch.setattr(engine.time, "sleep", lambda _: None)
     answer = client.request("DELETE", "/models/tiny", headers=KEY)
     assert answer.status_code == 409 and "in use" in answer.json()["detail"]
 

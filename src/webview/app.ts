@@ -1842,16 +1842,23 @@ function recommendRows(v: AppView): HTMLElement[] {
 /** Clean up was tapped: it shows as going on until the storage is measured again. */
 let cleaning: 'asked' | 'measuring' | undefined
 
+/** Why a part the person asked to remove is still here (main's `refused`), or null. */
+function refusedNote(v: AppView, p: StoragePart): HTMLElement | null {
+  const r = v.storage?.refused?.find(r => r.id === p.id && (r.item ?? '') === (p.item ?? ''))
+  return r ? bad(t('engine.notRemoved', { name: storedName(v, p), why: r.why })) : null
+}
+
 /** What nothing uses (storage.ts withUse; the processor's spare speech model is not in it), in one line with Clean up. */
 function unusedNotice(v: AppView): HTMLElement | null {
   const parts = (v.storage?.parts ?? []).filter(p => p.unused && p.bytes > 0)
   if (!parts.length) return null
+  const kept = cleaning ? [] : parts.map(p => refusedNote(v, p))
   const mb = parts.reduce((n, p) => n + p.bytes / 1e6, 0)
   return el(
     'div',
     { class: 'row notice old' },
     lucide('trash-2'),
-    el('div', { class: 'l' }, t('models.unused', { size: speechSize(mb) }), el('small', {}, t('models.unusedNote', { list: parts.map(p => storedName(v, p)).join(', ') }))),
+    el('div', { class: 'l' }, t('models.unused', { size: speechSize(mb) }), el('small', {}, t('models.unusedNote', { list: parts.map(p => storedName(v, p)).join(', ') })), ...kept),
     cleaning ? el('span', { class: 'v' }, t('models.cleaning')) : btn(t('models.cleanUp'), () => ((cleaning = 'asked'), post({ type: 'cleanUp' }), renderBody()), 'primary'),
   )
 }
@@ -2980,7 +2987,7 @@ function storedLine(v: AppView, p: StoragePart): HTMLElement {
   const freed = p.id === 'speech' && shared >= 100 ? t('storage.frees', { free: speechSize(p.bytes / 1e6 - shared), shared: speechSize(shared) }) : null
   const ask = !!p.users?.length || p.id === 'speech'
   const x = removable(v, p) ? ib('x', ask ? t('storage.removeAskTitle') : t('storage.removeTitle'), () => (ask ? ((asking = key), renderBody()) : remove())) : null
-  return row(label, [storedNote(v, p), used, freed, where], el('span', { class: 'kchg' }, size, x))
+  return row(label, [storedNote(v, p), used, freed, where, refusedNote(v, p)], el('span', { class: 'kchg' }, size, x))
 }
 
 /** What Krya keeps and how big it is: what nothing uses first, then the models, the programs that run them, and the person's own things. */

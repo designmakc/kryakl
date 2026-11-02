@@ -967,7 +967,7 @@ export const ru: Record<Key, Phrase> = {
   'engine.notRemoved': 'Не удалось удалить {name}: {why}',
   'engine.usedByTranscripts': 'Используется: модель расшифровок',
   'engine.usedByDictation': 'Используется: модель диктовки',
-  'engine.usedLoaded': 'Используется: загружена в память',
+  'engine.usedLoaded': 'Сейчас используется: попробуйте через минуту',
   'engine.usedDownloading': 'Используется: скачивается',
   'engine.usedTest': 'Используется: идёт проверка скорости',
   'engine.pasteKey': 'Сначала вставьте ключ Hugging Face',

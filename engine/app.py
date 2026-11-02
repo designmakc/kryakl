@@ -443,6 +443,10 @@ def delete_model(name: str):
     if name not in ALL_MODELS:
         raise HTTPException(404, "No such model")
     why = model_busy(name)
+    if why == "In use: loaded":
+        # Loaded but planned nowhere (another model picked since): let go of it first, unless a phrase or job runs.
+        worker.drop_unplanned(_dictating.locked)
+        why = model_busy(name)
     if why:
         raise HTTPException(409, why)
     folder = asr._cache_dir(name)
@@ -450,8 +454,16 @@ def delete_model(name: str):
     folders = [folder] + ([asr.WHISPER_DIR / ".locks" / folder.name] if asr.backend(name) == "whisper" else [])
     try:
         for f in folders:
-            if f.exists():
-                shutil.rmtree(f)
+            # A model just let go of may hold its files a moment longer on Windows.
+            for attempt in range(3):
+                try:
+                    if f.exists():
+                        shutil.rmtree(f)
+                    break
+                except OSError:
+                    if attempt == 2:
+                        raise
+                    time.sleep(0.2)
     except OSError as error:
         log.warning("could not remove %s: %s", name, error)
         raise HTTPException(409, f"Could not remove {name}: {error.strerror or error}")
@@ -482,6 +494,8 @@ def put_settings(changes: dict = Body(...)):
     if isinstance(plan, dict) and isinstance(plan.get("fingerprint"), str) and plan["fingerprint"] != settings["bench"].get("fingerprint", ""):
         worker.bench.reset(plan["fingerprint"])
     settings.update(changes)
+    if "plan" in changes:
+        worker.drop_unplanned(_dictating.locked)
     if isinstance(changes.get("hfToken"), str) and changes["hfToken"].strip():
         setup.start(settings["hfToken"])
     return public_settings()

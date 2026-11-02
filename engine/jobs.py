@@ -217,6 +217,24 @@ class Worker:
     def idle(self) -> bool:
         return self.current is None and self.queue.empty()
 
+    def drop_unplanned(self, busy: Callable[[], bool] = lambda: False) -> list[str]:
+        """The models in memory that no feature's plan names now (the person picked another): out at once, not
+        after resting, so they hold no memory and their files can go. Never while a job or a phrase may use one."""
+        if not self.idle() or self.dictating() or busy():
+            return []
+        # The other device's plan counts too: the processor's is the reserve should the card refuse.
+        planned = {self.entry(feature, device)[1]["model"] for feature in ("dictation", "transcripts") for device in ("cuda", "cpu")}
+        gone = []
+        for t in (self.transcriber, self.dictator, self.parakeet):
+            name = t.name
+            if t.loaded and name not in planned:
+                t.unload(name)
+                gone.append(name)
+        if gone:
+            log.info("unloaded, no longer planned: %s", ", ".join(gone))
+            gc.collect()
+        return gone
+
     def yield_to_dictation(self) -> None:
         """A transcription on the processor stops between its windows while someone dictates: the phrase comes first."""
         until = time.monotonic() + YIELD_LONGEST
@@ -252,6 +270,7 @@ class Worker:
             store.update(id, status="failed", stage="", error=message)
 
     def _housekeeping(self) -> None:
+        self.drop_unplanned()
         store = self.get_store()
         now = datetime.now()
         for row in store.rows(("recording",)):
