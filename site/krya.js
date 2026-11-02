@@ -62,13 +62,23 @@ $$('.langs a').forEach((a) => a.addEventListener('click', () => { a.href = a.get
 
 /* ---------- Voice: the browser's own, an English one that runs locally when there is one ---------- */
 const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
-function pickVoice(lang) {
+// In the talk your lines are read by a woman's voice and the duck's by a man's, told apart by the voices' names.
+const HER = /\b(aria|jenny|zira|ava|emma|libby|sonia|hazel|susan|samantha|michelle|female)\b/i;
+const HIM = /\b(guy|david|mark|andrew|brian|christopher|eric|ryan|george|male)\b/i;
+function pickVoice(lang, who) {
   if (!synth) return null;
   let vs = [];
   try { vs = synth.getVoices() || []; } catch (e) { vs = []; }
   const mine = vs.filter((v) => (v.lang || '').toLowerCase().startsWith(lang));
-  return mine.find((v) => v.localService && /natural|neural|aria|jenny|guy/i.test(v.name))
-    || mine.find((v) => v.localService) || mine[0] || null;
+  const best = (list) => list.find((v) => v.localService && /natural|neural|aria|jenny|guy/i.test(v.name))
+    || list.find((v) => v.localService) || list[0] || null;
+  const kind = who === 'her' ? HER : who === 'him' ? HIM : null;
+  return (kind && best(mine.filter((v) => kind.test(v.name)))) || best(mine);
+}
+// A browser with one voice: the two still sound apart by pitch.
+function pitchOf(v, who) {
+  if (!who || (v && (who === 'her' ? HER : HIM).test(v.name))) return 1;
+  return who === 'her' ? 1.25 : 0.8;
 }
 if (synth && synth.addEventListener) synth.addEventListener('voiceschanged', () => {});
 let speakId = 0;
@@ -86,16 +96,16 @@ function simulate(text, onword, id, withEnd, onend) {
   tick();
 }
 function speak(text, opts = {}) {
-  const { onword, onend, lang = 'en' } = opts;
+  const { onword, onend, lang = 'en', who } = opts;
   const id = ++speakId;
   talkVoice(id);
   const done = () => { if (id === speakId) onend && onend(); };
   if (!synth) { simulate(text, onword, id, true, done); return; }
   try { synth.cancel(); } catch (e) {}
   const u = new SpeechSynthesisUtterance(text);
-  const v = pickVoice(lang);
+  const v = pickVoice(lang, who);
   if (v) { u.voice = v; u.lang = v.lang; } else u.lang = ({ uk: 'uk-UA', ru: 'ru-RU' })[lang] || 'en-US';
-  u.rate = 0.95;
+  u.rate = 0.95; u.pitch = pitchOf(v, who);
   let heard = false;
   u.onboundary = (e) => { if (id !== speakId) return; if (!e.name || e.name === 'word') { heard = true; onword && onword(e.charIndex); } };
   u.onend = done;
@@ -829,37 +839,44 @@ function tkTime() {
 
 function tkReset() {
   tk.run++;
-  if (tk.phase === 'speaking') hush();
+  if (tk.phase === 'speaking' || tk.talking) hush();
+  tk.talking = false;
   clearInterval(tk.clock);
   tk.step = 0; tk.phase = 'idle'; tk.live = null;
   tkFeed.innerHTML = tkDuck(TALK[tk.topic].opener, -1);
   tkDraw();
 }
-// The line is heard word by word, as Krya shows it in a dashed line while you speak.
+// The line is said aloud by a woman's voice and heard word by word, as Krya shows it in a dashed line while you speak.
 async function tkListen() {
   quietCard(); hush();
   const run = ++tk.run; const alive = () => run === tk.run;
-  const words = TALK[tk.topic].lines[tk.step].text.split(' ');
+  const text = TALK[tk.topic].lines[tk.step].text;
+  const words = text.split(' ');
   tk.phase = 'listening'; tk.t0 = performance.now(); tk.talking = true;
   tk.live = tkAdd('<div class="tt me live"><div class="tt-b"><span class="said"></span></div></div>');
   const said = $('.said', tk.live);
   clearInterval(tk.clock); tk.clock = setInterval(() => { if (!alive() || tk.phase !== 'listening') { clearInterval(tk.clock); return; } tkTime(); }, 250);
   tkDraw();
   if (!tk.waveOn && !reduce) { tk.waveOn = true; requestAnimationFrame(tkWaveFrame); }
-  if (reduce) { said.textContent = words.join(' '); tk.talking = false; return; }
-  await sleep(420);
-  for (let i = 0; i < words.length; i++) {
+  const stopped = () => { if (alive()) tk.talking = false; };
+  if (reduce) { said.textContent = text; speak(text, { who: 'her', onend: stopped }); return; }
+  await sleep(300);
+  if (!alive()) return;
+  const starts = []; words.reduce((at, w) => { starts.push(at); return at + w.length + 1; }, 0);
+  let shown = 0;
+  const upTo = (at) => {
     if (!alive()) return;
-    said.insertAdjacentHTML('beforeend', `<span class="w">${i ? ' ' : ''}${esc(words[i])}</span>`); tkScroll();
-    await sleep(190 + Math.random() * 150);
-  }
-  if (alive()) tk.talking = false;
+    while (shown < words.length && starts[shown] <= at) { said.insertAdjacentHTML('beforeend', `<span class="w">${shown ? ' ' : ''}${esc(words[shown])}</span>`); shown++; }
+    tkScroll();
+  };
+  speak(text, { who: 'her', onword: upTo, onend: () => { upTo(text.length); stopped(); } });
 }
 // Sent: Krya checks the line and the duck thinks at once; the marks come first, then the answer, read aloud.
 async function tkSend() {
   const run = ++tk.run; const alive = () => run === tk.run;
   const i = tk.step; const el = tk.live; tk.live = null;
   clearInterval(tk.clock);
+  if (tk.talking) { hush(); tk.talking = false; }
   el.classList.remove('live'); el.dataset.i = i;
   $('.tt-b', el).innerHTML = `<span>${esc(TALK[tk.topic].lines[i].text)}</span><small class="checking">${ico('loader')}checking…</small>`;
   tk.phase = 'checking'; tkDraw();
@@ -878,7 +895,7 @@ function tkShow(i, voice) {
   tk.step = i + 1;
   if (!voice || !tk.seen) { tkSettle(); tkDraw(); return; }
   const run = tk.run; const spans = $$('.s', el);
-  speak(tkAnswer(i)[0], { onword: (at) => tkLight(spans, at), onend: () => { if (run !== tk.run || tk.phase !== 'speaking') return; tkUnlight(); tkSettle(); tkDraw(); } });
+  speak(tkAnswer(i)[0], { who: 'him', onword: (at) => tkLight(spans, at), onend: () => { if (run !== tk.run || tk.phase !== 'speaking') return; tkUnlight(); tkSettle(); tkDraw(); } });
   tk.sid = speakId; tk.phase = 'speaking'; tkDraw();
 }
 // A press while the duck thinks shows its answer at once, as a press in Krya does not wait for it.
@@ -899,6 +916,7 @@ function tkPress() {
 function tkCancel() {
   if (!tkState || tk.phase !== 'listening') return false;
   tk.run++; clearInterval(tk.clock);
+  if (tk.talking) { hush(); tk.talking = false; }
   if (tk.live) tk.live.remove();
   tk.live = null; tk.phase = 'idle'; tkDraw();
   return true;

@@ -493,9 +493,11 @@ figure.desk { margin: 0; }
 .istep h3 { font: 700 19px/1.25 var(--font); letter-spacing: -0.015em; color: var(--ink); margin-top: 6px; }
 .istep p { font-size: 15px; line-height: 1.55; color: var(--muted); }
 .istep p b { color: var(--ink); font-weight: 600; }
-.reqs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 40px; }
-.reqs span { height: 30px; display: inline-flex; align-items: center; gap: 7px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); font-size: 13px; color: var(--muted); background: var(--surface); }
-.reqs .lu { font-size: 14px; }
+.needs { margin-top: clamp(48px, 6vw, 72px); }
+.needs h3 { font: 700 19px/1.25 var(--font); letter-spacing: -0.015em; color: var(--ink); margin-bottom: 18px; }
+.needs .facts.cols { column-gap: clamp(20px, 3vw, 40px); }
+.proofs a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--link-line); text-underline-offset: 3px; white-space: nowrap; }
+.proofs a:hover { text-decoration-color: currentColor; }
 @media (max-width: 860px) { .install { grid-template-columns: 1fr; } }
 
 /* Sign-off */
