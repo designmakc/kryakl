@@ -1,6 +1,6 @@
 {
-  "name": "krya",
-  "productName": "Krya",
+  "name": "kryakl",
+  "productName": "Kryakl",
   "version": "0.14.1",
   "description": "Your language. Your shortcut. Listen to English, translate, fix keyboard layouts: offline, from any program.",
   "author": {
@@ -12,7 +12,7 @@
   "main": "dist/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ikstro/krya"
+    "url": "https://github.com/ikstro/kryakl"
   },
   "scripts": {
     "build": "node esbuild.mjs",

@@ -1,5 +1,5 @@
 // The talks with the duck (Talk, talk.ts), kept in talks.json in the app's
-// folder: the one going on, so it survives Krya quitting, and the ones New
+// folder: the one going on, so it survives Kryakl quitting, and the ones New
 // talk ended, newest first, for Library › Talks, where one is read again,
 // continued or removed. Kept small by themselves as the other logs are
 // (dictationlog.ts): 50 talks at most and none older than 30 days. A talk the
@@ -122,7 +122,7 @@ export class TalkStore {
     return added.filter(t => this.past.includes(t)).length
   }
 
-  /** What is waiting to be written, written now (Krya quits). */
+  /** What is waiting to be written, written now (Kryakl quits). */
   flush(): void {
     if (this.timer) this.write()
   }
@@ -148,7 +148,7 @@ export class TalkStore {
       const saved: Saved = { ...(this.ongoing ? { current: this.ongoing } : {}), past: this.past }
       fs.writeFileSync(this.file, JSON.stringify(saved) + '\n', 'utf8')
     } catch (error) {
-      console.warn('Krya: could not save the talks', error)
+      console.warn('Kryakl: could not save the talks', error)
     }
   }
 }
@@ -161,7 +161,7 @@ export function summaryOf(t: TalkRecord): TalkSummary {
 
 const newestFirst = (a: TalkRecord, b: TalkRecord) => Date.parse(b.ended) - Date.parse(a.ended)
 
-/** A turn as kept: a line still being checked when Krya quit is kept as said. */
+/** A turn as kept: a line still being checked when Kryakl quit is kept as said. */
 function settled(turn: TalkTurn): TalkTurn {
   const { checking: _checking, ...kept } = turn
   return kept

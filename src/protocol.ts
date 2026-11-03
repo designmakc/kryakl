@@ -226,9 +226,9 @@ export type AppView = {
   words: SavedWord[]
   /** Each shortcut is registered (false: another program holds it). */
   keysOk: { snip: boolean; select: boolean; translate: boolean; text: boolean; inPlace: boolean; check: boolean; type: boolean; typeCheck: boolean; pause: boolean; window: boolean }
-  /** What Krya learned from the person's typing (learning.ts): words fixed always, words of theirs. */
+  /** What Kryakl learned from the person's typing (learning.ts): words fixed always, words of theirs. */
   learned: { alwaysFix: Learned[]; myWords: Learned[] }
-  /** A program that runs as administrator was in front lately: its keys never reach Krya. */
+  /** A program that runs as administrator was in front lately: its keys never reach Kryakl. */
   elevatedApp?: string
   /** The texts translated lately, newest first (the last 10). */
   translations: TranslationEntry[]
@@ -244,7 +244,7 @@ export type AppView = {
   rivals: string[]
   /** Other programs known to watch the keyboard, running now (AutoHotkey, WhisperTyping…): no harm, named so the person knows. */
   keyboardApps: string[]
-  /** Some program pressed keys by itself since the keyboard helper started; Krya ignores those. */
+  /** Some program pressed keys by itself since the keyboard helper started; Kryakl ignores those. */
   foreignKeys: boolean
   speech: SpeechView
   /** The phrases dictated lately, newest first (the last 10). */
@@ -262,7 +262,7 @@ export type AppView = {
    * card it holds while loaded.
    */
   modelSpeed: Partial<Record<LlmModel, { sentence?: number; text?: number; reply?: number; start?: number; card?: number }>>
-  /** The local model loaded now, and whether on the graphics card (Models › This computer says what Krya holds right now). */
+  /** The local model loaded now, and whether on the graphics card (Models › This computer says what Kryakl holds right now). */
   llmLoaded?: { model: LlmModel; onCard: boolean }
   /** The word dictionary for the person's language. */
   dictionary: { status: DictionaryStatus }
@@ -270,13 +270,13 @@ export type AppView = {
   mistakes: MistakeEntry[]
   /** The talk going on, for the Talk page's line. */
   talk?: TalkSummary
-  /** What Krya keeps on this computer, measured once the Storage page was opened. */
+  /** What Kryakl keeps on this computer, measured once the Storage page was opened. */
   storage?: StorageView
 }
 
 /**
- * A part of what Krya keeps (storage.ts): Firefox's models and the word dictionaries by language, the natural voice, the
- * two language models and an older Krya's, llama.cpp's builds, each speech model, the speech engine's program and its
+ * A part of what Kryakl keeps (storage.ts): Firefox's models and the word dictionaries by language, the natural voice, the
+ * two language models and an older Kryakl's, llama.cpp's builds, each speech model, the speech engine's program and its
  * graphics card's and speakers' parts, the person's own things.
  */
 export type StorageId = 'fast' | 'dict' | 'voice' | 'accurate' | 'most' | 'unused' | 'llama' | 'speechModel' | 'speech' | 'gpu' | 'speakers' | 'yours' | 'transcripts'
@@ -295,7 +295,7 @@ export type OldFolder = { dir: string; why?: string; moving: boolean }
 export type TrayView = {
   /** The keys of its commands, hotkey.ts notation ("Control+C*2" for Ctrl+C twice); empty when there is none. */
   keys: { listenCopied: string; typeToTranslate: string; checkEnglish: string; talk: string; snipListen: string; snipTranslate: string; switch: string }
-  /** The quick settings' switches: fixing as one types, the switch key, the badge, the layout in the tray's icon, Ctrl+C twice, Krya paused. */
+  /** The quick settings' switches: fixing as one types, the switch key, the badge, the layout in the tray's icon, Ctrl+C twice, Kryakl paused. */
   autoFix: boolean
   switchOn: boolean
   layoutBadge: boolean
@@ -343,7 +343,7 @@ export type ToView =
   | { type: 'dictReady' }
   /** The app window's whole state. */
   | { type: 'app'; view: AppView }
-  /** Show this tab of the app window (the tray's "About Krya…"). */
+  /** Show this tab of the app window (the tray's "About Kryakl…"). */
   | { type: 'appTab'; tab: AppTab }
   /** The app window fills the screen or not (its button, a double click on its bar, Windows' keys): Maximize or Restore. */
   | { type: 'appWindow'; maximized: boolean }
@@ -421,7 +421,7 @@ export type ToHost =
   | { type: 'copyWords' }
   /** Open one of the About tab's links in the browser. */
   | { type: 'openLink'; url: string }
-  /** The app window's own buttons: it has no Windows frame. Close hides it, as Krya lives in the tray. */
+  /** The app window's own buttons: it has no Windows frame. Close hides it, as Kryakl lives in the tray. */
   | { type: 'window'; action: 'minimize' | 'maximize' | 'close' }
   /** The Transcribe page's microphone recording (or Talk's listening) began or ended: the tray shows it. */
   | { type: 'micRecording'; on: boolean }
@@ -475,7 +475,7 @@ export type ToHost =
   /** Forget the phrases dictated lately; the texts translated lately. */
   | { type: 'clearDictation' }
   | { type: 'clearTranslations' }
-  /** What Krya learned from the person's typing: one word out of a list, or everything. */
+  /** What Kryakl learned from the person's typing: one word out of a list, or everything. */
   | { type: 'unlearn'; list: 'alwaysFix' | 'myWords'; word: string }
   | { type: 'forgetLearned' }
   /** A backup of the settings and the libraries saved as a file, imported from one (the person picks it), or the settings all back to how they came. */
@@ -484,11 +484,11 @@ export type ToHost =
   | { type: 'resetSettings' }
   /** Every key back to how it came (after a question). */
   | { type: 'resetKeys' }
-  /** Report a problem (report.ts): the zip made and shown in its folder, then the email or the GitHub issue opened with `text` in it; or Krya's folder with the logs opened. */
+  /** Report a problem (report.ts): the zip made and shown in its folder, then the email or the GitHub issue opened with `text` in it; or Kryakl's folder with the logs opened. */
   | { type: 'reportProblem'; via: 'email' | 'github'; text: string }
   | { type: 'openLogs' }
   /**
-   * Measure what Krya keeps (the Models or Storage page opened). Remove one part (a language model: Fast in its place
+   * Measure what Kryakl keeps (the Models or Storage page opened). Remove one part (a language model: Fast in its place
    * when it translated; the speech engine whole, or its graphics card's or speakers' part); each downloads again when
    * wanted. Clean up removes every part nothing uses. Use recommended: the models advised for this computer, and their downloads.
    */
@@ -496,8 +496,8 @@ export type ToHost =
   | { type: 'removeStored'; id: StorageId; item?: string }
   | { type: 'cleanUp' }
   | { type: 'useRecommended' }
-  /** What is left in the old Altype folder moved into Krya's: the engine and the model's server stopped first, Krya started again after. */
-  | { type: 'moveToKrya' }
+  /** What is left in the old folders moved into Kryakl's: the engine and the model's server stopped first, Kryakl started again after. */
+  | { type: 'moveToKryakl' }
   // The dictation badge.
   | { type: 'dictationReady' }
   /** A phrase to type: the whole recording, as webm (an engine without sessions). */

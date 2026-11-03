@@ -54,7 +54,7 @@ export type EngineSettings = {
   model: string
   language: string
   hotwords: string
-  /** The words to spell as the engine holds them: Krya's `vocabulary` setting, sent with the plan. */
+  /** The words to spell as the engine holds them: Kryakl's `vocabulary` setting, sent with the plan. */
   vocabulary: { word: string; heard: string[] }[]
   hasToken: boolean
   dataDir: string
@@ -467,7 +467,7 @@ export function computerRows(v: AppView): HTMLElement[] {
 }
 
 /**
- * What Krya holds right now, said plainly (resources.ts: Krya is a guest on
+ * What Kryakl holds right now, said plainly (resources.ts: Kryakl is a guest on
  * the computer): each model in memory and where, the graphics card's first;
  * a model leaves it after three idle minutes.
  */

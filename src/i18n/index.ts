@@ -1,8 +1,8 @@
-// Krya's interface in English, Ukrainian or Russian (2026-11-01, the owner:
+// Kryakl's interface in English, Ukrainian or Russian (2026-11-01, the owner:
 // English by default, the others picked in Settings or the setup's first
 // step). Every phrase a page or the main process shows is a key of en.ts,
 // translated in uk.ts and ru.ts (a missing translation fails the typecheck).
-// What Krya teaches stays English whatever is picked: the duck's answers, the
+// What Kryakl teaches stays English whatever is picked: the duck's answers, the
 // corrected text, the card's English half, the instructions to the models.
 //
 // A page learns its language from its address (`?lang=uk`, main.ts
@@ -78,7 +78,7 @@ const displayNames = new Map<UiLanguage, Intl.DisplayNames | null>()
 /**
  * A language's name in the interface's language, by its English name or code
  * ("Ukrainian" → "українська" in Ukrainian, "Ukrainian" in English); a
- * language Krya does not know keeps the name given.
+ * language Kryakl does not know keeps the name given.
  */
 export function languageName(nameOrCode: string): string {
   const language = findLanguage(nameOrCode)

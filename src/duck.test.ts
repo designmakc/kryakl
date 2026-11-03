@@ -9,7 +9,7 @@ const learner = (native: string, more: Partial<Learner> = {}): Learner => ({ nat
 describe('duckPrompt', () => {
   it('says who the duck is, keeps to English, never corrects, and names the learner’s language and the talk', () => {
     const ru = duckPrompt(learner('ru'), 'cafe')
-    expect(ru).toContain('You are the duck in Krya')
+    expect(ru).toContain('You are the duck in Kryakl')
     expect(ru).toContain('not a teacher or a tutor')
     expect(ru).toContain('you have no internet')
     expect(ru).toContain("The learner's own language is Russian.")

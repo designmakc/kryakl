@@ -1,4 +1,4 @@
-// The speech engine as Krya holds it: the installed parts (speechpack.ts),
+// The speech engine as Kryakl holds it: the installed parts (speechpack.ts),
 // the running service (speechservice.ts), this computer (device.ts) with the
 // plan of which model runs where (speechplan.ts), and what the app window sees
 // of all of it (SpeechView). The service runs once a part is installed;
@@ -35,9 +35,9 @@ const MODEL_START_PROBES = 2
 const MEETING_PROBE_MS = 5000
 
 export type SpeechHostOptions = {
-  /** %LOCALAPPDATA%\Krya\speech: the environment, models, uv. */
+  /** %LOCALAPPDATA%\Kryakl\speech: the environment, models, uv. */
   root: string
-  /** Krya's own folder (%APPDATA%\Krya): the engine's settings and log, device.json. */
+  /** Kryakl's own folder (%APPDATA%\Kryakl): the engine's settings and log, device.json. */
   userDir: string
   engineDir: string
   extensionDir: string
@@ -63,7 +63,7 @@ export class SpeechHost {
   /** When each processor model for dictation was last asked to download (`fetchProcessorDictation`). */
   private readonly fetchAsked = new Map<string, number>()
   private readonly nvidiaDriver = hasNvidia()
-  /** The extension's version in Krya's folder, which Chrome loads unpacked. */
+  /** The extension's version in Kryakl's folder, which Chrome loads unpacked. */
   private readonly extensionShipped: string
   /** A meeting is being recorded through the Chrome extension now (the tray shows it). */
   meeting = false
@@ -89,7 +89,7 @@ export class SpeechHost {
       log: path.join(o.userDir, 'speech.log'),
       pycache: path.join(o.root, 'pycache'),
       // A test run's own home (its models are still the installed engine's); else where the engine is installed:
-      // %LOCALAPPDATA%\Krya\speech, or Altype's folder when it could not move (oldfolder.ts).
+      // %LOCALAPPDATA%\Kryakl\speech, or an old name's folder when it could not move (oldfolder.ts).
       env: o.testHome ? { KRYA_SPEECH_HOME: o.testHome } : { KRYA_SPEECH_DIR: o.root },
       // Beside the engine's settings (its APP_DIR), where an engine run by hand finds it too.
       token: speechToken(path.join(o.testHome ?? o.userDir, 'speech-token')),
@@ -113,7 +113,7 @@ export class SpeechHost {
     return path.join(this.o.userDir, 'device.json')
   }
 
-  /** At Krya's start: the service, when a part is installed; after an update brought other packages, those first. */
+  /** At Kryakl's start: the service, when a part is installed; after an update brought other packages, those first. */
   start(): void {
     if (this.pack.state.status !== 'ready') return
     if (this.pack.stale) void this.install([])
@@ -227,7 +227,7 @@ export class SpeechHost {
     void this.downloadModel(better.model)
   }
 
-  /** What the engine is told of Krya's choices: the plan, and the words to spell (vocabulary.ts). */
+  /** What the engine is told of Kryakl's choices: the plan, and the words to spell (vocabulary.ts). */
   private engineSettings(): { plan: SpeechPlan['engine']; vocabulary: ReturnType<typeof vocabularyFor> } {
     return { plan: this.plan.engine, vocabulary: vocabularyFor(this.o.settings()) }
   }
@@ -362,7 +362,7 @@ export class SpeechHost {
       try {
         await this.fetchModel(model)
       } catch (error) {
-        console.warn(`Krya: the speech model ${model} did not download`, error)
+        console.warn(`Kryakl: the speech model ${model} did not download`, error)
       }
     }
   }

@@ -6,7 +6,7 @@ describe('backup', () => {
   const parts = {
     words: [{ id: 1, word: 'went', base: 'go' }],
     mistakes: [{ at: '2026-10-30T10:00:00.000Z', text: 'He go.', corrected: 'He goes.', note: '' }],
-    learned: { fixedOnce: [], alwaysFix: [{ word: 'ghbdtn', lang: 'ru' }], myWords: [{ word: 'Krya', lang: 'en' }] },
+    learned: { fixedOnce: [], alwaysFix: [{ word: 'ghbdtn', lang: 'ru' }], myWords: [{ word: 'Kryakl', lang: 'en' }] },
     translations: [],
     dictation: [{ at: '2026-10-30T10:00:00.000Z', mode: 'type', text: 'Привет' }],
     talks: [{ id: 'a1', topic: 'cafe', started: '2026-11-01T10:00:00.000Z', ended: '2026-11-01T10:05:00.000Z', turns: [] }],

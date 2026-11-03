@@ -1,8 +1,8 @@
-r"""The speech engine's settings: %APPDATA%\Krya\speech.json.
+r"""The speech engine's settings: %APPDATA%\Kryakl\speech.json.
 
-Krya's own settings (keys, theme) are its settings.json beside it; these are
-the ones the engine acts on. Krya was Altype until 0.11: Altype's speech.json
-moves over once, when Krya itself could not move it. Altscribe, the app this
+Kryakl's own settings (keys, theme) are its settings.json beside it; these are
+the ones the engine acts on. Kryakl was Krya until 0.15 and Altype until 0.11: Altype's speech.json
+moves over once, when Kryakl itself could not move it. Altscribe, the app this
 engine came from, is adopted once too: its settings and its downloaded models.
 """
 
@@ -21,28 +21,28 @@ from pathlib import Path
 
 from vocab import split_items
 
-log = logging.getLogger("krya.settings")
+log = logging.getLogger("kryakl.settings")
 
-# A test run gives its own folders; the real ones are Krya's. ALTYPE_SPEECH_HOME is the old name's.
+# A test run gives its own folders; the real ones are Kryakl's. ALTYPE_SPEECH_HOME is the old name's.
 TEST_HOME = os.environ.get("KRYA_SPEECH_HOME") or os.environ.get("ALTYPE_SPEECH_HOME")
-APP_DIR = Path(TEST_HOME or Path(os.environ.get("APPDATA", Path.home())) / "Krya")
-# Krya says where the engine is installed: %LOCALAPPDATA%\Krya\speech, or Altype's when it could not move.
-SPEECH_DIR = Path(os.environ.get("KRYA_SPEECH_DIR") or Path(os.environ.get("LOCALAPPDATA", Path.home())) / "Krya" / "speech")
+APP_DIR = Path(TEST_HOME or Path(os.environ.get("APPDATA", Path.home())) / "Kryakl")
+# Kryakl says where the engine is installed: %LOCALAPPDATA%\Kryakl\speech, or an old name's when it could not move.
+SPEECH_DIR = Path(os.environ.get("KRYA_SPEECH_DIR") or Path(os.environ.get("LOCALAPPDATA", Path.home())) / "Kryakl" / "speech")
 MODELS_DIR = SPEECH_DIR / "models"
 SETTINGS_FILE = APP_DIR / "speech.json"
 
-# Krya's old name: its speech engine settings, and the transcripts folder it gave new users.
+# Altype, an older name: its speech engine settings, and the transcripts folder it gave new users.
 ALTYPE_SETTINGS = Path(os.environ.get("APPDATA", Path.home())) / "Altype" / "speech.json"
 
 OLD_SETTINGS = Path(os.environ.get("APPDATA", Path.home())) / "Altscribe" / "engine.json"
 OLD_MODELS = Path(os.environ.get("LOCALAPPDATA", Path.home())) / "Altscribe" / "models"
 
-# The speech models Krya can use: engine/models.json, shared with src/speechplan.ts.
+# The speech models Kryakl can use: engine/models.json, shared with src/speechplan.ts.
 CATALOG = json.loads((Path(__file__).resolve().parent / "models.json").read_text("utf-8"))
 MODELS = tuple(m["name"] for m in CATALOG["models"] if m["backend"] == "whisper")
 # Every model, Whisper or not (Parakeet dictates on the processor), with where and for what it may run.
 ALL_MODELS = {m["name"]: m for m in CATALOG["models"]}
-# Dictation on the CPU while Krya has sent no plan (an older Krya, or the plan
+# Dictation on the CPU while Kryakl has sent no plan (an older Kryakl, or the plan
 # not made yet): large-v3-turbo takes ~6 s for a 7 s phrase there, small ~2 s.
 CPU_DICTATION = "small"
 LANGUAGES = ("auto", "ru", "en")
@@ -67,15 +67,16 @@ def documents_dir() -> Path:
 
 
 def default_data_dir() -> Path:
-    r"""The transcripts' folder unless the person chose another: Documents\Krya\Transcripts.
+    r"""The transcripts' folder unless the person chose another: Documents\Kryakl\Transcripts.
 
-    Altype's (Documents\Altype\Transcripts) moves there at a real start (move_transcripts)."""
-    return documents_dir() / "Krya" / "Transcripts"
+    Krya's and Altype's (Documents\Krya\Transcripts, Documents\Altype\Transcripts) move there at a real start
+    (move_transcripts)."""
+    return documents_dir() / "Kryakl" / "Transcripts"
 
 
-def old_data_dir() -> Path:
-    r"""Altype's default transcripts folder, until 0.11."""
-    return documents_dir() / "Altype" / "Transcripts"
+def old_data_dirs() -> list[Path]:
+    r"""The old names' default transcripts folders, newest first: Krya's until 0.15, Altype's until 0.11."""
+    return [documents_dir() / name / "Transcripts" for name in ("Krya", "Altype")]
 
 
 def defaults() -> dict:
@@ -90,7 +91,7 @@ def defaults() -> dict:
         "dataDir": str(default_data_dir()),
         "kbDir": "",
         "kbInbox": "Inbox",
-        # What runs where, made by Krya from this computer's measurements (src/speechplan.ts):
+        # What runs where, made by Kryakl from this computer's measurements (src/speechplan.ts):
         # {threads, cpu: {dictation: {model, beam}, transcripts: {model}}, cuda: {... compute}}.
         "plan": {},
         # How fast each model runs here: {fingerprint, at, runs: {"model|device|compute": {phrase, rtf, n, at}}}.
@@ -99,7 +100,7 @@ def defaults() -> dict:
 
 
 def adopt_altype(file: Path = SETTINGS_FILE, old: Path = ALTYPE_SETTINGS) -> None:
-    """Altype's speech.json, once, when Krya did not move it over itself (main.ts moves it at start)."""
+    """Altype's speech.json, once, when Kryakl did not move it over itself (main.ts moves it at start)."""
     if file.exists() or not old.exists():
         return
     try:
@@ -197,18 +198,20 @@ def _repoint(new: Path, prefixes: set[str]) -> int:
 
 
 def move_transcripts(settings: "Settings", old: Path | None = None, new: Path | None = None) -> bool:
-    r"""Altype's library (Documents\Altype\Transcripts) becomes Krya's (Documents\Krya\Transcripts), once, by a rename.
+    r"""Krya's or Altype's library (Documents\Krya\Transcripts, Documents\Altype\Transcripts) becomes Kryakl's
+    (Documents\Kryakl\Transcripts), once, by a rename; with no `old` given, each old name's in turn, newest first.
 
-    Only the old default moves, never a folder the person chose; only into a Krya folder that is
+    Only the old default moves, never a folder the person chose; only into a Kryakl folder that is
     missing or empty; only when no transcript is being made (a failed one's leftover chunks do not
     hold it; its job's paths are pointed into the new folder). Anything in the way: nothing moves,
     dataDir stays, and the next start tries again. Run before the library is opened."""
-    if TEST_HOME and old is None:
-        return False
-    old = old or old_data_dir()
+    if old is None:
+        if TEST_HOME:
+            return False
+        return any(move_transcripts(settings, o, new) for o in old_data_dirs())
     new = new or default_data_dir()
     current = Path(settings["dataDir"])
-    # dataDir naming Krya's own default (a speech.json without dataDir) counts too: the old default showed Altype's there.
+    # dataDir naming Kryakl's own default (a speech.json without dataDir) counts too: the old default showed the old name's there.
     if not old.is_dir() or not (_same(current, old) or _same(current, new)):
         return False
     if new.exists():
@@ -234,7 +237,7 @@ def move_transcripts(settings: "Settings", old: Path | None = None, new: Path | 
     except (sqlite3.Error, ValueError, OSError) as error:
         log.warning("moved the transcripts, but their jobs still name %s: %s", old, error)
     try:
-        old.parent.rmdir()  # Documents\Altype, when nothing else is in it
+        old.parent.rmdir()  # Documents\Krya or \Altype, when nothing else is in it
     except OSError:
         pass
     log.info("moved the transcripts from %s to %s", old, new)
@@ -242,7 +245,7 @@ def move_transcripts(settings: "Settings", old: Path | None = None, new: Path | 
 
 
 def clean_plan(plan: dict) -> dict:
-    """A plan as Krya sends it, with anything this engine does not know left out."""
+    """A plan as Kryakl sends it, with anything this engine does not know left out."""
     out: dict = {}
     if isinstance(plan.get("fingerprint"), str):
         out["fingerprint"] = plan["fingerprint"][:64]
@@ -282,7 +285,7 @@ def _alias(raw) -> str | None:
 
 
 def clean_vocabulary(raw) -> list[dict]:
-    """The vocabulary as Krya sends it, as [{word, heard}]; a bare string is a word heard no other way.
+    """The vocabulary as Kryakl sends it, as [{word, heard}]; a bare string is a word heard no other way.
 
     Anything else (an empty word, a line break, a fourth word in an alias) is left out without a word:
     the list is typed by a person, and one slip should not cost the rest."""
@@ -309,7 +312,7 @@ def clean_vocabulary(raw) -> list[dict]:
 
 
 def clean_inbox(raw) -> str:
-    """The notes' folder inside the knowledge base: a relative path (Inbox, Notes/Krya), never out of it."""
+    """The notes' folder inside the knowledge base: a relative path (Inbox, Notes/Kryakl), never out of it."""
     if not isinstance(raw, str):
         return "Inbox"
     parts = [p.strip() for p in raw.replace("\\", "/").split("/")]

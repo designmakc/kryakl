@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 
 import { CARD_HEADROOM_MB, cardRoom, sharedReading } from './resources'
 
-describe('Krya, a guest on the graphics card', () => {
+describe('Kryakl, a guest on the graphics card', () => {
   test('a model goes on the card whole, with room left for the programs around it', () => {
     // Accurate holds 3080 MB of the RTX 2080 SUPER; an emulator left 2.5 GB free.
     expect(cardRoom(2500, 3080)).toBe(false)

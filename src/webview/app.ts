@@ -1,9 +1,9 @@
-// The app window, Krya's back office. A sidebar holds every place in groups
-// (Home; the actions; the library; the person's lists; Krya itself), the
+// The app window, Kryakl's back office. A sidebar holds every place in groups
+// (Home; the actions; the library; the person's lists; Kryakl itself), the
 // open one lit, and a search over every line of every page. The bar over the
 // content says where the person is (a second-level page as a crumb), carries
 // the action's keys, Back, and the window's buttons. Home comes first, always:
-// one line that shows what Krya does (on the first opening it plays as a
+// one line that shows what Kryakl does (on the first opening it plays as a
 // moment: a word typed in the wrong layout is fixed, translated and read
 // aloud, each step lighting the person's own key; then the line rises into
 // Home's head and the keys drop into their actions), whether the translator
@@ -46,7 +46,7 @@ declare global {
 
 const save = (patch: Partial<Settings>) => post({ type: 'saveSettings', patch })
 /** Where new versions are: downloaded by hand, nothing installs itself (main.ts LINKS has it). */
-const RELEASES = 'https://github.com/ikstro/krya/releases'
+const RELEASES = 'https://github.com/ikstro/kryakl/releases'
 /** Where a problem report goes by email (report.ts writes to it). */
 const REPORT_EMAIL = 'ikstro.design@gmail.com'
 
@@ -301,7 +301,7 @@ const NAV: { label: string; items: NavItem[] }[] = [
     ],
   },
   {
-    label: 'Krya',
+    label: t('app.name'),
     items: [
       { page: 'settings', icon: 'settings', title: TITLES.settings },
       { page: 'models', icon: 'boxes', title: TITLES.models },
@@ -471,7 +471,7 @@ function homeRow(action: Action, v: AppView): HTMLElement {
   )
 }
 
-/** Krya is paused: every key and reaction is off until Resume, here or in the tray. */
+/** Kryakl is paused: every key and reaction is off until Resume, here or in the tray. */
 function pausedNotice(v: AppView): HTMLElement | null {
   if (!v.settings.paused) return null
   return el(
@@ -967,7 +967,7 @@ const CAPS: Partial<Record<Page, (v: AppView) => string>> = {
   layouts: () => t('page.layoutsCap'),
   models: () => t('page.modelsCap'),
   storage: v => (v.storage?.measuring ? t('page.measuring') : v.storage ? t('page.freeOn', { size: speechSize(v.storage.freeMb), drive: v.storage.drive }) : t('page.storageCap')),
-  about: v => `Krya ${v.version}`,
+  about: v => `${t('app.name')} ${v.version}`,
   report: () => t('page.reportCap'),
 }
 
@@ -1379,7 +1379,7 @@ function keyRow(name: KeyName, label: string, note: string, taken = false, iconN
   return keyRecorder(name, key, key => saveKey(name, key), label, menu ? `${note}; ${menu}` : note, taken, iconName, extra, DEFAULTS[name])
 }
 
-/** Alt or Win alone as a key: Krya keeps it from opening a menu (typist.ts), so the line says where the menu went. */
+/** Alt or Win alone as a key: Kryakl keeps it from opening a menu (typist.ts), so the line says where the menu went. */
 function menuNote(key: string): string {
   if (/^(Left|Right)Alt(\*2)?$/.test(key)) return t('keys.menuAlt')
   if (/^(Left|Right)Super(\*2)?$/.test(key)) return t('keys.menuWin')
@@ -1648,7 +1648,7 @@ function levelFitText(fit: LevelFit, speed: AppView['modelSpeed'][LlmModel]): st
 }
 
 // ---------------------------------------------------------------- models
-// Every model Krya runs, on one page, each once, with the actions it serves:
+// Every model Kryakl runs, on one page, each once, with the actions it serves:
 // one used by two actions is downloaded and loaded once (the language model
 // for Translate and Check, a speech model for Dictate and Transcribe). Each
 // action's page names its model in one line that opens this page at it.
@@ -1924,7 +1924,7 @@ function translatePage(v: AppView): HTMLElement[] {
   ]
 }
 
-/** The texts translated lately (translationlog.ts), each to copy; Krya forgets them after 30 days by itself. */
+/** The texts translated lately (translationlog.ts), each to copy; Kryakl forgets them after 30 days by itself. */
 function translationsPage(v: AppView): HTMLElement[] {
   const list = v.translations
   return [
@@ -2258,7 +2258,7 @@ function dictatePage(v: AppView): HTMLElement[] {
 
 /**
  * Words to spell: names and terms dictation and transcripts write as the
- * person does, each with what it may be heard as (vocabulary.ts). Krya's own
+ * person does, each with what it may be heard as (vocabulary.ts). Kryakl's own
  * setting, sent to the engine with its plan, so it can be filled in before the
  * engine is here. Two fields add one: the word as written, and the heard
  * forms; a tap on a word puts it back into the fields to change it.
@@ -2313,7 +2313,7 @@ function vocabularyPage(v: AppView): HTMLElement[] {
   ]
 }
 
-/** The phrases typed lately (dictationlog.ts), each to copy; Krya forgets them after 30 days by itself. */
+/** The phrases typed lately (dictationlog.ts), each to copy; Kryakl forgets them after 30 days by itself. */
 function recentPage(v: AppView): HTMLElement[] {
   const recent = v.dictation.recent
   return [
@@ -2355,7 +2355,7 @@ function ago(epochSeconds: number): string {
 }
 
 /**
- * Chrome's own page: Krya opens a new Chrome window and types the address into it. When the window did not
+ * Chrome's own page: Kryakl opens a new Chrome window and types the address into it. When the window did not
  * come to the front, or there is no Chrome, the address is copied for the person to paste.
  */
 function openChrome(url: string): void {
@@ -2380,7 +2380,7 @@ function olderVersion(a: string, b: string): boolean {
   return false
 }
 
-/** Chrome runs an older copy of the extension than the one in Krya's folder: Reload brings the new one in. */
+/** Chrome runs an older copy of the extension than the one in Kryakl's folder: Reload brings the new one in. */
 const extensionStale = (v: AppView) => {
   const ext = extensionSeen(v)
   return !!ext && !!v.speech.extensionShipped && olderVersion(ext.version, v.speech.extensionShipped)
@@ -2394,7 +2394,7 @@ const extensionReload = (v: AppView) => {
   return !!ext && olderVersion(ext.version, FIXED_ID_SINCE)
 }
 
-/** The extensions page, at Krya's own card when Chrome has told its id. */
+/** The extensions page, at Kryakl's own card when Chrome has told its id. */
 const extensionsPage = (v: AppView) => {
   const id = extensionSeen(v)?.id
   return id && /^[a-p]{32}$/.test(id) ? `chrome://extensions/?id=${id}` : 'chrome://extensions/'
@@ -2414,7 +2414,7 @@ function meetCard(v: AppView): HTMLElement {
   return navCard('video', 'Google Meet', t('meet.note'), value, () => openSub('meet'), 'meet', !!ext && !stale)
 }
 
-/** How to record a Google Meet call: the Chrome extension, loaded from Krya's folder, and whether it is there. */
+/** How to record a Google Meet call: the Chrome extension, loaded from Kryakl's folder, and whether it is there. */
 function meetPage(v: AppView): HTMLElement[] {
   const dir = v.speech.extensionDir
   const ext = extensionSeen(v)
@@ -2633,7 +2633,7 @@ function programPage(v: AppView): HTMLElement[] {
   const part = (p: AppPart, iconName: LucideName, label: string, note: string) =>
     toggleCard(iconName, label, !rule.off.includes(p), on => change({ off: on ? rule.off.filter(x => x !== p) : [...rule.off, p] }), note)
   return [
-    grp(t('kb.hereKrya')),
+    grp(t('kb.hereKryakl')),
     part('fix', 'spell-check', t('kb.fixes'), t('kb.fixesNote')),
     part('switch', 'keyboard', t('kb.switches'), t('kb.switchesNote')),
     part('badge', 'type', t('kb.shows'), t('kb.partBadge')),
@@ -2657,7 +2657,7 @@ function programPage(v: AppView): HTMLElement[] {
   ]
 }
 
-/** What Krya learned from the person's typing: words it fixes always, words of theirs; each can go, or everything. */
+/** What Kryakl learned from the person's typing: words it fixes always, words of theirs; each can go, or everything. */
 function learnedPage(v: AppView): HTMLElement[] {
   const { alwaysFix, myWords } = v.learned
   const name = (code: string) => languageName(code)
@@ -2887,7 +2887,7 @@ const STORED: Record<StorageId, { title: string; note: string }> = {
   transcripts: { title: t('tray.transcripts'), note: t('storage.transcriptsNote') },
 }
 
-/** The models and voices, and the programs that run them: everything Krya downloads, in its one folder. */
+/** The models and voices, and the programs that run them: everything Kryakl downloads, in its one folder. */
 const MODEL_PARTS: readonly StorageId[] = ['fast', 'dict', 'voice', 'accurate', 'most', 'unused', 'speechModel']
 const PROGRAM_PARTS: readonly StorageId[] = ['llama', 'speech', 'gpu', 'speakers']
 const DOWNLOADED: readonly StorageId[] = [...MODEL_PARTS, ...PROGRAM_PARTS]
@@ -2973,7 +2973,7 @@ function storedLine(v: AppView, p: StoragePart): HTMLElement {
   const key = `${p.id}:${p.item ?? ''}`
   const label = el('span', {}, storedName(v, p), p.unused ? el('span', { class: 'chip unused' }, t('storage.notUsed')) : null)
   const size = el('span', { class: 'v num' }, speechSize(p.bytes / 1e6))
-  // A part still outside Krya's folder says where it is.
+  // A part still outside Kryakl's folder says where it is.
   const where = p.away ? pathNote(p.path) : null
   if (p.id === 'yours' || p.id === 'transcripts') return row(label, [storedNote(v, p), where], el('span', { class: 'kchg' }, size, linkBtn(t('tray.open'), () => post({ type: 'openPath', path: p.path }))))
   const remove = () => {
@@ -2990,7 +2990,7 @@ function storedLine(v: AppView, p: StoragePart): HTMLElement {
   return row(label, [storedNote(v, p), used, freed, where, refusedNote(v, p)], el('span', { class: 'kchg' }, size, x))
 }
 
-/** What Krya keeps and how big it is: what nothing uses first, then the models, the programs that run them, and the person's own things. */
+/** What Kryakl keeps and how big it is: what nothing uses first, then the models, the programs that run them, and the person's own things. */
 function storagePage(v: AppView): HTMLElement[] {
   const s = v.storage
   if (!s?.parts.length) return [aside('loader', t('storage.measuring'))]
@@ -3018,8 +3018,8 @@ function storagePage(v: AppView): HTMLElement[] {
 }
 
 /**
- * Parts Krya still uses from outside its folder (the old Altype one, mostly): how much, which, why the last
- * move left them, and Move to Krya, which stops what uses them, moves them and starts Krya again.
+ * Parts Kryakl still uses from outside its folder (the old names' ones, Krya's or Altype's): how much, which, why the last
+ * move left them, and Move to Kryakl, which stops what uses them, moves them and starts Kryakl again.
  */
 function oldNotice(v: AppView, s: StorageView): HTMLElement | null {
   const away = s.parts.filter(p => p.away)
@@ -3038,7 +3038,7 @@ function oldNotice(v: AppView, s: StorageView): HTMLElement | null {
       el('small', {}, t('storage.usesThere', { names })),
       s.old.why ? el('small', { class: 'bad' }, t('storage.notMoved', { why: s.old.why })) : null,
     ),
-    s.old.moving ? el('span', { class: 'v' }, t('storage.moving')) : btn(t('storage.move'), () => post({ type: 'moveToKrya' }), 'primary'),
+    s.old.moving ? el('span', { class: 'v' }, t('storage.moving')) : btn(t('storage.move'), () => post({ type: 'moveToKryakl' }), 'primary'),
   )
 }
 
@@ -3111,7 +3111,7 @@ function settingsPage(v: AppView): HTMLElement[] {
       ),
     ),
     languagesCard(v),
-    grp('Krya'),
+    grp(t('app.name')),
     card(
       'monitor',
       t('settings.theme'),
@@ -3177,9 +3177,9 @@ function aboutPage(v: AppView): HTMLElement[] {
           t('about.links'),
           link(RELEASES, t('about.newVersions')),
           ' · ',
-          link('https://github.com/ikstro/krya', t('about.source')),
+          link('https://github.com/ikstro/kryakl', t('about.source')),
           ' · ',
-          link('https://github.com/ikstro/krya/blob/main/NOTICE', t('about.licenses')),
+          link('https://github.com/ikstro/kryakl/blob/main/NOTICE', t('about.licenses')),
           ' · ',
           linkBtn(t('report.title'), () => go('report')),
         ),
@@ -3189,7 +3189,7 @@ function aboutPage(v: AppView): HTMLElement[] {
 }
 
 // ---------------------------------------------------------------- report a problem
-// The person writes what happened; Krya saves a zip of its logs (report.ts)
+// The person writes what happened; Kryakl saves a zip of its logs (report.ts)
 // and opens an email or a GitHub issue with the text in it. Nothing is sent
 // until they send it.
 

@@ -1,6 +1,6 @@
 // The tray's panel, in place of Windows' menu, drawn as the window's sidebar
 // and given air (P1, 2026-10-30): the way into the app window at the top (the
-// brand with the version, or Open, a yellow button) with Krya's state, then
+// brand with the version, or Open, a yellow button) with Kryakl's state, then
 // Actions (the copied text, a text to type or check, a piece of the screen,
 // with their keys as quiet text; the note and Transcripts once the engine is
 // in), Quick settings, Your words ("Keep a word as typed…", which opens into a
@@ -184,7 +184,7 @@ function group(label: string, ...rows: (HTMLElement | null)[]): HTMLElement {
   return el('section', { class: 'sec' }, el('div', { class: 'grp' }, label), ...rows)
 }
 
-/** Krya's state in a few words: paused, or whether the translator for the person's language is here; nothing when there is nothing to say. */
+/** Kryakl's state in a few words: paused, or whether the translator for the person's language is here; nothing when there is nothing to say. */
 function status(v: TrayView): HTMLElement | null {
   if (v.paused) return el('span', { class: 'st paused', title: t('tray.pausedTitle') }, el('span', { class: 'dot' }), t('tray.paused'))
   switch (v.translator) {
@@ -207,7 +207,7 @@ function render(v: TrayView): void {
   const openApp = () => post({ type: 'tray', command: 'open' })
   // The brand opens the window too; Open is the one the keys reach. The version beside it: a run from source says so, and when it was built.
   const version = el('span', { class: 'ver', title: t('tray.built', { build: v.build }) }, v.dev ? `${v.version} dev` : v.version)
-  const brand = el('button', { class: 'brand', tabindex: '-1', title: t('tray.openKrya'), onclick: openApp }, logo(), version)
+  const brand = el('button', { class: 'brand', tabindex: '-1', title: t('tray.openKryakl'), onclick: openApp }, logo(), version)
   const open = el('button', { class: 'open', 'data-nav': true, 'data-id': 'open', onclick: openApp }, t('tray.open'))
   const panel = el(
     'div',

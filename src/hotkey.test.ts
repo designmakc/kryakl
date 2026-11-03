@@ -77,7 +77,7 @@ describe('reading keys back', () => {
   })
 })
 
-describe('keys Krya presses', () => {
+describe('keys Kryakl presses', () => {
   test('Right Alt, Right Ctrl, the Win keys and the arrows are extended: let go without saying so, Right Alt would stay down', () => {
     for (const vk of [0xa5, 0xa3, 0x5b, 0x5c, 0x25, 0x26, 0x27, 0x28, 0x2e, 0x24]) expect(isExtendedKey(vk), vk.toString(16)).toBe(true)
   })

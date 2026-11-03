@@ -1,6 +1,6 @@
-/* Krya's materials, shared by every page (the app window, the card, the tray
+/* Kryakl's materials, shared by every page (the app window, the card, the tray
    panel, the badges): the neutral colors of standard settings (Windows 11's
-   grays) with Krya's duck yellow for the accent (2026-10-30), picked by
+   grays) with Kryakl's duck yellow for the accent (2026-10-30), picked by
    `prefers-color-scheme` (which nativeTheme.themeSource sets from the theme
    setting); Inter for all text and JetBrains Mono only for keys, times and
    numbers, both bundled (fonts/, OFL); radii; the keycap every key is drawn
@@ -194,7 +194,7 @@ html {
   color: var(--accent-text);
 }
 
-/* The logo, as text with no plate or frame: "Krya" in Inter 800, then the duck
+/* The logo, as text with no plate or frame: "Kryakl" in Inter 800, then the duck
    (')> in JetBrains Mono 700 in the font's own spacing, the beak looking right,
    ligatures off so )> stays two characters. Its size is the place's. */
 .logo {

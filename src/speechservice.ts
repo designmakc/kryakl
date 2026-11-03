@@ -1,6 +1,6 @@
 // The speech engine as a running service: engine/app.py under the Python the
 // speech pack installed, on 127.0.0.1:<port>. Started once a part is
-// installed, started again when it falls over, stopped with Krya. One
+// installed, started again when it falls over, stopped with Kryakl. One
 // already answering on the port (run by hand) is used when it proves it holds
 // the engine's key (auth.py); another program on the port is not, and never
 // receives the key: it is sent only once the proof holds. Every feature and
@@ -22,7 +22,7 @@ export type SpeechServiceState = 'off' | 'starting' | 'ready' | 'down'
 
 export type SpeechTestState = { state: 'idle' | 'waiting' | 'running' | 'done' | 'failed'; done: number; total: number; current: string; message: string; at: string }
 
-/** The engine's /health, as much of it as Krya reads (the optional parts come from engines of 0.2 on). */
+/** The engine's /health, as much of it as Kryakl reads (the optional parts come from engines of 0.2 on). */
 export type SpeechHealth = {
   version: string
   device: 'cuda' | 'cpu' | null
@@ -52,7 +52,7 @@ export type SpeechHealth = {
 
 /**
  * The engine's key, kept in `file` (speech-token beside the engine's settings, in the person's own
- * %APPDATA%), made the first time: Krya sends it with every call, and an engine run by hand reads it there.
+ * %APPDATA%), made the first time: Kryakl sends it with every call, and an engine run by hand reads it there.
  */
 export function speechToken(file: string): string {
   try {
@@ -67,7 +67,7 @@ export function speechToken(file: string): string {
   return made
 }
 
-/** An answer to /health that an engine of Krya's gives (of any version), keyed or not. */
+/** An answer to /health that an engine of Kryakl's gives (of any version), keyed or not. */
 export function looksLikeEngine(health: unknown): boolean {
   return typeof health === 'object' && health !== null && 'parts' in health && 'diarization' in health
 }
@@ -88,9 +88,9 @@ export type SpeechServiceOptions = {
   log: string
   /** Where Python keeps its compiled files: not in the app's folder, which updates replace. */
   pycache: string
-  /** The engine's key (speechToken): sent with every call, given to the engine Krya starts. */
+  /** The engine's key (speechToken): sent with every call, given to the engine Kryakl starts. */
   token: string
-  /** Stops an engine of an older Krya, left running without the key (Krya stopped without stopping it); Krya's own starts after. */
+  /** Stops an engine of an older Kryakl, left running without the key (Kryakl stopped without stopping it); Kryakl's own starts after. */
   stopStale?: () => Promise<void>
   env?: Record<string, string>
   change: () => void
@@ -188,7 +188,7 @@ export class SpeechService {
     this.child = child
   }
 
-  /** Whether the port is taken care of: Krya's engine is there (or being started), or another program holds it. */
+  /** Whether the port is taken care of: Kryakl's engine is there (or being started), or another program holds it. */
   private async check(): Promise<boolean> {
     if (this.stopping) return true
     try {
@@ -198,16 +198,16 @@ export class SpeechService {
       if (!provesKey(this.o.token, nonce, look?.proof)) {
         this.proved = false
         this.health = undefined
-        // An engine of an older Krya (it answers as one, but holds no key), left running: it goes, once, and Krya starts its own.
+        // An engine of an older Kryakl (it answers as one, but holds no key), left running: it goes, once, and Kryakl starts its own.
         if (!this.staleStopped && !this.child && looksLikeEngine(look) && this.o.stopStale) {
           this.staleStopped = true
-          this.stopping = this.o.stopStale().catch(error => console.warn('Krya: could not stop the older speech engine', error))
+          this.stopping = this.o.stopStale().catch(error => console.warn('Kryakl: could not stop the older speech engine', error))
           await this.stopping
           this.stopping = undefined
           if (!this.stopped && !this.child) this.launch()
           return true
         }
-        // Something else answers on the port without the key: not Krya's engine (another program, another account's).
+        // Something else answers on the port without the key: not Kryakl's engine (another program, another account's).
         this.set('down', `Port ${this.o.port} is used by another program: quit it, then press Restart`)
         return true
       }

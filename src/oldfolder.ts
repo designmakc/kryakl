@@ -1,8 +1,8 @@
-// The app was called Altype until 0.11 (2026-10-30), 2Talker until 0.3 and
-// tu-talk before that. Its folder in %APPDATA% moves over to Krya's once, item
-// by item, from the newest old folder that has each item; its folder in
-// %LOCALAPPDATA% (the downloads, the translation models, the speech engine)
-// moves over too, whole when it can. Nothing already in the new folder is
+// The app was called Krya until 0.15 (2026-11-03), Altype until 0.11
+// (2026-10-30), 2Talker until 0.3 and tu-talk before that. Its folder in
+// %APPDATA% moves over to Kryakl's once, item by item, from the newest old
+// folder that has each item; its folders in %LOCALAPPDATA% (the downloads, the
+// translation models, the speech engine) move over too, whole when they can. Nothing already in the new folder is
 // replaced; a part that cannot move is used where it is (`partDir`).
 
 import { execFileSync, spawn } from 'node:child_process'
@@ -15,7 +15,11 @@ import { POWERSHELL } from './system32'
 export type Warn = (message: string, error: unknown, from?: string) => void
 
 /** The app's earlier folder names, newest first. */
-export const OLD_FOLDERS = ['Altype', '2Talker', 'tu-talk']
+export const OLD_FOLDERS = ['Krya', 'Altype', '2Talker', 'tu-talk']
+/** The old names whose %LOCALAPPDATA% folder holds downloads (2Talker and tu-talk kept them in %APPDATA%), newest first. */
+export const OLD_LOCAL_FOLDERS = ['Krya', 'Altype']
+/** The old names' programs, which keep their folders in use while they run. */
+export const OLD_PROGRAMS = ['krya.exe', 'altype.exe']
 /**
  * What moves: the app's own files, never Electron's caches beside them. The
  * settings and the lists, the device profile, the speech engine's settings and
@@ -24,7 +28,7 @@ export const OLD_FOLDERS = ['Altype', '2Talker', 'tu-talk']
  */
 export const ITEMS: readonly (string | readonly [from: string, to: string])[] = [
   'settings.json', 'words.json', 'dictation.json', 'translations.json', 'learning.json', 'mistakes.json',
-  'device.json', 'speech.json', 'extension.json', 'speech.log', 'translate.log', ['altype.log', 'krya.log'],
+  'device.json', 'speech.json', 'extension.json', 'speech.log', 'translate.log', ['krya.log', 'kryakl.log'], ['altype.log', 'kryakl.log'],
   '.updaterId', 'models', 'voice', 'dict',
 ]
 
@@ -44,7 +48,7 @@ export function adoptOldFolders(appData: string, userDir: string, warn: Warn = (
         fs.renameSync(from, to)
         moved.push(`${oldName}/${fromName}`)
       } catch (error) {
-        warn(`Krya: could not move ${from}`, error)
+        warn(`Kryakl: could not move ${from}`, error)
       }
     }
   }
@@ -52,8 +56,8 @@ export function adoptOldFolders(appData: string, userDir: string, warn: Warn = (
 }
 
 /**
- * Moves %LOCALAPPDATA%\Altype (`oldDir`) into %LOCALAPPDATA%\Krya (`newDir`):
- * the whole folder in one step when Krya has none yet, else part by part
+ * Moves an old name's %LOCALAPPDATA% folder (`oldDir`, Krya's or Altype's) into %LOCALAPPDATA%\Kryakl (`newDir`):
+ * the whole folder in one step when Kryakl has none yet, else part by part
  * (models, voice, dict, translate, speech), never over what is there. The
  * speech engine's Python remembers where it was installed, so a moved
  * `speech` is set right for its new place (`repairSpeech`). A part that cannot
@@ -69,7 +73,7 @@ export function adoptLocalFolder(oldDir: string, newDir: string, warn: Warn = ()
       return ['*']
     } catch (error) {
       // One file in use stops the whole folder: the parts that can move still do.
-      warn(`Krya: could not move ${oldDir} at once`, error, oldDir)
+      warn(`Kryakl: could not move ${oldDir} at once`, error, oldDir)
     }
   }
   const moved: string[] = []
@@ -83,7 +87,7 @@ export function adoptLocalFolder(oldDir: string, newDir: string, warn: Warn = ()
       moved.push(name)
       if (name === 'speech') repairSpeech(to, from, warn)
     } catch (error) {
-      warn(`Krya: could not move ${from}`, error, from)
+      warn(`Kryakl: could not move ${from}`, error, from)
     }
   }
   try {
@@ -101,7 +105,7 @@ export function adoptLocalFolder(oldDir: string, newDir: string, warn: Warn = ()
  * minor version (cpython-3.12-… → cpython-3.12.15-…) with an absolute target;
  * both are rewritten. The packages' hard links into uv's cache move with the
  * folder on the same disk. The command-line launchers in `env\Scripts` keep
- * the old path, but Krya runs `python.exe` itself and never them.
+ * the old path, but Kryakl runs `python.exe` itself and never them.
  */
 export function repairSpeech(dir: string, oldDir: string, warn: Warn = () => undefined): void {
   const rebase = (text: string) => replaceFolder(text, oldDir, dir)
@@ -117,7 +121,7 @@ export function repairSpeech(dir: string, oldDir: string, warn: Warn = () => und
         fs.rmSync(link, { force: true, recursive: false })
         fs.symlinkSync(moved, link, 'junction')
       } catch (error) {
-        warn(`Krya: could not point ${link} at the new folder`, error)
+        warn(`Kryakl: could not point ${link} at the new folder`, error)
       }
     }
   }
@@ -128,7 +132,7 @@ export function repairSpeech(dir: string, oldDir: string, warn: Warn = () => und
     const moved = rebase(text)
     if (moved !== text) fs.writeFileSync(cfg, moved)
   } catch (error) {
-    warn(`Krya: could not point ${cfg} at the new folder`, error)
+    warn(`Kryakl: could not point ${cfg} at the new folder`, error)
   }
 }
 
@@ -142,9 +146,9 @@ function replaceFolder(text: string, from: string, to: string): string {
 export const DOWNLOADS = ['models', 'voice', 'dict']
 
 /**
- * Moves the downloads from `userDir` (%APPDATA%\Krya) into `localDir`
- * (%LOCALAPPDATA%\Krya), beside the speech engine and the translation
- * models, so everything Krya downloads is in one folder. Nothing already
+ * Moves the downloads from `userDir` (%APPDATA%\Kryakl) into `localDir`
+ * (%LOCALAPPDATA%\Kryakl), beside the speech engine and the translation
+ * models, so everything Kryakl downloads is in one folder. Nothing already
  * there is replaced; a failed move is left behind and reported.
  */
 export function moveDownloads(userDir: string, localDir: string, warn: Warn = () => undefined): string[] {
@@ -159,7 +163,7 @@ export function moveDownloads(userDir: string, localDir: string, warn: Warn = ()
       fs.renameSync(from, to)
       moved.push(name)
     } catch (error) {
-      warn(`Krya: could not move ${from}`, error, from)
+      warn(`Kryakl: could not move ${from}`, error, from)
     }
   }
   return moved
@@ -201,12 +205,12 @@ export function parseProcesses(text: string): RunningProcess[] {
 
 /**
  * The programs that keep the old folder's files in use: those run from inside `dir` (the speech
- * engine's python.exe and uv.exe, llama-server.exe, left by Altype or a run from source). Never
- * Krya itself (`self`), and never Altype.exe, which Krya waits for instead (main.ts oldAppRunning).
+ * engine's python.exe and uv.exe, llama-server.exe, left by Krya, Altype or a run from source). Never
+ * Kryakl itself (`self`), and never Krya.exe or Altype.exe, which Kryakl waits for instead (main.ts oldAppRunning).
  */
 export function holdersIn(processes: readonly RunningProcess[], dir: string, self = process.pid): RunningProcess[] {
   const root = path.resolve(dir).toLowerCase().replace(/[\\/]+$/, '') + path.sep
-  return processes.filter(p => p.pid !== self && p.name.toLowerCase() !== 'altype.exe' && path.resolve(p.path).toLowerCase().startsWith(root))
+  return processes.filter(p => p.pid !== self && !OLD_PROGRAMS.includes(p.name.toLowerCase()) && path.resolve(p.path).toLowerCase().startsWith(root))
 }
 
 /** Every program Windows lets this user see, with its executable's path (UTF-8, for folders named in any language). */
@@ -227,7 +231,7 @@ export function runningProcesses(): RunningProcess[] {
   }
 }
 
-/** The same, while Krya goes on (main's thread is never held while PowerShell answers). */
+/** The same, while Kryakl goes on (main's thread is never held while PowerShell answers). */
 export function runningProcessesSoon(): Promise<RunningProcess[]> {
   if (process.platform !== 'win32') return Promise.resolve([])
   return new Promise(resolve => {
@@ -264,7 +268,7 @@ export function freeFolder(dir: string, processes: readonly RunningProcess[] = r
   return settled(holders)
 }
 
-/** `freeFolder` while Krya goes on: for a folder nothing is waiting to move (an older speech engine left running). */
+/** `freeFolder` while Kryakl goes on: for a folder nothing is waiting to move (an older speech engine left running). */
 export async function freeFolderSoon(dir: string, processes: readonly RunningProcess[], warn: Warn = () => undefined, waitMs = 5000): Promise<{ stopped: RunningProcess[]; holding: RunningProcess[] }> {
   const holders = stopHolders(dir, processes, warn)
   const until = Date.now() + waitMs
@@ -278,7 +282,7 @@ function stopHolders(dir: string, processes: readonly RunningProcess[], warn: Wa
     try {
       process.kill(p.pid)
     } catch (error) {
-      warn(`Krya: could not stop ${p.name} (${p.pid}), run from ${dir}`, error)
+      warn(`Kryakl: could not stop ${p.name} (${p.pid}), run from ${dir}`, error)
     }
   }
   return holders
@@ -289,7 +293,7 @@ function settled(holders: readonly RunningProcess[]): { stopped: RunningProcess[
   return { stopped: holders.filter(p => !holding.includes(p)), holding }
 }
 
-/** Why a move failed, in the page's words: which program keeps a file in use, when Krya knows it. */
+/** Why a move failed, in the page's words: which program keeps a file in use, when Kryakl knows it. */
 export function whyLeft(error: unknown, holding: readonly RunningProcess[] = []): string {
   const code = (error as NodeJS.ErrnoException | undefined)?.code
   if (code === 'EPERM' || code === 'EBUSY' || code === 'EACCES') {
@@ -303,7 +307,7 @@ export function whyLeft(error: unknown, holding: readonly RunningProcess[] = [])
 export type LeftPart = { name: string; why: string }
 
 /**
- * What is still in `oldDir` after a move, each with its reason: Krya has its own (the old copy
+ * What is still in `oldDir` after a move, each with its reason: Kryakl has its own (the old copy
  * is not used), the error its move met (`errors`, by the part's name, or the whole folder's), or
  * that it was not tried.
  */
@@ -317,13 +321,13 @@ export function leftIn(oldDir: string, newDir: string, errors: ReadonlyMap<strin
   }
   const whole = errors.get(path.basename(oldDir))
   return names.map(name => {
-    if (fs.existsSync(path.join(newDir, name))) return { name, why: 'Krya has its own' }
+    if (fs.existsSync(path.join(newDir, name))) return { name, why: 'Kryakl has its own' }
     const error = errors.get(name) ?? whole
     return { name, why: error === undefined ? 'not moved yet' : whyLeft(error, holding) }
   })
 }
 
-/** electron-updater's download folders, in %LOCALAPPDATA%: the installers already installed (Krya updates by hand since 0.11, from GitHub). */
+/** electron-updater's download folders, in %LOCALAPPDATA%: the installers already installed (Kryakl updates by hand since 0.11, from GitHub). */
 export const OLD_UPDATER_CACHES = ['altype-updater', '2talker-updater', 'krya-updater']
 
 /** Deletes the old names' updater folders; returns which went. */
@@ -336,7 +340,7 @@ export function removeOldUpdaterCaches(localAppData: string, warn: Warn = () => 
       fs.rmSync(dir, { recursive: true, force: true })
       gone.push(name)
     } catch (error) {
-      warn(`Krya: could not remove ${dir}`, error)
+      warn(`Kryakl: could not remove ${dir}`, error)
     }
   }
   return gone

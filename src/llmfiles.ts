@@ -1,4 +1,4 @@
-// The files of Krya's local language models: llama.cpp's builds and the
+// The files of Kryakl's local language models: llama.cpp's builds and the
 // models they run, Google's Gemma 4 E4B (Accurate) and Gemma 4 12B (Most
 // accurate). The person uses one of them (`model` in the settings): it
 // translates (llmtranslator.ts) and checks English (checker.ts), so the two
@@ -74,7 +74,7 @@ export type LlmFiles = {
   target(model: LlmModel): LlamaTarget
   /** Deletes a model (an engine too once no model left needs it); its server is stopped and gone first, as Windows keeps a file in use. */
   remove(model: LlmModel): Promise<void>
-  /** Model files here that no model of the manifest is (an older Krya's), and deleting them. */
+  /** Model files here that no model of the manifest is (an older Kryakl's), and deleting them. */
   unused(): string[]
   removeUnused(): void
   /** A build deleted (the one no model runs on here now); its server stopped first. */

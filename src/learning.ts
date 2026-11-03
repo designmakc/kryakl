@@ -1,4 +1,4 @@
-// What Krya learned from the person's typing (the keyboard thread reports
+// What Kryakl learned from the person's typing (the keyboard thread reports
 // it, typist.ts), kept in learning.json in the app's folder, on this computer
 // only:
 //   fixedOnce  words fixed by hand once (the fix key, or erased and typed
@@ -6,7 +6,7 @@
 //              into; fixed by hand again, they move to
 //   alwaysFix  words fixed by themselves from then on;
 //   myWords    words of the person's, in no list, typed right three times:
-//              never fixed, and fixed into ("Лкнф" → "Krya");
+//              never fixed, and fixed into ("Лкнфлд" → "Kryakl");
 //   tally      the words on their way there, by a fingerprint only (a salted
 //              hash), never the word: how often, and the day last seen; one
 //              unseen for 30 days is forgotten.
@@ -184,7 +184,7 @@ export class LearnStore {
       fs.mkdirSync(path.dirname(this.file), { recursive: true })
       fs.writeFileSync(this.file, JSON.stringify(this.data, null, 2) + '\n', 'utf8')
     } catch (error) {
-      console.warn('Krya: could not save what it learned', error)
+      console.warn('Kryakl: could not save what it learned', error)
     }
   }
 }

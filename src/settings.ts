@@ -1,5 +1,5 @@
-// Krya's settings, kept in settings.json in the app's folder
-// (%APPDATA%\Krya). The learned language is English: the natural voice and
+// Kryakl's settings, kept in settings.json in the app's folder
+// (%APPDATA%\Kryakl). The learned language is English: the natural voice and
 // the word dictionaries are English ones.
 
 import { isUiLanguage, type UiLanguage } from './i18n'
@@ -20,11 +20,11 @@ export const RATES: readonly number[] = [0.75, 0.9, 1, 1.15, 1.3, 1.5]
 
 export type ThemeMode = 'system' | 'light' | 'dark'
 
-/** The sounds of a layout switch, media/switch/<name>-<1|2|3>.wav (English's note, then the others' lower): glass and pluck are Kenney's (CC0), string and duck Krya's own. */
+/** The sounds of a layout switch, media/switch/<name>-<1|2|3>.wav (English's note, then the others' lower): glass and pluck are Kenney's (CC0), string and duck Kryakl's own. */
 export const SWITCH_SOUNDS = ['glass', 'pluck', 'string', 'duck'] as const
 export type SwitchSound = (typeof SWITCH_SOUNDS)[number]
 
-/** Krya's local language models (llmfiles.ts): Accurate is Gemma 4 E4B, Most accurate Gemma 4 12B; each translates and checks English. */
+/** Kryakl's local language models (llmfiles.ts): Accurate is Gemma 4 E4B, Most accurate Gemma 4 12B; each translates and checks English. */
 export type LlmModel = 'accurate' | 'most'
 export type TranslationLevel = 'fast' | LlmModel
 /** The learner's English for Talk, on the common European scale (CEFR): the duck keeps to it (duck.ts LEVELS). */
@@ -74,7 +74,7 @@ export type Settings = {
   cardHeight: number
   /** Ctrl+C pressed twice: listen to the copied text. */
   doubleCopy: boolean
-  /** Keys (hotkey.ts; empty for none): listen to the selection (Krya copies it), or to a piece of the screen; */
+  /** Keys (hotkey.ts; empty for none): listen to the selection (Kryakl copies it), or to a piece of the screen; */
   selectKey: string
   snipKey: string
   /** translate the selection, or a piece of the screen. */
@@ -105,10 +105,10 @@ export type Settings = {
   fixOnPause: boolean
   /** A quiet click when a word is fixed by itself. */
   fixSound: boolean
-  /** A sound when the person switches the layout (Krya's keys or Windows' own), `switchSoundName`, a note of its own for each layout. */
+  /** A sound when the person switches the layout (Kryakl's keys or Windows' own), `switchSoundName`, a note of its own for each layout. */
   switchSound: boolean
   switchSoundName: SwitchSound
-  /** Krya learns from the person's typing (learning.ts): words fixed by hand, words of theirs. */
+  /** Kryakl learns from the person's typing (learning.ts): words fixed by hand, words of theirs. */
   learn: boolean
   /** A key that types the words at the end, typed in the wrong layout, again in the right one (again: the next layout), or converts the selection; empty for none. `fixKeyOn` turns it off without forgetting it. */
   fixKey: string
@@ -123,7 +123,7 @@ export type Settings = {
   trayLayout: boolean
   /** Nothing of the keyboard helper while a program fills the screen (a game, a presentation, a video). */
   quietFullScreen: boolean
-  /** A key that pauses Krya and resumes it; a key that opens its window. Empty for none. */
+  /** A key that pauses Kryakl and resumes it; a key that opens its window. Empty for none. */
   pauseKey: string
   windowKey: string
   /**
@@ -159,7 +159,7 @@ export type Settings = {
   /**
    * Words dictation and transcripts spell as written, one line each as the
    * person typed it: the word, then what it may be heard as in parentheses
-   * ("Krya (кря, края)"); vocabulary.ts reads them.
+   * ("Kryakl (крякл, кракл)"); vocabulary.ts reads them.
    */
   vocabulary: string[]
   /**
@@ -182,13 +182,13 @@ export type Settings = {
   /** "Not now" to the test: what it would have measured then, and when; it is offered again when that changes, a day later at the soonest. */
   speechTestDeclinedKey: string
   speechTestDeclinedAt: number
-  /** Start Krya when Windows starts. */
+  /** Start Kryakl when Windows starts. */
   startWithWindows: boolean
   /** The offer of the natural voice was closed. */
   naturalDismissed: boolean
   /** The Home's opening moment (one line through fix, translate, listen) has played once; Replay plays it again. */
   introSeen: boolean
-  /** Krya paused: all its keys and reactions off (Ctrl+C twice, the keyboard helper, dictation) until turned back on. */
+  /** Kryakl paused: all its keys and reactions off (Ctrl+C twice, the keyboard helper, dictation) until turned back on. */
   paused: boolean
   /**
    * The first-run setup (the window's wizard: language, this computer, what to

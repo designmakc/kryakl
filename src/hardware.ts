@@ -1,4 +1,4 @@
-// This computer's parts as Krya describes them (device.ts finds them out):
+// This computer's parts as Kryakl describes them (device.ts finds them out):
 // the types and what both the main process and the pages say of them.
 
 import { t } from './i18n'

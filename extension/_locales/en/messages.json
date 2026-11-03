@@ -1,18 +1,18 @@
 {
   "name": {
-    "message": "Krya: meeting recorder"
+    "message": "Kryakl: meeting recorder"
   },
   "description": {
-    "message": "Records a tab's sound (Google Meet or any other) and your microphone. Krya makes the transcript on this computer."
+    "message": "Records a tab's sound (Google Meet or any other) and your microphone. Kryakl makes the transcript on this computer."
   },
   "actionTitle": {
-    "message": "Krya: record this tab"
+    "message": "Kryakl: record this tab"
   },
   "commandToggle": {
     "message": "Start or stop recording the tab"
   },
   "footer": {
-    "message": "The transcript appears in Krya → Transcripts."
+    "message": "The transcript appears in Kryakl → Transcripts."
   },
   "engineReady": {
     "message": "ready"
@@ -39,7 +39,7 @@
     "message": "Or Alt+Shift+M on the meeting tab. The tab and your microphone are recorded as two tracks."
   },
   "startKrya": {
-    "message": "Start Krya and turn on Transcribe: it makes the text on this computer."
+    "message": "Start Kryakl and turn on Transcribe: it makes the text on this computer."
   },
   "micBlocked": {
     "message": "The microphone is not allowed: your voice will be missing."
@@ -48,19 +48,19 @@
     "message": "Allow"
   },
   "lost": {
-    "message": "Part of the recording did not reach Krya"
+    "message": "Part of the recording did not reach Kryakl"
   },
   "sent": {
     "message": "Sent. The transcript is ready in a few minutes."
   },
   "micTitle": {
-    "message": "Krya: microphone"
+    "message": "Kryakl: microphone"
   },
   "micHeading": {
     "message": "Allow the microphone"
   },
   "micWhy": {
-    "message": "Krya records your voice as a track of its own, so the transcript shows where you spoke and where the others did. The sound never leaves this computer: Krya transcribes it here."
+    "message": "Kryakl records your voice as a track of its own, so the transcript shows where you spoke and where the others did. The sound never leaves this computer: Kryakl transcribes it here."
   },
   "micAllow": {
     "message": "Allow the microphone"

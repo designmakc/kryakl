@@ -1,7 +1,7 @@
-// `npm run shots`: Krya's pages in offscreen windows with the real preload, fed view.ts's
+// `npm run shots`: Kryakl's pages in offscreen windows with the real preload, fed view.ts's
 // fixtures, pictured into .cache/shots/ (every page and second-level page in both themes, the
 // tray panel, the dictation badge with a fake microphone). It never touches the desktop or
-// the installed Krya, so it runs while that one runs.
+// the installed Kryakl, so it runs while that one runs.
 import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { englishHtml, textOutHtml, translationHtml } from '../../src/render'
@@ -335,7 +335,7 @@ async function appShots(theme: 'dark' | 'light', narrow = false): Promise<void> 
     send(w, { type: 'app', view: appView({ paused: true }) })
     await sleep(500)
     await shot(w, tag('home-paused'))
-    // Chrome holds an older copy of the extension than Krya's folder.
+    // Chrome holds an older copy of the extension than Kryakl's folder.
     const stale = appView()
     stale.speech = { ...stale.speech, extensionShipped: '0.2.1' }
     send(w, { type: 'app', view: stale })

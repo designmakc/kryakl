@@ -1,7 +1,7 @@
 """The words: faster-whisper, on an NVIDIA card when the gpu part is there, else on the CPU.
 
 A long recording gets times for every word; a dictated phrase just its text, fast.
-Which model runs where is Krya's plan (settings.py `plan`); this module loads
+Which model runs where is Kryakl's plan (settings.py `plan`); this module loads
 what it is told and says when the card cannot take it (`CudaFailed`).
 """
 
@@ -21,7 +21,7 @@ import phantoms
 from audio import RATE
 from settings import CATALOG, MODELS_DIR
 
-log = logging.getLogger("krya.asr")
+log = logging.getLogger("kryakl.asr")
 
 # Whisper writes in the style of the text before it; without one it sometimes
 # drops capitals and full stops for a whole recording.

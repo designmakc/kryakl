@@ -1,4 +1,4 @@
-// The popup: what this tab is, whether Krya's speech engine is running, Record / Stop.
+// The popup: what this tab is, whether Kryakl's speech engine is running, Record / Stop.
 // Its words are in Chrome's language (_locales; English when Chrome's is not Ukrainian or Russian).
 
 const T = (key, ...subs) => chrome.i18n.getMessage(key, subs)
@@ -59,7 +59,7 @@ async function render(error) {
     children.push(
       el('div', { class: 'title' }, tab?.title || T('tab')),
       el('button', { disabled: !status.engine, onclick: () => act('start', tab) }, T('record')),
-      el('div', { class: 'muted' }, status.engine ? T('orKey') : T('startKrya')),
+      el('div', { class: 'muted' }, status.engine ? T('orKey') : T('startKryakl')),
     )
     if (!mic) {
       children.push(

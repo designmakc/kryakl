@@ -267,7 +267,7 @@ function needStep(v: AppView, h: SetupHooks, c: Choice, r: ReturnType<typeof rec
     ),
     c.transcribe ? advised(toggleCard('users', t('setup.speakers'), c.speakers, flip('speakers'), `${r.speakers.why} · ${sizeText(s.speakers.sizes[speakersWhere(c, v)].download)}`), r.speakers) : null,
     c.transcribe && c.speakers ? speakersOnCard(v, h, c) : null,
-    grp('Krya'),
+    grp(t('app.name')),
     advised(toggleCard('power', t('setup.startWithWindows'), c.startWithWindows, flip('startWithWindows'), r.startWithWindows.why), r.startWithWindows),
     grp(t('setup.allOfIt')),
     total,

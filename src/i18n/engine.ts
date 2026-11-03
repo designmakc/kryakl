@@ -58,7 +58,7 @@ const WITH_REASON: readonly [RegExp, (m: RegExpMatchArray) => string][] = [
   [/^(.+) did not arrive whole$/s, m => t('engine.notWhole', { name: m[1] ?? '' })],
 ]
 
-/** An engine's message in the interface's language, when it is one Krya knows. */
+/** An engine's message in the interface's language, when it is one Kryakl knows. */
 export function engineMessage(text: string): string {
   const key = EXACT[text]
   if (key) return t(key)

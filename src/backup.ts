@@ -1,6 +1,6 @@
-// A backup of what the person made in Krya, one file to keep or to take to
+// A backup of what the person made in Kryakl, one file to keep or to take to
 // another computer (Settings › Backup): the settings, the word notebook, the
-// mistakes, what Krya learned from their typing (the words, never the
+// mistakes, what Kryakl learned from their typing (the words, never the
 // fingerprints, which are salted on this computer), the recent translations,
 // the dictated phrases and the talks with the duck put away. Not in it: the downloads (they download again),
 // the speech engine's settings with the Hugging Face key (a secret), the
@@ -12,7 +12,7 @@ import { t } from './i18n'
 import type { LearnedLists } from './learning'
 
 export const BACKUP_KIND = 'krya-backup'
-/** The kind a backup of Altype's days (0.10.2) carries: read as Krya's. */
+/** The kind a backup of Altype's days (0.10.2) carries: read as Kryakl's. */
 export const OLD_BACKUP_KINDS: readonly unknown[] = ['altype-backup']
 
 export type BackupParts = {

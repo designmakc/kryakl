@@ -88,7 +88,7 @@ class Desk {
         installed: () => ['en', 'ru', 'uk'],
         exeOf: () => this.exe,
         elevated: () => false,
-        ownExe: 'krya.exe',
+        ownExe: 'kryakl.exe',
         switchLayout: (_hwnd, id) => {
           this.layout = id
         },
@@ -910,7 +910,7 @@ test('Alt tapped twice is the translate key, with a mask key from another progra
   expect(desk.sent).toContainEqual({ type: 'hotkey', action: 'translate' })
 })
 
-test('an Alt or Win tap that is a key of Krya\'s is let go behind a key that types nothing, so no menu takes the focus', () => {
+test('an Alt or Win tap that is a key of Kryakl\'s is let go behind a key that types nothing, so no menu takes the focus', () => {
   const desk = new Desk({ keys: { check: 'LeftAlt*2', snip: 'RightSuper' } })
   // Both taps of the double: the first cannot know a second comes.
   expect(desk.typist.key(0xa4, 0, true)).toBe(false)
@@ -929,7 +929,7 @@ test('an Alt or Win tap that is a key of Krya\'s is let go behind a key that typ
   ctrl.tap(VK_LCONTROL)
   ctrl.tap(VK_LCONTROL)
   expect([desk.masked.length, ctrl.masked]).toEqual([3, []])
-  // A program left out of Krya's keys keeps its menu.
+  // A program left out of Kryakl's keys keeps its menu.
   const off = new Desk({ keys: { check: 'LeftAlt*2' }, apps: { 'notepad.exe': { off: ['keys'], layout: '' } } })
   off.tap(0xa4)
   expect(off.masked).toEqual([])
@@ -1019,7 +1019,7 @@ describe('the layout and Caps Lock as Windows has them', () => {
   })
 })
 
-test('a dictation started before a picture went full screen still stops with its key; nothing else of Krya’s wakes', () => {
+test('a dictation started before a picture went full screen still stops with its key; nothing else of Kryakl’s wakes', () => {
   const keys = { dictate: 'RightControl*2', translate: 'LeftControl*2' }
   const hotkeys = (desk: Desk) => desk.sent.filter(m => m.type === 'hotkey')
   const viewer = new Desk({ keys })

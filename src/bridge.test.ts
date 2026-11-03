@@ -2,10 +2,10 @@ import { describe, expect, test } from 'vitest'
 
 import { callAllowed, messageAllowed, openable, pageOf, patchAllowed } from './bridge'
 
-const at = (page: string) => `file:///C:/Users/you/AppData/Local/Programs/krya/resources/app.asar/media/${page}?frame=dwm`
+const at = (page: string) => `file:///C:/Users/you/AppData/Local/Programs/kryakl/resources/app.asar/media/${page}?frame=dwm`
 
 describe('which page sent a message', () => {
-  test('each of Krya\'s pages by its file; anything else is another', () => {
+  test('each of Kryakl\'s pages by its file; anything else is another', () => {
     expect([pageOf(at('app.html')), pageOf(at('card.html')), pageOf(at('tray.html')), pageOf(at('dictation.html')), pageOf(at('talk.html'))]).toEqual(['app', 'card', 'tray', 'dictation', 'talk'])
     expect(pageOf(at('badge.html'))).toBe('other')
     expect(pageOf('https://evil.example/app.html')).toBe('other')
@@ -14,7 +14,7 @@ describe('which page sent a message', () => {
 })
 
 describe('a page that shows text from outside opens, removes and exports nothing', () => {
-  const dangerous = ['openPath', 'showInFolder', 'openLink', 'installSpeech', 'removeStored', 'cleanUp', 'useRecommended', 'moveToKrya', 'importBackup', 'exportBackup', 'resetSettings', 'restartSpeech', 'reportProblem', 'openLogs']
+  const dangerous = ['openPath', 'showInFolder', 'openLink', 'installSpeech', 'removeStored', 'cleanUp', 'useRecommended', 'moveToKryakl', 'importBackup', 'exportBackup', 'resetSettings', 'restartSpeech', 'reportProblem', 'openLogs']
   test.each(['card', 'tray', 'dictation', 'talk'] as const)('the %s', page => {
     for (const type of dangerous) expect(messageAllowed(page, type), type).toBe(false)
   })
@@ -89,12 +89,12 @@ describe('calls with an answer', () => {
 })
 
 describe('what a page may open with the system', () => {
-  const folders = new Set(['C:\\Users\\you\\Documents\\Krya\\Transcripts', '\\\\nas\\kb'])
+  const folders = new Set(['C:\\Users\\you\\Documents\\Kryakl\\Transcripts', '\\\\nas\\kb'])
   const isDirectory = (p: string) => folders.has(p)
   test('a folder, a note, a text file', () => {
-    expect(openable('C:\\Users\\you\\Documents\\Krya\\Transcripts', isDirectory)).toBe(true)
+    expect(openable('C:\\Users\\you\\Documents\\Kryakl\\Transcripts', isDirectory)).toBe(true)
     expect(openable('E:\\kb\\Inbox\\2026-10-30 Standup.md', isDirectory)).toBe(true)
-    expect(openable('C:\\Users\\you\\AppData\\Roaming\\Krya\\krya.txt', isDirectory)).toBe(true)
+    expect(openable('C:\\Users\\you\\AppData\\Roaming\\Kryakl\\kryakl.txt', isDirectory)).toBe(true)
     expect(openable('\\\\nas\\kb', isDirectory)).toBe(true)
   })
   test('never a program, a script, a shortcut, an address or a relative path', () => {

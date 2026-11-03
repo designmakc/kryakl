@@ -1,11 +1,11 @@
-// One talk with the duck, held by the main process while Krya runs (the page
+// One talk with the duck, held by the main process while Kryakl runs (the page
 // only draws it). The person's line is checked (Check my English: its mistakes
 // marked in place, a note in their own language) and answered by the duck
 // (duck.ts) at once, both on the same model, so the marks come in about a
 // second and the answer in about three. The answer keeps to what was said,
 // mistakes and all. A new line while the duck still thinks takes its place:
 // the answer under way is dropped, the check is not. talks.ts keeps it on
-// disk, so it goes on after Krya starts again; New talk puts it away there.
+// disk, so it goes on after Kryakl starts again; New talk puts it away there.
 
 import type { CheckOutcome } from './checker'
 import type { Said } from './duck'

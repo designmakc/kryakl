@@ -1,11 +1,11 @@
-/* Krya's colors (GitHub Light / Dark Dimmed), as in the app's theme.css. */
+/* Kryakl's colors (GitHub Light / Dark Dimmed), as in the app's theme.css. */
 :root { --bg: #ffffff; --raised: #f6f8fa; --border: #d0d7de; --text: #1f2328; --strong: #0e1116; --muted: #656d76; --accent: #0969da; --on-accent: #fff; --red: #cf222e; --green: #1a7f37; --duck: #f2a100; }
 @media (prefers-color-scheme: dark) {
   :root { --bg: #22272e; --raised: #2d333b; --border: #444c56; --text: #adbac7; --strong: #cdd9e5; --muted: #768390; --accent: #6cb6ff; --on-accent: #1c2128; --red: #e5534b; --green: #8ddb8c; --duck: #ffd60a; }
 }
 body { margin: 0; width: 300px; background: var(--bg); color: var(--text); font: 13px/1.45 'Segoe UI', system-ui, sans-serif; }
 header { display: flex; align-items: center; gap: 2px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
-/* Krya's text logo, as the app draws it: the word, then the duck (') in mono with its beak to the right. */
+/* Kryakl's text logo, as the app draws it: the word, then the duck (') in mono with its beak to the right. */
 .logo { font: 800 15px 'Segoe UI', system-ui, sans-serif; color: var(--strong); white-space: nowrap; }
 .duck { font: 700 14px ui-monospace, Consolas, monospace; color: var(--duck); font-variant-ligatures: none; }
 .duck .eye { color: var(--strong); }

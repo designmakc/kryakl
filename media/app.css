@@ -1128,7 +1128,7 @@ mark {
   background: color-mix(in srgb, var(--red) 7%, var(--surface));
 }
 
-/* Home's notice (Krya is paused): a card in the actions' column, above them. */
+/* Home's notice (Kryakl is paused): a card in the actions' column, above them. */
 .home > .row.notice {
   width: auto;
   flex: none;
@@ -2992,7 +2992,7 @@ li + li > .ti::before {
   margin-left: 0;
 }
 
-/* Storage: parts still in the old Altype folder, and Move to Krya. Amber, as what waits for the person. */
+/* Storage: parts still in the old folders, and Move to Kryakl. Amber, as what waits for the person. */
 .row.notice.old {
   border-color: color-mix(in srgb, var(--amber) 55%, var(--border));
   background: color-mix(in srgb, var(--amber) 8%, var(--surface));

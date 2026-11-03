@@ -14,7 +14,7 @@ def home(tmp_path, monkeypatch):
     monkeypatch.setattr(engine_settings, "TEST_HOME", None)
     docs = tmp_path / "Documents"
     old = docs / "Altype" / "Transcripts"
-    new = docs / "Krya" / "Transcripts"
+    new = docs / "Kryakl" / "Transcripts"
     s = store.Store(old)
     id = s.create("T", "file", "done")
     s.save(id, {"title": "T", "duration": 1, "language": "en", "utterances": [{"text": "hello"}]})
@@ -53,7 +53,7 @@ def test_old_parent_kept_when_not_empty(home):
     assert (home["old"].parent / "other.txt").exists()
 
 
-def test_dir_of_krya_default_moves_too(home):
+def test_dir_of_kryakl_default_moves_too(home):
     home["settings"].update({"dataDir": str(home["new"])})
     assert move(home)
     assert (home["new"] / home["id"]).is_dir()
@@ -74,14 +74,14 @@ def test_same_folder_other_case(home):
     assert move(home)
 
 
-def test_kept_when_krya_folder_has_files(home):
+def test_kept_when_kryakl_folder_has_files(home):
     home["new"].mkdir(parents=True)
     (home["new"] / "x.txt").write_text("x")
     assert not move(home)
     stays(home)
 
 
-def test_empty_krya_folder_replaced(home):
+def test_empty_kryakl_folder_replaced(home):
     home["new"].mkdir(parents=True)
     assert move(home)
     assert (home["new"] / home["id"]).is_dir() and not home["old"].exists()
@@ -112,7 +112,26 @@ def test_nothing_without_old_folder(tmp_path, monkeypatch):
     old = tmp_path / "Documents" / "Altype" / "Transcripts"
     file.write_text(json.dumps({"dataDir": str(old)}), "utf-8")
     s = engine_settings.Settings(file)
-    assert not engine_settings.move_transcripts(s, old, tmp_path / "Documents" / "Krya" / "Transcripts")
+    assert not engine_settings.move_transcripts(s, old, tmp_path / "Documents" / "Kryakl" / "Transcripts")
+
+
+def test_kryas_library_moves_from_the_old_names_in_turn(tmp_path, monkeypatch):
+    monkeypatch.setattr(engine_settings, "TEST_HOME", None)
+    docs = tmp_path / "Documents"
+    monkeypatch.setattr(engine_settings, "documents_dir", lambda: docs)
+    krya = docs / "Krya" / "Transcripts"
+    s = store.Store(krya)
+    id = s.create("K", "file", "done")
+    s._db.close()
+    (docs / "Altype" / "Transcripts").mkdir(parents=True)
+    file = tmp_path / "speech.json"
+    file.write_text(json.dumps({"dataDir": str(krya)}), "utf-8")
+    settings = engine_settings.Settings(file)
+    assert engine_settings.move_transcripts(settings)
+    assert (docs / "Kryakl" / "Transcripts" / id).is_dir() and not krya.exists()
+    assert settings["dataDir"] == str(docs / "Kryakl" / "Transcripts")
+    # Altype's is not the library any more: it stays where it is.
+    assert (docs / "Altype" / "Transcripts").is_dir()
 
 
 def test_failed_row_with_chunks_does_not_hold_the_move(home):

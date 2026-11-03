@@ -1,14 +1,14 @@
 """How fast each model runs on this computer.
 
-A short test (`Calibrator`, run when the person agrees in Krya) measures every
+A short test (`Calibrator`, run when the person agrees in Kryakl) measures every
 model already downloaded on a bundled clip: a 7 s phrase as Dictate recognizes it,
 and 30 s as Transcribe does. Real use keeps the numbers up afterwards: every
-transcription's words and speakers, every dictated phrase. Krya reads them from
+transcription's words and speakers, every dictated phrase. Kryakl reads them from
 /health (`bench`) and chooses the models from them (src/speechplan.ts).
 
 Kept in speech.json as {fingerprint, at, runs: {"model|device|compute": {phrase, rtf, n, at, source, tested}}};
 `tested` keeps the test's own numbers, against which real use far slower is not counted (`OUTLIER`).
-The fingerprint is this computer's (processor, memory, cards, driver), as Krya
+The fingerprint is this computer's (processor, memory, cards, driver), as Kryakl
 sends it with the plan: on another computer the numbers start again.
 """
 
@@ -24,9 +24,9 @@ import audio
 from asr import CudaFailed, backend, recognizer
 from audio import RATE
 
-log = logging.getLogger("krya.bench")
+log = logging.getLogger("kryakl.bench")
 
-# ~39 s of English read by Krya's natural voice (Kokoro): made for this test, nobody's recording.
+# ~39 s of English read by Kryakl's natural voice (Kokoro): made for this test, nobody's recording.
 CLIP = Path(__file__).resolve().parent / "calibration" / "clip.ogg"
 PHRASE_SECONDS = 7
 # One 30 s window, as each of a long recording's: more would count a part-filled second window as a whole one.
@@ -167,7 +167,7 @@ class Calibrator:
         self.done = 0
         self.message = ""
         self.state = "waiting"
-        self._thread = threading.Thread(target=self._run, args=(runs, expected), name="krya-calibrate", daemon=True)
+        self._thread = threading.Thread(target=self._run, args=(runs, expected), name="kryakl-calibrate", daemon=True)
         self._thread.start()
         return True
 

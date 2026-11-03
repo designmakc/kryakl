@@ -1,11 +1,11 @@
-# Windows installer: npm run dist → release/Krya-Setup-<version>.exe
-# The id of 2Talker, the app's first name: Krya installs over it and over Altype, and updates them.
+# Windows installer: npm run dist → release/Kryakl-Setup-<version>.exe
+# The id of 2Talker, the app's first name: Kryakl installs over it and over Altype, and updates them.
 # An update keeps the folder the app was installed in (NSIS reads InstallLocation
 # from the registry key of this id), so Programs\altype stays Altype's old home and
 # the Chrome extension loaded unpacked from it keeps working; a new install goes to
-# Programs\krya (package.json's name). The program is Krya.exe either way.
+# Programs\kryakl (package.json's name). The program is Kryakl.exe either way.
 appId: com.ikstro.2talker
-productName: Krya
+productName: Kryakl
 copyright: Copyright © 2026 Yevhen Peshynskyi
 directories:
   output: release
@@ -53,9 +53,9 @@ nsis:
   oneClick: true
   perMachine: false
   runAfterFinish: true
-  artifactName: Krya-Setup-${version}.${ext}
+  artifactName: Kryakl-Setup-${version}.${ext}
   # Uninstall asks whether the data goes too (build/installer.nsh); an update keeps it.
   include: build/installer.nsh
-# No publish settings: the release workflow puts the installer in a GitHub release itself, and Krya does
+# No publish settings: the release workflow puts the installer in a GitHub release itself, and Kryakl does
 # not update itself (people download new versions from the releases). The installer is not signed
 # (a free app): Windows warns at install.

@@ -27,7 +27,7 @@ const BADGE = { width: 36, height: 22 }
 /** With Caps Lock on, the badge says so too ("EN ⇪"). */
 const BADGE_CAPS_WIDTH = 54
 const BADGE_MS = 900
-/** A word the badge says while Krya works stays up to this long, unless taken down sooner. */
+/** A word the badge says while Kryakl works stays up to this long, unless taken down sooner. */
 const SAY_MS = 15_000
 
 type MainAction = Exclude<KeyAction, 'switch' | 'fix' | 'layout'>
@@ -268,7 +268,7 @@ export class KeyboardHelper {
     return this.shorts.get(layout) ?? '?'
   }
 
-  /** A word in the badge by the text cursor while Krya works there (Translate in place); empty hides it. */
+  /** A word in the badge by the text cursor while Kryakl works there (Translate in place); empty hides it. */
   say(text: string, ms = SAY_MS): void {
     if (!text) {
       if (this.badgeTimer) clearTimeout(this.badgeTimer)

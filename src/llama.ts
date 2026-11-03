@@ -1,13 +1,13 @@
 // llama.cpp's server (llama-server.exe of a build llmtranslator.ts
-// downloads) as a process of Krya's own: one model at a time, on a free port
+// downloads) as a process of Kryakl's own: one model at a time, on a free port
 // of 127.0.0.1, started by the first request (or a key that will make one,
 // `warm`), stopped after three idle minutes (ten until 2026-10-31: the card's
-// memory back sooner) and with Krya. On Vulkan llama.cpp puts as many of the model's layers on
+// memory back sooner) and with Kryakl. On Vulkan llama.cpp puts as many of the model's layers on
 // the graphics card as its memory holds (its own `--fit`); CUDA takes them all
 // (`allLayers`), NVIDIA's driver lending the card the computer's memory for
 // the rest, which is far quicker than splitting. A card that cannot take the
 // model at all (an old driver, a broken Vulkan) leaves it on the processor
-// (`--device none`) until Krya starts again.
+// (`--device none`) until Kryakl starts again.
 
 import { spawn as nodeSpawn, type ChildProcess } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
@@ -63,8 +63,8 @@ export function serverArgs(target: LlamaTarget, port: number, cpu: boolean): str
 }
 
 /**
- * The server's environment: Krya's own, without the person's LLAMA_* settings (LLAMA_ARG_TOOLS would give
- * the model a shell), with Krya's key: llama.cpp answers anyone on 127.0.0.1 (any program, a web page)
+ * The server's environment: Kryakl's own, without the person's LLAMA_* settings (LLAMA_ARG_TOOLS would give
+ * the model a shell), with Kryakl's key: llama.cpp answers anyone on 127.0.0.1 (any program, a web page)
  * unless asked for a key, which it takes from LLAMA_API_KEY (never in the arguments, which other programs can read).
  */
 export function serverEnv(from: NodeJS.ProcessEnv, apiKey: string): NodeJS.ProcessEnv {
@@ -80,10 +80,10 @@ export class LlamaServer {
   private idle: NodeJS.Timeout | undefined
   /** When the last request ended, or the server was warmed. */
   private usedAt = 0
-  /** Builds and models the card could not take: on the processor until Krya starts again. */
+  /** Builds and models the card could not take: on the processor until Kryakl starts again. */
   private readonly cpuOnly = new Set<string>()
 
-  /** The key every request to the server carries (Authorization: Bearer), new each time Krya starts. */
+  /** The key every request to the server carries (Authorization: Bearer), new each time Kryakl starts. */
   readonly apiKey = randomBytes(32).toString('hex')
 
   constructor(private readonly o: LlamaOptions) {}

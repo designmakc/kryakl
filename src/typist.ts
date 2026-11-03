@@ -47,7 +47,7 @@ import type { Press } from './winkbd'
 /** What a key does: switch or fix the layout here, or go to one layout; the others are the main process's. */
 export type KeyAction = 'switch' | 'fix' | 'layout' | 'select' | 'snip' | 'translate' | 'text' | 'inPlace' | 'check' | 'type' | 'typeCheck' | 'dictate' | 'english' | 'note' | 'again' | 'practice' | 'talk' | 'pause' | 'window'
 
-/** The parts of the keyboard helper a program can be left out of: fixing as one types, the switch and layout keys, the badge, every key of Krya's. */
+/** The parts of the keyboard helper a program can be left out of: fixing as one types, the switch and layout keys, the badge, every key of Kryakl's. */
 export type AppPart = 'fix' | 'switch' | 'badge' | 'keys'
 
 /** The field's answer to "is it a password?": yes, no, or it would not say. */
@@ -234,7 +234,7 @@ const MENU_KEYS: ReadonlySet<number> = new Set([0xa4, 0xa5, 0x5b, 0x5c])
 
 /** Caps Lock is asked of Windows again when the last answer is older than this (Windows may turn it off on Shift). */
 const CAPS_FRESH_MS = 1000
-/** After Krya switches a window's layout, Windows may go on naming the old one for a while: the new one is trusted until Windows agrees, or this long. */
+/** After Kryakl switches a window's layout, Windows may go on naming the old one for a while: the new one is trusted until Windows agrees, or this long. */
 const SWITCH_TRUST_MS = 3000
 
 /** A modifier tapped alone counts while held no longer than this. */
@@ -315,7 +315,7 @@ export class Typist {
   private trustNext = false
   /** The layout the last key was typed in, in which window. */
   private lastLayout: { hwnd: bigint; layout: string } | undefined
-  /** The layout Krya switched to by itself, until the next key: a change to it is not the person's. */
+  /** The layout Kryakl switched to by itself, until the next key: a change to it is not the person's. */
   private ownSwitch: string | undefined
   /** What was done last: typing (the fix key fixes it), selecting (it converts the selection), or something else. */
   private last: 'typed' | 'selected' | 'none' = 'none'
@@ -363,9 +363,9 @@ export class Typist {
   /** Caps Lock, as last asked of Windows (or flipped by its key since), and when. */
   private caps = false
   private capsAt = Number.NEGATIVE_INFINITY
-  /** The layout Krya last switched a window to, trusted over Windows' late answer. */
+  /** The layout Kryakl last switched a window to, trusted over Windows' late answer. */
   private expected: { hwnd: bigint; layout: string; until: number } | undefined
-  /** For the switch's sound: the layout last heard in front, and the last switch Krya made (silent, or sounded already). */
+  /** For the switch's sound: the layout last heard in front, and the last switch Kryakl made (silent, or sounded already). */
   private heard: { hwnd: bigint; layout: string } | undefined
   private made: { hwnd: bigint; layout: string } | undefined
 
@@ -445,7 +445,7 @@ export class Typist {
   // ---------------------------------------------------------------- keys
 
   /**
-   * A key went down or up; `own`: pressed by Krya itself; `foreign`: by
+   * A key went down or up; `own`: pressed by Kryakl itself; `foreign`: by
    * another program. True keeps it from the program.
    */
   key(vk: number, scan: number, down: boolean, own = false, foreign = false): boolean {
@@ -464,7 +464,7 @@ export class Typist {
     const mod = modOf(vk)
     if (!down) {
       this.held.delete(vk)
-      // An Alt or Win tap that is one of Krya's keys: its key-up is let go later, after a key that types nothing (VS Code's menu bar took the focus from its chat).
+      // An Alt or Win tap that is one of Kryakl's keys: its key-up is let go later, after a key that types nothing (VS Code's menu bar took the focus from its chat).
       if (mod && this.onModifierUp(vk)) {
         this.env.mask(vk)
         return true
@@ -474,7 +474,7 @@ export class Typist {
     const repeat = this.held.has(vk)
     this.held.add(vk)
     if (this.quiet()) {
-      // A game or a presentation: no key of Krya's, no fixing; modifiers are still followed, so none seems held after.
+      // A game or a presentation: no key of Kryakl's, no fixing; modifiers are still followed, so none seems held after.
       // But a dictation started before the full screen must still stop with its key: its taps and keys are read, and only they act (`allowed`); nothing typed is fixed.
       if (this.dictating && mod) {
         if (!repeat) this.onModifierDown(vk)
@@ -515,7 +515,7 @@ export class Typist {
   }
 
   /**
-   * A key another program pressed (another layout switcher, a macro tool, Krya's
+   * A key another program pressed (another layout switcher, a macro tool, Kryakl's
    * own copy and paste): it never makes or breaks a tap of the person's keys,
    * which another switcher reacting to a Ctrl tap would; a modifier still
    * counts as held; anything typed means the keys kept no longer match the text.
@@ -617,7 +617,7 @@ export class Typist {
     return this.keys.find(({ spec }) => spec.kind === kind && spec.vk === vk)
   }
 
-  /** Whether a key works in the program in front: a program can be left out of Krya's keys, or of switching; the pause key works everywhere. */
+  /** Whether a key works in the program in front: a program can be left out of Kryakl's keys, or of switching; the pause key works everywhere. */
   private allowed(key: Bound): boolean {
     if (key.action === 'pause') return true
     if (this.quiet() && !DICTATION_ACTIONS.has(key.action)) return false
@@ -667,7 +667,7 @@ export class Typist {
     }
   }
 
-  /** True: the tap was Alt or Win as a key of Krya's, to be let go behind a key that types nothing. */
+  /** True: the tap was Alt or Win as a key of Kryakl's, to be let go behind a key that types nothing. */
   private onModifierUp(vk: number): boolean {
     const t = this.tap
     this.tap = undefined
@@ -824,8 +824,8 @@ export class Typist {
 
   /**
    * A key typed in another layout than the last one in this window, and not
-   * one Krya switched to by itself: the person switched (Windows' keys, the
-   * language bar, Krya's switch key). The words before are as they meant
+   * one Kryakl switched to by itself: the person switched (Windows' keys, the
+   * language bar, Kryakl's switch key). The words before are as they meant
    * them, and so is the next one.
    */
   private noticeSwitch(hwnd: bigint, layout: string): void {
@@ -1116,7 +1116,7 @@ export class Typist {
   }
 
   /**
-   * The layout in front changed in the same window, and not by Krya: the
+   * The layout in front changed in the same window, and not by Kryakl: the
    * person switched with Windows' own keys (or the language bar), and it
    * sounds too. Another window's layout is no switch.
    */
@@ -1145,7 +1145,7 @@ export class Typist {
     this.expected = { hwnd, layout, until: this.env.now() + SWITCH_TRUST_MS }
   }
 
-  /** The layout the window in front types in: the one Krya just switched it to, until Windows agrees; else Windows' answer. */
+  /** The layout the window in front types in: the one Kryakl just switched it to, until Windows agrees; else Windows' answer. */
   private layoutNow(front: Front): string {
     const named = this.env.layoutOf(front.tid)
     const e = this.expected

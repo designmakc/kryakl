@@ -166,7 +166,7 @@ export function select<T extends string | number>(value: T, options: [T, string]
   return el('span', { class: 'sel' }, node, lucide('chevron-down', 's'))
 }
 
-/** The interface's language, each named in itself; picked, every window of Krya loads again in it (Settings, the setup's first step). */
+/** The interface's language, each named in itself; picked, every window of Kryakl loads again in it (Settings, the setup's first step). */
 export function uiLanguageCard(current: UiLanguage, save: (uiLanguage: UiLanguage) => void): HTMLElement {
   return card(
     'globe',

@@ -83,7 +83,7 @@ export class TranslationLog {
       fs.mkdirSync(path.dirname(this.file), { recursive: true })
       fs.writeFileSync(this.file, JSON.stringify(this.entries, null, 2) + '\n', 'utf8')
     } catch (error) {
-      console.warn('Krya: could not save the translations', error)
+      console.warn('Kryakl: could not save the translations', error)
     }
   }
 }

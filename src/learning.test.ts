@@ -11,7 +11,7 @@ const dirs: string[] = []
 const stores: LearnStore[] = []
 
 function store(now = () => 100 * DAY_MS): { s: LearnStore; file: string } {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'krya-learn-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'kryakl-learn-'))
   dirs.push(dir)
   const file = path.join(dir, 'learning.json')
   const s = new LearnStore(file, now)
@@ -25,7 +25,7 @@ afterEach(() => {
   for (const dir of dirs.splice(0)) fs.rmSync(dir, { recursive: true, force: true })
 })
 
-describe('what Krya learns', () => {
+describe('what Kryakl learns', () => {
   test('a word fixed by hand twice is fixed always', () => {
     const { s } = store()
     expect(s.fixedByHand({ word: 'vs', lang: 'ru' })).toBe(false)
@@ -46,10 +46,10 @@ describe('what Krya learns', () => {
     const { s, file } = store()
     s.tally('abc', 1)
     s.flush()
-    expect(fs.readFileSync(file, 'utf8')).not.toContain('krya')
+    expect(fs.readFileSync(file, 'utf8')).not.toContain('kryakl')
     expect(s.forThread().tally).toEqual({ abc: 1 })
-    expect(s.tally('abc', 3, { word: 'krya', lang: 'en' })).toBe(true)
-    expect(s.myWords).toEqual([{ word: 'krya', lang: 'en' }])
+    expect(s.tally('abc', 3, { word: 'kryakl', lang: 'en' })).toBe(true)
+    expect(s.myWords).toEqual([{ word: 'kryakl', lang: 'en' }])
     expect(s.forThread().tally).toEqual({})
   })
 
@@ -79,14 +79,14 @@ describe('what Krya learns', () => {
 
 test('a backup’s learned words are added to their lists unless a list here has the word', () => {
   const { s, file } = store()
-  s.tally('h', 3, { word: 'Krya', lang: 'en' })
+  s.tally('h', 3, { word: 'Kryakl', lang: 'en' })
   const added = s.merge({
-    alwaysFix: [{ word: 'ghbdtn', lang: 'ru' }, { word: 'Krya', lang: 'ru' }],
+    alwaysFix: [{ word: 'ghbdtn', lang: 'ru' }, { word: 'Kryakl', lang: 'ru' }],
     myWords: [{ word: 'Figma', lang: 'en' }],
     fixedOnce: 'junk',
   })
   expect(added).toBe(2)
-  expect(s.lists()).toEqual({ fixedOnce: [], alwaysFix: [{ word: 'ghbdtn', lang: 'ru' }], myWords: [{ word: 'Krya', lang: 'en' }, { word: 'Figma', lang: 'en' }] })
+  expect(s.lists()).toEqual({ fixedOnce: [], alwaysFix: [{ word: 'ghbdtn', lang: 'ru' }], myWords: [{ word: 'Kryakl', lang: 'en' }, { word: 'Figma', lang: 'en' }] })
   s.flush()
   expect(new LearnStore(file).lists().myWords).toHaveLength(2)
 })

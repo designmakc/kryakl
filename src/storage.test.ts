@@ -11,7 +11,7 @@ const made: string[] = []
 afterEach(() => made.splice(0).forEach(dir => fs.rmSync(dir, { recursive: true, force: true })))
 
 function tempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'krya-storage-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'kryakl-storage-'))
   made.push(dir)
   return dir
 }
@@ -37,15 +37,15 @@ test('a file hard-linked from elsewhere (uv\'s cache) counts as shared', async (
   expect(await folderSize(path.join(root, 'env'))).toEqual({ bytes: 57, shared: 50 })
 })
 
-test('a download used from outside Krya\'s folder is marked away; the person\'s own things and what is not there are not', () => {
-  const home = 'C:\\Users\\you\\AppData\\Local\\Krya'
+test('a download used from outside Kryakl\'s folder is marked away; the person\'s own things and what is not there are not', () => {
+  const home = 'C:\\Users\\you\\AppData\\Local\\Kryakl'
   const parts = markAway(
     [
       { id: 'speech', path: 'C:\\Users\\you\\AppData\\Local\\Altype\\speech', bytes: 7e9, shared: 0 },
-      { id: 'voice', path: 'c:\\users\\you\\appdata\\local\\krya\\voice', bytes: 2e8, shared: 0 },
-      { id: 'dict', path: 'C:\\Users\\you\\AppData\\Local\\Krya2\\dict', bytes: 3e6, shared: 0 },
+      { id: 'voice', path: 'c:\\users\\you\\appdata\\local\\kryakl\\voice', bytes: 2e8, shared: 0 },
+      { id: 'dict', path: 'C:\\Users\\you\\AppData\\Local\\Kryakl2\\dict', bytes: 3e6, shared: 0 },
       { id: 'most', path: 'C:\\Users\\you\\AppData\\Local\\Altype\\translate\\models\\m.gguf', bytes: 0, shared: 0 },
-      { id: 'yours', path: 'C:\\Users\\you\\AppData\\Roaming\\Krya', bytes: 1e6, shared: 0 },
+      { id: 'yours', path: 'C:\\Users\\you\\AppData\\Roaming\\Kryakl', bytes: 1e6, shared: 0 },
     ],
     home,
     ['speech', 'voice', 'dict', 'most'],

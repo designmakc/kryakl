@@ -1,6 +1,6 @@
-// A problem report (Krya › Report a problem, the tray's Report): one zip the
-// person sends by hand, attached to an email or a GitHub issue; Krya sends
-// nothing itself (2026-10-31, the owner). It holds Krya's three logs, each
+// A problem report (Kryakl › Report a problem, the tray's Report): one zip the
+// person sends by hand, attached to an email or a GitHub issue; Kryakl sends
+// nothing itself (2026-10-31, the owner). It holds Kryakl's three logs, each
 // with the one before it (log.ts rotate), what this computer is (device.json)
 // and the settings with the person's own lists only counted; never their
 // words, mistakes, translations, phrases or transcripts, nor the Hugging Face
@@ -17,10 +17,10 @@ import { oldLog } from './log'
 import { system32 } from './system32'
 
 export const REPORT_EMAIL = 'ikstro.design@gmail.com'
-export const ISSUES = 'https://github.com/ikstro/krya/issues/new'
+export const ISSUES = 'https://github.com/ikstro/kryakl/issues/new'
 
-/** The logs a report takes from Krya's folder, each with its `.old.log`. */
-export const LOGS = ['krya.log', 'speech.log', 'translate.log'] as const
+/** The logs a report takes from Kryakl's folder, each with its `.old.log`. */
+export const LOGS = ['kryakl.log', 'speech.log', 'translate.log'] as const
 /** The end of each log: the lines before a problem, not the whole history. */
 const TAIL = 512_000
 /** The settings that are the person's own lists: counted, never copied. */
@@ -36,11 +36,11 @@ export function namesHere(): Names {
   return { you: [os.userInfo().username, path.basename(os.homedir())], computer: os.hostname() }
 }
 
-/** Krya and Windows, in one line of the report, the email and the issue. */
+/** Kryakl and Windows, in one line of the report, the email and the issue. */
 export type ReportFacts = { version: string; build: string; electron: string; windows: string; arch: string }
 
 export const factsLine = (f: ReportFacts): string =>
-  `Krya ${f.version}${f.build ? ` dev, built ${f.build}` : ''} · Windows ${f.windows} ${f.arch} · Electron ${f.electron}`
+  `Kryakl ${f.version}${f.build ? ` dev, built ${f.build}` : ''} · Windows ${f.windows} ${f.arch} · Electron ${f.electron}`
 
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 /** A name as a whole word, never inside a longer one ("ann" stays in "announce"). */
@@ -72,14 +72,14 @@ export function settingsSummary(settings: object): Record<string, unknown> {
   return out
 }
 
-/** "Krya report 2026-10-31 14-05.zip", in local time. */
+/** "Kryakl report 2026-10-31 14-05.zip", in local time. */
 export function reportName(at: Date): string {
   const two = (n: number) => String(n).padStart(2, '0')
-  return `Krya report ${at.getFullYear()}-${two(at.getMonth() + 1)}-${two(at.getDate())} ${two(at.getHours())}-${two(at.getMinutes())}.zip`
+  return `Kryakl report ${at.getFullYear()}-${two(at.getMonth() + 1)}-${two(at.getDate())} ${two(at.getHours())}-${two(at.getMinutes())}.zip`
 }
 
 export type ReportInput = {
-  /** Krya's folder, %APPDATA%\Krya: the logs and device.json. */
+  /** Kryakl's folder, %APPDATA%\Kryakl: the logs and device.json. */
   dir: string
   /** Where the zip goes. */
   out: string
@@ -93,10 +93,10 @@ export type ReportInput = {
   at: Date
 }
 
-/** report.txt: what happened, Krya and Windows, the parts, the settings. */
+/** report.txt: what happened, Kryakl and Windows, the parts, the settings. */
 export function reportText(i: Omit<ReportInput, 'dir' | 'out'>): string {
   return [
-    `Krya problem report, ${i.at.toISOString()}`,
+    `Kryakl problem report, ${i.at.toISOString()}`,
     '',
     'What happened',
     i.message.trim() || '(nothing written)',
@@ -142,7 +142,7 @@ function zip(dir: string, files: string[], out: string): Promise<void> {
 
 /** Writes the report's zip at `out`, made in a folder of the system's temp that goes after; its path. */
 export async function makeReport(i: ReportInput): Promise<string> {
-  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'krya-report-'))
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'kryakl-report-'))
   try {
     const files: string[] = []
     const put = (name: string, text: string) => {
@@ -188,9 +188,9 @@ const headline = (message: string, most: number) => {
   return line.length > most ? `${line.slice(0, most - 1)}…` : line
 }
 
-/** The email: to Krya's author, the text and the facts in it, a line on the zip to attach (a link cannot carry it). */
+/** The email: to Kryakl's author, the text and the facts in it, a line on the zip to attach (a link cannot carry it). */
 export function mailUrl(message: string, facts: ReportFacts, file: string): string {
-  const subject = encodeURIComponent(`Krya ${facts.version}: ${headline(message, 60) || t('ui.reportSubject')}`)
+  const subject = encodeURIComponent(`Kryakl ${facts.version}: ${headline(message, 60) || t('ui.reportSubject')}`)
   const foot = `\r\n\r\n${factsLine(facts)}\r\n${t('ui.reportAttach', { file })}`
   const head = `mailto:${REPORT_EMAIL}?subject=${subject}&body=`
   const said = (message.trim() || t('ui.reportAsk')).replace(/\r?\n/g, '\r\n')
@@ -200,7 +200,7 @@ export function mailUrl(message: string, facts: ReportFacts, file: string): stri
 /** A new GitHub issue with the text and the facts in it; the zip is dragged onto the page. */
 export function issueUrl(message: string, facts: ReportFacts, file: string): string {
   const title = encodeURIComponent(headline(message, 80) || t('ui.reportTitle'))
-  const foot = `\n\n### Krya\n\n${factsLine(facts)}\n\n${t('ui.reportDrag', { file })}`
+  const foot = `\n\n### Kryakl\n\n${factsLine(facts)}\n\n${t('ui.reportDrag', { file })}`
   const head = `${ISSUES}?title=${title}&body=`
   const said = `### ${t('ui.reportWhat')}\n\n${message.trim() || '…'}`
   return head + encodeURIComponent(fitEncoded(said, ISSUE_MOST - head.length - encodeURIComponent(foot).length) + foot)

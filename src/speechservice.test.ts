@@ -16,16 +16,16 @@ afterEach(() => {
 
 describe('the speech engine\'s key', () => {
   test('is made once, random, and kept beside the engine\'s settings', () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'krya-token-'))
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'kryakl-token-'))
     dirs.push(dir)
-    const file = path.join(dir, 'Krya', 'speech-token')
+    const file = path.join(dir, 'Kryakl', 'speech-token')
     const first = speechToken(file)
     expect(first).toMatch(/^[0-9a-f]{64}$/)
     expect(fs.readFileSync(file, 'utf8')).toBe(first)
     expect(speechToken(file)).toBe(first)
   })
 
-  test('an engine on the port is Krya\'s only when it answers the nonce with the key (auth.py proof)', () => {
+  test('an engine on the port is Kryakl\'s only when it answers the nonce with the key (auth.py proof)', () => {
     const answer = (key: string, nonce: string) => createHmac('sha256', key).update(nonce).digest('hex')
     expect(provesKey('k', 'n1', answer('k', 'n1'))).toBe(true)
     expect(provesKey('k', 'n1', answer('other', 'n1'))).toBe(false)
@@ -38,7 +38,7 @@ describe('the engine on the port', () => {
   const answer = (key: string, nonce: string) => createHmac('sha256', key).update(nonce).digest('hex')
   const ENGINE = { ok: true, version: '0.2.0', parts: { core: true }, diarization: 'missing' }
 
-  /** Krya's engine as app.py's guard answers: the proof alone without the key, everything with it. */
+  /** Kryakl's engine as app.py's guard answers: the proof alone without the key, everything with it. */
   const realEngine = (req: http.IncomingMessage) => {
     const keyed = req.headers['x-krya-token'] === 'k'
     const nonce = req.headers['x-krya-nonce'] ? String(req.headers['x-krya-nonce']) : ''
@@ -60,7 +60,7 @@ describe('the engine on the port', () => {
       res.end(JSON.stringify(body ?? { detail: 'the engine\'s key is needed' }))
     })
     await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'krya-engine-'))
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'kryakl-engine-'))
     dirs.push(dir)
     const stopStale = vi.fn(async () => undefined)
     const service: SpeechService = new SpeechService({
@@ -81,7 +81,7 @@ describe('the engine on the port', () => {
     return { ...seen, stopStale, received, keyed: received.filter(r => 'x-krya-token' in r.headers) }
   }
 
-  test('Krya\'s own engine proves it holds the key before it gets it, and is then used', async () => {
+  test('Kryakl\'s own engine proves it holds the key before it gets it, and is then used', async () => {
     let listed: unknown
     const r = await onPort(realEngine, async service => {
       listed = await service.call('GET', '/transcripts')
@@ -98,7 +98,7 @@ describe('the engine on the port', () => {
     expect(r.stopStale).not.toHaveBeenCalled()
   })
 
-  test('an older engine of Krya\'s without the key is stopped, once, and Krya starts its own', async () => {
+  test('an older engine of Kryakl\'s without the key is stopped, once, and Kryakl starts its own', async () => {
     const r = await onPort(() => ENGINE)
     expect(r.stopStale).toHaveBeenCalledTimes(1)
     // Its own start was tried: there is no Python here, so it says so.

@@ -109,7 +109,7 @@ function full(over: Partial<AppView['settings']>, plan: AppView['speech']['plan'
       introSeen: true,
       native: 'Russian',
       languages: ['uk'],
-      vocabulary: ['Krya (кря, края)', 'Peshynskyi (пешинский)', 'Paximizer'],
+      vocabulary: ['Kryakl (кря, края)', 'Peshynskyi (пешинский)', 'Paximizer'],
       apps: [
         { exe: 'code.exe', off: ['fix'], layout: '04090409' },
         { exe: 'windowsterminal.exe', off: ['fix', 'badge'], layout: '' },
@@ -141,7 +141,7 @@ function full(over: Partial<AppView['settings']>, plan: AppView['speech']['plan'
     ],
     update: { status: 'none' },
     keysOk: { snip: true, select: true, translate: true, text: true, inPlace: true, check: true, type: true, typeCheck: true, pause: true, window: true },
-    learned: { alwaysFix: [{ word: 'vs', lang: 'ru' }], myWords: [{ word: 'krya', lang: 'en' }, { word: 'пешинский', lang: 'ru' }] },
+    learned: { alwaysFix: [{ word: 'vs', lang: 'ru' }], myWords: [{ word: 'kryakl', lang: 'en' }, { word: 'пешинский', lang: 'ru' }] },
     elevatedApp: 'taskmgr.exe',
     translations: [
       { at: new Date(now - 300e3).toISOString(), from: 'ru', to: 'en', text: 'Конечно, пришлю обновлённые макеты до созвона.', translation: 'Of course, I will send the updated layouts before the call.' },
@@ -177,11 +177,11 @@ function full(over: Partial<AppView['settings']>, plan: AppView['speech']['plan'
         diarizationMessage: '',
         busy: null,
         queued: 0,
-        dataDir: 'C:\\Users\\you\\Documents\\Krya\\Transcripts',
+        dataDir: 'C:\\Users\\you\\Documents\\Kryakl\\Transcripts',
         kbDir: 'C:\\Users\\you\\Notes',
       },
       port: 8765,
-      extensionDir: 'C:\\Users\\you\\AppData\\Local\\Programs\\krya\\resources\\app.asar.unpacked\\extension',
+      extensionDir: 'C:\\Users\\you\\AppData\\Local\\Programs\\kryakl\\resources\\app.asar.unpacked\\extension',
       extensionShipped: '0.2.0',
       download: { core: 160, gpu: 1150, speakers: 3000 },
       installed: { core: 330, gpu: 1700, speakers: 4000 },
@@ -216,7 +216,7 @@ function full(over: Partial<AppView['settings']>, plan: AppView['speech']['plan'
     // The owner's computer on 2026-10-31: the speech engine's packages hard-linked into uv's cache; what each part serves, as main.ts withUse says.
     storage: {
       measuring: false,
-      root: 'C:\\Users\\you\\AppData\\Local\\Krya',
+      root: 'C:\\Users\\you\\AppData\\Local\\Kryakl',
       drive: 'C:',
       freeMb: 212_400,
       parts: [

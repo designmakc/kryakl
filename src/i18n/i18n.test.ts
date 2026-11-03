@@ -38,6 +38,12 @@ describe('the dictionaries', () => {
       const same = keys.filter(k => typeof en[k] === 'string' && (en[k] as string).split(' ').length > 2 && dict[k] === en[k])
       expect(same).toEqual([])
     })
+
+    it(`${name} names the app Крякл, never Kryakl, but for a folder's name`, () => {
+      const latin = keys.filter(k => /Kryakl(?! › Reports)/.test(JSON.stringify(dict[k])))
+      expect(latin).toEqual([])
+      expect(dict['app.name']).toBe('Крякл')
+    })
   }
 })
 
@@ -70,7 +76,7 @@ describe('t', () => {
     expect(sizeText(5200)).toBe('5,2 ГБ')
     setUiLanguage('ru')
     expect(languageName('English')).toBe('английский')
-    // A language Krya does not know keeps the name given.
+    // A language Kryakl does not know keeps the name given.
     expect(languageName('Klingon')).toBe('Klingon')
   })
 })

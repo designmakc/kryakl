@@ -217,7 +217,7 @@ describe('createLlmTranslators', () => {
     expect(fs.existsSync(paths.engineDir('vulkan'))).toBe(false)
   })
 
-  it('finds the model files an older Krya left, never its own or one downloading, and deletes them when told', async () => {
+  it('finds the model files an older Kryakl left, never its own or one downloading, and deletes them when told', async () => {
     const { files, root, paths } = setup()
     await files.prepare('accurate', () => undefined)
     const models = path.join(root, 'models')

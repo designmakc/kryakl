@@ -1,11 +1,11 @@
 // The clipboard through user32 itself, for what Electron's clipboard cannot
 // do: keep every kind of thing on it (copied files, Office's own formats, not
-// only text, HTML and a picture) to put back, mark what Krya puts there so
+// only text, HTML and a picture) to put back, mark what Kryakl puts there so
 // Windows' clipboard history (Win+V) and the cloud clipboard leave it out,
 // and tell one change of the clipboard from another (its sequence number).
 // A text to paste is promised rather than put (Windows' delayed rendering):
 // Windows asks the owner window for it (WM_RENDERFORMAT) when a program reads
-// it, which tells Krya the paste has landed and the person's clipboard can
+// it, which tells Kryakl the paste has landed and the person's clipboard can
 // go back.
 
 import koffi from 'koffi'
@@ -63,7 +63,7 @@ function historyMarks(): { format: number; data: Buffer }[] {
 let privateFormats: number[] | undefined
 /**
  * The clipboard holds what its program asked others not to watch: a password manager's copy (KeePass,
- * 1Password and others put these marks on a password). Krya then neither shows nor reads it.
+ * 1Password and others put these marks on a password). Kryakl then neither shows nor reads it.
  */
 export function privateCopy(): boolean {
   privateFormats ??= ['ExcludeClipboardContentFromMonitorProcessing', 'Clipboard Viewer Ignore'].map(name => RegisterClipboardFormatW(name) as number)
@@ -181,7 +181,7 @@ export function render(): boolean {
   return true
 }
 
-/** The owner window is going while its text is still promised (WM_RENDERALLFORMATS): handed over for good, if the clipboard is still Krya's. */
+/** The owner window is going while its text is still promised (WM_RENDERALLFORMATS): handed over for good, if the clipboard is still Kryakl's. */
 export function renderAll(): void {
   const p = promised
   if (!p) return

@@ -1,5 +1,5 @@
 // What to tell a person whose computer has no voice for the language they
-// learn: where the system adds one. Voices are read once when Krya starts,
+// learn: where the system adds one. Voices are read once when Kryakl starts,
 // so a new one shows up after a restart.
 
 import { t } from '../i18n'

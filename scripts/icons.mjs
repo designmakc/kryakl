@@ -1,4 +1,4 @@
-// Draws Krya's pictures. The app icon is K3, the duck {•> on a black rounded
+// Draws Kryakl's pictures. The app icon is K3, the duck {•> on a black rounded
 // tile, white braces and eye and a duck-yellow beak, as the tray on a dark
 // taskbar (build/icon.svg; I1's yellow tile until 2026-10-30): build/icon.png (512 px),
 // build/icon.ico (16, 24, 32, 48, 256: the installer and the program) and
@@ -7,7 +7,7 @@
 // without a tile, the braces and the eye in ink and the beak in the duck's
 // colour, for either taskbar: media/tray-light.png (ink on a light taskbar)
 // and tray-dark.png, each with its @2x (32 px), tray-*-paused.png (the same at
-// 45 %, while Krya is paused), and tray-recording.png, a red dot, while
+// 45 %, while Kryakl is paused), and tray-recording.png, a red dot, while
 // anything records. The tray's pictures are pixels at 16, each pixel doubled
 // at 32. All of it is drawn on a canvas, whose pixels keep their transparency
 // in an ordinary page; the SVG is copied to media/. Run under Electron:

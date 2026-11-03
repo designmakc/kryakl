@@ -1,4 +1,4 @@
-// Krya's main process. It lives in the tray and waits for a text:
+// Kryakl's main process. It lives in the tray and waits for a text:
 //   - Ctrl+C twice in any program, or the listen key: the selected text;
 //   - the snip key (Ctrl+Alt+S): Windows' own snipping overlay opens, and the
 //     piece of the screen it puts on the clipboard is read with the OCR built
@@ -17,7 +17,7 @@
 // The speech engine (speechhost.ts: Python, installed in parts when first
 // wanted) serves Dictate (dictation.ts), Transcribe and the Chrome extension.
 //
-// %APPDATA%\Krya\ (moved over from Altype's, 2Talker's or tu-talk's folder, once: oldfolder.ts)
+// %APPDATA%\Kryakl\ (moved over from Krya's, Altype's, 2Talker's or tu-talk's folder, once: oldfolder.ts)
 //   settings.json   see settings.ts
 //   words.json      the word notebook (words.ts)
 //   dictation.json  the phrases dictated lately, 30 days at most (dictationlog.ts)
@@ -27,9 +27,9 @@
 //   dict\           word dictionaries for languages other than Russian
 //   models\         the translator's models, one folder per language pair
 //   speech.json     the speech engine's settings (engine/settings.py), speech.log
-// %LOCALAPPDATA%\Krya\ (moved over from Altype's, once; a part that could not move is used there)
-// %LOCALAPPDATA%\Krya\speech\   the speech engine's Python, packages and models
-// %LOCALAPPDATA%\Krya\translate\   llama.cpp and the Gemma 4 models (Accurate, Most accurate)
+// %LOCALAPPDATA%\Kryakl\ (moved over from Krya's and Altype's, once; a part that could not move is used there)
+// %LOCALAPPDATA%\Kryakl\speech\   the speech engine's Python, packages and models
+// %LOCALAPPDATA%\Kryakl\translate\   llama.cpp and the Gemma 4 models (Accurate, Most accurate)
 
 import * as fs from 'node:fs'
 import * as path from 'node:path'
@@ -71,7 +71,7 @@ import { log, logTo } from './log'
 import { NATURAL_PREFIX, systemVoiceName, type NaturalState } from './natural'
 import { recognize } from './ocr'
 import { pickLines } from './ocrpick'
-import { adoptLocalFolder, adoptOldFolders, freeFolder, hasToMove, leftIn, moveDownloads, partDir, removeOldUpdaterCaches, type LeftPart, type Warn } from './oldfolder'
+import { adoptLocalFolder, adoptOldFolders, freeFolder, hasToMove, leftIn, moveDownloads, OLD_LOCAL_FOLDERS, partDir, removeOldUpdaterCaches, type LeftPart, type Warn } from './oldfolder'
 import { paragraphsOf } from './ocrtext'
 import { placeByTray, placeNear, resize, type Point } from './placement'
 import type { AppTab, AppView, BusyPart, CardKind, CardState, CheckResult, DictationMode, DictionaryStatus, GlossMissing, HostCall, HostVoice, Refused, StorageId, StoragePart, StorageView, TalkWindowView, TextResult, ToHost, ToView, TranslationState, TrayCommand, TrayView, ViewConfig } from './protocol'
@@ -134,11 +134,11 @@ const MAX_TEXT_CHARS = 6000
 const SNIP_WAIT_MS = 120_000
 /** Programs put a copy on the clipboard in steps; it is read once they are done. */
 const SETTLE_MS = 60
-/** How long after Krya presses Ctrl+C the program's copy may come: a busy VS Code (Claude writing an answer) takes over half a second. */
+/** How long after Kryakl presses Ctrl+C the program's copy may come: a busy VS Code (Claude writing an answer) takes over half a second. */
 const COPY_WAIT_MS = 2000
 /** No copy by then: the field's selection is read through UI Automation instead (Claude's question box in VS Code never answers Ctrl+C). */
 const UIA_WAIT_MS = 600
-/** How long after Krya's own write to the clipboard a change is still taken for that write. */
+/** How long after Kryakl's own write to the clipboard a change is still taken for that write. */
 const OWN_CLIPBOARD_MS = 300
 /** A selection converted into another layout is selected again up to this long. */
 const RESELECT_MOST = 400
@@ -190,9 +190,9 @@ const KEYBOARD_SETTINGS: readonly (keyof Settings)[] = [
 /** The links the About tab may open. */
 const LINKS = new Set([
   'https://ikstro.com',
-  'https://github.com/ikstro/krya',
-  'https://github.com/ikstro/krya/releases',
-  'https://github.com/ikstro/krya/blob/main/NOTICE',
+  'https://github.com/ikstro/kryakl',
+  'https://github.com/ikstro/kryakl/releases',
+  'https://github.com/ikstro/kryakl/blob/main/NOTICE',
   // The steps to the speakers' model: an account, the model's terms, a Read token.
   'https://huggingface.co/join',
   'https://huggingface.co/pyannote/speaker-diarization-community-1',
@@ -202,22 +202,21 @@ const LINKS = new Set([
 /** The settings that are Dictate's keys (and Talk's, which listens as dictation does): registered only once the speech engine is installed. */
 const DICTATION_KEYS: readonly (keyof Settings)[] = ['dictateKey', 'englishKey', 'noteKey', 'againKey', 'practiceKey', 'talkKey']
 
-// One Krya at a time, whichever folder it keeps its things in: the lock is taken on Krya's own
+// One Kryakl at a time, whichever folder it keeps its things in: the lock is taken on Kryakl's own
 // folder first, before a test run moves to its own. A second copy (another start, `npm start`, a test
 // run) hands its arguments to the first and quits; the first opens its window.
 const theOnlyOne = app.requestSingleInstanceLock()
-// A test run (KRYA_TEST_HOME; ALTYPE_TEST_HOME, the old name, still read) keeps to its own folders and port; the installed Krya is quit first.
+// A test run (KRYA_TEST_HOME; ALTYPE_TEST_HOME, the old name, still read) keeps to its own folders and port; the installed Kryakl is quit first.
 const TEST_HOME = process.env.KRYA_TEST_HOME || process.env.ALTYPE_TEST_HOME || undefined
 if (TEST_HOME) app.setPath('userData', TEST_HOME)
 const speechPort = TEST_HOME ? Number(process.env.KRYA_TEST_PORT || process.env.ALTYPE_TEST_PORT) || 8797 : SPEECH_PORT
 
 const userDir = () => app.getPath('userData')
 const localAppData = () => process.env.LOCALAPPDATA ?? path.join(app.getPath('appData'), '..', 'Local')
-/** %LOCALAPPDATA%\Krya: what is big and downloaded (the speech engine, the translation models), never roamed. */
-const localDir = () => TEST_HOME ?? path.join(localAppData(), 'Krya')
-/** %LOCALAPPDATA%\Altype, the old name's folder: a part that could not move out of it is used there (oldfolder.ts adoptLocalFolder). */
-const oldLocalDir = () => path.join(localAppData(), 'Altype')
-const oldLocalDirs = () => (TEST_HOME ? [] : [oldLocalDir()])
+/** %LOCALAPPDATA%\Kryakl: what is big and downloaded (the speech engine, the translation models), never roamed. */
+const localDir = () => TEST_HOME ?? path.join(localAppData(), 'Kryakl')
+/** %LOCALAPPDATA%\Krya and \Altype, the old names' folders, newest first: a part that could not move out of one is used there (oldfolder.ts adoptLocalFolder). */
+const oldLocalDirs = () => (TEST_HOME ? [] : OLD_LOCAL_FOLDERS.map(name => path.join(localAppData(), name)))
 /** A part of localDir (speech, translate), or the old folder's when it is still there. */
 const localPart = (name: string) => partDir(name, localDir(), ...oldLocalDirs())
 /** A download's folder (the Firefox models, the voice, the word meanings): in localDir, beside the rest (oldfolder.ts moveDownloads); else where its move left it. */
@@ -249,9 +248,9 @@ let snipSince = 0
 /** What the snip is for: the card to listen to, or the translator; the key that asked for it. */
 let snipFor: Purpose = 'listen'
 let snipVia: string | undefined
-/** Krya is using the clipboard itself (converting a selection, pasting, putting it back): its changes are no requests. */
+/** Kryakl is using the clipboard itself (converting a selection, pasting, putting it back): its changes are no requests. */
 let clipboardBusy = false
-/** What the person had on the clipboard, kept while Krya borrows it and put back after; the card's window owns Krya's writes. */
+/** What the person had on the clipboard, kept while Kryakl borrows it and put back after; the card's window owns Kryakl's writes. */
 const clipGuard = new ClipboardGuard<ClipboardSnapshot>({
   sequence: clipboardSequence,
   snapshot: () => clipboardSnapshot(clipboardOwner()),
@@ -278,7 +277,7 @@ let balloonClick: (() => void) | undefined
 let keyboard: KeyboardHelper
 let keyboardTrouble: string | undefined
 let lastApp: string | undefined
-/** A program run as administrator was in front lately: Windows keeps its keys from Krya's hooks. */
+/** A program run as administrator was in front lately: Windows keeps its keys from Kryakl's hooks. */
 let elevatedApp: string | undefined
 /** The layout in front and Caps Lock, for the tray's icon (when it shows the layout). */
 let frontLayout: { layout: string; caps: boolean } | undefined
@@ -354,7 +353,7 @@ function systemNative(): string {
 }
 
 /**
- * The app was called Altype until 0.11, 2Talker and tu-talk before: its things move over once,
+ * The app was called Krya until 0.15, Altype until 0.11, 2Talker and tu-talk before: its things move over once,
  * %APPDATA%'s item by item, %LOCALAPPDATA%'s whole when it can (the speech engine's Python set right
  * for its new place). A test run keeps to its own folder and moves nothing. Returns what moved, for the log.
  */
@@ -367,48 +366,68 @@ function adoptOldFolder(): Moved {
   return { ...local, moved: [...moved, ...local.moved] }
 }
 
-/** What a move from the old folders did: what moved, the programs stopped to let go of its files, what stayed and why. */
-type Moved = { moved: string[]; stopped: string[]; left: LeftPart[] }
+/** What stayed in one old folder after a move, and why. */
+type LeftIn = { dir: string; parts: LeftPart[] }
+
+/** What a move from the old folders did: what moved, the programs stopped to let go of their files, what stayed and why. */
+type Moved = { moved: string[]; stopped: string[]; left: LeftIn[] }
 
 /**
- * %LOCALAPPDATA%\Altype into Krya's folder (oldfolder.ts adoptLocalFolder), and the downloads from %APPDATA%\Krya
- * (moveDownloads). Programs run from inside the old folder (the speech engine's Python, llama-server, left by Altype
- * or a run from source) keep its files in use, so they are stopped first, only while it holds something to move.
+ * %LOCALAPPDATA%\Krya and \Altype into Kryakl's folder (oldfolder.ts adoptLocalFolder), newest first, and the
+ * downloads from %APPDATA%\Kryakl (moveDownloads). Programs run from inside an old folder (the speech engine's
+ * Python, llama-server, left by Krya, Altype or a run from source) keep its files in use, so they are stopped
+ * first, only while it holds something to move.
  */
 function moveLocalFolder(): Moved {
-  const old = oldLocalDir()
-  const errors = new Map<string, unknown>()
-  const warn: Warn = (message, error, from) => {
-    console.warn(message, error)
-    if (from) errors.set(path.basename(from), error)
+  const moved: string[] = []
+  const stopped: string[] = []
+  const left: LeftIn[] = []
+  for (const old of oldLocalDirs()) {
+    const errors = new Map<string, unknown>()
+    const warn: Warn = (message, error, from) => {
+      console.warn(message, error)
+      if (from) errors.set(path.basename(from), error)
+    }
+    const freed = hasToMove(old, localDir()) ? freeFolder(old, undefined, warn) : { stopped: [], holding: [] }
+    moved.push(...adoptLocalFolder(old, localDir(), warn).map(name => `local/${path.basename(old)}/${name}`))
+    stopped.push(...freed.stopped.map(p => `${p.name} (${p.pid})`))
+    const parts = leftIn(old, localDir(), errors, freed.holding)
+    if (parts.length) left.push({ dir: old, parts })
   }
-  const freed = hasToMove(old, localDir()) ? freeFolder(old, undefined, warn) : { stopped: [], holding: [] }
-  const moved = adoptLocalFolder(old, localDir(), warn).map(name => `local/${name}`)
-  moved.push(...moveDownloads(userDir(), localDir(), warn).map(name => `downloads/${name}`))
-  const left = leftIn(old, localDir(), errors, freed.holding)
+  moved.push(...moveDownloads(userDir(), localDir(), (message, error) => console.warn(message, error)).map(name => `downloads/${name}`))
   leftOld = left
-  return { moved, stopped: freed.stopped.map(p => `${p.name} (${p.pid})`), left }
+  return { moved, stopped, left }
 }
 
-/** What the last move left in the old Altype folder and why: the Storage page says it beside Move to Krya. */
-let leftOld: LeftPart[] = []
+/** What the last move left in the old folders and why: the Storage page says it beside Move to Kryakl. */
+let leftOld: LeftIn[] = []
 
-/** The log's lines for a move: what was stopped for it, what stayed in the old folder and why. */
+/** The log's lines for a move: what was stopped for it, what stayed in each old folder and why. */
 function logMoved(r: Moved): void {
   if (r.moved.length) log(`moved over from the old folders: ${r.moved.join(', ')}`)
-  if (r.stopped.length) log(`stopped to free ${oldLocalDir()}: ${r.stopped.join(', ')}`)
-  if (r.left.length) log(`left in ${oldLocalDir()}: ${r.left.map(p => `${p.name} (${p.why})`).join(', ')}`)
+  if (r.stopped.length) log(`stopped to free the old folders: ${r.stopped.join(', ')}`)
+  for (const { dir, parts } of r.left) log(`left in ${dir}: ${parts.map(p => `${p.name} (${p.why})`).join(', ')}`)
 }
 
-/** The old name's program still running (Altype.exe, an older install): its folders are in use, so this start gives way. */
-function oldAppRunning(): boolean {
-  if (TEST_HOME || !fs.existsSync(path.join(app.getPath('appData'), 'Altype', 'settings.json'))) return false
-  try {
-    const out = execFileSync(system32('tasklist.exe'), ['/FI', 'IMAGENAME eq Altype.exe', '/FO', 'CSV', '/NH'], { encoding: 'utf8', windowsHide: true, timeout: 5000 })
-    return /"Altype\.exe"/i.test(out)
-  } catch {
-    return false
+/** The old names' programs, with the folder that says each was installed here: while one runs, its folders are in use. */
+const OLD_APPS = [
+  { exe: 'Krya.exe', folder: 'Krya', name: 'Krya' },
+  { exe: 'Altype.exe', folder: 'Altype', name: 'Altype' },
+]
+
+/** The old name's program still running (Krya.exe or Altype.exe, an older install), so this start gives way; its name, else undefined. */
+function oldAppRunning(): string | undefined {
+  if (TEST_HOME) return undefined
+  for (const old of OLD_APPS) {
+    if (!fs.existsSync(path.join(app.getPath('appData'), old.folder, 'settings.json'))) continue
+    try {
+      const out = execFileSync(system32('tasklist.exe'), ['/FI', `IMAGENAME eq ${old.exe}`, '/FO', 'CSV', '/NH'], { encoding: 'utf8', windowsHide: true, timeout: 5000 })
+      if (out.toLowerCase().includes(`"${old.exe.toLowerCase()}"`)) return old.name
+    } catch {
+      // Windows did not answer: this start goes on.
+    }
   }
+  return undefined
 }
 
 function readSettings(): Settings {
@@ -426,7 +445,7 @@ function saveSettings(patch: Partial<Settings>): void {
     fs.mkdirSync(userDir(), { recursive: true })
     fs.writeFileSync(settingsFile(), JSON.stringify(settings, null, 2) + '\n', 'utf8')
   } catch (error) {
-    console.warn('Krya: could not save the settings', error)
+    console.warn('Kryakl: could not save the settings', error)
   }
   if ('startWithWindows' in patch) applyLoginItem()
   // A key may be Electron's or the keyboard thread's (hotkey.ts isAccelerator): both learn of any change.
@@ -457,7 +476,7 @@ function applyLoginItem(): void {
 /** The uninstaller asks its one question in the interface's language (build/installer.nsh reads it here); a run from source or a test run leaves the registry alone. */
 function rememberUiLanguage(): void {
   if (!app.isPackaged || TEST_HOME) return
-  execFile(system32('reg.exe'), ['add', 'HKCU\\Software\\Krya', '/v', 'UiLanguage', '/d', settings.uiLanguage, '/f'], { windowsHide: true, timeout: 5000 }, () => undefined)
+  execFile(system32('reg.exe'), ['add', 'HKCU\\Software\\Kryakl', '/v', 'UiLanguage', '/d', settings.uiLanguage, '/f'], { windowsHide: true, timeout: 5000 }, () => undefined)
 }
 
 function config(): ViewConfig {
@@ -657,7 +676,7 @@ function prepareTranslator(t: Translator): void {
       last = Date.now()
       postApp()
     })
-    .catch(error => console.warn('Krya: the translator did not download', error))
+    .catch(error => console.warn('Kryakl: the translator did not download', error))
     .finally(() => postApp())
 }
 
@@ -711,7 +730,7 @@ function unsaveWord(word: string): void {
 async function exportWords(): Promise<void> {
   const { filePath } = await dialog.showSaveDialog(appWin ?? ({} as BrowserWindow), {
     title: t('main.saveWords'),
-    defaultPath: path.join(app.getPath('documents'), 'Krya words.txt'),
+    defaultPath: path.join(app.getPath('documents'), 'Kryakl words.txt'),
     filters: [{ name: t('main.ankiText'), extensions: ['txt'] }],
   })
   if (filePath) fs.writeFileSync(filePath, ankiTsv(words.list()) + '\n', 'utf8')
@@ -722,7 +741,7 @@ async function exportBackup(): Promise<void> {
   const day = new Date().toISOString().slice(0, 10)
   const options: Electron.SaveDialogOptions = {
     title: t('main.saveBackup'),
-    defaultPath: path.join(app.getPath('documents'), `Krya backup ${day}.json`),
+    defaultPath: path.join(app.getPath('documents'), `Kryakl backup ${day}.json`),
     filters: [{ name: t('main.backupFile'), extensions: ['json'] }],
   }
   const { filePath } = appWin ? await dialog.showSaveDialog(appWin, options) : await dialog.showSaveDialog(options)
@@ -739,14 +758,14 @@ async function exportBackup(): Promise<void> {
   fs.writeFileSync(filePath, JSON.stringify(backup, null, 2) + '\n', 'utf8')
 }
 
-/** A page's own errors into krya.log, so a report says what broke there. */
+/** A page's own errors into kryakl.log, so a report says what broke there. */
 function logPageErrors(win: BrowserWindow, name: string): void {
   win.webContents.on('console-message', m => {
     if (m.level === 'error') log(`${name} page: ${m.message} (${m.sourceId}:${m.lineNumber})`)
   })
 }
 
-/** Krya and Windows, for a report's first lines. */
+/** Kryakl and Windows, for a report's first lines. */
 function reportFacts(): ReportFacts {
   return { version: app.getVersion(), build: app.isPackaged ? '' : buildText(), electron: process.versions.electron, windows: process.getSystemVersion(), arch: process.arch }
 }
@@ -762,14 +781,14 @@ function reportStatus(): string[] {
 }
 
 /**
- * Report a problem (report.ts): the zip in Documents\Krya\Reports, shown in its
+ * Report a problem (report.ts): the zip in Documents\Kryakl\Reports, shown in its
  * folder, then the email or the GitHub issue opened with the person's text in
  * it; they attach the zip and send it themselves.
  */
 async function reportProblem(via: 'email' | 'github', text: string): Promise<void> {
   const at = new Date()
   log(`report: made for ${via}`)
-  const out = path.join(app.getPath('documents'), 'Krya', 'Reports', reportName(at))
+  const out = path.join(app.getPath('documents'), 'Kryakl', 'Reports', reportName(at))
   const facts = reportFacts()
   await makeReport({ dir: userDir(), out, message: text, facts, status: reportStatus(), settings, names: namesHere(), at })
   shell.showItemInFolder(out)
@@ -781,7 +800,7 @@ async function reportProblem(via: 'email' | 'github', text: string): Promise<voi
  * A backup the person picks, after a question that says what it holds: its
  * settings replace these (this computer's place for the dictation badge
  * stays), its words, mistakes, learned words and history are added to what is
- * here. A settings file from an older Krya is its settings alone.
+ * here. A settings file from an older Kryakl is its settings alone.
  */
 async function importBackup(): Promise<void> {
   const options: Electron.OpenDialogOptions = { title: t('main.openBackup'), defaultPath: app.getPath('documents'), filters: [{ name: t('main.backupFile'), extensions: ['json'] }], properties: ['openFile'] }
@@ -792,12 +811,12 @@ async function importBackup(): Promise<void> {
   try {
     read = readBackup(JSON.parse(fs.readFileSync(file, 'utf8')))
   } catch (error) {
-    void dialog.showMessageBox({ type: 'warning', title: 'Krya', message: t('main.backupUnread'), detail: messageOf(error) })
+    void dialog.showMessageBox({ type: 'warning', title: t('app.name'), message: t('main.backupUnread'), detail: messageOf(error) })
     return
   }
   const ask: Electron.MessageBoxOptions = {
     type: 'question',
-    title: 'Krya',
+    title: t('app.name'),
     message: t('main.importAsk'),
     detail: t('main.importDetail', { what: backupSummary(read) }),
     buttons: [t('main.import'), t('common.cancel')],
@@ -817,11 +836,11 @@ async function importBackup(): Promise<void> {
   postApp()
 }
 
-/** All settings back to how they came, after a question; the person's language, the setup done and what Krya learned stay. */
+/** All settings back to how they came, after a question; the person's language, the setup done and what Kryakl learned stay. */
 async function resetSettings(): Promise<void> {
   const options: Electron.MessageBoxOptions = {
     type: 'question',
-    title: 'Krya',
+    title: t('app.name'),
     message: t('main.resetAsk'),
     detail: t('main.resetDetail'),
     buttons: [t('main.reset'), t('common.cancel')],
@@ -837,7 +856,7 @@ async function resetSettings(): Promise<void> {
 async function resetKeys(): Promise<void> {
   const options: Electron.MessageBoxOptions = {
     type: 'question',
-    title: 'Krya',
+    title: t('app.name'),
     message: t('main.resetKeysAsk'),
     detail: t('main.resetKeysDetail'),
     buttons: [t('main.resetKeys'), t('common.cancel')],
@@ -867,7 +886,7 @@ function createCard(): BrowserWindow {
     fullscreenable: false,
     skipTaskbar: true,
     alwaysOnTop: true,
-    title: 'Krya',
+    title: t('app.name'),
     backgroundColor: cardColor(),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -987,7 +1006,7 @@ function buildText(): string {
 
 // ---------------------------------------------------------------- storage
 
-/** What Krya keeps, measured once the Storage page was opened (storage.ts); again after a removal. */
+/** What Kryakl keeps, measured once the Storage page was opened (storage.ts); again after a removal. */
 let storage: StorageView | undefined
 let measuring = false
 let measureAgain = false
@@ -1050,7 +1069,7 @@ function measureStorage(): void {
       const parts = markAway(splitSpeech(measured), root, DOWNLOADED)
       storage = { measuring: false, root, drive: driveOf(root), freeMb: freeMb(root), parts, ...oldFolderView(parts) }
     })
-    .catch(error => console.warn('Krya: could not measure the storage', error))
+    .catch(error => console.warn('Kryakl: could not measure the storage', error))
     .finally(() => {
       measuring = false
       if (storage?.measuring) storage = { ...storage, measuring: false }
@@ -1065,7 +1084,7 @@ function measureStorage(): void {
 /** Measured again after a removal, when the page has been opened. */
 const remeasure = () => (storage ? measureStorage() : postApp())
 
-/** Krya's downloads, which belong in its one folder; the person's own things live elsewhere. */
+/** Kryakl's downloads, which belong in its one folder; the person's own things live elsewhere. */
 const DOWNLOADED: readonly StorageId[] = ['fast', 'dict', 'voice', 'accurate', 'most', 'unused', 'llama', 'speechModel', 'speech', 'gpu', 'speakers']
 
 /** What the parts serve now (storage.ts withUse): the settings, the build the model runs on here, the speech plan with its reserve on the other device. */
@@ -1090,7 +1109,7 @@ const storageView = (s: StorageView): StorageView => ({ ...s, parts: withUse(s.p
 let refused: Refused[] = []
 
 function noteRefused(id: StorageId, item: string | undefined, error: unknown): void {
-  console.warn(`Krya: could not remove ${id}${item ? ` ${item}` : ''}`, error)
+  console.warn(`Kryakl: could not remove ${id}${item ? ` ${item}` : ''}`, error)
   const why = engineMessage(error instanceof Error ? error.message : String(error))
   refused.push({ id, ...(item ? { item } : {}), why })
 }
@@ -1165,32 +1184,35 @@ function useRecommended(): void {
   if (Object.keys(advice.patch).length) saveSettings(advice.patch)
   if ('translationLevel' in advice.patch) prepareTranslator(activeTranslator())
   if (advice.model && settings.translationLevel === 'fast') prepareModel()
-  if (advice.natural) voiceStore.download().catch(error => console.warn('Krya: the natural voice did not download', error))
+  if (advice.natural) voiceStore.download().catch(error => console.warn('Kryakl: the natural voice did not download', error))
   if (advice.parts.length)
     speech.install(advice.parts).then(
       () => (registerShortcuts(), applyKeyboard()),
-      error => console.warn('Krya: the speech engine did not install', error),
+      error => console.warn('Kryakl: the speech engine did not install', error),
     )
 }
-/** Move to Krya is under way: the page shows it, and a second press waits. */
-let movingToKrya = false
+/** Move to Kryakl is under way: the page shows it, and a second press waits. */
+let movingToKryakl = false
 
-/** A download used from outside Krya's folder: the old one's place, and why the last move left it there. */
+/** A download used from outside Kryakl's folder: the old one's place, and why the last move left it there. */
 function oldFolderView(parts: readonly StoragePart[]): Pick<StorageView, 'old'> {
-  if (!parts.some(p => p.away)) return {}
-  const why = [...new Set(leftOld.filter(p => p.why !== 'Krya has its own').map(p => p.why))].join('; ')
-  return { old: { dir: oldLocalDir(), moving: movingToKrya, ...(why ? { why } : {}) } }
+  const away = parts.find(p => p.away)
+  if (!away) return {}
+  const dir = oldLocalDirs().find(d => away.path.toLowerCase().startsWith(d.toLowerCase() + path.sep)) ?? path.dirname(away.path)
+  const reasons = leftOld.find(l => l.dir === dir)?.parts ?? []
+  const why = [...new Set(reasons.filter(p => p.why !== 'Kryakl has its own').map(p => p.why))].join('; ')
+  return { old: { dir, moving: movingToKryakl, ...(why ? { why } : {}) } }
 }
 
 /**
- * The Storage page's Move to Krya: what still lives in the old Altype folder goes into Krya's. The speech engine,
+ * The Storage page's Move to Kryakl: what still lives in the old folders goes into Kryakl's. The speech engine,
  * the model's server, the voice and Firefox's translator let go of their files first; the programs run from the
- * old folder are stopped (moveLocalFolder). Each part keeps its place from Krya's start, so Krya starts again on
+ * old folder are stopped (moveLocalFolder). Each part keeps its place from Kryakl's start, so Kryakl starts again on
  * the Storage page once anything moved; when nothing could, the engine comes back and the page says why.
  */
-async function moveToKrya(): Promise<void> {
-  if (movingToKrya || TEST_HOME) return
-  movingToKrya = true
+async function moveToKryakl(): Promise<void> {
+  if (movingToKryakl || TEST_HOME) return
+  movingToKryakl = true
   if (storage) storage = { ...storage, ...oldFolderView(storage.parts) }
   postApp()
   speech.service.stop()
@@ -1200,19 +1222,19 @@ async function moveToKrya(): Promise<void> {
   // The page's "moving" is drawn before the move holds the main process for a second or two.
   await new Promise(resolve => setTimeout(resolve, 300))
   const r = moveLocalFolder()
-  log('move to Krya: pressed on the Storage page')
+  log('move to Kryakl: pressed on the Storage page')
   logMoved(r)
   if (r.moved.length) {
     app.relaunch({ args: [...process.argv.slice(1).filter(a => a !== '--storage'), '--storage'] })
     app.quit()
     return
   }
-  movingToKrya = false
+  movingToKryakl = false
   speech.start()
   measureStorage()
 }
 
-/** A download of Krya's own deleted from the Storage page; each downloads again when it is wanted next. */
+/** A download of Kryakl's own deleted from the Storage page; each downloads again when it is wanted next. */
 function appView(): AppView {
   return {
     settings,
@@ -1268,7 +1290,7 @@ function createAppWindow(): BrowserWindow {
     show: false,
     // The page draws its own sidebar and bar (the mark, the places, minimize and close); the edges still resize.
     frame: false,
-    title: 'Krya',
+    title: t('app.name'),
     icon: path.join(app.getAppPath(), 'media', 'icon.png'),
     backgroundColor: appColor(),
     webPreferences: {
@@ -1286,13 +1308,13 @@ function createAppWindow(): BrowserWindow {
   // The page's maximize button shows Maximize or Restore, whichever way the window got there (a double click on the bar too).
   win.on('maximize', () => postAppWindow())
   win.on('unmaximize', () => postAppWindow())
-  // Its errors go into krya.log; a run from source shows the rest of what it says in the terminal.
+  // Its errors go into kryakl.log; a run from source shows the rest of what it says in the terminal.
   logPageErrors(win, 'app window')
   if (!app.isPackaged) {
-    win.webContents.on('console-message', m => m.level !== 'error' && console.warn(`Krya app window: ${m.message} (${m.sourceId}:${m.lineNumber})`))
-    win.webContents.on('did-fail-load', (_event, code, description) => console.warn(`Krya app window did not load: ${code} ${description}`))
+    win.webContents.on('console-message', m => m.level !== 'error' && console.warn(`Kryakl app window: ${m.message} (${m.sourceId}:${m.lineNumber})`))
+    win.webContents.on('did-fail-load', (_event, code, description) => console.warn(`Kryakl app window did not load: ${code} ${description}`))
   }
-  // Closing hides: Krya lives in the tray.
+  // Closing hides: Kryakl lives in the tray.
   win.on('close', event => {
     if (quitting) return
     event.preventDefault()
@@ -1486,21 +1508,21 @@ function onMessage(message: ToHost, page: Page): void {
       postApp()
       return
     case 'exportBackup':
-      exportBackup().catch(error => console.warn('Krya: could not save the backup', error))
+      exportBackup().catch(error => console.warn('Kryakl: could not save the backup', error))
       return
     case 'importBackup':
-      importBackup().catch(error => console.warn('Krya: could not import the backup', error))
+      importBackup().catch(error => console.warn('Kryakl: could not import the backup', error))
       return
     case 'resetSettings':
-      resetSettings().catch(error => console.warn('Krya: could not reset the settings', error))
+      resetSettings().catch(error => console.warn('Kryakl: could not reset the settings', error))
       return
     case 'resetKeys':
-      resetKeys().catch(error => console.warn('Krya: could not reset the keys', error))
+      resetKeys().catch(error => console.warn('Kryakl: could not reset the keys', error))
       return
     case 'installSpeech':
       speech.install(message.parts, message.models).then(
         () => (registerShortcuts(), applyKeyboard()),
-        error => console.warn('Krya: the speech engine did not install', error),
+        error => console.warn('Kryakl: the speech engine did not install', error),
       )
       return
     case 'prepareTranslator':
@@ -1539,11 +1561,11 @@ function onMessage(message: ToHost, page: Page): void {
     case 'storage':
       measureStorage()
       return
-    case 'moveToKrya':
-      void moveToKrya().catch(error => {
-        movingToKrya = false
-        leftOld = [{ name: 'Altype', why: messageOf(error) }]
-        console.warn('Krya: could not move the old folder', error)
+    case 'moveToKryakl':
+      void moveToKryakl().catch(error => {
+        movingToKryakl = false
+        leftOld = oldLocalDirs().map(dir => ({ dir, parts: [{ name: path.basename(dir), why: messageOf(error) }] }))
+        console.warn('Kryakl: could not move the old folder', error)
         remeasure()
       })
       return
@@ -1566,7 +1588,7 @@ function onMessage(message: ToHost, page: Page): void {
       if (typeof message.path === 'string' && path.win32.isAbsolute(message.path)) shell.showItemInFolder(message.path)
       return
     case 'openPath':
-      // A folder, a note or a text file; never a program, a script or a shortcut. One of Krya's own
+      // A folder, a note or a text file; never a program, a script or a shortcut. One of Kryakl's own
       // folders not made yet (the transcripts' before the first transcript) is made, then opened.
       makeOwnFolder(message.path)
       if (openable(message.path, isDirectory)) void shell.openPath(message.path)
@@ -1593,7 +1615,7 @@ function onMessage(message: ToHost, page: Page): void {
       natural.at(message.id, message.index)
       return
     case 'downloadNatural':
-      voiceStore.download().catch(error => console.warn('Krya: the natural voice did not download', error))
+      voiceStore.download().catch(error => console.warn('Kryakl: the natural voice did not download', error))
       return
     case 'dismissNatural':
       saveSettings({ naturalDismissed: true })
@@ -1619,7 +1641,7 @@ function onMessage(message: ToHost, page: Page): void {
       maximizeCard(message.on)
       return
     case 'close':
-      closeCard().catch(error => console.warn('Krya: could not give the keyboard back', error))
+      closeCard().catch(error => console.warn('Kryakl: could not give the keyboard back', error))
       return
     case 'retry':
       if (last && shown?.id === last.id) void translateInto(last.id, last.text, last.kind, last.note)
@@ -1636,10 +1658,10 @@ function onMessage(message: ToHost, page: Page): void {
       void checkCard(message.id, message.text)
       return
     case 'copyText':
-      clipboard.writeText(message.text).catch(error => console.warn('Krya: could not copy', error))
+      clipboard.writeText(message.text).catch(error => console.warn('Kryakl: could not copy', error))
       return
     case 'pasteText':
-      pasteTranslation(message.id, message.text).catch(error => console.warn('Krya: could not paste the translation', error))
+      pasteTranslation(message.id, message.text).catch(error => console.warn('Kryakl: could not paste the translation', error))
       return
     case 'lookup':
       lookupWord(message.word, asker)
@@ -1672,10 +1694,10 @@ function onMessage(message: ToHost, page: Page): void {
       postApp()
       return
     case 'exportWords':
-      exportWords().catch(error => console.warn('Krya: could not save the words', error))
+      exportWords().catch(error => console.warn('Kryakl: could not save the words', error))
       return
     case 'copyWords':
-      clipboard.writeText(wordsText(words.list())).catch(error => console.warn('Krya: could not copy the words', error))
+      clipboard.writeText(wordsText(words.list())).catch(error => console.warn('Kryakl: could not copy the words', error))
       return
     case 'openLink':
       if (LINKS.has(message.url)) void shell.openExternal(message.url)
@@ -1839,7 +1861,7 @@ function translationJob(codes: readonly string[], wait = false): TranslationJob 
       if (translator.state(code).status !== 'absent') continue
       translator
         .prepare(code, () => undefined)
-        .catch(error => console.warn('Krya: the draft translator did not download', error))
+        .catch(error => console.warn('Kryakl: the draft translator did not download', error))
         .finally(() => postApp())
     }
     return { t, translate: t.translate, busy: () => undefined }
@@ -2018,7 +2040,7 @@ function translateText(text: string, kind: CardKind, at: Point, via?: string): v
  * text, the card showing why.
  */
 async function recognizeSnip(id: number, png: Buffer): Promise<{ text: string; misread: boolean } | undefined> {
-  const file = path.join(app.getPath('temp'), `krya-${process.pid}-${id}.png`)
+  const file = path.join(app.getPath('temp'), `kryakl-${process.pid}-${id}.png`)
   try {
     fs.writeFileSync(file, png)
     const native = langCode(settings.native)
@@ -2060,7 +2082,7 @@ function focusedField(): unknown {
   try {
     return focusedElement()
   } catch (error) {
-    console.warn('Krya: could not ask which field has the keyboard', error)
+    console.warn('Kryakl: could not ask which field has the keyboard', error)
     return undefined
   }
 }
@@ -2071,7 +2093,7 @@ function selectionIn(field: unknown): string {
   try {
     return selectedText(field).trim()
   } catch (error) {
-    console.warn('Krya: could not read the selection through UI Automation', error)
+    console.warn('Kryakl: could not read the selection through UI Automation', error)
     return ''
   }
 }
@@ -2122,7 +2144,7 @@ async function pasteInto(window: bigint, field: unknown, text: string): Promise<
       // A web page in a window (VS Code's chat) takes the keyboard back a moment after.
       if (focus(field)) await new Promise(resolve => setTimeout(resolve, 80))
     } catch (error) {
-      console.warn('Krya: could not give the keyboard back to the field', error)
+      console.warn('Kryakl: could not give the keyboard back to the field', error)
     }
     releaseField(field)
   }
@@ -2163,7 +2185,7 @@ async function translateInPlace(text: string, at: Point, window: bigint, via?: s
     if (busy) keyboard.say(t(busy === 'card' ? 'badge.fastCard' : 'badge.fastProcessor'), BUSY_SAY_MS)
   } catch (error) {
     keyboard.say('')
-    tray?.displayBalloon({ title: 'Krya', content: t('main.notTranslated', { why: messageOf(error) }) })
+    tray?.displayBalloon({ title: t('app.name'), content: t('main.notTranslated', { why: messageOf(error) }) })
   }
 }
 
@@ -2422,7 +2444,7 @@ async function checkCard(id: number, text: string): Promise<void> {
 function prepareModel(): void {
   checker
     .prepare(() => postApp())
-    .catch(error => console.warn('Krya: the model did not download', error))
+    .catch(error => console.warn('Kryakl: the model did not download', error))
     .finally(() => (postApp(), remeasure()))
 }
 
@@ -2461,7 +2483,7 @@ function showText(text: string, purpose: Purpose, at: Point, window?: bigint, vi
 async function useClipboard(purpose: Purpose): Promise<void> {
   const text = (await clipboard.readText()).trim()
   if (text) showText(text, purpose, screen.getCursorScreenPoint())
-  else tray?.displayBalloon({ title: 'Krya', content: t('main.noClipText') })
+  else tray?.displayBalloon({ title: t('app.name'), content: t('main.noClipText') })
 }
 
 /** How often a running model looks for a program on the full screen, and how long it rests before it gives the card to one. */
@@ -2531,7 +2553,7 @@ function llmLoadedView(): { llmLoaded?: { model: LlmModel; onCard: boolean } } {
 /** What the window last heard of the loaded model: a change is sent to it. */
 let loadedShown = ''
 
-/** Every few seconds while Krya runs: a model on a full screen's card let go, and what one holds measured. */
+/** Every few seconds while Kryakl runs: a model on a full screen's card let go, and what one holds measured. */
 function watchModel(): void {
   const loaded = JSON.stringify(llmLoadedView())
   if (loaded !== loadedShown) {
@@ -2539,8 +2561,8 @@ function watchModel(): void {
     postApp()
   }
   stopForFullScreen()
-  recheckBusy().catch(error => console.warn('Krya: could not look at the graphics card', error))
-  measureCard().catch(error => console.warn('Krya: could not measure the graphics card', error))
+  recheckBusy().catch(error => console.warn('Kryakl: could not look at the graphics card', error))
+  measureCard().catch(error => console.warn('Kryakl: could not measure the graphics card', error))
 }
 
 /**
@@ -2563,7 +2585,7 @@ function warmModel(purpose: Purpose): void {
   )
 }
 
-/** A selection key: Krya presses Ctrl+C in the program in front and shows what it copies; the clipboard is put back after. */
+/** A selection key: Kryakl presses Ctrl+C in the program in front and shows what it copies; the clipboard is put back after. */
 async function useSelection(purpose: Purpose, via?: string): Promise<void> {
   warmModel(purpose)
   const at = screen.getCursorScreenPoint()
@@ -2599,7 +2621,7 @@ async function useSelection(purpose: Purpose, via?: string): Promise<void> {
     // Put back once a late copy has had its time; nothing changed, nothing is written.
     clipGuard.release(LATE_COPY_MS)
     log(`copy: nothing in ${COPY_WAIT_MS} ms from ${exe}`)
-    tray?.displayBalloon({ title: 'Krya', content: t('main.nothingCopied') })
+    tray?.displayBalloon({ title: t('app.name'), content: t('main.nothingCopied') })
   }, COPY_WAIT_MS)
 }
 
@@ -2615,7 +2637,7 @@ async function clipboardPng(): Promise<Buffer | undefined> {
 
 /** Reads the clipboard once the program that changed it is done. */
 function afterSettling(read: () => Promise<void>): void {
-  setTimeout(() => read().catch(error => console.warn('Krya: could not read the clipboard', error)), SETTLE_MS)
+  setTimeout(() => read().catch(error => console.warn('Kryakl: could not read the clipboard', error)), SETTLE_MS)
 }
 
 function onClipboardChange(): void {
@@ -2629,7 +2651,7 @@ function onClipboardChange(): void {
     // A password manager's copy (marked "do not watch") is neither shown nor read aloud.
     const secret = privateCopy()
     afterSettling(async () => {
-      // The copy Krya pressed: taken back once read.
+      // The copy Kryakl pressed: taken back once read.
       clipGuard.claim()
       const text = secret ? '' : (await clipboard.readText()).trim()
       await clipGuard.putBack()
@@ -2640,7 +2662,7 @@ function onClipboardChange(): void {
     return
   }
   if (now < lateCopyUntil && !ctrl) {
-    // The program's late answer to Krya's Ctrl+C: put back with the rest, when clipGuard's wait ends.
+    // The program's late answer to Kryakl's Ctrl+C: put back with the rest, when clipGuard's wait ends.
     lateCopyUntil = 0
     clipGuard.claim()
     return
@@ -2667,7 +2689,7 @@ function onClipboardChange(): void {
 
 /** A change of the clipboard by the person: Ctrl+C twice asks for the card. */
 function doubleCopyChange(now: number, ctrl: boolean): void {
-  // Copying from the card itself is not a request, nor is any copy while Krya is paused, nor a password
+  // Copying from the card itself is not a request, nor is any copy while Kryakl is paused, nor a password
   // manager's copy (marked "do not watch"): Ctrl+C twice on a password never shows or reads it.
   if (card?.isFocused() || !settings.doubleCopy || settings.paused || privateCopy()) return
   if (!copies.change(now, ctrl)) return
@@ -2679,10 +2701,10 @@ function doubleCopyChange(now: number, ctrl: boolean): void {
 }
 
 function selection(purpose: Purpose, via?: string): void {
-  useSelection(purpose, via).catch(error => console.warn('Krya: could not copy the selection', error))
+  useSelection(purpose, via).catch(error => console.warn('Kryakl: could not copy the selection', error))
 }
 
-/** The pause key: Krya paused, or back. */
+/** The pause key: Kryakl paused, or back. */
 function togglePause(): void {
   saveSettings({ paused: !settings.paused })
 }
@@ -2747,7 +2769,7 @@ function registerShortcuts(): void {
   // The settings window shows the trouble itself; the balloon is for a start without it.
   if (taken.length > 0 && !(appWin?.isVisible() ?? false)) {
     tray?.displayBalloon({
-      title: 'Krya',
+      title: t('app.name'),
       content: t('main.keysTaken', { n: taken.length, keys: taken.map(keyLabel).join(` ${t('common.and')} `) }),
     })
   }
@@ -2773,7 +2795,7 @@ function tableFor(id: string): KeyTable | undefined {
 }
 
 /**
- * Krya pastes through the clipboard: what the person had there is kept
+ * Kryakl pastes through the clipboard: what the person had there is kept
  * (once for a run of such pastes) and goes back once `work` is done, or has
  * failed: a moment after the program read the pasted text, or `after` ms;
  * a snip still awaited is no longer.
@@ -2790,7 +2812,7 @@ async function borrowClipboard<T>(work: () => Promise<T>, after: (result: T | un
   }
 }
 
-/** Runs Krya's own use of the clipboard; the changes it makes, until a moment after, are not taken for requests. */
+/** Runs Kryakl's own use of the clipboard; the changes it makes, until a moment after, are not taken for requests. */
 async function ownClipboard<T>(work: () => Promise<T>): Promise<T> {
   clipboardBusy = true
   try {
@@ -2802,7 +2824,7 @@ async function ownClipboard<T>(work: () => Promise<T>): Promise<T> {
 }
 
 /**
- * The fix key with a selection: Krya copies it, types it again in the
+ * The fix key with a selection: Kryakl copies it, types it again in the
  * next layout of `cycle` (the one after the layout it was typed in), pastes
  * it over the selection, selects it again (a second press goes on to the
  * next layout), switches the layout and puts the clipboard back. Signs
@@ -2827,7 +2849,7 @@ async function convertSelection(cycle: string[], now: string): Promise<void> {
 
 /** Copies the selection and pastes it converted: whether anything was pasted (the clipboard then goes back once it is read), and whether it is selected again. */
 async function convertOver(cycle: string[], now: string): Promise<{ pasted: boolean; selected: boolean }> {
-  const marker = `Krya ${Date.now()}`
+  const marker = `Kryakl ${Date.now()}`
   const field = focusedField()
   await clipGuard.write(marker)
   await pressCopy()
@@ -2847,7 +2869,7 @@ async function convertOver(cycle: string[], now: string): Promise<{ pasted: bool
     }
   }
   releaseField(field)
-  // The copy Krya pressed is its own to take back.
+  // The copy Kryakl pressed is its own to take back.
   if (copied) clipGuard.claim()
   if (!text) {
     log(`convert: nothing copied in ${COPY_WAIT_MS} ms`)
@@ -3026,7 +3048,7 @@ async function layoutIcon(short: string, caps: boolean, dark: boolean): Promise<
     layoutIcons.set(key, icon)
     return icon
   } catch (error) {
-    console.warn('Krya: could not draw the layout in the tray', error)
+    console.warn('Kryakl: could not draw the layout in the tray', error)
     return undefined
   }
 }
@@ -3037,7 +3059,7 @@ function tooltip(): string {
   const ways = [settings.doubleCopy ? t('tray.tipTwice') : '', settings.selectKey ? keyLabel(settings.selectKey) : ''].filter(Boolean)
   const listen = ways.length ? t('tray.tipListen', { keys: ways.join(` ${t('common.or')} `) }) : ''
   const translate = settings.translateKey ? t('tray.tipTranslate', { key: keyLabel(settings.translateKey) }) : ''
-  return ['Krya', listen, translate].filter(Boolean).join(' · ')
+  return [t('app.name'), listen, translate].filter(Boolean).join(' · ')
 }
 
 /** The tray's pictures (scripts/icons.mjs): the duck for a light or a dark taskbar, faded while paused, and the red dot while recording. */
@@ -3057,13 +3079,13 @@ function trayIcon(picture: TrayPicture): Electron.NativeImage {
 
 function createTray(): Tray {
   const t = new Tray(trayIcon(`${darkTaskbar() ? 'dark' : 'light'}${settings.paused ? '-paused' : ''}`))
-  // Either button opens Krya's own panel: Windows' menu cannot take Krya's look.
+  // Either button opens Kryakl's own panel: Windows' menu cannot take Kryakl's look.
   t.on('click', () => toggleTrayPanel())
   t.on('right-click', () => toggleTrayPanel())
   return t
 }
 
-/** The tray's panel: a window of Krya's own by the tray icon, made once and hidden between uses. */
+/** The tray's panel: a window of Kryakl's own by the tray icon, made once and hidden between uses. */
 function createTrayPanel(): BrowserWindow {
   const win = new BrowserWindow({
     width: TRAY_WIDTH,
@@ -3077,7 +3099,7 @@ function createTrayPanel(): BrowserWindow {
     fullscreenable: false,
     skipTaskbar: true,
     alwaysOnTop: true,
-    title: 'Krya',
+    title: t('app.name'),
     backgroundColor: appColor(),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -3093,7 +3115,7 @@ function createTrayPanel(): BrowserWindow {
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
   win.webContents.on('will-navigate', event => event.preventDefault())
   logPageErrors(win, 'tray panel')
-  if (!app.isPackaged) win.webContents.on('console-message', m => m.level !== 'error' && console.warn(`Krya tray panel: ${m.message} (${m.sourceId}:${m.lineNumber})`))
+  if (!app.isPackaged) win.webContents.on('console-message', m => m.level !== 'error' && console.warn(`Kryakl tray panel: ${m.message} (${m.sourceId}:${m.lineNumber})`))
   // A click anywhere else puts it away, as a menu goes.
   win.on('blur', () => {
     if (Date.now() - trayShownAt > 200) hideTrayPanel()
@@ -3195,7 +3217,7 @@ function runTrayCommand(command: TrayCommand): void {
 }
 
 /**
- * For a mouse button or a launcher: `Krya --clipboard` listens to the
+ * For a mouse button or a launcher: `Kryakl --clipboard` listens to the
  * copied text and `--translate` translates it; `--snip` snips to listen,
  * `--text` to translate. True when the arguments held one.
  */
@@ -3216,7 +3238,7 @@ function runCommand(argv: readonly string[]): boolean {
     snip('translate')
     return true
   }
-  // Started again by Move to Krya: back on the Storage page, measured anew.
+  // Started again by Move to Kryakl: back on the Storage page, measured anew.
   if (argv.includes('--storage')) {
     openApp('storage')
     return true
@@ -3307,8 +3329,8 @@ function setUpSpeechEngine(): void {
     done({ requestHeaders: key ? { ...details.requestHeaders, 'X-Krya-Token': key } : details.requestHeaders })
   })
   speech.start()
-  // Windows is asked about the cards and the battery once Krya is up: it takes a second or two.
-  setTimeout(() => void speech.probe().catch(error => console.warn('Krya: could not look at this computer', error)), 4000)
+  // Windows is asked about the cards and the battery once Kryakl is up: it takes a second or two.
+  setTimeout(() => void speech.probe().catch(error => console.warn('Kryakl: could not look at this computer', error)), 4000)
 }
 
 /** The formats a transcript is saved in (the engine's export.FORMATS). */
@@ -3316,7 +3338,7 @@ const EXPORT_FORMATS = new Set(['txt', 'md', 'srt', 'vtt', 'docx', 'json'])
 
 const isDirectory = (p: string) => fs.statSync(p).isDirectory()
 
-/** Makes `p` when it is one of Krya's own folders (its settings, its downloads, the transcripts') and not there yet. */
+/** Makes `p` when it is one of Kryakl's own folders (its settings, its downloads, the transcripts') and not there yet. */
 function makeOwnFolder(p: unknown): void {
   if (typeof p !== 'string' || fs.existsSync(p)) return
   const same = (a: string) => path.win32.resolve(a).toLowerCase() === path.win32.resolve(p).toLowerCase()
@@ -3352,7 +3374,7 @@ async function hostCall(request: HostCall): Promise<unknown> {
       }
       const { canceled, filePath } = appWin ? await dialog.showSaveDialog(appWin, options) : await dialog.showSaveDialog(options)
       if (canceled || !filePath) return null
-      // The engine gives the bytes; Krya writes them where the person chose (the engine writes no file a caller names).
+      // The engine gives the bytes; Kryakl writes them where the person chose (the engine writes no file a caller names).
       fs.writeFileSync(filePath, await speech.bytes(`/transcripts/${encodeURIComponent(request.id)}/file?format=${request.format}`))
       return filePath
     }
@@ -3370,13 +3392,14 @@ async function hostCall(request: HostCall): Promise<unknown> {
 }
 
 function start(): void {
-  if (oldAppRunning()) {
-    dialog.showMessageBoxSync({ type: 'info', title: 'Krya', message: 'Altype is still running', detail: "Krya is Altype's new name. Quit Altype from its tray menu, then start Krya: it takes over your settings, words and downloads." })
+  const running = oldAppRunning()
+  if (running) {
+    dialog.showMessageBoxSync({ type: 'info', title: 'Kryakl', message: `${running} is still running`, detail: `Kryakl is ${running}'s new name. Quit ${running} from its tray menu, then start Kryakl: it takes over your settings, words and downloads.` })
     app.quit()
     return
   }
   const adopted = adoptOldFolder()
-  // krya.log beside the settings: the warnings, and what the windows did.
+  // kryakl.log beside the settings: the warnings, and what the windows did.
   logTo(userDir())
   const warn = console.warn.bind(console)
   console.warn = (...parts: unknown[]) => {
@@ -3388,7 +3411,7 @@ function start(): void {
   process.on('warning', w => log(`warning: ${w.name}: ${w.message}`))
   app.on('render-process-gone', (_event, contents, details) => log(`a page's process is gone (${pageOf(contents.getURL())}): ${details.reason}, exit ${details.exitCode}`))
   app.on('child-process-gone', (_event, details) => log(`${details.type}${details.name ? ` (${details.name})` : ''} process is gone: ${details.reason}, exit ${details.exitCode}`))
-  log(`start: Krya ${app.getVersion()}, Electron ${process.versions.electron}, Windows ${process.getSystemVersion()}${TEST_HOME ? ', test home' : ''}`)
+  log(`start: Kryakl ${app.getVersion()}, Electron ${process.versions.electron}, Windows ${process.getSystemVersion()}${TEST_HOME ? ', test home' : ''}`)
   // Everything downloaded in one folder (moveLocalFolder): what 0.10.0 and before kept in %APPDATA% moves over too.
   logMoved(adopted)
   const firstRun = !fs.existsSync(settingsFile())
@@ -3398,7 +3421,7 @@ function start(): void {
   // Only a fresh install sees the setup; a settings file from before it counts as set up (the default).
   if (firstRun) saveSettings({ setupDone: false })
   applyTheme()
-  // Windows' own light or dark, switched while Krya runs (the theme "system"), repaints the windows' ground and edge, and the tray's icon for the taskbar.
+  // Windows' own light or dark, switched while Kryakl runs (the theme "system"), repaints the windows' ground and edge, and the tray's icon for the taskbar.
   nativeTheme.on('updated', () => {
     applyColors()
     refreshTray()
@@ -3460,7 +3483,7 @@ function start(): void {
       sendTrayView()
     },
     // A word fixed by hand twice is fixed by itself from then on, and kept as typed no more.
-    // krya.log says each step, never the word.
+    // kryakl.log says each step, never the word.
     fixedByHand: word => {
       const kept = settings.keepWords.includes(word.word)
       const already = learned.alwaysFix.some(l => l.word === word.word && l.lang === word.lang)
@@ -3486,7 +3509,7 @@ function start(): void {
     },
     notLearned: why =>
       log(why === 'field' ? 'learn: a word fixed by hand, not learned: the field said it is a password, or would not say' : 'learn: a word fixed by hand, not learned: it made no word of a word'),
-    selection: (cycle, layout) => void convertSelection(cycle, layout).catch(error => console.warn('Krya: could not convert the selection', error)),
+    selection: (cycle, layout) => void convertSelection(cycle, layout).catch(error => console.warn('Kryakl: could not convert the selection', error)),
     hotkey: action => {
       if (action === 'pause') return togglePause()
       // Paused, the thread keeps the pause key alone; a key on its way meanwhile does nothing.
@@ -3524,7 +3547,7 @@ function start(): void {
     },
     failed: message => {
       keyboardTrouble = message
-      console.warn(`Krya keyboard: ${message}`)
+      console.warn(`Kryakl keyboard: ${message}`)
       postApp()
     },
   })
@@ -3542,7 +3565,7 @@ function start(): void {
     log(`bridge: ${page} may not call ${String(request?.call)}`)
     throw new Error('Not allowed from this window')
   })
-  // The card's window owns Krya's pasted text: handed over when the paste's program reads it.
+  // The card's window owns Kryakl's pasted text: handed over when the paste's program reads it.
   const stopRendering = watchRendering(
     card,
     () => {
@@ -3559,7 +3582,7 @@ function start(): void {
       stopRendering()
     }
   } catch (error) {
-    tray.displayBalloon({ title: 'Krya', content: t('main.copyTwiceOff', { why: messageOf(error) }) })
+    tray.displayBalloon({ title: t('app.name'), content: t('main.copyTwiceOff', { why: messageOf(error) }) })
   }
   void sendHostVoices()
   // The first start opens the window on "How to use".
@@ -3582,7 +3605,7 @@ if (!theOnlyOne) {
     // Quitting within a paste's moment: what the person had goes back now, while the card's window can still own the clipboard.
     clipGuard.flush()
   })
-  // The card is hidden, never closed: Krya keeps running in the tray.
+  // The card is hidden, never closed: Kryakl keeps running in the tray.
   app.on('window-all-closed', () => undefined)
   // Each part is put away on its own: one that fails must not keep the app from quitting.
   app.on('will-quit', () => {
@@ -3602,7 +3625,7 @@ if (!theOnlyOne) {
       try {
         step()
       } catch (error) {
-        console.warn(`Krya: could not put away the ${name}`, error)
+        console.warn(`Kryakl: could not put away the ${name}`, error)
       }
     }
   })

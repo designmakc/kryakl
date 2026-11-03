@@ -1,6 +1,6 @@
 // Pictures of every surface of the app window, the tray panel and the dictation badge, made
 // offscreen by scripts/shots/harness.ts under Electron: npm run shots -> .cache/shots/*.png
-// and log.txt. Build first (dist/preload.js, media/*.js); the installed Krya may keep running.
+// and log.txt. Build first (dist/preload.js, media/*.js); the installed Kryakl may keep running.
 import { spawnSync } from 'node:child_process'
 import { mkdirSync } from 'node:fs'
 import electron from 'electron'

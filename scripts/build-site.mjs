@@ -1,7 +1,7 @@
 // The landing's Ukrainian and Russian pages, made from the English one (site/index.html): every text of the page
 // replaced by its translation (scripts/site/<lang>.mjs, the longest first, so a short one never cuts into a longer
-// one), the head and the language links pointed at the page's own address, and window.KRYA set for the shared
-// script (site/krya.js): its words and the examples in the version's language.
+// one), the head and the language links pointed at the page's own address, and window.KRYAKL set for the shared
+// script (site/kryakl.js): its words and the examples in the version's language.
 // node scripts/build-site.mjs → site/uk/index.html, site/ru/index.html. The Pages workflow runs it before upload.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -9,15 +9,17 @@ import { fileURLToPath } from 'node:url'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const SITE = join(ROOT, 'site')
-const BASE = 'https://ikstro.com/krya/'
+const BASE = 'https://ikstro.com/kryakl/'
 const VERSIONS = [
   { code: 'en', label: 'EN', name: 'English', dir: '' },
-  { code: 'uk', label: 'UA', name: 'Українська', dir: 'uk/' },
-  { code: 'ru', label: 'RU', name: 'Русский', dir: 'ru/' },
+  { code: 'uk', label: 'UA', name: 'Українська', dir: 'uk/', brand: 'Крякл' },
+  { code: 'ru', label: 'RU', name: 'Русский', dir: 'ru/', brand: 'Крякл' },
 ]
+// The logo's word as the English page sets it: a translated page sets the name in its own letters (2026-11-03).
+const LOGO_WORD = '>Kryakl <span class="duck"'
 const CI = !!process.env.GITHUB_ACTIONS
 
-// The language links as seen from one version: relative, so the page works from a file and under /krya/ alike.
+// The language links as seen from one version: relative, so the page works from a file and under /kryakl/ alike.
 function langLinks(from, label) {
   const up = from.dir ? '../' : ''
   const links = VERSIONS.map(v => {
@@ -42,20 +44,24 @@ for (const version of VERSIONS.filter(v => v.dir)) {
     [`<link rel="canonical" href="${BASE}">`, `<link rel="canonical" href="${BASE}${version.dir}">`],
     [`<meta property="og:url" content="${BASE}">`, `<meta property="og:url" content="${BASE}${version.dir}">`],
     ['<meta property="og:locale" content="en_US">', `<meta property="og:locale" content="${locale}">`],
-    ['<link rel="stylesheet" href="krya.css">', '<link rel="stylesheet" href="../krya.css">'],
-    ['<script src="krya.js"></script>', `<script>window.KRYA = ${JSON.stringify({ lang: version.code, text, demo }).replace(/</g, '\\u003c')};</script>\n<script src="../krya.js"></script>`],
+    ['<link rel="stylesheet" href="kryakl.css">', '<link rel="stylesheet" href="../kryakl.css">'],
+    ['<script src="kryakl.js"></script>', `<script>window.KRYAKL = ${JSON.stringify({ lang: version.code, text, demo }).replace(/</g, '\\u003c')};</script>\n<script src="../kryakl.js"></script>`],
   ]
   for (const [from, to] of head) {
     if (!page.includes(from)) throw new Error(`${version.code}: the English page has no ${from}`)
     page = page.replace(from, to)
   }
+  if (!page.includes(LOGO_WORD)) throw new Error(`${version.code}: the English page has no logo ${LOGO_WORD}`)
+  page = page.split(LOGO_WORD).join(`>${version.brand} <span class="duck"`)
+  // The title and og:title name it the same way; the tagline stays English, as in Kryakl.
+  page = page.split('Kryakl. Talk to the duck.').join(`${version.brand}. Talk to the duck.`)
   page = page.replace(/<nav class="langs"[\s\S]*?<\/nav>/, langLinks(version, langLabel))
   mkdirSync(join(SITE, version.dir), { recursive: true })
   writeFileSync(join(SITE, version.dir, 'index.html'), page)
   // A text of the English page no translation names stays English on this page: said, never fatal, so the page still goes up.
   for (const m of missing) console.warn(`${CI ? '::warning::' : ''}${version.code}: not on the English page any more: ${m.slice(0, 90)}`)
   console.log(`site/${version.dir}index.html: ${html.length - missing.length} of ${html.length} texts`)
-  // --check: the texts still in English, to read through (Krya's own windows stay English on purpose).
+  // --check: the texts still in English, to read through (Kryakl's own windows stay English on purpose).
   if (process.argv.includes('--check')) {
     const body = page.slice(page.indexOf('<body>'), page.indexOf('<script'))
     const left = new Set()

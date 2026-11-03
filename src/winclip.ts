@@ -26,7 +26,7 @@ export function handleOf(window: BrowserWindow): bigint {
 export function watchClipboard(window: BrowserWindow, onChange: () => void): () => void {
   const hwnd = handleOf(window)
   window.hookWindowMessage(WM_CLIPBOARDUPDATE, () => onChange())
-  if (!AddClipboardFormatListener(hwnd)) throw new Error('Windows did not let Krya watch the clipboard')
+  if (!AddClipboardFormatListener(hwnd)) throw new Error('Windows did not let Kryakl watch the clipboard')
   return () => {
     RemoveClipboardFormatListener(hwnd)
     // On quitting, the window may be gone already.
@@ -37,7 +37,7 @@ export function watchClipboard(window: BrowserWindow, onChange: () => void): () 
 const WM_RENDERFORMAT = 0x0305
 const WM_RENDERALLFORMATS = 0x0306
 
-/** The window owns Krya's promised text (winclipboard.ts): `onRead` when a program asks for it, `onGoing` when the window goes first. */
+/** The window owns Kryakl's promised text (winclipboard.ts): `onRead` when a program asks for it, `onGoing` when the window goes first. */
 export function watchRendering(window: BrowserWindow, onRead: () => void, onGoing: () => void): () => void {
   // Called within Windows' message: the text must be handed over before the hook returns.
   window.hookWindowMessage(WM_RENDERFORMAT, () => onRead())
@@ -158,7 +158,7 @@ export function allowForeground(): void {
   AllowSetForegroundWindow(ASFW_ANY)
 }
 
-/** Each side's modifier keys, by the names krya.log gives them. */
+/** Each side's modifier keys, by the names kryakl.log gives them. */
 const SIDES: readonly [number, string][] = [
   [0xa2, 'Left Ctrl'],
   [0xa3, 'Right Ctrl'],

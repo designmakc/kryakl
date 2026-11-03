@@ -10,7 +10,7 @@ import { summaryOf, TALKS_MOST, TalkStore } from './talks'
 
 const dirs: string[] = []
 function tempFile(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'krya-talks-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'kryakl-talks-'))
   dirs.push(dir)
   return path.join(dir, 'talks.json')
 }

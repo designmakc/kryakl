@@ -1,7 +1,7 @@
-"""Krya's speech service: a local HTTP service on 127.0.0.1 for Krya, its Chrome extension and other apps.
+"""Kryakl's speech service: a local HTTP service on 127.0.0.1 for Kryakl, its Chrome extension and other apps.
 
 Run: python app.py [--port 8765]. Only this computer can reach it, and only
-callers with the engine's key (X-Krya-Token, see auth.py) are served; Krya's
+callers with the engine's key (X-Krya-Token, see auth.py) are served; Kryakl's
 own Chrome extension may record meetings; a web page or another extension
 cannot call it (see `guard`).
 
@@ -26,7 +26,7 @@ What other apps may use, and keep using:
                                       the key only {ok}, or with X-Krya-Nonce only {proof}
   GET  /transcripts/<id>/file?format= the transcript as txt, md, srt, vtt, docx or json (bytes)
 
-Krya alone uses: PUT /settings {plan, vocabulary: [{word, heard}]} (which model runs
+Kryakl alone uses: PUT /settings {plan, vocabulary: [{word, heard}]} (which model runs
 where, made from this computer's measurements; the words to spell right and what they
 are heard as), POST /calibrate (the speed test), POST /models/<name>/download,
 DELETE /models/<name> (its files gone -> {name, state: "missing"}; 409 while it is planned,
@@ -80,7 +80,7 @@ SOURCES = ("file", "mic", "meet", "note")
 TRACKS = ("main", "mic", "tab")
 MEDIA = {".mp4", ".mkv", ".webm", ".mov", ".avi", ".m4v", ".mp3", ".m4a", ".wav", ".ogg", ".oga", ".opus", ".flac", ".aac", ".wma"}
 
-log = logging.getLogger("krya")
+log = logging.getLogger("kryakl")
 settings = Settings()
 EXTENSION_FILE = APP_DIR / "extension.json"
 
@@ -140,14 +140,14 @@ worker.dictating = sessions.active
 # The speed test runs only while nothing else does: no transcription, no phrase being recognized.
 calibrator = Calibrator(worker.bench, lambda: worker.idle() and not _dictating.locked() and not sessions.active(), worker.unload_all, lambda: worker.activity, worker.threads)
 # No /docs, /redoc or /openapi.json: Swagger's page would load scripts from a CDN onto the engine's own origin.
-app = FastAPI(title="Krya speech", version=VERSION, docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI(title="Kryakl speech", version=VERSION, docs_url=None, redoc_url=None, openapi_url=None)
 app.add_middleware(CORSMiddleware, allow_origins=[auth.EXTENSION_ORIGIN], allow_methods=["*"], allow_headers=["*"])
 TOKEN = auth.load_token()
 
 
 @app.middleware("http")
 async def guard(request: Request, call_next):
-    """Krya with the engine's key, its own extension on its own routes; anyone else gets /health's bare ok.
+    """Kryakl with the engine's key, its own extension on its own routes; anyone else gets /health's bare ok.
 
     The Host check stops DNS rebinding: a page whose name points at 127.0.0.1 still says its own name.
     """
@@ -157,7 +157,7 @@ async def guard(request: Request, call_next):
         return JSONResponse({"detail": "forbidden"}, status_code=403)
     method, path = request.method, request.url.path
     if origin:
-        # A web page or another extension: nothing. Krya's extension: only what it does.
+        # A web page or another extension: nothing. Kryakl's extension: only what it does.
         if origin != auth.EXTENSION_ORIGIN or not auth.extension_may(method, path):
             return JSONResponse({"detail": "forbidden"}, status_code=403)
         # Any program here can send that Origin: the recording routes hold such a caller to a meeting (`by_extension`).
@@ -168,7 +168,7 @@ async def guard(request: Request, call_next):
             if request.headers.get("x-krya-extension", "").strip():
                 note_extension(origin, request.headers["x-krya-extension"])
             nonce = request.headers.get("x-krya-nonce", "")
-            # Krya's first look, before it sends the key: the proof alone, so a program that took the port never gets it.
+            # Kryakl's first look, before it sends the key: the proof alone, so a program that took the port never gets it.
             if auth.nonce_ok(nonce):
                 return JSONResponse({"proof": auth.proof(TOKEN, nonce)})
             return JSONResponse({"ok": True})
@@ -195,15 +195,15 @@ def planned(feature: str) -> dict:
 @app.get("/health")
 def health(request: Request):
     if request.headers.get("origin"):
-        # Krya's extension needs to know only that the engine is up.
+        # Kryakl's extension needs to know only that the engine is up.
         return {"ok": True, "version": VERSION}
     nonce = request.headers.get("x-krya-nonce", "")
-    # The proof that this engine holds the key (auth.py), as without it; Krya asks it without the key first (guard).
+    # The proof that this engine holds the key (auth.py), as without it; Kryakl asks it without the key first (guard).
     return {**health_view(), **({"proof": auth.proof(TOKEN, nonce)} if auth.nonce_ok(nonce) else {})}
 
 
 def loaded_now() -> list[dict]:
-    """The models in memory now and where (Krya's Models page says what it holds of the card right now)."""
+    """The models in memory now and where (Kryakl's Models page says what it holds of the card right now)."""
     out = [{"model": t.name, "device": t.device} for t in (worker.transcriber, worker.dictator, worker.parakeet) if t.loaded]
     if worker.diarizer.loaded:
         out.append({"model": "speakers", "device": worker.diarizer.device})
@@ -272,7 +272,7 @@ def _prepare() -> None:
 @app.post("/dictate/prepare")
 def prepare_dictation():
     """Loads (and the first time downloads) the dictation model in the background; /health shows how far."""
-    threading.Thread(target=_prepare, name="krya-prepare", daemon=True).start()
+    threading.Thread(target=_prepare, name="kryakl-prepare", daemon=True).start()
     return planned("dictation")
 
 
@@ -356,7 +356,7 @@ def open_session(body: dict = Body(default={})):
     # stream.py calls a recognizer with (sound, language, expected, before) only; strictness rides along here.
     recognize = functools.partial(_piece, strict=body.get("strict") is True)
     session = sessions.open(Session(recognize, kind, expected, language))
-    threading.Thread(target=_prepare, name="krya-prepare", daemon=True).start()
+    threading.Thread(target=_prepare, name="kryakl-prepare", daemon=True).start()
     return {"id": session.id, "model": planned("dictation")}
 
 
@@ -418,7 +418,7 @@ def download_model(name: str):
             except Exception:
                 log.exception("could not download %s", name)
 
-        threading.Thread(target=fetch, name=f"krya-fetch-{name}", daemon=True).start()
+        threading.Thread(target=fetch, name=f"kryakl-fetch-{name}", daemon=True).start()
     return asr.model_state(name)
 
 
@@ -439,7 +439,7 @@ def model_busy(name: str) -> str:
 
 @app.delete("/models/{name}")
 def delete_model(name: str):
-    """A model's files gone from the disk (Krya's Models page); it downloads again when wanted."""
+    """A model's files gone from the disk (Kryakl's Models page); it downloads again when wanted."""
     if name not in ALL_MODELS:
         raise HTTPException(404, "No such model")
     why = model_busy(name)
@@ -639,7 +639,7 @@ def get_audio(id: str):
 
 @app.get("/transcripts/{id}/file")
 def file_of(id: str, format: str = "txt"):
-    """The transcript in a format, as bytes: Krya writes them where the person chose in its Save dialog.
+    """The transcript in a format, as bytes: Kryakl writes them where the person chose in its Save dialog.
 
     (The engine itself writes no file a caller names.)"""
     if format not in export.FORMATS:
@@ -704,7 +704,7 @@ def by_extension(request: Request) -> bool:
 
 
 def extension_meeting(request: Request, row: dict | None) -> None:
-    """A caller by the extension's Origin touches only a meeting's recording, never Krya's microphone or a note."""
+    """A caller by the extension's Origin touches only a meeting's recording, never Kryakl's microphone or a note."""
     if by_extension(request) and row is not None and row["source"] != "meet":
         raise HTTPException(403, "forbidden")
 
@@ -733,7 +733,7 @@ def start_recording(request: Request, body: dict = Body(...)):
     if source not in ("mic", "meet", "note") or not tracks or any(t not in TRACKS for t in tracks):
         raise HTTPException(400, "source and tracks are needed")
     if by_extension(request) and source != "meet":
-        # The extension starts only meetings (offscreen.js); a note or the microphone is Krya's, with the key.
+        # The extension starts only meetings (offscreen.js); a note or the microphone is Kryakl's, with the key.
         raise HTTPException(403, "forbidden")
     title = (body.get("title") or "").strip() or {"mic": "Microphone recording", "meet": "Meeting", "note": "Note"}[source]
     store = state.get_store()
@@ -794,7 +794,7 @@ def main() -> int:
     # Only a real start adopts Altscribe's folders, never an import (the tests import this module).
     adopt_altscribe()
     settings.reload()
-    # Altype's transcripts into Documents\Krya, before anything opens the library.
+    # Krya's and Altype's transcripts into Documents\Kryakl, before anything opens the library.
     move_transcripts(settings)
     worker.start()
     if settings["hfToken"] and not diarize.downloaded():

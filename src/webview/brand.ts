@@ -1,17 +1,19 @@
-// Krya's logo and icon as the pages draw them (2026-10-30): the text logo
-// "Krya (')>" (theme.css `.logo`; the eye ' in the text's colour, the
+// Kryakl's logo and icon as the pages draw them (2026-10-30): the text logo
+// "Kryakl (')>" (theme.css `.logo`; the eye ' in the text's colour, the
 // parentheses and the beak in the duck's), and the app icon K3, the duck {•>
 // on its black tile, white braces and eye and a yellow beak (build/icon.svg's
 // shapes), where the logo has no room.
 
+import { t } from '../i18n'
 import { el, html } from './dom'
 
-/** The text logo; its size is the place's font size. */
+/** The text logo; its size is the place's font size. Its word is the name in the interface's language: Kryakl, Крякл in Ukrainian and Russian. */
 export function logo(): HTMLElement {
+  const name = t('app.name')
   return el(
     'span',
-    { class: 'logo', 'aria-label': 'Krya' },
-    el('span', {}, 'Krya'),
+    { class: 'logo', 'aria-label': name },
+    el('span', {}, name),
     el('span', { class: 'duck', 'aria-hidden': 'true' }, '(', el('span', { class: 'eye' }, "'"), ')>'),
   )
 }

@@ -25,7 +25,7 @@ import logging
 import re
 from dataclasses import dataclass
 
-log = logging.getLogger("krya.phantoms")
+log = logging.getLogger("kryakl.phantoms")
 
 # Whisper's own measures of a segment: the chance there was no speech, and how sure it was of its words.
 NO_SPEECH = 0.4

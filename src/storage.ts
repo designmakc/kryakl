@@ -1,9 +1,9 @@
-// What Krya keeps on this computer, measured for the Storage page: every
-// download in one folder (%LOCALAPPDATA%\Krya) and the person's own things
-// (%APPDATA%\Krya, the transcripts). On a computer with uv of its own (a
+// What Kryakl keeps on this computer, measured for the Storage page: every
+// download in one folder (%LOCALAPPDATA%\Kryakl) and the person's own things
+// (%APPDATA%\Kryakl, the transcripts). On a computer with uv of its own (a
 // developer's), the speech engine's packages are hard links into uv's cache:
 // the same bytes in two folders, counted as `shared` so the page can say what
-// a removal really frees. That cache is not Krya's and is not shown. Each
+// a removal really frees. That cache is not Kryakl's and is not shown. Each
 // part is told what it serves now (`withUse`): a part nothing uses is marked,
 // for the pages to say so and for Clean up to remove.
 
@@ -43,7 +43,7 @@ export function isUnder(target: string, dir: string): boolean {
   return rel === '' || (!rel.startsWith('..') && !path.isAbsolute(rel))
 }
 
-/** The downloads Krya uses from outside its folder `home` (a move that could not finish), marked `away`. */
+/** The downloads Kryakl uses from outside its folder `home` (a move that could not finish), marked `away`. */
 export function markAway(parts: readonly StoragePart[], home: string, downloads: readonly StorageId[]): StoragePart[] {
   return parts.map(p => (downloads.includes(p.id) && p.bytes > 0 && !isUnder(p.path, home) ? { ...p, away: true } : p))
 }

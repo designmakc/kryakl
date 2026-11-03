@@ -105,7 +105,7 @@ def test_the_engine_proves_it_holds_the_key(client):
 
 
 def test_a_nonce_without_the_key_gets_the_proof_and_nothing_else(client):
-    # Krya's first look: whatever holds the port learns no key from it, and the engine tells nothing but the proof.
+    # Kryakl's first look: whatever holds the port learns no key from it, and the engine tells nothing but the proof.
     r = client.get("/health", headers={"x-krya-nonce": "n1"})
     assert r.status_code == 200 and r.json() == {"proof": auth.proof(KEY["x-krya-token"], "n1")}
     assert client.get("/health", headers={"x-krya-nonce": "n" * (auth.NONCE_MAX + 1)}).json() == {"ok": True}
@@ -120,7 +120,7 @@ def test_a_web_page_and_another_extension_are_refused_everywhere(client):
             assert client.request(method, route, headers={**who, **KEY}).status_code == 403, (who, method, route)
 
 
-def test_krya_s_extension_records_and_says_hello_but_reads_nothing(client):
+def test_kryakl_s_extension_records_and_says_hello_but_reads_nothing(client):
     assert client.get("/health", headers={**OURS, "x-krya-extension": "0.4.0"}).json() == {"ok": True, "version": engine.VERSION}
     assert engine.extension["id"] == auth.EXTENSION_ID
     assert client.post("/recordings", headers=OURS, json={"source": "meet", "title": "x", "tracks": {"tab": {"startedAt": 0}}}).status_code == 200
@@ -136,13 +136,13 @@ def meeting(client, headers=OURS) -> str:
 
 @pytest.mark.parametrize("source", ["note", "mic"])
 def test_the_extension_s_origin_starts_no_note_and_no_microphone(client, source):
-    # Any program here can send the extension's Origin; it records a meeting and nothing of Krya's.
+    # Any program here can send the extension's Origin; it records a meeting and nothing of Kryakl's.
     tracks = {"main" if source == "note" else "mic": {"startedAt": 0}}
     assert client.post("/recordings", headers=OURS, json={"source": source, "tracks": tracks}).status_code == 403
     assert client.post("/recordings", headers=KEY, json={"source": source, "tracks": tracks}).status_code == 200
 
 
-def test_the_extension_s_origin_touches_no_recording_of_krya_s(client):
+def test_the_extension_s_origin_touches_no_recording_of_kryakl_s(client):
     id = client.post("/recordings", headers=KEY, json={"source": "mic", "tracks": {"mic": {"startedAt": 0}}}).json()["id"]
     assert client.put(f"/recordings/{id}/mic/0", headers=OURS, content=b"x").status_code == 403
     assert client.post(f"/recordings/{id}/finish", headers=OURS, json={}).status_code == 403
@@ -200,8 +200,8 @@ def test_no_api_pages(client):
 
 @pytest.mark.parametrize("raw, kept", [
     ("Inbox", "Inbox"),
-    ("Notes/Krya", "Notes/Krya"),
-    ("Notes\\Krya", "Notes/Krya"),
+    ("Notes/Kryakl", "Notes/Kryakl"),
+    ("Notes\\Kryakl", "Notes/Kryakl"),
     ("..\\..\\Startup", "Inbox"),
     ("a/../../b", "Inbox"),
     ("C:\\Users\\x\\Startup", "Inbox"),

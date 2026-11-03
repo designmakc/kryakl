@@ -4,7 +4,7 @@
 // key again stops. Then, by the key:
 //   type     the text is typed where the cursor is (through the clipboard,
 //            which is put back as it was),
-//   english  the same, translated into English first by Krya's translator,
+//   english  the same, translated into English first by Kryakl's translator,
 //   note     the recording goes into the knowledge base as a .md file
 //            (through the engine's library), and a balloon says where.
 // Esc while recording throws it away. Typed phrases go into the log
@@ -104,7 +104,7 @@ export class Dictation {
   private async start(mode: DictationMode, key: string): Promise<void> {
     if (!this.o.speech.installed) return this.o.needsEngine()
     if (!this.o.speech.ready) {
-      this.o.balloon('Krya', 'The speech engine is starting. Try again in a few seconds.')
+      this.o.balloon('Kryakl', 'The speech engine is starting. Try again in a few seconds.')
       return
     }
     this.mode = mode
@@ -232,8 +232,8 @@ export class Dictation {
   typeAgain(): void {
     if (this.state !== 'idle' || this.opening) return
     const last = this.o.log.last()
-    if (!last) return this.o.balloon('Krya', 'Nothing dictated yet')
-    this.o.paste(`${last.text} `).catch(error => console.warn('Krya: could not type the phrase again', error))
+    if (!last) return this.o.balloon('Kryakl', 'Nothing dictated yet')
+    this.o.paste(`${last.text} `).catch(error => console.warn('Kryakl: could not type the phrase again', error))
   }
 
   clearLog(): void {
@@ -313,7 +313,7 @@ export class Dictation {
       alwaysOnTop: true,
       // The program being typed in keeps the focus, so the text lands there.
       focusable: false,
-      title: 'Krya dictation',
+      title: 'Kryakl dictation',
       // The page draws the pill itself (its 16 px corners and 1 px edge, dictation.css): the window around it is
       // see-through, on Windows 10 and 11 alike, as DWM's own round corner is fixed at about 8 px.
       transparent: true,
@@ -354,7 +354,7 @@ export class Dictation {
     try {
       putOnTop(handleOf(b))
     } catch (error) {
-      console.warn('Krya: Windows did not put the badge on top', error)
+      console.warn('Kryakl: Windows did not put the badge on top', error)
     }
   }
 
@@ -363,7 +363,7 @@ export class Dictation {
     try {
       return sightOf(handleOf(b))
     } catch (error) {
-      console.warn('Krya: could not ask Windows about the badge', error)
+      console.warn('Kryakl: could not ask Windows about the badge', error)
       return undefined
     }
   }
@@ -418,7 +418,7 @@ export class Dictation {
       const rect = windowRect(foreground().hwnd)
       if (rect) return screen.getDisplayMatching(screen.screenToDipRect(null, rect)).workArea
     } catch (error) {
-      console.warn('Krya: could not find the window in front', error)
+      console.warn('Kryakl: could not find the window in front', error)
     }
     return screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).workArea
   }

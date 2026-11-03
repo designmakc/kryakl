@@ -21,17 +21,17 @@ function put(file: string, text: string): void {
   fs.writeFileSync(file, text)
 }
 
-test('2Talker\'s folder moves over to Krya\'s, item by item, never over what is there; tu-talk fills the gaps', () => {
-  const appData = temp('krya-appdata-')
+test('2Talker\'s folder moves over to Kryakl\'s, item by item, never over what is there; tu-talk fills the gaps', () => {
+  const appData = temp('kryakl-appdata-')
   const at = (file: string) => path.join(appData, file)
   put(at('2Talker/settings.json'), '{"native":"Russian"}')
   put(at('2Talker/words.json'), '[1]')
   put(at('2Talker/models/ru/model.bin'), 'm')
   put(at('tu-talk/voice/voice.onnx'), 'v')
   put(at('tu-talk/settings.json'), '{"old":true}')
-  put(at('Krya/dict/de.json'), 'kept')
+  put(at('Kryakl/dict/de.json'), 'kept')
   put(at('2Talker/dict/de.json'), 'older')
-  const userDir = path.join(appData, 'Krya')
+  const userDir = path.join(appData, 'Kryakl')
   const moved = adoptOldFolders(appData, userDir)
   expect(moved.sort()).toEqual(['2Talker/models', '2Talker/settings.json', '2Talker/words.json', 'tu-talk/voice'])
   expect(fs.readFileSync(path.join(userDir, 'settings.json'), 'utf8')).toBe('{"native":"Russian"}')
@@ -42,8 +42,8 @@ test('2Talker\'s folder moves over to Krya\'s, item by item, never over what is 
   expect(adoptOldFolders(appData, userDir)).toEqual([])
 })
 
-test('Altype\'s folder moves over to Krya\'s first: every file of the app\'s, the log under its new name; Electron\'s caches stay', () => {
-  const appData = temp('krya-appdata-')
+test('Altype\'s folder moves over to Kryakl\'s first: every file of the app\'s, the log under its new name; Electron\'s caches stay', () => {
+  const appData = temp('kryakl-appdata-')
   const at = (file: string) => path.join(appData, file)
   put(at('Altype/settings.json'), '{"native":"Ukrainian"}')
   for (const name of ['words.json', 'mistakes.json', 'learning.json', 'dictation.json', 'translations.json', 'device.json', 'speech.json', 'extension.json', 'speech.log', 'translate.log']) put(at(`Altype/${name}`), name)
@@ -51,10 +51,10 @@ test('Altype\'s folder moves over to Krya\'s first: every file of the app\'s, th
   put(at('Altype/GPUCache/data_0'), 'chromium')
   put(at('2Talker/settings.json'), '{"native":"Russian"}')
   put(at('2Talker/words.json'), '[2talker]')
-  // Electron made Krya's folder before the move: its lock and caches are there.
-  put(at('Krya/lockfile'), '')
-  put(at('Krya/GPUCache/data_0'), 'new')
-  const userDir = at('Krya')
+  // Electron made Kryakl's folder before the move: its lock and caches are there.
+  put(at('Kryakl/lockfile'), '')
+  put(at('Kryakl/GPUCache/data_0'), 'new')
+  const userDir = at('Kryakl')
   const moved = adoptOldFolders(appData, userDir)
   expect(moved).toContain('Altype/settings.json')
   expect(moved).toContain('Altype/altype.log')
@@ -63,16 +63,32 @@ test('Altype\'s folder moves over to Krya\'s first: every file of the app\'s, th
   expect(fs.readFileSync(path.join(userDir, 'words.json'), 'utf8')).toBe('words.json')
   expect(fs.readFileSync(path.join(userDir, 'mistakes.json'), 'utf8')).toBe('mistakes.json')
   expect(fs.readFileSync(path.join(userDir, 'speech.json'), 'utf8')).toBe('speech.json')
-  expect(fs.readFileSync(path.join(userDir, 'krya.log'), 'utf8')).toBe('history')
+  expect(fs.readFileSync(path.join(userDir, 'kryakl.log'), 'utf8')).toBe('history')
   expect(fs.readFileSync(path.join(userDir, 'GPUCache/data_0'), 'utf8')).toBe('new')
   expect(fs.existsSync(at('Altype/GPUCache/data_0'))).toBe(true)
   expect(adoptOldFolders(appData, userDir)).toEqual([])
 })
 
+test('Krya\'s folder moves over to Kryakl\'s before Altype\'s: its log under the new name, Altype\'s only fills the gaps', () => {
+  const appData = temp('kryakl-appdata-')
+  const at = (file: string) => path.join(appData, file)
+  put(at('Krya/settings.json'), '{"native":"Ukrainian"}')
+  put(at('Krya/krya.log'), 'krya')
+  put(at('Altype/settings.json'), '{"native":"Russian"}')
+  put(at('Altype/altype.log'), 'altype')
+  put(at('Altype/mistakes.json'), '[]')
+  const userDir = at('Kryakl')
+  const moved = adoptOldFolders(appData, userDir)
+  expect(moved).toEqual(['Krya/settings.json', 'Krya/krya.log', 'Altype/mistakes.json'])
+  expect(fs.readFileSync(path.join(userDir, 'settings.json'), 'utf8')).toBe('{"native":"Ukrainian"}')
+  expect(fs.readFileSync(path.join(userDir, 'kryakl.log'), 'utf8')).toBe('krya')
+  expect(fs.existsSync(at('Altype/settings.json'))).toBe(true)
+})
+
 test('the downloads move from %APPDATA% to %LOCALAPPDATA% once, never over what is there; one that stayed is still found', () => {
-  const root = temp('krya-downloads-')
-  const roaming = path.join(root, 'Roaming', 'Krya')
-  const local = path.join(root, 'Local', 'Krya')
+  const root = temp('kryakl-downloads-')
+  const roaming = path.join(root, 'Roaming', 'Kryakl')
+  const local = path.join(root, 'Local', 'Kryakl')
   put(path.join(roaming, 'models/ru/model.bin'), 'm')
   put(path.join(roaming, 'voice/voice.onnx'), 'v')
   put(path.join(roaming, 'dict/de.json'), 'older')
@@ -85,7 +101,7 @@ test('the downloads move from %APPDATA% to %LOCALAPPDATA% once, never over what 
   expect(partDir('models', local, roaming)).toBe(path.join(local, 'models'))
   // A folder that could not move (in use) is used where it is.
   fs.rmSync(path.join(local, 'dict'), { recursive: true })
-  expect(partDir('dict', local, roaming)).toBe(path.join(local, '..', '..', 'Roaming', 'Krya', 'dict'))
+  expect(partDir('dict', local, roaming)).toBe(path.join(local, '..', '..', 'Roaming', 'Kryakl', 'dict'))
   expect(partDir('translate', local, roaming)).toBe(path.join(local, 'translate'))
   expect(moveDownloads(roaming, roaming)).toEqual([])
 })
@@ -100,10 +116,10 @@ function speechEngine(dir: string): void {
   put(path.join(dir, 'models', 'whisper', 'small', 'model.bin'), 'w')
 }
 
-test('%LOCALAPPDATA%\\Altype moves to Krya whole, and the speech engine\'s Python points at its new place', () => {
-  const local = temp('krya-local-')
+test('%LOCALAPPDATA%\\Altype moves to Kryakl whole, and the speech engine\'s Python points at its new place', () => {
+  const local = temp('kryakl-local-')
   const old = path.join(local, 'Altype')
-  const next = path.join(local, 'Krya')
+  const next = path.join(local, 'Kryakl')
   speechEngine(path.join(old, 'speech'))
   put(path.join(old, 'translate', 'models', 'gemma.gguf'), 'g')
   expect(adoptLocalFolder(old, next)).toEqual(['*'])
@@ -117,10 +133,10 @@ test('%LOCALAPPDATA%\\Altype moves to Krya whole, and the speech engine\'s Pytho
   expect(adoptLocalFolder(old, next)).toEqual([])
 })
 
-test('into a Krya folder already there, the parts move one by one, never over what is there; what stays is used from the old folder', () => {
-  const local = temp('krya-local-')
+test('into a Kryakl folder already there, the parts move one by one, never over what is there; what stays is used from the old folder', () => {
+  const local = temp('kryakl-local-')
   const old = path.join(local, 'Altype')
-  const next = path.join(local, 'Krya')
+  const next = path.join(local, 'Kryakl')
   speechEngine(path.join(old, 'speech'))
   put(path.join(old, 'voice', 'voice.onnx'), 'old voice')
   put(path.join(old, 'models', 'ru', 'model.bin'), 'm')
@@ -137,8 +153,8 @@ test('into a Krya folder already there, the parts move one by one, never over wh
 })
 
 test('the Python is pointed at its new place whatever case Windows wrote the old one in; another folder is left alone', () => {
-  const local = temp('krya-local-')
-  const dir = path.join(local, 'Krya', 'speech')
+  const local = temp('kryakl-local-')
+  const dir = path.join(local, 'Kryakl', 'speech')
   fs.mkdirSync(path.join(dir, 'env'), { recursive: true })
   const old = path.join(local, 'Altype', 'speech')
   fs.writeFileSync(path.join(dir, 'env', 'pyvenv.cfg'), `home = ${old.toUpperCase()}\\python\\cpython-3.12\r\nother = ${old}-x\\y\r\n`)
@@ -146,15 +162,32 @@ test('the Python is pointed at its new place whatever case Windows wrote the old
   expect(fs.readFileSync(path.join(dir, 'env', 'pyvenv.cfg'), 'utf8')).toBe(`home = ${path.resolve(dir)}\\python\\cpython-3.12\r\nother = ${old}-x\\y\r\n`)
 })
 
-test('the programs to stop before the move: those run from inside the old folder, never Krya or Altype.exe', () => {
+test('Krya\'s %LOCALAPPDATA% folder moves to Kryakl whole, the speech engine\'s Python with it', () => {
+  const local = temp('kryakl-local-')
+  const old = path.join(local, 'Krya')
+  const next = path.join(local, 'Kryakl')
+  speechEngine(path.join(old, 'speech'))
+  expect(adoptLocalFolder(old, next)).toEqual(['*'])
+  expect(fs.readFileSync(path.join(next, 'speech', 'env', 'pyvenv.cfg'), 'utf8')).toContain(path.join(next, 'speech', 'python'))
+})
+
+test('the programs run from Krya\'s folder are stopped, Krya.exe never: Kryakl waits for it', () => {
+  const processes = parseProcesses([
+    '130\tpython.exe\tC:\\Users\\you\\AppData\\Local\\Krya\\speech\\env\\Scripts\\python.exe',
+    '131\tKrya.exe\tC:\\Users\\you\\AppData\\Local\\Krya\\Krya.exe',
+  ].join('\r\n'))
+  expect(holdersIn(processes, 'C:\\Users\\you\\AppData\\Local\\Krya', 999).map(p => p.pid)).toEqual([130])
+})
+
+test('the programs to stop before the move: those run from inside the old folder, never Kryakl or Altype.exe', () => {
   const text = [
     '4\tSystem\t',
     '120\tpython.exe\tC:\\Users\\you\\AppData\\Local\\Altype\\speech\\env\\Scripts\\python.exe',
     '121\tllama-server.exe\tc:\\users\\YOU\\appdata\\local\\altype\\translate\\engine\\vulkan-ab12\\llama-server.exe',
     '122\tpython.exe\tC:\\Users\\you\\AppData\\Local\\Altype2\\python.exe',
-    '123\tpython.exe\tE:\\Cursor\\Krya\\engine\\.venv\\Scripts\\python.exe',
+    '123\tpython.exe\tE:\\Cursor\\Kryakl\\engine\\.venv\\Scripts\\python.exe',
     '124\tAltype.exe\tC:\\Users\\you\\AppData\\Local\\Altype\\Altype.exe',
-    '125\tKrya.exe\tC:\\Users\\you\\AppData\\Local\\Altype\\Krya.exe',
+    '125\tKryakl.exe\tC:\\Users\\you\\AppData\\Local\\Altype\\Kryakl.exe',
     'garbage',
   ].join('\r\n')
   const processes = parseProcesses(text)
@@ -163,7 +196,7 @@ test('the programs to stop before the move: those run from inside the old folder
   expect(holders.map(p => p.pid)).toEqual([120, 121])
 })
 
-test('an older engine is stopped while Krya goes on, and only a program run from inside its folder', async () => {
+test('an older engine is stopped while Kryakl goes on, and only a program run from inside its folder', async () => {
   const dir = temp('krya-speech-')
   const child = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], { stdio: 'ignore' })
   await new Promise(resolve => child.once('spawn', resolve))
@@ -181,7 +214,7 @@ test('an older engine is stopped while Krya goes on, and only a program run from
   expect(r.holding).toEqual([])
 })
 
-test('why a part stayed: the program that holds it when Krya knows it, else another program; Krya\'s own copy', () => {
+test('why a part stayed: the program that holds it when Kryakl knows it, else another program; Kryakl\'s own copy', () => {
   const busy = Object.assign(new Error('EPERM: operation not permitted, rename'), { code: 'EPERM' })
   expect(whyLeft(busy, [{ pid: 1, name: 'python.exe', path: 'x' }, { pid: 2, name: 'python.exe', path: 'y' }])).toBe('a file in it is in use by python.exe')
   expect(whyLeft(busy)).toBe('a file in it is in use by another program')
@@ -189,9 +222,9 @@ test('why a part stayed: the program that holds it when Krya knows it, else anot
 })
 
 test('a part in use stays in the old folder and is used there; once let go, the next move takes it', () => {
-  const local = temp('krya-local-')
+  const local = temp('kryakl-local-')
   const old = path.join(local, 'Altype')
-  const next = path.join(local, 'Krya')
+  const next = path.join(local, 'Kryakl')
   put(path.join(old, 'speech', 'models', 'small.bin'), 's')
   put(path.join(old, 'voice', 'voice.onnx'), 'v')
   put(path.join(next, 'dict', 'de.json'), 'kept')
@@ -203,7 +236,7 @@ test('a part in use stays in the old folder and is used there; once let go, the 
     expect(adoptLocalFolder(old, next, (_m, error, from) => from && errors.set(path.basename(from), error))).toEqual(['voice'])
     expect(partDir('speech', next, old)).toBe(path.join(old, 'speech'))
     expect(leftIn(old, next, errors)).toEqual([
-      { name: 'dict', why: 'Krya has its own' },
+      { name: 'dict', why: 'Kryakl has its own' },
       { name: 'speech', why: 'a file in it is in use by another program' },
     ])
   } finally {
@@ -214,13 +247,13 @@ test('a part in use stays in the old folder and is used there; once let go, the 
   expect(hasToMove(old, next)).toBe(false)
 })
 
-test('the updater downloads go, Krya\'s own too: it no longer updates itself', () => {
-  const local = temp('krya-local-')
+test('the updater downloads go, Kryakl\'s own too: it no longer updates itself', () => {
+  const local = temp('kryakl-local-')
   put(path.join(local, 'altype-updater', 'pending', 'Altype-Setup-0.10.2.exe'), 'x')
-  put(path.join(local, 'krya-updater', 'pending', 'Krya-Setup-0.11.0.exe'), 'y')
-  put(path.join(local, 'krya-other', 'kept.txt'), 'z')
+  put(path.join(local, 'krya-updater', 'pending', 'Kryakl-Setup-0.11.0.exe'), 'y')
+  put(path.join(local, 'kryakl-other', 'kept.txt'), 'z')
   expect(removeOldUpdaterCaches(local)).toEqual(['altype-updater', 'krya-updater'])
   expect(fs.existsSync(path.join(local, 'altype-updater'))).toBe(false)
   expect(fs.existsSync(path.join(local, 'krya-updater'))).toBe(false)
-  expect(fs.existsSync(path.join(local, 'krya-other'))).toBe(true)
+  expect(fs.existsSync(path.join(local, 'kryakl-other'))).toBe(true)
 })

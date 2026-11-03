@@ -3,11 +3,11 @@
 The engine listens on 127.0.0.1, which every program and every Windows account
 on the computer can reach, and any Chrome extension too. So:
 
-- Krya (and a program of the person's that reads the key) sends the engine's
+- Kryakl (and a program of the person's that reads the key) sends the engine's
   key in X-Krya-Token. The key is random, kept in speech-token beside the
   engine's settings (in the person's own %APPDATA%, which other accounts cannot
-  read) and handed to the engine Krya starts in KRYA_SPEECH_TOKEN.
-- Krya's own Chrome extension, known by its fixed id (the "key" in
+  read) and handed to the engine Kryakl starts in KRYA_SPEECH_TOKEN.
+- Kryakl's own Chrome extension, known by its fixed id (the "key" in
   extension/manifest.json), may only say hello and record a meeting. Its Origin
   proves nothing to the engine (any program here can send that header), so a
   caller by it may only start a `meet` recording, send its chunks (up to
@@ -16,7 +16,7 @@ on the computer can reach, and any Chrome extension too. So:
   without an Origin) and nothing more.
 
 `/health` with X-Krya-Nonce and no key answers HMAC(key, nonce) and nothing
-else: Krya checks it before it sends the key, so another program (another
+else: Kryakl checks it before it sends the key, so another program (another
 account's) that took the port first never receives the key.
 """
 
@@ -54,12 +54,12 @@ _EXTENSION_ROUTES = [
     ("PUT", re.compile(r"/recordings/[^/]+/[^/]+/\d+")),
     ("POST", re.compile(r"/recordings/[^/]+/finish")),
 ]
-# Krya's nonce is 32 hex digits; a longer one is not Krya's.
+# Kryakl's nonce is 32 hex digits; a longer one is not Kryakl's.
 NONCE_MAX = 128
 
 
 def load_token(path: Path = TOKEN_FILE) -> str:
-    """The engine's key: Krya's (KRYA_SPEECH_TOKEN), else the file's, else a new one written there."""
+    """The engine's key: Kryakl's (KRYA_SPEECH_TOKEN), else the file's, else a new one written there."""
     given = os.environ.get("KRYA_SPEECH_TOKEN", "").strip()
     if given:
         return given
@@ -89,5 +89,5 @@ def proof(token: str, nonce: str) -> str:
 
 
 def extension_may(method: str, path: str) -> bool:
-    """Krya's extension calls only its own routes (a preflight for them too)."""
+    """Kryakl's extension calls only its own routes (a preflight for them too)."""
     return any((method == m or method == "OPTIONS") and p.fullmatch(path) for m, p in _EXTENSION_ROUTES)

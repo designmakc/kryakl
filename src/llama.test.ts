@@ -166,7 +166,7 @@ describe('LlamaServer', () => {
   })
 })
 
-it('the server answers only Krya: a key of its own, given in the environment, and none of the person\'s LLAMA_* settings', () => {
+it('the server answers only Kryakl: a key of its own, given in the environment, and none of the person\'s LLAMA_* settings', () => {
   const env = serverEnv({ PATH: 'C:\\Windows', LLAMA_ARG_TOOLS: 'all', LLAMA_API_KEY: 'theirs', llama_arg_host: '0.0.0.0' }, 'k1')
   expect(env).toEqual({ PATH: 'C:\\Windows', LLAMA_API_KEY: 'k1' })
   const server = new LlamaServer({ log: 'x.log' })

@@ -47,30 +47,30 @@ describe('links', () => {
   })
 
   it('makes an email that Windows hands over whole, however long the text', () => {
-    const url = mailUrl(`Перевод не работает\n${'очень длинный текст '.repeat(200)}`, facts, 'Krya report 2026-10-31 14-05.zip')
+    const url = mailUrl(`Перевод не работает\n${'очень длинный текст '.repeat(200)}`, facts, 'Kryakl report 2026-10-31 14-05.zip')
     expect(url.length).toBeLessThanOrEqual(1800)
     expect(url.startsWith('mailto:ikstro.design@gmail.com?subject=')).toBe(true)
     const body = decodeURIComponent(url.slice(url.indexOf('&body=') + 6))
-    expect(body).toContain('Krya 0.11.2 · Windows 10.0.26300 x64')
-    expect(body).toContain('please attach "Krya report 2026-10-31 14-05.zip"')
-    expect(decodeURIComponent(url.slice(url.indexOf('subject=') + 8, url.indexOf('&body=')))).toBe('Krya 0.11.2: Перевод не работает')
+    expect(body).toContain('Kryakl 0.11.2 · Windows 10.0.26300 x64')
+    expect(body).toContain('please attach "Kryakl report 2026-10-31 14-05.zip"')
+    expect(decodeURIComponent(url.slice(url.indexOf('subject=') + 8, url.indexOf('&body=')))).toBe('Kryakl 0.11.2: Перевод не работает')
   })
 
   it('makes a GitHub issue with a title from the first line', () => {
     const url = issueUrl('The card stays empty\nafter Ctrl+C twice', facts, 'r.zip')
-    expect(url.startsWith('https://github.com/ikstro/krya/issues/new?title=The%20card%20stays%20empty&body=')).toBe(true)
+    expect(url.startsWith('https://github.com/ikstro/kryakl/issues/new?title=The%20card%20stays%20empty&body=')).toBe(true)
     expect(decodeURIComponent(url.slice(url.indexOf('&body=') + 6))).toContain('drag `r.zip` here')
   })
 
   it('names a report by the local time', () => {
-    expect(reportName(new Date(2026, 9, 31, 14, 5))).toBe('Krya report 2026-10-31 14-05.zip')
+    expect(reportName(new Date(2026, 9, 31, 14, 5))).toBe('Kryakl report 2026-10-31 14-05.zip')
   })
 })
 
 describe('makeReport', () => {
   const temp: string[] = []
   const dir = () => {
-    const d = fs.mkdtempSync(path.join(os.tmpdir(), 'krya-report-test-'))
+    const d = fs.mkdtempSync(path.join(os.tmpdir(), 'kryakl-report-test-'))
     temp.push(d)
     return d
   }
@@ -80,8 +80,8 @@ describe('makeReport', () => {
 
   it('takes the logs and the computer, cleaned, and never the speech settings or the lists', async () => {
     const home = dir()
-    fs.writeFileSync(path.join(home, 'krya.log'), 'start: Krya\ncopy: came in 30 ms from C:\\Users\\creoo\\Code.exe\n')
-    fs.writeFileSync(path.join(home, 'krya.old.log'), 'before\n')
+    fs.writeFileSync(path.join(home, 'kryakl.log'), 'start: Kryakl\ncopy: came in 30 ms from C:\\Users\\creoo\\Code.exe\n')
+    fs.writeFileSync(path.join(home, 'kryakl.old.log'), 'before\n')
     fs.writeFileSync(path.join(home, 'speech.log'), 'whoami hf_AbCdEf1234567890\n')
     fs.writeFileSync(path.join(home, 'device.json'), '{"cpu":"i9"}')
     fs.writeFileSync(path.join(home, 'speech.json'), '{"hfToken":"hf_secret1234567890"}')
@@ -90,8 +90,8 @@ describe('makeReport', () => {
     await makeReport({ dir: home, out, message: 'It broke', facts, status: ['Speech engine: ready'], settings: { keepWords: ['secret'] }, names, at: new Date() })
     const opened = dir()
     await unzip(out, opened)
-    expect(fs.readdirSync(opened).sort()).toEqual(['device.json', 'krya.log', 'krya.old.log', 'report.txt', 'speech.log'])
-    expect(fs.readFileSync(path.join(opened, 'krya.log'), 'utf8')).toContain('C:\\Users\\<you>\\Code.exe')
+    expect(fs.readdirSync(opened).sort()).toEqual(['device.json', 'kryakl.log', 'kryakl.old.log', 'report.txt', 'speech.log'])
+    expect(fs.readFileSync(path.join(opened, 'kryakl.log'), 'utf8')).toContain('C:\\Users\\<you>\\Code.exe')
     expect(fs.readFileSync(path.join(opened, 'speech.log'), 'utf8')).toBe('whoami hf_…\n')
     const report = fs.readFileSync(path.join(opened, 'report.txt'), 'utf8')
     expect(report).toContain('It broke')

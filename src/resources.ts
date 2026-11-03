@@ -1,6 +1,6 @@
-// Krya is a guest on the computer (2026-10-31, the owner: "наш продукт не
+// Kryakl is a guest on the computer (2026-10-31, the owner: "наш продукт не
 // должен съедать все ресурсы компьютера"): the person's own programs (an
-// emulator, a game, a call) own the graphics card, and Krya takes only what is
+// emulator, a game, a call) own the graphics card, and Kryakl takes only what is
 // free. A local model goes on the card whole or not at all: llama.cpp's own
 // `--fit` puts as many layers on it as its free memory holds, and half a model
 // is both slow (3 words a second instead of 20, an emulator on the RTX 2080
