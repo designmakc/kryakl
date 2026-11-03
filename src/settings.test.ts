@@ -26,6 +26,11 @@ describe('normalize', () => {
     expect(normalize({ rate: 1.5, theme: 'dark', oneAtATime: true })).toMatchObject({ rate: 1.5, theme: 'dark', oneAtATime: true })
   })
 
+  test('the offers of a model to Translate keep only the local models, once each', () => {
+    expect(normalize({ shareOfferSeen: ['accurate', 'fast', 'accurate', 3, 'most'] }).shareOfferSeen).toEqual(['accurate', 'most'])
+    expect(normalize({ shareOfferSeen: 'accurate' }).shareOfferSeen).toEqual([])
+  })
+
   test('the translation level is Fast until another one is picked', () => {
     expect(normalize({}).translationLevel).toBe('fast')
     expect(normalize({ translationLevel: 'most' }).translationLevel).toBe('most')

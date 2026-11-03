@@ -1650,11 +1650,17 @@ button.chip:hover {
   background: color-mix(in srgb, var(--accent) 7%, var(--surface));
 }
 
-.offer > .codicon {
+.offer > .codicon,
+.offer > svg.lu {
   flex: none;
   margin-top: 1px;
   font-size: 16px;
   color: var(--accent-text);
+}
+
+.offer > svg.lu {
+  width: 16px;
+  height: 16px;
 }
 
 .offer .ot {

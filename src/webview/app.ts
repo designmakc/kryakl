@@ -35,6 +35,7 @@ import { recommend, recommendedModels } from '../setup'
 import { resetSetup, setupNodes } from './setup'
 import { aboutOf, api, computerRows, diarizationOf, engineRows, engineSettings, fault, forgetEngine, gpuRow, hasPart, installed, onRedraw, pickKb, preferRow, running, saveEngine, size as speechSize, speakerRows, speechChoiceRows, testOffer, toast } from './speech'
 import { TOPICS } from '../topics'
+import { isBeta, versionText } from '../version'
 import { withMarks } from './marks'
 import { backToList, enterTranscripts, leaveTranscripts, newRows, openTranscript, setTranscriptHooks, transcriptsBody, transcriptsCap } from './transcripts'
 
@@ -1712,6 +1713,37 @@ function llmChoice(v: AppView, model: LlmModel, on: boolean, pick: () => void, s
   return radioRow(label, notes, on, pick, control, remove)
 }
 
+/**
+ * Translate on Fast while the model Check and Talk use is here already: one
+ * offer, per model, to translate with it too (nothing to download). Not where
+ * the model is slow here. Taken or Not now, it does not show again.
+ */
+function shareOffer(v: AppView): HTMLElement | null {
+  const s = v.settings
+  const model = s.model
+  if (s.translationLevel !== 'fast' || v.models[model].status !== 'ready' || s.shareOfferSeen.includes(model)) return null
+  if (translationAdvice(v.speech.device)[model].slow) return null
+  const seen = () => save({ shareOfferSeen: [...s.shareOfferSeen, model] })
+  const name = levelName(model)
+  return el(
+    'div',
+    { class: 'offer' },
+    lucide('boxes'),
+    el(
+      'div',
+      { class: 'ot' },
+      el('b', {}, t('translate.shareAsk', { model: name })),
+      el('small', {}, t('translate.shareNote', { model: name, fast: levelName('fast') })),
+      el(
+        'span',
+        { class: 'acts' },
+        btn(t('translate.shareUse', { model: name }), () => (post({ type: 'translationLevel', level: model }), seen()), 'primary'),
+        linkBtn(t('common.notNow'), seen),
+      ),
+    ),
+  )
+}
+
 /** Models › Translate: Fast (Firefox's models, which only translate), or the language model Check my English uses too. */
 function translateChoicePage(v: AppView): HTMLElement[] {
   const s = v.settings
@@ -1739,10 +1771,11 @@ function translateChoicePage(v: AppView): HTMLElement[] {
   const share = (model: LlmModel) =>
     t(s.model !== model ? 'models.checkMoves' : s.translationLevel === model ? 'models.checkShares' : 'models.checkAlready')
   return [
+    shareOffer(v),
     grp(t('models.translateWith')),
     fastRow,
     ...(['accurate', 'most'] as const).map(model => llmChoice(v, model, s.translationLevel === model, () => post({ type: 'translationLevel', level: model }), share(model))),
-  ]
+  ].filter((n): n is HTMLElement => n !== null)
 }
 
 /** Models › Check my English: the language model; Translate uses the same one unless it is on Fast. */
@@ -1907,6 +1940,7 @@ function translatePage(v: AppView): HTMLElement[] {
   const text = TRY_TRANSLATE[s.native] ?? 'Of course, I will send the updated layouts before the call.'
   const how = s.translateKey ? t('translate.tryKey', { how: usage(s.translateKey) }) : t('translate.tryNone')
   return [
+    shareOffer(v),
     grp(t('keys.group')),
     keyRow('translateKey', t('translate.select'), s.translateKey ? t('translate.selectNote', { how: usage(s.translateKey) }) : t('translate.selectNoKey'), !v.keysOk.translate, 'languages'),
     keyRow('typeKey', t('translate.type'), t('translate.typeNote'), !v.keysOk.type, 'type'),
@@ -1921,7 +1955,7 @@ function translatePage(v: AppView): HTMLElement[] {
     grp(t('translate.history')),
     navCard('clock', t('translate.recent'), t('translate.recentNote'), v.translations.length ? String(v.translations.length) : t('translate.none'), () => go('translations'), 'translations'),
     tryIt(text, how),
-  ]
+  ].filter((n): n is HTMLElement => n !== null)
 }
 
 /** The texts translated lately (translationlog.ts), each to copy; Kryakl forgets them after 30 days by itself. */
@@ -3134,8 +3168,8 @@ function settingsPage(v: AppView): HTMLElement[] {
     // New versions are downloaded by hand from GitHub (the owner, 2026-10-30): nothing installs itself.
     card(
       'rotate-cw',
-      t(v.dev ? 'settings.versionDev' : 'settings.version', { version: v.version }),
-      [v.dev ? t('settings.built', { build: v.build }) : t('settings.versionNote')],
+      t(v.dev ? 'settings.versionDev' : 'settings.version', { version: versionText(v.version) }),
+      [v.dev ? t('settings.built', { build: v.build }) : t('settings.versionNote'), isBeta(v.version) ? t('settings.betaNote') : null],
       linkBtn(t('settings.newVersions'), () => post({ type: 'openLink', url: RELEASES })),
     ),
     grp(t('settings.backup')),
@@ -3161,7 +3195,8 @@ function aboutPage(v: AppView): HTMLElement[] {
       el('div', { class: 'mk' }, tile(88), logo()),
       el('p', { class: 'tag' }, 'Talk to the duck.'),
       // A run from source says when it was built, so it is never taken for the last release.
-      el('p', { class: 'ver' }, v.dev ? t('about.versionDev', { version: v.version, build: v.build }) : t('about.version', { version: v.version })),
+      el('p', { class: 'ver' }, v.dev ? t('about.versionDev', { version: versionText(v.version), build: v.build }) : t('about.version', { version: versionText(v.version) })),
+      isBeta(v.version) ? el('p', { class: 'ver' }, t('about.betaNote')) : null,
       el(
         'dl',
         { class: 'facts' },

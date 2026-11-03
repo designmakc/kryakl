@@ -14,6 +14,7 @@ import { hotkeyLabel } from '../hotkey'
 import { languageName, t } from '../i18n'
 import type { Settings } from '../settings'
 import type { ToHost, ToView, TrayCommand, TrayView, TutorHost } from '../protocol'
+import { versionText } from '../version'
 import { logo } from './brand'
 import { dwmFlag, el } from './dom'
 import { lucide, type LucideName } from './lucide'
@@ -206,7 +207,7 @@ function render(v: TrayView): void {
   const focused = document.activeElement instanceof HTMLElement ? document.activeElement.dataset.id : undefined
   const openApp = () => post({ type: 'tray', command: 'open' })
   // The brand opens the window too; Open is the one the keys reach. The version beside it: a run from source says so, and when it was built.
-  const version = el('span', { class: 'ver', title: t('tray.built', { build: v.build }) }, v.dev ? `${v.version} dev` : v.version)
+  const version = el('span', { class: 'ver', title: t('tray.built', { build: v.build }) }, v.dev ? `${versionText(v.version)} dev` : versionText(v.version))
   const brand = el('button', { class: 'brand', tabindex: '-1', title: t('tray.openKryakl'), onclick: openApp }, logo(), version)
   const open = el('button', { class: 'open', 'data-nav': true, 'data-id': 'open', onclick: openApp }, t('tray.open'))
   const panel = el(

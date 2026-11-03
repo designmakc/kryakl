@@ -71,5 +71,13 @@ jobs:
           fi
           prerelease=""
           case "$TAG" in *-*) prerelease="--prerelease" ;; esac
+          # Kryakl is a beta while its version is 0.x: said in the title and on top of the notes, never as a
+          # prerelease, which /releases/latest (the landing's Download) would skip.
+          beta=""
+          case "$TAG" in v0.*)
+            beta=" (beta)"
+            { printf '> **Beta.** Kryakl is a test version: some things may still break. Found a bug? Kryakl › Report a problem, or open an issue.\n\n'; cat out/release-notes.md; } > out/notes.md
+            mv out/notes.md out/release-notes.md ;;
+          esac
           gh release create "$TAG" out/Kryakl-Setup-*.exe --repo "$REPO" --draft $prerelease \
-            --title "Kryakl ${TAG#v}" --notes-file out/release-notes.md
+            --title "Kryakl ${TAG#v}$beta" --notes-file out/release-notes.md

@@ -166,6 +166,9 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .eyebrow svg { width: 22px; height: 22px; border-radius: 6px; }
 .eyebrow b { color: var(--ink); font-weight: 600; }
 .eyebrow .ipa { font-family: var(--mono); font-weight: 400; letter-spacing: 0; }
+/* Kryakl is a beta while its version is 0.x: a quiet chip, never the duck's yellow. */
+.eyebrow .beta { padding: 1px 7px; border: 1px solid var(--line); border-radius: 999px; font: 500 11.5px/1.5 var(--mono); letter-spacing: 0.02em; color: var(--ink); }
+.beta-note { margin-top: 10px; font-size: 13.5px; line-height: 1.45; color: var(--muted); }
 .display { font: 800 var(--t-display)/0.92 var(--font); letter-spacing: -0.052em; color: var(--ink); text-wrap: balance; }
 .display .duck { font-size: 0.86em; letter-spacing: -0.02em; white-space: nowrap; }
 .lead { font-size: var(--t-lead); line-height: 1.55; color: var(--text); max-width: 34em; }

@@ -186,6 +186,8 @@ export type Settings = {
   startWithWindows: boolean
   /** The offer of the natural voice was closed. */
   naturalDismissed: boolean
+  /** The local models whose offer to Translate on Fast was answered (taken or Not now): it shows once per model, once the model is here for Check or Talk. */
+  shareOfferSeen: LlmModel[]
   /** The Home's opening moment (one line through fix, translate, listen) has played once; Replay plays it again. */
   introSeen: boolean
   /** Kryakl paused: all its keys and reactions off (Ctrl+C twice, the keyboard helper, dictation) until turned back on. */
@@ -266,6 +268,7 @@ export const DEFAULTS: Settings = {
   speechTestDeclinedAt: 0,
   startWithWindows: true,
   naturalDismissed: false,
+  shareOfferSeen: [],
   introSeen: false,
   paused: false,
   setupDone: true,
@@ -443,6 +446,7 @@ export function normalize(raw: unknown, native = DEFAULTS.native): Settings {
     speechTestDeclinedAt: typeof r.speechTestDeclinedAt === 'number' && Number.isFinite(r.speechTestDeclinedAt) ? r.speechTestDeclinedAt : 0,
     startWithWindows: flag(r.startWithWindows, DEFAULTS.startWithWindows),
     naturalDismissed: flag(r.naturalDismissed, DEFAULTS.naturalDismissed),
+    shareOfferSeen: strings(r.shareOfferSeen).filter((m): m is LlmModel => m === 'accurate' || m === 'most'),
     introSeen: flag(r.introSeen, DEFAULTS.introSeen),
     paused: flag(r.paused, DEFAULTS.paused),
   }

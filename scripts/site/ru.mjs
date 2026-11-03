@@ -19,7 +19,8 @@ export default {
     [`<a href="#install">Install</a>`, `<a href="#install">Установить</a>`],
     [`</svg>Download</a>`, `</svg>Скачать</a>`],
     // Hero
-    [`<span><b>Kryakl</b> <span class="ipa" title="How Kryakl is said">/ˈkrjɑː.kəl/</span> · local AI for Windows 10 and 11</span>`, `<span><b>Крякл</b> · локальный ИИ для Windows 10 и 11</span>`],
+    [`<span><b>Kryakl</b> <span class="ipa" title="How Kryakl is said">/ˈkrjɑː.kəl/</span> <span class="beta">beta</span> · local AI for Windows 10 and 11</span>`, `<span><b>Крякл</b> <span class="beta">бета</span> · локальный ИИ для Windows 10 и 11</span>`],
+    [`Beta: some things may still break. Found one? Report a problem from Kryakl.`, `Бета: что-то ещё может работать не так. Нашли ошибку? Сообщите о ней из Крякла.`],
     [`<p class="lead-for">For people who would rather run AI on their own computer than pay a cloud for it.</p>`, `<p class="lead-for">Для тех, кто скорее запустит нейросеть на своём компьютере, чем будет платить за неё облаку.</p>`],
     [`<p class="lead">Kryakl is a small tray app (about 12 GB with its models :) for every program. It fixes text typed in the wrong layout, translates, reads English aloud, checks your English and types what you say. When you want to practise, it talks with you in English. One app instead of a layout switcher, a translator tab and a grammar checker.</p>`, `<p class="lead">Крякл — небольшая программа в трее (вместе с моделями около 12 ГБ :), которая работает везде, где вы пишете и читаете. Он исправляет текст, набранный не в той раскладке, переводит, читает английский вслух, проверяет ваш английский и печатает то, что вы говорите. А когда хочется попрактиковаться, разговаривает с вами по-английски. Одна программа вместо переключателя раскладок, вкладки с переводчиком и проверки грамматики.</p>`],
     [`</svg>Download for Windows</a>`, `</svg>Скачать для Windows</a>`],
