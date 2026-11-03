@@ -79,6 +79,7 @@ Landing (`site/index.html`, 2026-10-31, the first concept, which the owner judge
 - The old address https://ikstro.com/krya/ leads to https://ikstro.com/kryakl/ (the owner sent the old link around): pages of redirection in the user site's repository (`ikstro/ikstro.github.io`, `krya/`), keeping the language (/krya/uk/ → /kryakl/uk/). The repository is `ikstro/kryakl`; GitHub sends the old name there, so no repository may be made under the old name.
 - What nobody sees keeps the old name: the engine's headers (`X-Krya-*`, the Chrome extension speaks them), the env names (`KRYA_*`), the backup's kind, the Python project `krya-speech`.
 - The English landing says how the name is said: /ˈkrjɑː.kəl/. The duck's sound on the landing stays «кря».
+- In Ukrainian and Russian the one you talk to is Крякл too, never «качка»/«утка» (the owner: "Слова «утка», «качка» … надо заменить на Крякл"): the interface, the landing and the promo ("Поговоріть з Кряклом. Він відповість."); in English it stays "the duck", and the landing's story of a duck going to the bakery stays a duck.
 
 ## Product rules (owner decisions, 2026-11-02): learning by Pause, the switch's sound
 
