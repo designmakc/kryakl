@@ -44,6 +44,8 @@ for (const version of VERSIONS.filter(v => v.dir)) {
     [`<link rel="canonical" href="${BASE}">`, `<link rel="canonical" href="${BASE}${version.dir}">`],
     [`<meta property="og:url" content="${BASE}">`, `<meta property="og:url" content="${BASE}${version.dir}">`],
     ['<meta property="og:locale" content="en_US">', `<meta property="og:locale" content="${locale}">`],
+    [`<meta property="og:image" content="${BASE}og-en.png">`, `<meta property="og:image" content="${BASE}og-${version.code}.png">`],
+    ['<meta property="og:site_name" content="Kryakl">', `<meta property="og:site_name" content="${version.brand}">`],
     ['<link rel="stylesheet" href="kryakl.css">', '<link rel="stylesheet" href="../kryakl.css">'],
     ['<script src="kryakl.js"></script>', `<script>window.KRYAKL = ${JSON.stringify({ lang: version.code, text, demo }).replace(/</g, '\\u003c')};</script>\n<script src="../kryakl.js"></script>`],
   ]

@@ -18,6 +18,7 @@ export default {
     [`<a href="#install">Install</a>`, `<a href="#install">Встановити</a>`],
     [`</svg>Download</a>`, `</svg>Завантажити</a>`],
     // Hero
+    [`Kryakl, local AI for Windows: fixes the layout, translates, reads English aloud and checks it`, `Крякл, локальний ШІ для Windows: виправляє розкладку, перекладає, читає англійську вголос і перевіряє її`],
     [`<span><b>Kryakl</b> <span class="ipa" title="How Kryakl is said">/ˈkrjɑː.kəl/</span> <span class="beta">beta</span> · local AI for Windows 10 and 11</span>`, `<span><b>Крякл</b> <span class="beta">бета</span> · локальний ШІ для Windows 10 і 11</span>`],
     [`Beta: some things may still break. Found one? Report a problem from Kryakl.`, `Бета: щось іще може працювати не так. Знайшли помилку? Повідомте про неї з Крякла.`],
     [`<p class="lead-for">For people who would rather run AI on their own computer than pay a cloud for it.</p>`, `<p class="lead-for">Для тих, хто радше запустить нейромережу на своєму комп’ютері, ніж платитиме за неї хмарі.</p>`],
