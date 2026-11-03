@@ -113,9 +113,22 @@ export class SpeechHost {
     return path.join(this.o.userDir, 'device.json')
   }
 
+  /** The launcher was set right once this run: never again, whatever the check says. */
+  private relocated = false
+
   /** At Kryakl's start: the service, when a part is installed; after an update brought other packages, those first. */
   start(): void {
     if (this.pack.state.status !== 'ready') return
+    // Moved from Krya's or Altype's folder, the environment's launcher still names the old place: set right first.
+    if (this.pack.moved && !this.relocated) {
+      this.relocated = true
+      log('speech: the engine moved here; setting its Python launcher right')
+      void this.pack.relocate().then(
+        () => (log('speech: launcher set right'), this.start()),
+        error => (console.warn('Kryakl: could not set the speech engine right after the move', error), void this.service.start()),
+      )
+      return
+    }
     if (this.pack.stale) void this.install([])
     else void this.service.start()
   }
@@ -135,6 +148,11 @@ export class SpeechHost {
 
   get ready(): boolean {
     return this.service.state === 'ready'
+  }
+
+  /** The engine stopped for good after its restarts (or another program holds its port): waiting will not bring it. */
+  get down(): boolean {
+    return this.service.state === 'down'
   }
 
   /** The engine is of 0.2 or later: it takes a plan and runs the speed test. */

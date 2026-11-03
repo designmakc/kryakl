@@ -71,7 +71,7 @@ import { log, logTo } from './log'
 import { NATURAL_PREFIX, systemVoiceName, type NaturalState } from './natural'
 import { recognize } from './ocr'
 import { pickLines } from './ocrpick'
-import { adoptLocalFolder, adoptOldFolders, freeFolder, hasToMove, leftIn, moveDownloads, OLD_LOCAL_FOLDERS, partDir, removeOldUpdaterCaches, type LeftPart, type Warn } from './oldfolder'
+import { adoptLocalFolder, adoptOldFolders, freeFolder, hasToMove, healSpeech, leftIn, moveDownloads, OLD_LOCAL_FOLDERS, partDir, removeOldUpdaterCaches, type LeftPart, type Warn } from './oldfolder'
 import { paragraphsOf } from './ocrtext'
 import { placeByTray, placeNear, resize, type Point } from './placement'
 import type { AppTab, AppView, BusyPart, CardKind, CardState, CheckResult, DictationMode, DictionaryStatus, GlossMissing, HostCall, HostVoice, Refused, StorageId, StoragePart, StorageView, TalkWindowView, TextResult, ToHost, ToView, TranslationState, TrayCommand, TrayView, ViewConfig } from './protocol'
@@ -3279,6 +3279,9 @@ function balloon(title: string, content: string, click?: () => void): void {
 }
 
 function setUpSpeechEngine(): void {
+  // A move whose repair failed (0.15.0) left the Python's link on the old folder: set right before the engine starts.
+  const healed = healSpeech(localPart('speech'), (message, error) => console.warn(message, error))
+  if (healed.length) log(`speech: the Python's link pointed at its own folder again (${healed.join(', ')})`)
   speech = new SpeechHost({
     root: localPart('speech'),
     userDir: userDir(),
@@ -3311,6 +3314,7 @@ function setUpSpeechEngine(): void {
     languageOf: text => languageOf(text, settings.native, languageWords(), myLanguages(settings)),
     balloon,
     needsEngine: () => openApp('dictate'),
+    report: () => openApp('report'),
     openTranscript,
     onChange: () => {
       keyboard?.dictating(dictation.state !== 'idle')

@@ -118,7 +118,8 @@ export function repairSpeech(dir: string, oldDir: string, warn: Warn = () => und
         const target = fs.readlinkSync(link)
         const moved = rebase(target)
         if (moved === target) continue
-        fs.rmSync(link, { force: true, recursive: false })
+        // unlink, not rmSync: Electron 45's Node refuses rmSync on a junction (ERR_FS_EISDIR), which left 0.15.0's moves broken.
+        fs.unlinkSync(link)
         fs.symlinkSync(moved, link, 'junction')
       } catch (error) {
         warn(`Kryakl: could not point ${link} at the new folder`, error)
@@ -134,6 +135,34 @@ export function repairSpeech(dir: string, oldDir: string, warn: Warn = () => und
   } catch (error) {
     warn(`Kryakl: could not point ${cfg} at the new folder`, error)
   }
+}
+
+/**
+ * The speech engine's Python links that lead nowhere, pointed at the folder of the same name beside them: a move
+ * whose repair failed (0.15.0 under Electron 45 left the junction on Krya's old folder, so the engine never started)
+ * is set right at the next start. A link whose target is there, or with no such folder beside it, is left. Returns
+ * the links set right.
+ */
+export function healSpeech(dir: string, warn: Warn = () => undefined): string[] {
+  const pythons = path.join(dir, 'python')
+  if (!fs.existsSync(pythons)) return []
+  const healed: string[] = []
+  for (const name of fs.readdirSync(pythons)) {
+    const link = path.join(pythons, name)
+    try {
+      if (!fs.lstatSync(link).isSymbolicLink()) continue
+      const target = fs.readlinkSync(link)
+      if (fs.existsSync(target)) continue
+      const beside = path.join(pythons, path.basename(target))
+      if (same(beside, link) || !fs.existsSync(beside)) continue
+      fs.unlinkSync(link)
+      fs.symlinkSync(beside, link, 'junction')
+      healed.push(name)
+    } catch (error) {
+      warn(`Kryakl: could not point ${link} at ${pythons}`, error)
+    }
+  }
+  return healed
 }
 
 /** `text` with every path under `from` put under `to`, whatever the case Windows wrote it in. */

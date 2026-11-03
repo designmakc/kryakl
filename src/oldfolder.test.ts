@@ -5,7 +5,7 @@ import * as path from 'node:path'
 
 import { afterEach, expect, test } from 'vitest'
 
-import { adoptLocalFolder, adoptOldFolders, freeFolderSoon, hasToMove, holdersIn, leftIn, moveDownloads, parseProcesses, partDir, removeOldUpdaterCaches, repairSpeech, whyLeft } from './oldfolder'
+import { adoptLocalFolder, adoptOldFolders, freeFolderSoon, hasToMove, holdersIn, leftIn, moveDownloads, parseProcesses, partDir, removeOldUpdaterCaches, healSpeech, repairSpeech, whyLeft } from './oldfolder'
 
 const made: string[] = []
 afterEach(() => made.splice(0).forEach(dir => fs.rmSync(dir, { recursive: true, force: true })))
@@ -169,6 +169,24 @@ test('Krya\'s %LOCALAPPDATA% folder moves to Kryakl whole, the speech engine\'s 
   speechEngine(path.join(old, 'speech'))
   expect(adoptLocalFolder(old, next)).toEqual(['*'])
   expect(fs.readFileSync(path.join(next, 'speech', 'env', 'pyvenv.cfg'), 'utf8')).toContain(path.join(next, 'speech', 'python'))
+})
+
+test('a Python link left on a folder that is gone is pointed at the one beside it; a good link, or one with nothing beside it, is left', () => {
+  const local = temp('kryakl-local-')
+  const dir = path.join(local, 'Kryakl', 'speech')
+  const full = path.join(dir, 'python', 'cpython-3.12.15-windows-x86_64-none')
+  put(path.join(full, 'python.exe'), 'python')
+  // As 0.15.0 left it: the junction still on Krya's folder, moved away.
+  const link = path.join(dir, 'python', 'cpython-3.12-windows-x86_64-none')
+  fs.symlinkSync(path.join(local, 'Krya', 'speech', 'python', 'cpython-3.12.15-windows-x86_64-none'), link, 'junction')
+  const lost = path.join(dir, 'python', 'cpython-3.11-windows-x86_64-none')
+  fs.symlinkSync(path.join(local, 'Krya', 'speech', 'python', 'cpython-3.11.9-windows-x86_64-none'), lost, 'junction')
+  expect(healSpeech(dir)).toEqual(['cpython-3.12-windows-x86_64-none'])
+  expect(fs.readFileSync(path.join(link, 'python.exe'), 'utf8')).toBe('python')
+  expect(fs.readlinkSync(lost)).toContain('Krya')
+  // Set right, it is left alone after.
+  expect(healSpeech(dir)).toEqual([])
+  expect(healSpeech(path.join(local, 'none'))).toEqual([])
 })
 
 test('the programs run from Krya\'s folder are stopped, Krya.exe never: Kryakl waits for it', () => {

@@ -18,6 +18,7 @@ import { BrowserWindow, globalShortcut, screen, shell } from 'electron'
 import { openable } from './bridge'
 import type { DictationLog } from './dictationlog'
 import { frameWindow } from './dwm'
+import { t } from './i18n'
 import { log } from './log'
 import { badgeOffset, placeBadge, type Rect } from './placement'
 import type { DictationMode, ToHost, ToView } from './protocol'
@@ -56,6 +57,8 @@ export type DictationOptions = {
   balloon: (title: string, content: string, click?: () => void) => void
   /** The engine is not installed yet: Dictate's page offers it. */
   needsEngine: () => void
+  /** The app window on Report a problem: the engine would not start. */
+  report: () => void
   /** The app window on a transcript: a note that stayed in Transcripts. */
   openTranscript: (id: string) => void
   onChange: () => void
@@ -104,7 +107,9 @@ export class Dictation {
   private async start(mode: DictationMode, key: string): Promise<void> {
     if (!this.o.speech.installed) return this.o.needsEngine()
     if (!this.o.speech.ready) {
-      this.o.balloon('Kryakl', 'The speech engine is starting. Try again in a few seconds.')
+      // Given up after its restarts, it will not come by waiting: the notice says so and opens the report.
+      if (this.o.speech.down) this.o.balloon(t('app.name'), t('dict.engineDown'), this.o.report)
+      else this.o.balloon(t('app.name'), t('dict.engineStarting'))
       return
     }
     this.mode = mode

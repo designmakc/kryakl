@@ -289,6 +289,8 @@ export const en = {
   'dict.typed': 'Typed',
   'dict.noteFailed': 'The note was not saved',
   'dict.nothingTyped': 'Nothing typed',
+  'dict.engineStarting': 'The speech engine is starting. Try again in a few seconds.',
+  'dict.engineDown': 'The speech engine could not start. Click to report the problem.',
   'dict.fastCard': 'Typed with Fast: the graphics card is busy',
   'dict.fastProcessor': 'Typed with Fast: the processor is busy',
   'badge.fastCard': 'Fast · graphics card busy',
