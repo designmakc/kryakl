@@ -1039,7 +1039,7 @@
     "engine.notRemoved": "Could not remove {name}: {why}",
     "engine.usedByTranscripts": "In use: the transcripts model",
     "engine.usedByDictation": "In use: the dictation model",
-    "engine.usedLoaded": "In use: loaded",
+    "engine.usedLoaded": "In use right now: try again in a minute",
     "engine.usedDownloading": "In use: downloading",
     "engine.usedTest": "In use: the speed test runs",
     "engine.pasteKey": "Paste a Hugging Face key first",
@@ -2482,7 +2482,7 @@
     "engine.notRemoved": "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0443\u0434\u0430\u043B\u0438\u0442\u044C {name}: {why}",
     "engine.usedByTranscripts": "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F: \u043C\u043E\u0434\u0435\u043B\u044C \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043E\u043A",
     "engine.usedByDictation": "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F: \u043C\u043E\u0434\u0435\u043B\u044C \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0438",
-    "engine.usedLoaded": "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F: \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u0430 \u0432 \u043F\u0430\u043C\u044F\u0442\u044C",
+    "engine.usedLoaded": "\u0421\u0435\u0439\u0447\u0430\u0441 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F: \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0447\u0435\u0440\u0435\u0437 \u043C\u0438\u043D\u0443\u0442\u0443",
     "engine.usedDownloading": "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F: \u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F",
     "engine.usedTest": "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F: \u0438\u0434\u0451\u0442 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u0438",
     "engine.pasteKey": "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043A\u043B\u044E\u0447 Hugging Face",
@@ -3925,7 +3925,7 @@
     "engine.notRemoved": "\u041D\u0435 \u0432\u0434\u0430\u043B\u043E\u0441\u044F \u0432\u0438\u0434\u0430\u043B\u0438\u0442\u0438 {name}: {why}",
     "engine.usedByTranscripts": "\u0412\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454\u0442\u044C\u0441\u044F: \u043C\u043E\u0434\u0435\u043B\u044C \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043E\u043A",
     "engine.usedByDictation": "\u0412\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454\u0442\u044C\u0441\u044F: \u043C\u043E\u0434\u0435\u043B\u044C \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
-    "engine.usedLoaded": "\u0412\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454\u0442\u044C\u0441\u044F: \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u0430 \u0432 \u043F\u0430\u043C\u2019\u044F\u0442\u044C",
+    "engine.usedLoaded": "\u0417\u0430\u0440\u0430\u0437 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454\u0442\u044C\u0441\u044F: \u0441\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0437\u0430 \u0445\u0432\u0438\u043B\u0438\u043D\u0443",
     "engine.usedDownloading": "\u0412\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454\u0442\u044C\u0441\u044F: \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F",
     "engine.usedTest": "\u0412\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454\u0442\u044C\u0441\u044F: \u0456\u0434\u0435 \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0448\u0432\u0438\u0434\u043A\u043E\u0441\u0442\u0456",
     "engine.pasteKey": "\u0421\u043F\u0435\u0440\u0448\u0443 \u0432\u0441\u0442\u0430\u0432\u0442\u0435 \u043A\u043B\u044E\u0447 Hugging Face",
@@ -8791,15 +8791,20 @@
     ];
   }
   var cleaning;
+  function refusedNote(v, p) {
+    const r = v.storage?.refused?.find((r2) => r2.id === p.id && (r2.item ?? "") === (p.item ?? ""));
+    return r ? bad(t("engine.notRemoved", { name: storedName(v, p), why: r.why })) : null;
+  }
   function unusedNotice(v) {
     const parts = (v.storage?.parts ?? []).filter((p) => p.unused && p.bytes > 0);
     if (!parts.length) return null;
+    const kept = cleaning ? [] : parts.map((p) => refusedNote(v, p));
     const mb = parts.reduce((n, p) => n + p.bytes / 1e6, 0);
     return el(
       "div",
       { class: "row notice old" },
       lucide("trash-2"),
-      el("div", { class: "l" }, t("models.unused", { size: size(mb) }), el("small", {}, t("models.unusedNote", { list: parts.map((p) => storedName(v, p)).join(", ") }))),
+      el("div", { class: "l" }, t("models.unused", { size: size(mb) }), el("small", {}, t("models.unusedNote", { list: parts.map((p) => storedName(v, p)).join(", ") })), ...kept),
       cleaning ? el("span", { class: "v" }, t("models.cleaning")) : btn(t("models.cleanUp"), () => (cleaning = "asked", post({ type: "cleanUp" }), renderBody()), "primary")
     );
   }
@@ -9733,7 +9738,7 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
     const freed = p.id === "speech" && shared >= 100 ? t("storage.frees", { free: size(p.bytes / 1e6 - shared), shared: size(shared) }) : null;
     const ask = !!p.users?.length || p.id === "speech";
     const x = removable(v, p) ? ib("x", ask ? t("storage.removeAskTitle") : t("storage.removeTitle"), () => ask ? (asking2 = key, renderBody()) : remove2()) : null;
-    return row(label, [storedNote(v, p), used, freed, where2], el("span", { class: "kchg" }, size2, x));
+    return row(label, [storedNote(v, p), used, freed, where2, refusedNote(v, p)], el("span", { class: "kchg" }, size2, x));
   }
   function storagePage(v) {
     const s = v.storage;
