@@ -39,6 +39,12 @@ SURE_OTHER = 0.7
 # English translation (2026-10-31: Russian dictated with Ukrainian and English expected came
 # out in English). The person's own language is closer.
 PLAUSIBLE_ENGLISH = 0.2
+# Among the expected ones the person's own language (the first) gives way only to one this many
+# times as likely: told the wrong language Whisper writes a translation, and no later step can
+# bring the words back. Measured 2026-11-05 with turbo on clips of read speech: a breath alone
+# and the first 0.3 s of Russian read as English 2 to 4 times likelier than Russian; a whole
+# second of English reads at least 19 times likelier, a second of Russian never the other way.
+OWN_LEAN = 5
 
 
 def _cuda_dirs() -> list[Path]:
@@ -180,18 +186,27 @@ def pick_language(probs: dict[str, float], expected: tuple[str, ...] | list[str]
     """Whisper's likeliest language, unless it is an unexpected one it is not sure of: then the likelier expected one.
 
     `strict`: the caller knows only the expected ones are spoken (Ukrainian heard in Russian
-    speech is a mistake there, however sure), so the likeliest of them, always."""
+    speech is a mistake there, however sure), so the likeliest of them, the first
+    of them winning a close call (OWN_LEAN)."""
     top = max(probs, key=probs.get)
     pool = [c for c in expected if c in probs]
     if top != "en" and top not in pool and probs.get("en", 0.0) < PLAUSIBLE_ENGLISH and any(c != "en" for c in pool):
         pool = [c for c in pool if c != "en"]
     if strict:
         if pool:
-            return max(pool, key=lambda c: probs[c])
+            best = max(pool, key=lambda c: probs[c])
+            own = expected[0]
+            return own if own in pool and probs[best] < OWN_LEAN * probs[own] else best
         log.warning("strict language asked, but Whisper knows none of %s", list(expected))
     if not pool or top in pool or probs[top] >= SURE_OTHER:
         return top
     return max(pool, key=lambda c: probs[c])
+
+
+def _log_pick(language: str, probs: dict[str, float], expected, speech: np.ndarray) -> None:
+    """Why a phrase came out in its language, should it be the wrong one; never its words."""
+    heard = ", ".join(f"{c} {probs.get(c, 0.0):.3f}" for c in dict.fromkeys([language, *expected]))
+    log.info("language %s on %.1f s of speech (%s)", language, len(speech) / RATE, heard)
 
 
 def _said(segments, speech: np.ndarray) -> str:
@@ -354,6 +369,7 @@ class Transcriber:
                 probs = {token[2:-2]: p for token, p in model.model.detect_language(encoded)[0]}
                 language = pick_language(probs, expected, strict)
                 sure = float(probs[language])
+                _log_pick(language, probs, expected, speech)
             else:
                 language = "en"
         # The options as faster-whisper fills them (thresholds, suppressed tokens…), from a call
@@ -382,6 +398,7 @@ class Transcriber:
                 probs = dict(every) if every else {top: sure}
                 language = pick_language(probs, expected, strict)
                 sure = probs.get(language, sure)
+                _log_pick(language, probs, expected, speech)
             except Exception:
                 language = None
         segments, info = self._model.transcribe(

@@ -21,7 +21,7 @@ import { DOUBLE_MS, HotkeyRecorder, hotkeyLabel, type Recorded } from '../hotkey
 import type { AppTab, AppView, DiffPart, Feature, KeyboardLayout, MistakeEntry, SavedWord, Settings, StorageId, StoragePart, StorageView, ToView, TutorHost } from '../protocol'
 import { LANGUAGES } from '../languages'
 import { translationAdvice, type LevelFit } from '../hardware'
-import { COPY_TWICE_KEYS, DEFAULTS, keptForm, myLanguages, RATES, SWITCH_SOUNDS, TALK_ABOUT_MAX, TALK_LEVELS, type AppRule, type LlmModel, type TalkLevel, type ThemeMode, type TranslationLevel } from '../settings'
+import { COPY_TWICE_KEYS, DEFAULTS, EDIT_OWN_MAX, EDIT_STYLES, keptForm, myLanguages, RATES, SWITCH_SOUNDS, TALK_ABOUT_MAX, TALK_LEVELS, type AppRule, type LlmModel, type TalkLevel, type ThemeMode, type TranslationLevel } from '../settings'
 import type { AppPart } from '../typist'
 // app.ts has a languageName of its own (a code's English name); the interface's is langName here.
 import { formatDate, languageName as langName, levelName, setUiLanguage, t, uiLanguage, type Key } from '../i18n'
@@ -32,7 +32,7 @@ import { el, icon, setIcon } from './dom'
 import { glyph } from './glyphs'
 import { caps, COPY_TWICE } from './keycaps'
 import { lucide, type LucideName } from './lucide'
-import { aside, bad, bar, btn, card, chip, enginePlate, grp, ib, lineList, linkBtn, listPage, liveField, navCard, post, row, seg, select, radioRow, recommended, tiles, toggleCard, toggleKnob, twoNames, uiLanguageCard, warn, wordChips } from './ui'
+import { aside, bad, bar, btn, card, chip, enginePlate, grp, ib, lineList, linkBtn, listPage, liveField, navCard, post, row, seg, select, radioRow, recommended, tiles, toggle, toggleCard, toggleKnob, twoNames, uiLanguageCard, warn, wordChips } from './ui'
 import { seconds } from '../speechplan'
 import { recommend, recommendedModels } from '../setup'
 import { resetSetup, setupNodes } from './setup'
@@ -768,7 +768,7 @@ function finishMoment(): void {
 // was scrolled to, as a browser does.
 
 /** A page of a page: a long part of it, opened from a line with a chevron or a tile. */
-type SubId = 'card' | 'screen' | 'aboutYou' | 'talkWindow' | 'notes' | 'meet' | 'speakers' | 'fixing' | 'program' | 'languages' | 'forTranslate' | 'forCheck' | 'forDictate' | 'forTranscribe' | 'forVoice'
+type SubId = 'card' | 'screen' | 'aboutYou' | 'talkWindow' | 'notes' | 'edit' | 'meet' | 'speakers' | 'fixing' | 'program' | 'languages' | 'forTranslate' | 'forCheck' | 'forDictate' | 'forTranscribe' | 'forVoice'
 
 type Place = { name: Page; sub?: SubId }
 
@@ -874,6 +874,7 @@ const SUBS: Record<SubId, Sub> = {
   aboutYou: { title: () => t('talkPage.aboutYou'), body: aboutYouPage },
   talkWindow: { title: () => t('act.talkWindow'), body: talkWindowPage },
   notes: { title: () => t('dictate.notesFolder'), body: kbRows },
+  edit: { title: () => t('edit.title'), body: editPage },
   meet: { title: 'Google Meet', body: meetPage },
   speakers: { title: () => t('page.speakers'), body: speakerRows, valid: installed },
   fixing: { title: () => t('page.fixing'), body: fixingPage },
@@ -1054,6 +1055,7 @@ const SEARCHED: Place[] = [
   { name: 'english', sub: 'aboutYou' },
   { name: 'english', sub: 'talkWindow' },
   { name: 'voice', sub: 'notes' },
+  { name: 'voice', sub: 'edit' },
   { name: 'layout', sub: 'fixing' },
   { name: 'recordings', sub: 'speakers' },
   { name: 'recordings', sub: 'meet' },
@@ -2191,6 +2193,7 @@ function voicePage(v: AppView): HTMLElement[] {
       { icon: 'whole-word', title: TITLES.vocabulary, count: s.vocabulary.length || '', open: () => go('vocabulary'), id: 'vocabulary' },
       { icon: 'message-square-text', title: TITLES.phrases, count: v.dictation.recent.length || '', open: () => go('phrases'), id: 'phrases' },
       { icon: 'folder', title: t('dictate.notesFolder'), sub: kb ? pathTail(kb) : t('act.notChosen'), open: () => openSub('notes'), id: 'notes' },
+      { icon: 'pencil-line', title: t('edit.title'), sub: s.dictateEdit ? t(`edit.${s.dictateEditStyle}`) : t('edit.off'), open: () => openSub('edit'), id: 'edit' },
     ]),
     ...(offer.length ? [grp(t('dictate.engine')), ...offer] : []),
     testOffer(v),
@@ -2198,9 +2201,72 @@ function voicePage(v: AppView): HTMLElement[] {
     keyRow('englishKey', t('dict.english'), t('dictate.englishNote', { lang: languageName(s.native) }), !k.english),
     keyRow('againKey', t('dictate.againKey'), t('dictate.againNote'), !k.again),
     keyRow('noteKey', t('dict.note'), t('dictate.noteNote'), !k.note),
+    toggle(t('dictate.panel'), s.dictationPanel, dictationPanel => save({ dictationPanel }), t('dictate.panelNote')),
     aside('info', t('dictate.escNote')),
     el('p', { class: 'privacy' }, lucide('lock', 's'), t('dictate.privacy')),
     enginePlate([{ title: t('dictate.speechModel'), value: speechValue(v, 'dictation'), open: () => go('models', 'forDictate') }]),
+  ].filter((n): n is HTMLElement => n !== null)
+}
+
+/** The person's own instruction, saved a moment after they stop (and at once when they leave the field). */
+let ownTimer: number | undefined
+
+function ownField(value: string): HTMLTextAreaElement {
+  const field = el('textarea', {
+    class: 'field report about',
+    rows: 3,
+    maxlength: EDIT_OWN_MAX,
+    placeholder: t('edit.ownPlaceholder'),
+    'aria-label': t('edit.ownLabel'),
+    'data-live': 'editOwn',
+  })
+  field.value = value
+  const store = () => {
+    window.clearTimeout(ownTimer)
+    ownTimer = undefined
+    if (field.value !== view?.settings.dictateEditOwn) save({ dictateEditOwn: field.value })
+  }
+  field.addEventListener('input', () => {
+    window.clearTimeout(ownTimer)
+    ownTimer = window.setTimeout(store, 600)
+  })
+  field.addEventListener('blur', () => ownTimer !== undefined && store())
+  return field
+}
+
+/** The model text editing needs, offered with its size while it is not here. */
+function editModelNotice(v: AppView): HTMLElement | null {
+  const model = v.settings.model
+  const files = v.models[model]
+  if (!v.settings.dictateEdit || files.status === 'ready') return null
+  const fetching = files.status === 'downloading'
+  return el(
+    'div',
+    { class: 'row notice' },
+    lucide('download'),
+    el(
+      'div',
+      { class: 'l' },
+      t('edit.needsModel', { name: levelName(model), size: speechSize(files.size) }),
+      el('small', {}, fetching ? t('talkPage.downloading') : files.status === 'failed' ? t('talk.downloadFailed') : t('talkPage.downloadOnce')),
+      fetching ? bar(files.progress) : null,
+    ),
+    fetching ? el('span', { class: 'pct' }, `${Math.round(files.progress * 100)}%`) : btn(files.status === 'failed' ? t('common.tryAgain') : t('settings.download'), () => post({ type: 'useModel', model }), 'primary'),
+  )
+}
+
+/** Voice typing › Text editing: each phrase put right by the local model, by an instruction picked or written; off until turned on. */
+function editPage(v: AppView): HTMLElement[] {
+  const s = v.settings
+  const slow = translationAdvice(v.speech.device)[s.model].slow
+  return [
+    toggleCard('pencil-line', t('edit.on'), s.dictateEdit, dictateEdit => save({ dictateEdit }), t(slow ? 'edit.onNoteSlow' : 'edit.onNote')),
+    editModelNotice(v),
+    grp(t('edit.style')),
+    ...EDIT_STYLES.map(style => radioRow(t(`edit.${style}`), [t(`edit.${style}Note`)], s.dictateEditStyle === style, () => save({ dictateEditStyle: style }))),
+    s.dictateEditStyle === 'own' ? el('div', { class: 'row add' }, el('div', { class: 'l' }, t('edit.ownLabel')), ownField(s.dictateEditOwn), el('small', {}, t('edit.ownHint'))) : null,
+    aside('info', t('edit.keeps')),
+    enginePlate([{ title: t('edit.model'), value: checkValue(v), open: () => go('models', 'forCheck') }]),
   ].filter((n): n is HTMLElement => n !== null)
 }
 

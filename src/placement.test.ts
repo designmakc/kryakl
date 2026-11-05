@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { badgeOffset, placeBadge, placeByTray, placeNear, resize } from './placement'
+import { badgeOffset, flightPoint, placeBadge, placeByTray, placeNear, resize } from './placement'
 
 const area = { x: 0, y: 0, width: 1920, height: 1040 }
 const size = { width: 440, height: 200 }
@@ -51,6 +51,22 @@ describe('resize', () => {
   test('keeps the top while it fits, moves up when it does not', () => {
     expect(resize({ x: 10, y: 100, width: 440, height: 200 }, 300, area).y).toBe(100)
     expect(resize({ x: 10, y: 900, width: 440, height: 200 }, 300, area)).toEqual({ x: 10, y: 740, width: 440, height: 300 })
+  })
+})
+
+describe('flightPoint', () => {
+  const from = { x: 100, y: 200 }
+  const to = { x: 500, y: 600 }
+
+  test('goes from one place to the other, slowly at first', () => {
+    expect(flightPoint(from, to, 0)).toEqual(from)
+    expect(flightPoint(from, to, 1)).toEqual(to)
+    expect(flightPoint(from, to, 0.5)).toEqual({ x: 200, y: 300 })
+  })
+
+  test('stays between them however late the clock', () => {
+    expect(flightPoint(from, to, 1.4)).toEqual(to)
+    expect(flightPoint(from, to, -1)).toEqual(from)
   })
 })
 

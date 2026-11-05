@@ -35,6 +35,7 @@ describe('settingsSummary', () => {
       languages: ['uk'],
     })
     expect(settingsSummary({ talkAbout: 'I am Alex, a designer.', talkLevel: 'B1' })).toEqual({ talkAbout: '22 characters, not shown', talkLevel: 'B1' })
+    expect(settingsSummary({ dictateEdit: true, dictateEditStyle: 'own', dictateEditOwn: 'Пиши короче.' })).toEqual({ dictateEdit: true, dictateEditStyle: 'own', dictateEditOwn: '12 characters, not shown' })
   })
 })
 

@@ -145,6 +145,11 @@ test('each part says what uses it; a part nothing uses is marked, a reserve for 
   ])
 })
 
+test('text editing makes the model and its build serve Dictate too', () => {
+  const parts = withUse([part('accurate'), part('llama', 'vulkan')], { ...context, level: 'fast', edit: true })
+  expect(parts.map(p => p.users)).toEqual([['Check', 'Dictate'], ['Check', 'Dictate']])
+})
+
 test('the model serves Check alone while Translate is on Fast; a Windows voice leaves the natural one unused', () => {
   const parts = withUse([part('accurate'), part('llama', 'vulkan'), part('voice')], { ...context, level: 'fast', naturalVoice: false })
   expect(parts.map(p => p.users)).toEqual([['Check'], ['Check'], []])

@@ -10,7 +10,8 @@ What other apps may use, and keep using:
                                       a short recording (any format; raw 16-bit 16 kHz mono with
                                       format=pcm16) -> {text, language, sure}
                                       (`expected`: the languages likely spoken, up to 8, when Whisper is unsure;
-                                      strict: never a language outside expected; an explicit `language` wins;
+                                      strict: never a language outside expected, the first of them winning a
+                                      close call; an explicit `language` wins;
                                       `language` is "" when the model does not say, as Parakeet;
                                       the text is spelled as the vocabulary says)
   POST /dictate/sessions {expected?, language?, strict?} -> {id, model}

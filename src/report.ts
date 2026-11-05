@@ -69,6 +69,8 @@ export function settingsSummary(settings: object): Record<string, unknown> {
   }
   // What they told the duck about themselves: only how long it is.
   if (typeof out.talkAbout === 'string') out.talkAbout = `${out.talkAbout.length} characters, not shown`
+  // Their own instruction for dictated text: the same.
+  if (typeof out.dictateEditOwn === 'string') out.dictateEditOwn = `${out.dictateEditOwn.length} characters, not shown`
   return out
 }
 

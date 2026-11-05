@@ -12,7 +12,7 @@ export type DictationEntry = {
   mode: 'type' | 'english'
   /** What was typed. */
   text: string
-  /** What was said, before it was translated (the English key). */
+  /** What was said, before it was edited or translated. */
   heard?: string
 }
 

@@ -3,7 +3,8 @@
 // dropped it, that never takes the focus, so the program keeps it); the same
 // key again stops. Then, by the key:
 //   type     the text is typed where the cursor is (through the clipboard,
-//            which is put back as it was),
+//            which is put back as it was), put right first by the local model
+//            when text editing is on (dictedit.ts),
 //   english  the same, translated into English first by Kryakl's translator,
 //   note     the recording goes into the knowledge base as a .md file
 //            (through the engine's library), and a balloon says where.
@@ -20,7 +21,7 @@ import type { DictationLog } from './dictationlog'
 import { frameWindow } from './dwm'
 import { t } from './i18n'
 import { log } from './log'
-import { badgeOffset, placeBadge, type Rect } from './placement'
+import { badgeOffset, flightPoint, placeBadge, type Rect } from './placement'
 import type { DictationMode, ToHost, ToView } from './protocol'
 import type { Settings } from './settings'
 import type { SpeechHost } from './speechhost'
@@ -34,6 +35,9 @@ const LOOK_MS = { first: 500, every: 2000 }
 const NOTE_WAIT_MS = 5 * 60_000
 /** How long the badge says something of a phrase it typed (Fast translated it). */
 const NOTE_SHOWN_MS = 3000
+/** How long the badge takes to fly into the tray, as the page's shrinking (dictation.css), and how often it moves meanwhile. */
+const FLIGHT_MS = 260
+const FLIGHT_STEP_MS = 16
 /** The most languages the engine weighs a phrase against. */
 const MOST_EXPECTED = 8
 
@@ -48,6 +52,12 @@ export type DictationOptions = {
   /** The text in English; `from` is the language the engine heard. */
   /** The phrase in English; `note`, said in the badge after it is typed (Fast translated it, the model too slow just now). */
   toEnglish: (text: string, from: string) => Promise<{ text: string; note?: string }>
+  /** The phrase as text editing leaves it; `note`, said in the badge after it is typed (typed as said, and why). Off, it comes back as it was. */
+  edit: (text: string, signal: AbortSignal) => Promise<{ text: string; note?: string }>
+  /** Whether a phrase goes through text editing now. */
+  editing: () => boolean
+  /** A phrase is starting: the model loads while it is spoken. */
+  warm: () => void
   /** Practice: a phrase spoken in English, shown checked (Check my English) instead of typed. */
   check: (text: string) => void
   /** The languages the person uses (their own, English, the others they named): a phrase is taken as one of them, never another. */
@@ -66,6 +76,10 @@ export type DictationOptions = {
   log: DictationLog
   /** A phrase went into the log, or the log was cleared: the Dictate page shows the latest. */
   logged: () => void
+  /** Whether the badge shows while a phrase is dictated; it still comes up to say what went wrong. */
+  panel: () => boolean
+  /** The middle of the tray icon, where a badge folded away flies. */
+  trayPoint: () => { x: number; y: number }
   /** Where the person last dropped the badge, from the bottom centre of the work area; and keeping a new place. */
   offset: () => Settings['dictationBadge']
   moved: (offset: Settings['dictationBadge']) => void
@@ -94,6 +108,17 @@ export class Dictation {
   private trouble = ''
   /** Windows cloaked the badge: a new one is made before the next phrase. */
   private stale: false | string = false
+  /** Ends the edit under way: the phrase was thrown away. */
+  private editStop: AbortController | undefined
+  /** The badge is out of sight for this phrase, folded away or not wanted: the recording goes on in it all the same. */
+  private tucked = false
+  /** The screen this phrase started on: a badge brought back comes up there. */
+  private area: Rect = { x: 0, y: 0, width: 0, height: 0 }
+  /** The person is moving the badge: a new height waits for the drop. */
+  private dragging = false
+  /** The height the page last asked for, kept while the badge cannot take it. */
+  private asked: number = BADGE.min
+  private flight: NodeJS.Timeout | undefined
 
   constructor(private readonly o: DictationOptions) {}
 
@@ -113,8 +138,9 @@ export class Dictation {
       return
     }
     this.mode = mode
+    if (mode === 'type' || mode === 'english') this.o.warm()
     // The screen to show on is the one with the window the text goes into, taken now, while it is in front.
-    const area = this.workArea()
+    this.area = this.workArea()
     this.set('recording')
     const expected = this.expected(mode)
     let session: string | undefined
@@ -132,7 +158,18 @@ export class Dictation {
     if (this.state !== 'recording') return
     if (this.stale) this.renew()
     const badge = this.window()
-    this.height = BADGE.min
+    this.height = this.asked = BADGE.min
+    this.tucked = !this.o.panel()
+    if (this.tucked) log('badge: not shown, as the setting says')
+    else this.present(badge, `session ${session ? 'yes' : 'no'}`)
+    this.send({ type: 'dictation', command: 'start', mode, key, ...(session ? { session } : {}), expected })
+    globalShortcut.register('Escape', () => this.cancel())
+  }
+
+  /** The badge at the person's place on this phrase's screen, on top. */
+  private present(badge: BrowserWindow, why: string): void {
+    clearInterval(this.flight)
+    const area = this.area
     const place = placeBadge(this.o.offset(), { width: BADGE.width, height: this.height }, area)
     badge.setBounds(place)
     badge.showInactive()
@@ -140,10 +177,37 @@ export class Dictation {
     const before = this.sight(badge)
     this.raise(badge)
     const was = before ? troubleOf(before) : ''
-    log(`badge: shown at ${JSON.stringify(badge.getBounds())} (asked ${JSON.stringify(place)}, area ${JSON.stringify(area)}, offset ${JSON.stringify(this.o.offset())}), visible ${badge.isVisible()}, session ${session ? 'yes' : 'no'}${was ? `; was ${was}, raised` : ''}`)
+    log(`badge: shown at ${JSON.stringify(badge.getBounds())} (asked ${JSON.stringify(place)}, area ${JSON.stringify(area)}, offset ${JSON.stringify(this.o.offset())}), visible ${badge.isVisible()}, ${why}${was ? `; was ${was}, raised` : ''}`)
     this.look(LOOK_MS.first)
-    this.send({ type: 'dictation', command: 'start', mode, key, ...(session ? { session } : {}), expected })
-    globalShortcut.register('Escape', () => this.cancel())
+  }
+
+  /** The person folded the badge away: it flies into the tray's red dot, the recording going on; the next phrase shows it again. */
+  private tuck(fly: boolean): void {
+    const b = this.badge
+    if (this.state === 'idle' || this.tucked || !b || b.isDestroyed()) return
+    this.tucked = true
+    if (!fly) return b.hide()
+    const from = b.getBounds()
+    const tray = this.o.trayPoint()
+    // The panel shrinks into its bottom right corner: that corner lands on the icon.
+    const to = { x: tray.x - from.width, y: tray.y - from.height }
+    const began = Date.now()
+    clearInterval(this.flight)
+    this.flight = setInterval(() => {
+      if (b.isDestroyed()) return clearInterval(this.flight)
+      const progress = (Date.now() - began) / FLIGHT_MS
+      if (progress >= 1) return b.hide()
+      const at = flightPoint(from, to, progress)
+      b.setPosition(at.x, at.y)
+    }, FLIGHT_STEP_MS)
+  }
+
+  /** A badge out of sight comes up to say something the person has to know. */
+  private reveal(): void {
+    if (!this.tucked) return
+    this.tucked = false
+    this.height = this.asked
+    if (this.badge && !this.badge.isDestroyed()) this.present(this.badge, 'brought back')
   }
 
   private stop(): void {
@@ -156,6 +220,7 @@ export class Dictation {
   cancel(): void {
     if (this.state !== 'recording' && !(this.state === 'working' && this.mode !== 'note')) return
     globalShortcut.unregister('Escape')
+    this.editStop?.abort()
     this.send({ type: 'dictation', command: 'cancel', mode: this.mode, key: '' })
   }
 
@@ -177,6 +242,9 @@ export class Dictation {
         return true
       case 'dictationHeight':
         this.fit(message.px)
+        return true
+      case 'dictationTuck':
+        this.tuck(message.fly)
         return true
       case 'dictationCancelled':
         this.over()
@@ -218,18 +286,33 @@ export class Dictation {
     try {
       // Whisper unsure, or a model that does not say (Parakeet): the language by the text's letters and words.
       const spoken = language && sure >= 0.5 ? language : this.o.languageOf(text)
-      if (mode === 'english' && spoken !== 'en') ({ text, note } = await this.o.toEnglish(text, spoken))
+      if (this.o.editing()) {
+        const stop = new AbortController()
+        this.editStop = stop
+        this.send({ type: 'dictationEditing' })
+        ;({ text, note } = await this.o.edit(text, stop.signal))
+        this.editStop = undefined
+        // Esc while it was edited: the phrase is gone (the badge says so in a moment).
+        if (stop.signal.aborted) return
+      }
+      if (mode === 'english' && spoken !== 'en') {
+        const english = await this.o.toEnglish(text, spoken)
+        text = english.text
+        note = english.note ?? note
+      }
     } catch (error) {
       return this.fail(`Could not translate: ${error instanceof Error ? error.message : String(error)}`)
     }
     // Said in the badge a moment after it is typed; else the badge goes at once.
-    if (note) this.send({ type: 'dictationDone', text, note })
-    else this.badge?.hide()
+    if (note) {
+      this.reveal()
+      this.send({ type: 'dictationDone', text, note })
+    } else this.badge?.hide()
     this.over()
     // A space after it, so the next phrase or word goes on without one typed by hand.
     await this.o.paste(`${text} `)
     if (note) this.hideSoon(NOTE_SHOWN_MS)
-    this.o.log.add(mode === 'english' ? { mode, text, heard } : { mode: 'type', text })
+    this.o.log.add(mode === 'english' ? { mode, text, heard } : { mode: 'type', text, ...(text === heard.trim() ? {} : { heard }) })
     this.o.logged()
   }
 
@@ -275,6 +358,7 @@ export class Dictation {
 
   private fail(message: string): void {
     this.over()
+    this.reveal()
     this.send({ type: 'dictationError', message })
     this.hideSoon(3500)
   }
@@ -309,7 +393,7 @@ export class Dictation {
       show: false,
       frame: false,
       resizable: false,
-      // Its status line is a drag region (dictation.css): the person puts it where it bothers least.
+      // All of it is a drag region (dictation.css): the person puts it where it bothers least.
       movable: true,
       minimizable: false,
       maximizable: false,
@@ -332,8 +416,15 @@ export class Dictation {
     b.removeMenu()
     b.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
     b.webContents.on('will-navigate', event => event.preventDefault())
-    // 'moved' comes once, when a drag by the person ends (never for setBounds).
-    b.on('moved', () => this.dropped())
+    // Both come only for a drag by the person, 'moved' once, when it ends (never for setBounds or a flight).
+    b.on('will-move', () => {
+      this.dragging = true
+    })
+    b.on('moved', () => {
+      this.dragging = false
+      this.dropped()
+      this.fit(this.asked)
+    })
     b.on('closed', () => {
       // A badge made again (renew) is not this one.
       if (this.badge !== b) return
@@ -342,6 +433,7 @@ export class Dictation {
     })
     b.on('hide', () => {
       clearTimeout(this.looking)
+      clearInterval(this.flight)
       log(`badge: hidden, state ${this.state}`)
     })
     b.on('unresponsive', () => log('badge: the page does not answer'))
@@ -433,7 +525,8 @@ export class Dictation {
     const b = this.badge
     if (!b || b.isDestroyed() || !Number.isFinite(px)) return
     const height = Math.round(Math.min(BADGE.max, Math.max(BADGE.min, px)))
-    if (height === this.height) return
+    this.asked = height
+    if (height === this.height || this.dragging || this.tucked) return
     this.height = height
     const now = b.getBounds()
     const area = screen.getDisplayMatching(now).workArea
@@ -452,6 +545,7 @@ export class Dictation {
 
   dispose(): void {
     clearTimeout(this.looking)
+    clearInterval(this.flight)
     this.badge?.destroy()
   }
 }

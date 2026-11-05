@@ -396,6 +396,8 @@ export type ToView =
   | { type: 'dictation'; command: 'start' | 'stop' | 'cancel'; mode: DictationMode; key: string; session?: string; expected?: string[] }
   /** `note`: said in place of "Typed" (Fast translated it, the model too slow just now). */
   | { type: 'dictationDone'; text: string; note?: string }
+  /** The phrase is with the local model (text editing). */
+  | { type: 'dictationEditing' }
   | { type: 'dictationError'; message: string }
   /** The tray's panel was just shown: focus its first command. */
   | { type: 'trayShown' }
@@ -554,6 +556,8 @@ export type ToHost =
   | { type: 'dictationNote'; id: string }
   /** The badge's content is this tall, in CSS pixels; the window follows, its bottom edge kept. */
   | { type: 'dictationHeight'; px: number }
+  /** The person folded the badge away for this phrase; `fly`: into the tray, or at once where motion is reduced. */
+  | { type: 'dictationTuck'; fly: boolean }
   | { type: 'dictationCancelled' }
   | { type: 'dictationFailed'; message: string }
 

@@ -39,6 +39,10 @@ export const TALK_LEVEL_NAMES: Readonly<Record<TalkLevel, { name: string; note: 
 }
 /** What the learner tells the duck about themselves, at most. */
 export const TALK_ABOUT_MAX = 500
+/** Text editing: how a dictated phrase is put right by the local model (dictedit.ts); `own` is the person's instruction. */
+export type EditStyle = 'clean' | 'business' | 'aiTask' | 'list' | 'own'
+export const EDIT_STYLES: readonly EditStyle[] = ['clean', 'business', 'aiTask', 'list', 'own']
+export const EDIT_OWN_MAX = 500
 
 /** The levels (and the models) as the pages and the card name them. */
 export const LEVEL_NAMES: Readonly<Record<TranslationLevel, string>> = { fast: 'Fast', accurate: 'Accurate', most: 'Most accurate' }
@@ -152,6 +156,11 @@ export type Settings = {
   talkLevel: TalkLevel
   /** Talk: what the learner told the duck about themselves (a name, work, interests); the duck reads it in every talk. */
   talkAbout: string
+  /** Text editing: each dictated phrase goes through the local model before it is typed; off until the person turns it on. */
+  dictateEdit: boolean
+  dictateEditStyle: EditStyle
+  /** Their own instruction, for the style `own`. */
+  dictateEditOwn: string
   /** Where the talk window was last left, in screen pixels; none until it is moved or sized (it opens by the bottom right of the screen). */
   talkBounds: { x: number; y: number; width: number; height: number } | null
   /**
@@ -160,6 +169,8 @@ export type Settings = {
    * last dropped it (0, 0 is 12 px above the taskbar's edge, in the middle).
    */
   dictationBadge: { dx: number; dy: number }
+  /** The badge shows while a phrase is dictated; off, only the tray's red dot does, and the badge comes up only to say what went wrong. */
+  dictationPanel: boolean
   /**
    * Words dictation and transcripts spell as written, one line each as the
    * person typed it: the word, then what it may be heard as in parentheses
@@ -260,8 +271,12 @@ export const DEFAULTS: Settings = {
   talkOnTop: false,
   talkLevel: 'B1',
   talkAbout: '',
+  dictateEdit: false,
+  dictateEditStyle: 'clean',
+  dictateEditOwn: '',
   talkBounds: null,
   dictationBadge: { dx: 0, dy: 0 },
+  dictationPanel: true,
   vocabulary: [],
   translationLevel: 'fast',
   model: 'accurate',
@@ -457,8 +472,12 @@ export function normalize(raw: unknown, native = DEFAULTS.native): Settings {
     talkOnTop: flag(r.talkOnTop, DEFAULTS.talkOnTop),
     talkLevel: TALK_LEVELS.includes(r.talkLevel as TalkLevel) ? (r.talkLevel as TalkLevel) : DEFAULTS.talkLevel,
     talkAbout: typeof r.talkAbout === 'string' ? r.talkAbout.slice(0, TALK_ABOUT_MAX) : DEFAULTS.talkAbout,
+    dictateEdit: flag(r.dictateEdit, DEFAULTS.dictateEdit),
+    dictateEditStyle: EDIT_STYLES.includes(r.dictateEditStyle as EditStyle) ? (r.dictateEditStyle as EditStyle) : DEFAULTS.dictateEditStyle,
+    dictateEditOwn: typeof r.dictateEditOwn === 'string' ? r.dictateEditOwn.slice(0, EDIT_OWN_MAX) : DEFAULTS.dictateEditOwn,
     talkBounds: windowBounds(r.talkBounds),
     dictationBadge: badgeOffset(r.dictationBadge),
+    dictationPanel: flag(r.dictationPanel, DEFAULTS.dictationPanel),
     vocabulary: vocabularyLines(r.vocabulary),
     ...levelAndModel(r.translationLevel, r.model),
     speechPrefer: r.speechPrefer === 'speed' ? 'speed' : 'accuracy',

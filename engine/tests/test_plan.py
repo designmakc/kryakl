@@ -71,10 +71,25 @@ def test_speech_in_another_language_is_never_taken_for_english():
     assert asr.pick_language(russian, ["uk", "en"], strict=True) == "uk"
     assert asr.pick_language(russian, ["uk", "en"]) == "ru"
     assert asr.pick_language({"ru": 0.6, "en": 0.05, "uk": 0.03}, ["uk", "en"]) == "uk"
-    # English likely enough (an accent heard as German), or the only one expected: English.
-    assert asr.pick_language({"de": 0.4, "en": 0.35, "uk": 0.2}, ["uk", "en"], strict=True) == "en"
+    # English far likelier than the person's own language, or the only one expected: English.
+    assert asr.pick_language({"de": 0.4, "en": 0.35, "uk": 0.05}, ["uk", "en"], strict=True) == "en"
     assert asr.pick_language(russian, ["en"], strict=True) == "en"
-    assert asr.pick_language({"en": 0.6, "uk": 0.3}, ["uk", "en"], strict=True) == "en"
+    assert asr.pick_language({"en": 0.9, "uk": 0.1}, ["uk", "en"], strict=True) == "en"
+
+
+def test_a_close_call_goes_to_the_persons_own_language():
+    # A breath before the first word reads as English three times likelier than Russian.
+    breath = {"en": 0.03, "ru": 0.01, "pt": 0.4}
+    assert asr.pick_language(breath, ["ru", "en"], strict=True) == "ru"
+    assert asr.pick_language({"en": 0.6, "uk": 0.3}, ["uk", "en"], strict=True) == "uk"
+    # A second of English is at least 19 times likelier.
+    assert asr.pick_language({"en": 0.95, "ru": 0.05}, ["ru", "en"], strict=True) == "en"
+    # Only where the caller says only the expected ones are spoken.
+    assert asr.pick_language({"en": 0.6, "ru": 0.3}, ["ru", "en"]) == "en"
+    # English expected alone (Talk, spoken practice): nothing to lean to.
+    assert asr.pick_language({"ru": 0.9, "en": 0.05}, ["en"], strict=True) == "en"
+    # A person's own language Whisper does not know takes no part.
+    assert asr.pick_language({"en": 0.6, "ru": 0.3}, ["xx", "ru", "en"], strict=True) == "en"
 
 
 def test_clean_vocabulary_drops_bad_entries_and_takes_bare_words():

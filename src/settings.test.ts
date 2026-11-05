@@ -15,6 +15,20 @@ describe('Kept as typed', () => {
 })
 
 describe('normalize', () => {
+  test('shows the dictation panel until it is turned off', () => {
+    expect(normalize({}).dictationPanel).toBe(true)
+    expect(normalize({ dictationPanel: false }).dictationPanel).toBe(false)
+    expect(normalize({ dictationPanel: 'no' }).dictationPanel).toBe(true)
+  })
+
+  test('keeps text editing off until it is turned on, with a known style and a short own instruction', () => {
+    expect(normalize({})).toMatchObject({ dictateEdit: false, dictateEditStyle: 'clean', dictateEditOwn: '' })
+    expect(normalize({ dictateEdit: true, dictateEditStyle: 'aiTask' })).toMatchObject({ dictateEdit: true, dictateEditStyle: 'aiTask' })
+    expect(normalize({ dictateEditStyle: 'poem' }).dictateEditStyle).toBe('clean')
+    expect(normalize({ dictateEditOwn: 'x'.repeat(600) }).dictateEditOwn).toHaveLength(500)
+    expect(normalize({ dictateEditOwn: 7 }).dictateEditOwn).toBe('')
+  })
+
   test('a missing or broken file gives the defaults, with the native language from the system', () => {
     expect(normalize(undefined)).toEqual(DEFAULTS)
     expect(normalize('nonsense', 'German')).toEqual({ ...DEFAULTS, native: 'German' })

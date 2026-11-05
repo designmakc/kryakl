@@ -308,7 +308,15 @@ async function appShots(theme: 'dark' | 'light', narrow = false): Promise<void> 
     // Each action with its lists and its second-level pages, reached as a person reaches them.
     await page('translate', ['translations', 'card', 'screen'])
     await page('english', ['words', 'mistakes', 'aboutYou', 'talkWindow'])
-    await page('voice', ['vocabulary', 'phrases', 'notes'])
+    await page('voice', ['vocabulary', 'phrases', 'notes', 'edit'])
+    // Text editing on, with the person's own instruction.
+    await click(w, '[data-sub="edit"]')
+    send(w, { type: 'app', view: appView({ dictateEdit: true, dictateEditStyle: 'own', dictateEditOwn: 'Пиши короче, без вводных слов.' }) })
+    await sleep(500)
+    await shot(w, tag('voice-edit-own'))
+    send(w, { type: 'app', view: v })
+    await esc(w)
+    await sleep(400)
     await page('recordings', ['transcripts', 'meet', 'speakers'])
     await page('layout', ['kept', 'learned', 'programs', 'layouts', 'fixing'])
     await page('settings', ['languages'])

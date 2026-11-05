@@ -13,7 +13,10 @@ Whisper pays a full 30 s window for any piece, so its pieces are long (4 s or
 more on the processor, 10 s on the card); Parakeet costs what the sound lasts,
 so its pieces may be short. Whisper's language is found once, on the first
 piece, among the expected ones (the person's own, English), and kept; each
-piece is told the text before it, so it goes on in its style.
+piece is told the text before it, so it goes on in its style. A guess or a
+preview only settles it by standing for a whole piece: on one word before a
+pause Whisper took Russian for English, and the whole phrase came out an
+English translation (2026-11-05).
 
 Nothing is kept: the sound lives in memory until the session is over.
 """
@@ -92,7 +95,7 @@ class Session:
         self._open: tuple[int, int, list[tuple[int, int]]] | None = None  # (cut, length, speech spans) of the last look
         self._pieces: list[tuple[int, int]] = []  # closed, waiting to be recognized
         self._texts: list[str] = []
-        self._guess: tuple[int, int, str] | None = None  # (start, end, text): the open tail recognized ahead
+        self._guess: tuple[int, int, str, str, float] | None = None  # (start, end, text, language, sure): the open tail recognized ahead
         self._working: tuple[str, int, int] | None = None  # (piece|guess, start, end) being recognized
         self.state = "listening"  # listening, finishing, done, cancelled, failed
         self.error = ""
@@ -171,8 +174,14 @@ class Session:
         if speech_end is not None and guess and guess[0] == start and speech_end <= guess[1]:
             if guess[2]:
                 self._texts.append(guess[2])
+            self._settle(guess[3], guess[4])
             return
         self._pieces.append((start, end))
+
+    def _settle(self, language: str, sure: float) -> None:
+        """The first whole piece decides the language for the rest (lock held)."""
+        if self.language is None and language:
+            self.language, self.sure = language, sure
 
     def _ahead(self) -> tuple[int, int] | None:
         """The open tail worth recognizing ahead: speech that ended a moment ago, not recognized yet (lock held)."""
@@ -248,16 +257,14 @@ class Session:
             with self._lock:
                 self.took += spent
                 self._working = None
-                if self.language is None and language:
-                    # Whisper's first piece decides the language for the rest.
-                    self.language, self.sure = language, sure
                 if job[0] == "piece":
+                    self._settle(language, sure)
                     if text:
                         self._texts.append(text)
                 elif job[0] == "preview":
                     self._preview = (job[2], text)
                 elif self._cut == job[1]:
-                    self._guess = (job[1], job[2], text)
+                    self._guess = (job[1], job[2], text, language, sure)
                 self._lock.notify_all()
 
     # ---------------------------------------------------------------- out

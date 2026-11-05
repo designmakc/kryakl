@@ -7,6 +7,7 @@
 import { t, type Key } from '../i18n'
 import type { DictationMode, ToView, TutorHost } from '../protocol'
 import { el } from './dom'
+import { lucide } from './lucide'
 import { ChunkRecorder, micTrouble, PhraseRecorder, StreamRecorder, type StreamStatus } from './recorder'
 import { Wave } from './wave'
 
@@ -46,8 +47,26 @@ function clock(seconds: number): string {
 /** The panel: the words on top (none when there are none to show), the status line under them. */
 function show(kind: string, text: HTMLElement | null, ...line: (Node | string)[]): void {
   root.className = `badge ${kind}`
-  root.replaceChildren(...(text ? [text] : []), el('div', { class: 'line' }, ...line))
+  root.replaceChildren(...(text ? [text] : []), el('div', { class: 'line' }, ...line), ...(kind === 'rec' || kind === 'busy' ? [tuckButton()] : []))
   if (text) toEnd(text)
+}
+
+/** Folds the badge into the tray for this phrase, the recording going on; it says so by the tray's red dot. */
+function tuckButton(): HTMLElement {
+  return el(
+    'button',
+    {
+      class: 'tuck',
+      title: t('dict.tuck'),
+      'aria-label': t('dict.tuck'),
+      onclick: () => {
+        const fly = !matchMedia('(prefers-reduced-motion: reduce)').matches
+        if (fly) root.classList.add('away')
+        host.post({ type: 'dictationTuck', fly })
+      },
+    },
+    lucide('chevron-down', 's'),
+  )
 }
 
 /** The latest words in view; the top fades when earlier ones are above. */
@@ -176,6 +195,8 @@ window.addEventListener('message', event => {
     if (message.command === 'start') void start(message.mode, message.session, message.expected)
     else if (message.command === 'stop') void stop()
     else void cancel()
+  } else if (message.type === 'dictationEditing') {
+    show('busy', said ? wordsOf(said) : null, el('span', { class: 'spin' }), el('span', { class: 'what' }, t('dict.editing')))
   } else if (message.type === 'dictationDone') {
     show('done', wordsOf(message.text), el('span', { class: 'check' }, '✓'), el('span', { class: 'what' }, message.note ?? (mode === 'note' ? t('dict.saved') : t('dict.typed'))))
   } else if (message.type === 'dictationError') {

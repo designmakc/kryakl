@@ -92,6 +92,12 @@ export function placeBadge(offset: { dx: number; dy: number }, size: { width: nu
   }
 }
 
+/** Where a window flying from `from` to `to` is at `progress` (0…1): it sets off slowly and speeds up, as a thing falling in. */
+export function flightPoint(from: { x: number; y: number }, to: { x: number; y: number }, progress: number): { x: number; y: number } {
+  const eased = Math.min(1, Math.max(0, progress)) ** 2
+  return { x: Math.round(from.x + (to.x - from.x) * eased), y: Math.round(from.y + (to.y - from.y) * eased) }
+}
+
 /** The offset a badge dropped at `bounds` keeps: placeBadge's in reverse. */
 export function badgeOffset(bounds: Rect, area: Rect): { dx: number; dy: number } {
   return {

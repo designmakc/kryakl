@@ -92,6 +92,8 @@ export type UseContext = {
   /** Translate's level, and the one language model: Check's always, Translate's unless it is Fast. */
   level: 'fast' | 'accurate' | 'most'
   model: 'accurate' | 'most'
+  /** Text editing is on: dictated phrases go through that model too. */
+  edit?: boolean
   /** The languages the person uses, by code: Fast's models for them translate, or show the quick draft. */
   languages: readonly string[]
   /** The person's own language: its dictionary gives the words' meanings in the cards. */
@@ -116,9 +118,9 @@ function usersOf(p: StoragePart, c: UseContext): string[] | undefined {
       return when(c.naturalVoice, 'Listen')
     case 'accurate':
     case 'most':
-      return p.id === c.model ? [...when(c.level === p.id, 'Translate'), 'Check'] : []
+      return p.id === c.model ? [...when(c.level === p.id, 'Translate'), 'Check', ...when(!!c.edit, 'Dictate')] : []
     case 'llama':
-      return p.item === c.build ? [...when(c.level !== 'fast', 'Translate'), 'Check'] : []
+      return p.item === c.build ? [...when(c.level !== 'fast', 'Translate'), 'Check', ...when(!!c.edit, 'Dictate')] : []
     case 'speechModel':
       return [...when(p.item === c.speech.dictation, 'Dictate'), ...when(p.item === c.speech.transcripts, 'Transcribe')]
     case 'unused':

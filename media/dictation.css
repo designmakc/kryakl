@@ -1,5 +1,5 @@
 /* Dictate's badge: one panel at the bottom of the screen being typed in. The
-   phrase on top, as it is heard; one status line under it, which is also the
+   phrase on top, as it is heard; one status line under it. All of it is the
    handle to move the badge by. The window is as tall as the panel
    (dictation.ts in the page posts its height) and see-through: the pill, its
    16 px corners and its 1 px edge are drawn here, on Windows 10 and 11 alike. */
@@ -10,6 +10,7 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: transparent;
 body { font: 400 var(--t-body) / 1.45 var(--font); color: var(--text); user-select: none; cursor: default; -webkit-font-smoothing: antialiased; }
 
 .badge {
+  position: relative;
   /* The window is at most 180 px: past that the words scroll, the status line stays. */
   max-height: 180px;
   padding: 10px 14px 9px;
@@ -20,6 +21,16 @@ body { font: 400 var(--t-body) / 1.45 var(--font); color: var(--text); user-sele
   display: flex;
   flex-direction: column;
   gap: 7px;
+  /* Drag it anywhere to put it elsewhere; dictation.ts keeps the place. */
+  -webkit-app-region: drag;
+}
+
+/* Folded away: it shrinks into its corner while the window flies to the tray (dictation.ts). */
+.badge.away {
+  transform: scale(0.2);
+  transform-origin: bottom right;
+  opacity: 0;
+  transition: transform 260ms ease-in, opacity 260ms ease-in;
 }
 
 /* The phrase as it stands: whole, wrapping, the latest words in view; six
@@ -29,6 +40,8 @@ body { font: 400 var(--t-body) / 1.45 var(--font); color: var(--text); user-sele
   flex: 0 1 auto;
   min-height: 0;
   max-height: calc(1.45em * 6);
+  /* Room for the fold button beside the first line; kept when it goes, so the phrase never wraps anew. */
+  padding-right: 20px;
   overflow-y: auto;
   scrollbar-width: none;
   /* A step under the app's text, and lighter (Inter is variable: any weight). */
@@ -43,14 +56,12 @@ body { font: 400 var(--t-body) / 1.45 var(--font); color: var(--text); user-sele
 .words.waiting { color: var(--muted); }
 .badge.error .words { color: var(--text); }
 
-/* The status line: drag it to put the badge elsewhere; dictation.ts keeps the place. */
 .line {
   display: flex;
   align-items: center;
   gap: 8px;
   min-height: 18px;
   font: 400 var(--t-small) / 1.45 var(--font);
-  -webkit-app-region: drag;
 }
 .what { color: var(--strong); font-weight: 600; white-space: nowrap; }
 .time { font: 500 var(--t-small) / 1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -65,6 +76,24 @@ body { font: 400 var(--t-body) / 1.45 var(--font); color: var(--text); user-sele
 
 /* The last three seconds of sound, newest at the right (dictation.ts draws it). */
 canvas.wave { flex: 1; min-width: 0; height: 16px; margin-left: 6px; }
+
+/* Folds the badge into the tray, the recording going on: a quiet chevron at the end of the phrase's first line. */
+.tuck {
+  position: absolute;
+  top: 10px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--muted);
+  -webkit-app-region: no-drag;
+}
+.tuck:hover { background: var(--raised); color: var(--strong); }
 
 .spin { flex: none; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border); border-top-color: var(--mark); animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }

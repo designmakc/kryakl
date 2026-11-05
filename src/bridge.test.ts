@@ -24,7 +24,7 @@ describe('a page that shows text from outside opens, removes and exports nothing
   test('each page keeps what it does', () => {
     for (const type of ['ready', 'speak', 'speakNatural', 'stop', 'close', 'pin', 'maximize', 'height', 'copyText', 'pasteText', 'translateText', 'checkText', 'lookup', 'saveWord', 'unsaveWord', 'saveSettings', 'downloadNatural', 'openSpeechSettings']) expect(messageAllowed('card', type), type).toBe(true)
     for (const type of ['trayReady', 'trayHeight', 'trayClose', 'tray', 'keepWord', 'saveSettings']) expect(messageAllowed('tray', type), type).toBe(true)
-    for (const type of ['dictationReady', 'dictationText', 'dictationAudio', 'dictationNote', 'dictationHeight', 'dictationCancelled', 'dictationFailed']) expect(messageAllowed('dictation', type), type).toBe(true)
+    for (const type of ['dictationReady', 'dictationTuck', 'dictationText', 'dictationAudio', 'dictationNote', 'dictationHeight', 'dictationCancelled', 'dictationFailed']) expect(messageAllowed('dictation', type), type).toBe(true)
   })
   test('only the talk window talks to the duck: a model\'s words in the card cannot start a talk or speak for the person', () => {
     for (const type of ['talkStart', 'talkSay', 'talkInterrupt', 'talkClear', 'talkListen', 'talkReady', 'talkPin', 'talkWindow', 'talkContinue', 'talkDelete', 'talksClear']) {

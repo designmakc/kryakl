@@ -126,6 +126,33 @@ def test_a_tail_recognized_in_the_pause_is_not_recognized_again():
     assert len(r.calls) == 1
 
 
+def test_a_guess_that_stands_for_the_piece_gives_its_language():
+    r = Recognizer(language="uk")
+    s = make(r)
+    send(s, np.concatenate([tone(2.5), silence(0.8)]))
+    assert wait(lambda: len(r.calls) == 1)
+    time.sleep(0.1)
+    out = s.finish(b"")
+    assert out["language"] == "uk" and out["sure"] == 0.9
+
+
+def test_a_guess_never_settles_the_language_of_what_comes_after_it():
+    # A breath or the first word, recognized ahead in a pause, reads as English; the phrase is Russian.
+    class FirstEnglish(Recognizer):
+        def __call__(self, sound, language, expected, before):
+            text, _, sure = super().__call__(sound, language, expected, before)
+            return text, "en" if len(self.calls) == 1 else "ru", sure
+
+    r = FirstEnglish()
+    s = make(r)
+    n = send(s, np.concatenate([tone(2), silence(0.4)]))
+    assert wait(lambda: len(r.calls) == 1)
+    s.add(n, (tone(1.5) * 32767).astype("<i2").tobytes())
+    out = s.finish(b"")
+    assert r.calls[1]["language"] is None
+    assert out["language"] == "ru"
+
+
 def test_speech_after_the_guess_is_recognized_with_it():
     r = Recognizer()
     s = make(r)

@@ -41,6 +41,7 @@ import { app, BrowserWindow, clipboard, dialog, globalShortcut, ipcMain, nativeI
 import { backupSummary, makeBackup, readBackup, type BackupRead } from './backup'
 import { callAllowed, messageAllowed, openable, pageOf, patchAllowed, type Page } from './bridge'
 import { createChecker, type Checker } from './checker'
+import { createEditor, type Editor } from './dictedit'
 import { openInChrome } from './chrome'
 import { DoubleCopy } from './clipboard'
 import { ClipboardGuard } from './clipguard'
@@ -109,6 +110,7 @@ import {
 import { TranslationLog } from './translationlog'
 import type { Translator } from './translator'
 import manifest from './voice-manifest.json'
+import { vocabularyFor } from './vocabulary'
 import { VoiceStore, type VoiceManifest } from './voicestore'
 import { wordDiff } from './worddiff'
 import { focus, focusedElement, release, saysNothingSelected, selectedText } from './uia'
@@ -1107,6 +1109,7 @@ function useContext(): UseContext {
   return {
     level: settings.translationLevel,
     model: settings.model,
+    edit: settings.dictateEdit,
     languages: myLanguages(settings),
     native: langCode(settings.native),
     naturalVoice: settings.voice === '' || settings.voice.startsWith(NATURAL_PREFIX),
@@ -2301,6 +2304,7 @@ async function translateTextCard(id: number, text: string, from: string, to: str
 /** Check my English (the one local model, which translates too, on llama.cpp's server), and the mistakes it found. */
 let llmFiles: LlmFiles
 let checker: Checker
+let editor: Editor
 let mistakes: MistakeStore
 
 /** The latest check asked of a check card: an older one, still running, is not shown. */
@@ -2618,13 +2622,45 @@ function warmModel(purpose: Purpose): void {
   if (model === 'fast' || llmFiles.state(model).status !== 'ready') return
   // Check my English always uses the model.
   if (purpose === 'check') return llmFiles.server.warm(llmFiles.target(model))
-  // Fast translates while the model is too slow: nothing to load for it.
+  warmWhole(model)
+}
+
+/** The model started ahead, unless it is too slow just now or the card cannot hold it whole: the job finds that out itself. */
+function warmWhole(model: LlmModel): void {
   if (busyFor(model)) return
-  // Only on a card that holds it whole; else the job finds the card full itself and Fast translates (roomFirst).
   cardFull(model).then(
     full => full || busyFor(model) || llmFiles.server.warm(llmFiles.target(model)),
     () => llmFiles.server.warm(llmFiles.target(model)),
   )
+}
+
+/** How long a phrase waits for its edit, the model's load included: then it is typed as said. */
+const EDIT_WAIT_MS = { card: 8000, processor: 20_000 }
+
+/**
+ * Text editing: the phrase as the local model leaves it (dictedit.ts). Dictation
+ * never waits for a model that cannot work now: the phrase is typed as it was
+ * said and the badge says why. Never a word of the phrase in the log.
+ */
+async function editPhrase(text: string, stop: AbortSignal): Promise<{ text: string; note?: string }> {
+  const model = settings.model
+  if (llmFiles.state(model).status !== 'ready') return { text, note: t('dict.editNoModel') }
+  const busy = busyFor(model)
+  if (busy) return { text, note: t(busy === 'card' ? 'dict.editCard' : 'dict.editProcessor') }
+  if (await cardFull(model).catch(() => undefined)) return { text, note: t('dict.editCard') }
+  const wait = EDIT_WAIT_MS[translationAdvice(speech?.profile)[model].where === 'card' ? 'card' : 'processor']
+  const style = settings.dictateEditStyle
+  const began = Date.now()
+  try {
+    const terms = vocabularyFor(settings).map(entry => entry.word)
+    const out = await editor.edit(text, style, settings.dictateEditOwn, terms, AbortSignal.any([stop, AbortSignal.timeout(wait)]))
+    log(`edit: ${style}, ${((Date.now() - began) / 1000).toFixed(1)} s${out.doubt ? `, typed as said (${out.doubt})` : ''}`)
+    return out.doubt ? { text, note: t('dict.editDoubt') } : { text: out.text }
+  } catch (error) {
+    if (stop.aborted) return { text }
+    log(`edit: ${style}, gave up after ${((Date.now() - began) / 1000).toFixed(1)} s: ${error instanceof Error ? error.name : 'failed'}`)
+    return { text, note: t('dict.editSlow') }
+  }
 }
 
 /**
@@ -3082,6 +3118,14 @@ function sendTrayView(): void {
 }
 
 /** Something records now: dictation listening (any of its keys), the microphone on the Transcribe page, or a meeting through the Chrome extension. */
+/** The middle of the tray icon; Windows gives no place for one kept among the hidden icons: the corner of the screen by them. */
+function trayPoint(): { x: number; y: number } {
+  const icon = tray?.getBounds()
+  if (icon?.width) return { x: icon.x + icon.width / 2, y: icon.y + icon.height / 2 }
+  const { x, y, width, height } = screen.getPrimaryDisplay().workArea
+  return { x: x + width, y: y + height }
+}
+
 function recordingNow(): boolean {
   return dictation?.state === 'recording' || micRecording || !!speech?.meeting
 }
@@ -3411,6 +3455,11 @@ function setUpSpeechEngine(): void {
       const busy = job.busy()
       return { text: english, ...(busy ? { note: t(busy === 'card' ? 'dict.fastCard' : 'dict.fastProcessor') } : {}) }
     },
+    edit: editPhrase,
+    editing: () => settings.dictateEdit,
+    warm: () => {
+      if (settings.dictateEdit && llmFiles.state(settings.model).status === 'ready') warmWhole(settings.model)
+    },
     check: practice,
     expected: () => myLanguages(settings),
     languageOf: text => languageOf(text, settings.native, languageWords(), myLanguages(settings)),
@@ -3424,6 +3473,8 @@ function setUpSpeechEngine(): void {
     },
     log: dictationLog,
     logged: () => postApp(),
+    panel: () => settings.dictationPanel,
+    trayPoint,
     offset: () => settings.dictationBadge,
     moved: offset => saveSettings({ dictationBadge: offset }),
   })
@@ -3552,6 +3603,7 @@ function start(): void {
   llm = createLlmTranslators({ files: llmFiles, onTimed: modelTimed })
   setInterval(watchModel, FULL_SCREEN_LOOK_MS)
   checker = createChecker({ files: llmFiles, model: () => settings.model, onTimed: modelTimed })
+  editor = createEditor({ files: llmFiles, model: () => settings.model })
   mistakes = new MistakeStore(path.join(userDir(), 'mistakes.json'))
   // Talk: the same model checks each line and the duck answers it (talk.ts, duck.ts).
   duck = createDuck({ files: llmFiles, model: () => settings.model, onTimed: modelTimed })

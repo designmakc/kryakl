@@ -280,6 +280,35 @@
     "dict.engineDown": "The speech engine could not start. Click to report the problem.",
     "dict.fastCard": "Typed with Fast: the graphics card is busy",
     "dict.fastProcessor": "Typed with Fast: the processor is busy",
+    "dict.tuck": "Fold into the tray: the recording goes on",
+    "dict.editing": "Editing\u2026",
+    "dict.editNoModel": "Typed as said: the model is not downloaded",
+    "dict.editCard": "Typed as said: the graphics card is busy",
+    "dict.editProcessor": "Typed as said: the processor is busy",
+    "dict.editSlow": "Typed as said: the model took too long",
+    "dict.editDoubt": "Typed as said: the edit looked wrong",
+    "edit.title": "Text editing",
+    "edit.off": "off",
+    "edit.on": "Edit what I dictate",
+    "edit.onNote": "the local model puts each phrase right before it is typed, about a second more; nothing leaves this computer",
+    "edit.onNoteSlow": "the local model puts each phrase right before it is typed; here each phrase waits several seconds",
+    "edit.needsModel": "Text editing needs the {name} model ({size})",
+    "edit.style": "How to edit",
+    "edit.clean": "Clean up",
+    "edit.cleanNote": "removes \u201Cum\u201D, repeats and slips, sets the punctuation right; the other words stay",
+    "edit.business": "Business tone",
+    "edit.businessNote": "for letters and work chats: neutral, polite words",
+    "edit.aiTask": "Task for an AI",
+    "edit.aiTaskNote": "a clear request for Claude or ChatGPT; terms and file names stay",
+    "edit.list": "List",
+    "edit.listNote": "each thought on a line of its own",
+    "edit.own": "My own instruction",
+    "edit.ownNote": "your own words on how to write",
+    "edit.ownLabel": "Instruction",
+    "edit.ownPlaceholder": "For example: keep it short, leave the terms in English",
+    "edit.ownHint": "Up to 500 characters. Left empty, phrases are typed as said.",
+    "edit.keeps": "Notes, Talk and spoken practice are never edited. What you said stays in Phrases: point at a phrase to see it.",
+    "edit.model": "Model",
     "badge.fastCard": "Fast \xB7 graphics card busy",
     "badge.fastProcessor": "Fast \xB7 processor busy",
     "settings.uiLanguage": "Interface language",
@@ -994,6 +1023,8 @@
     "dictate.noteNote": "into your notes folder",
     "dictate.againKey": "Type the last phrase again",
     "dictate.againNote": "repeats it where the cursor is",
+    "dictate.panel": "Show the panel while dictating",
+    "dictate.panelNote": "off: the red dot in the tray shows the recording; an error still comes up for a moment",
     "dictate.escNote": "The words appear as you speak. Esc cancels the phrase before it is typed.",
     "dictate.privacy": "Speech is recognized on this computer; nothing is sent anywhere.",
     "vocab.wordPlaceholder": "Word",
@@ -1640,6 +1671,35 @@
     "dict.engineDown": "\u0414\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438 \u043D\u0435 \u0441\u043C\u043E\u0433 \u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C\u0441\u044F. \u041D\u0430\u0436\u043C\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0441\u043E\u043E\u0431\u0449\u0438\u0442\u044C \u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0435.",
     "dict.fastCard": "\u041D\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u043D\u043E \xAB\u0411\u044B\u0441\u0442\u0440\u044B\u043C\xBB: \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u0437\u0430\u043D\u044F\u0442\u0430",
     "dict.fastProcessor": "\u041D\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u043D\u043E \xAB\u0411\u044B\u0441\u0442\u0440\u044B\u043C\xBB: \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440 \u0437\u0430\u043D\u044F\u0442",
+    "dict.tuck": "\u0421\u0432\u0435\u0440\u043D\u0443\u0442\u044C \u0432 \u0442\u0440\u0435\u0439: \u0437\u0430\u043F\u0438\u0441\u044C \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0435\u0442\u0441\u044F",
+    "dict.editing": "\u041F\u0440\u0430\u0432\u043B\u044E\u2026",
+    "dict.editNoModel": "\u041D\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u043D\u043E \u043A\u0430\u043A \u0441\u043A\u0430\u0437\u0430\u043D\u043E: \u043C\u043E\u0434\u0435\u043B\u044C \u043D\u0435 \u0441\u043A\u0430\u0447\u0430\u043D\u0430",
+    "dict.editCard": "\u041D\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u043D\u043E \u043A\u0430\u043A \u0441\u043A\u0430\u0437\u0430\u043D\u043E: \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u0437\u0430\u043D\u044F\u0442\u0430",
+    "dict.editProcessor": "\u041D\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u043D\u043E \u043A\u0430\u043A \u0441\u043A\u0430\u0437\u0430\u043D\u043E: \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440 \u0437\u0430\u043D\u044F\u0442",
+    "dict.editSlow": "\u041D\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u043D\u043E \u043A\u0430\u043A \u0441\u043A\u0430\u0437\u0430\u043D\u043E: \u043C\u043E\u0434\u0435\u043B\u044C \u043D\u0435 \u0443\u0441\u043F\u0435\u043B\u0430",
+    "dict.editDoubt": "\u041D\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u043D\u043E \u043A\u0430\u043A \u0441\u043A\u0430\u0437\u0430\u043D\u043E: \u043F\u0440\u0430\u0432\u043A\u0430 \u0432\u044B\u0448\u043B\u0430 \u0441\u0442\u0440\u0430\u043D\u043D\u043E\u0439",
+    "edit.title": "\u041F\u0440\u0430\u0432\u043A\u0430 \u0442\u0435\u043A\u0441\u0442\u0430",
+    "edit.off": "\u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u0430",
+    "edit.on": "\u041F\u0440\u0430\u0432\u0438\u0442\u044C \u043D\u0430\u0434\u0438\u043A\u0442\u043E\u0432\u0430\u043D\u043D\u043E\u0435",
+    "edit.onNote": "\u043B\u043E\u043A\u0430\u043B\u044C\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C \u043F\u043E\u043F\u0440\u0430\u0432\u0438\u0442 \u043A\u0430\u0436\u0434\u0443\u044E \u0444\u0440\u0430\u0437\u0443 \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0447\u0430\u0442\u044C\u044E, \u043F\u0440\u0438\u043C\u0435\u0440\u043D\u043E \u043D\u0430 \u0441\u0435\u043A\u0443\u043D\u0434\u0443 \u0434\u043E\u043B\u044C\u0448\u0435; \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0443\u0445\u043E\u0434\u0438\u0442 \u0441 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0430",
+    "edit.onNoteSlow": "\u043B\u043E\u043A\u0430\u043B\u044C\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C \u043F\u043E\u043F\u0440\u0430\u0432\u0438\u0442 \u043A\u0430\u0436\u0434\u0443\u044E \u0444\u0440\u0430\u0437\u0443 \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0447\u0430\u0442\u044C\u044E; \u0437\u0434\u0435\u0441\u044C \u043A\u0430\u0436\u0434\u0430\u044F \u0444\u0440\u0430\u0437\u0430 \u0436\u0434\u0451\u0442 \u043D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0441\u0435\u043A\u0443\u043D\u0434",
+    "edit.needsModel": "\u0414\u043B\u044F \u043F\u0440\u0430\u0432\u043A\u0438 \u043D\u0443\u0436\u043D\u0430 \u043C\u043E\u0434\u0435\u043B\u044C \xAB{name}\xBB ({size})",
+    "edit.style": "\u041A\u0430\u043A \u043F\u0440\u0430\u0432\u0438\u0442\u044C",
+    "edit.clean": "\u041F\u043E\u0447\u0438\u0441\u0442\u0438\u0442\u044C",
+    "edit.cleanNote": "\u0443\u0431\u0438\u0440\u0430\u0435\u0442 \xAB\u044D-\u044D\xBB, \u043F\u043E\u0432\u0442\u043E\u0440\u044B \u0438 \u043E\u0433\u043E\u0432\u043E\u0440\u043A\u0438, \u043F\u043E\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u0437\u043D\u0430\u043A\u0438; \u043E\u0441\u0442\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u043B\u043E\u0432\u0430 \u043D\u0435 \u0442\u0440\u043E\u0433\u0430\u0435\u0442",
+    "edit.business": "\u0414\u0435\u043B\u043E\u0432\u043E\u0439 \u0442\u043E\u043D",
+    "edit.businessNote": "\u0434\u043B\u044F \u043F\u0438\u0441\u0435\u043C \u0438 \u0440\u0430\u0431\u043E\u0447\u0438\u0445 \u0447\u0430\u0442\u043E\u0432: \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0435 \u0432\u0435\u0436\u043B\u0438\u0432\u044B\u0435 \u0441\u043B\u043E\u0432\u0430",
+    "edit.aiTask": "\u0417\u0430\u0434\u0430\u0447\u0430 \u0434\u043B\u044F \u0418\u0418",
+    "edit.aiTaskNote": "\u0447\u0451\u0442\u043A\u0430\u044F \u043F\u0440\u043E\u0441\u044C\u0431\u0430 \u0434\u043B\u044F Claude \u0438\u043B\u0438 ChatGPT; \u0442\u0435\u0440\u043C\u0438\u043D\u044B \u0438 \u0438\u043C\u0435\u043D\u0430 \u0444\u0430\u0439\u043B\u043E\u0432 \u043A\u0430\u043A \u0435\u0441\u0442\u044C",
+    "edit.list": "\u0421\u043F\u0438\u0441\u043E\u043A",
+    "edit.listNote": "\u043A\u0430\u0436\u0434\u0430\u044F \u043C\u044B\u0441\u043B\u044C \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u0439 \u0441\u0442\u0440\u043E\u043A\u043E\u0439",
+    "edit.own": "\u0421\u0432\u043E\u044F \u0438\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044F",
+    "edit.ownNote": "\u0432\u0430\u0448\u0438 \u0441\u043B\u043E\u0432\u0430 \u043E \u0442\u043E\u043C, \u043A\u0430\u043A \u043F\u0438\u0441\u0430\u0442\u044C",
+    "edit.ownLabel": "\u0418\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044F",
+    "edit.ownPlaceholder": "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u043F\u0438\u0448\u0438 \u043A\u043E\u0440\u043E\u0447\u0435, \u0442\u0435\u0440\u043C\u0438\u043D\u044B \u043E\u0441\u0442\u0430\u0432\u043B\u044F\u0439 \u043D\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u043C",
+    "edit.ownHint": "\u0414\u043E 500 \u0437\u043D\u0430\u043A\u043E\u0432. \u0415\u0441\u043B\u0438 \u043F\u0443\u0441\u0442\u043E, \u0444\u0440\u0430\u0437\u0430 \u043F\u0435\u0447\u0430\u0442\u0430\u0435\u0442\u0441\u044F \u043A\u0430\u043A \u0441\u043A\u0430\u0437\u0430\u043D\u0430.",
+    "edit.keeps": "\u0417\u0430\u043C\u0435\u0442\u043A\u0438, \u0420\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0438 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u0430\u044F \u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0430 \u043D\u0435 \u043F\u0440\u0430\u0432\u044F\u0442\u0441\u044F. \u0421\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0435 \u043E\u0441\u0442\u0430\u0451\u0442\u0441\u044F \u0432\u043E \xAB\u0424\u0440\u0430\u0437\u0430\u0445\xBB: \u043D\u0430\u0432\u0435\u0434\u0438\u0442\u0435 \u043D\u0430 \u0444\u0440\u0430\u0437\u0443, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u0435\u0433\u043E.",
+    "edit.model": "\u041C\u043E\u0434\u0435\u043B\u044C",
     "badge.fastCard": "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \xB7 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u0437\u0430\u043D\u044F\u0442\u0430",
     "badge.fastProcessor": "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \xB7 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440 \u0437\u0430\u043D\u044F\u0442",
     "settings.uiLanguage": "\u042F\u0437\u044B\u043A \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430",
@@ -2354,6 +2414,8 @@
     "dictate.noteNote": "\u0432 \u043F\u0430\u043F\u043A\u0443 \u0437\u0430\u043C\u0435\u0442\u043E\u043A",
     "dictate.againKey": "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u044E\u044E \u0444\u0440\u0430\u0437\u0443",
     "dictate.againNote": "\u043F\u043E\u0432\u0442\u043E\u0440\u044F\u0435\u0442 \u0435\u0451 \u0442\u0430\u043C, \u0433\u0434\u0435 \u043A\u0443\u0440\u0441\u043E\u0440",
+    "dictate.panel": "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043F\u0430\u043D\u0435\u043B\u044C \u043F\u0440\u0438 \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0435",
+    "dictate.panelNote": "\u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u043E: \u0437\u0430\u043F\u0438\u0441\u044C \u0432\u0438\u0434\u043D\u0430 \u043F\u043E \u043A\u0440\u0430\u0441\u043D\u043E\u0439 \u0442\u043E\u0447\u043A\u0435 \u0432 \u0442\u0440\u0435\u0435, \u043E\u0448\u0438\u0431\u043A\u0438 \u0432\u0441\u0451 \u0440\u0430\u0432\u043D\u043E \u043F\u043E\u044F\u0432\u044F\u0442\u0441\u044F \u043D\u0430 \u043F\u0430\u0440\u0443 \u0441\u0435\u043A\u0443\u043D\u0434",
     "dictate.escNote": "\u0421\u043B\u043E\u0432\u0430 \u043F\u043E\u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F, \u043F\u043E\u043A\u0430 \u0432\u044B \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0435. Esc \u043E\u0442\u043C\u0435\u043D\u044F\u0435\u0442 \u0444\u0440\u0430\u0437\u0443, \u043F\u043E\u043A\u0430 \u0435\u0451 \u043D\u0435 \u043D\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u043B\u0438.",
     "dictate.privacy": "\u0420\u0435\u0447\u044C \u0440\u0430\u0441\u043F\u043E\u0437\u043D\u0430\u0451\u0442\u0441\u044F \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435; \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0438\u043A\u0443\u0434\u0430 \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F.",
     "vocab.wordPlaceholder": "\u0421\u043B\u043E\u0432\u043E",
@@ -3000,6 +3062,35 @@
     "dict.engineDown": "\u0420\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u043D\u0435 \u0437\u043C\u0456\u0433 \u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u0438\u0441\u044F. \u041D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C, \u0449\u043E\u0431 \u043F\u043E\u0432\u0456\u0434\u043E\u043C\u0438\u0442\u0438 \u043F\u0440\u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0443.",
     "dict.fastCard": "\u041D\u0430\u0434\u0440\u0443\u043A\u043E\u0432\u0430\u043D\u043E \xAB\u0428\u0432\u0438\u0434\u043A\u0438\u043C\xBB: \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u0437\u0430\u0439\u043D\u044F\u0442\u0430",
     "dict.fastProcessor": "\u041D\u0430\u0434\u0440\u0443\u043A\u043E\u0432\u0430\u043D\u043E \xAB\u0428\u0432\u0438\u0434\u043A\u0438\u043C\xBB: \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440 \u0437\u0430\u0439\u043D\u044F\u0442\u0438\u0439",
+    "dict.tuck": "\u0417\u0433\u043E\u0440\u043D\u0443\u0442\u0438 \u0432 \u0442\u0440\u0435\u0439: \u0437\u0430\u043F\u0438\u0441 \u0442\u0440\u0438\u0432\u0430\u0454",
+    "dict.editing": "\u0420\u0435\u0434\u0430\u0433\u0443\u044E\u2026",
+    "dict.editNoModel": "\u041D\u0430\u0434\u0440\u0443\u043A\u043E\u0432\u0430\u043D\u043E \u044F\u043A \u0441\u043A\u0430\u0437\u0430\u043D\u043E: \u043C\u043E\u0434\u0435\u043B\u044C \u043D\u0435 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u0430",
+    "dict.editCard": "\u041D\u0430\u0434\u0440\u0443\u043A\u043E\u0432\u0430\u043D\u043E \u044F\u043A \u0441\u043A\u0430\u0437\u0430\u043D\u043E: \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u0437\u0430\u0439\u043D\u044F\u0442\u0430",
+    "dict.editProcessor": "\u041D\u0430\u0434\u0440\u0443\u043A\u043E\u0432\u0430\u043D\u043E \u044F\u043A \u0441\u043A\u0430\u0437\u0430\u043D\u043E: \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440 \u0437\u0430\u0439\u043D\u044F\u0442\u0438\u0439",
+    "dict.editSlow": "\u041D\u0430\u0434\u0440\u0443\u043A\u043E\u0432\u0430\u043D\u043E \u044F\u043A \u0441\u043A\u0430\u0437\u0430\u043D\u043E: \u043C\u043E\u0434\u0435\u043B\u044C \u043D\u0435 \u0432\u0441\u0442\u0438\u0433\u043B\u0430",
+    "dict.editDoubt": "\u041D\u0430\u0434\u0440\u0443\u043A\u043E\u0432\u0430\u043D\u043E \u044F\u043A \u0441\u043A\u0430\u0437\u0430\u043D\u043E: \u0440\u0435\u0434\u0430\u0433\u0443\u0432\u0430\u043D\u043D\u044F \u0432\u0438\u0439\u0448\u043B\u043E \u0434\u0438\u0432\u043D\u0438\u043C",
+    "edit.title": "\u0420\u0435\u0434\u0430\u0433\u0443\u0432\u0430\u043D\u043D\u044F \u0442\u0435\u043A\u0441\u0442\u0443",
+    "edit.off": "\u0432\u0438\u043C\u043A\u043D\u0435\u043D\u043E",
+    "edit.on": "\u0420\u0435\u0434\u0430\u0433\u0443\u0432\u0430\u0442\u0438 \u043D\u0430\u0434\u0438\u043A\u0442\u043E\u0432\u0430\u043D\u0435",
+    "edit.onNote": "\u043B\u043E\u043A\u0430\u043B\u044C\u043D\u0430 \u043C\u043E\u0434\u0435\u043B\u044C \u0432\u0438\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u043A\u043E\u0436\u043D\u0443 \u0444\u0440\u0430\u0437\u0443 \u043F\u0435\u0440\u0435\u0434 \u0434\u0440\u0443\u043A\u043E\u043C, \u043F\u0440\u0438\u0431\u043B\u0438\u0437\u043D\u043E \u043D\u0430 \u0441\u0435\u043A\u0443\u043D\u0434\u0443 \u0434\u043E\u0432\u0448\u0435; \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u0439\u0434\u0435 \u0437 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0430",
+    "edit.onNoteSlow": "\u043B\u043E\u043A\u0430\u043B\u044C\u043D\u0430 \u043C\u043E\u0434\u0435\u043B\u044C \u0432\u0438\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u043A\u043E\u0436\u043D\u0443 \u0444\u0440\u0430\u0437\u0443 \u043F\u0435\u0440\u0435\u0434 \u0434\u0440\u0443\u043A\u043E\u043C; \u0442\u0443\u0442 \u043A\u043E\u0436\u043D\u0430 \u0444\u0440\u0430\u0437\u0430 \u0447\u0435\u043A\u0430\u0454 \u043A\u0456\u043B\u044C\u043A\u0430 \u0441\u0435\u043A\u0443\u043D\u0434",
+    "edit.needsModel": "\u0414\u043B\u044F \u0440\u0435\u0434\u0430\u0433\u0443\u0432\u0430\u043D\u043D\u044F \u043F\u043E\u0442\u0440\u0456\u0431\u043D\u0430 \u043C\u043E\u0434\u0435\u043B\u044C \xAB{name}\xBB ({size})",
+    "edit.style": "\u042F\u043A \u0440\u0435\u0434\u0430\u0433\u0443\u0432\u0430\u0442\u0438",
+    "edit.clean": "\u041F\u043E\u0447\u0438\u0441\u0442\u0438\u0442\u0438",
+    "edit.cleanNote": "\u043F\u0440\u0438\u0431\u0438\u0440\u0430\u0454 \xAB\u0435-\u0435\xBB, \u043F\u043E\u0432\u0442\u043E\u0440\u0438 \u0439 \u043E\u0431\u043C\u043E\u0432\u043A\u0438, \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454 \u0437\u043D\u0430\u043A\u0438; \u0440\u0435\u0448\u0442\u0443 \u0441\u043B\u0456\u0432 \u043D\u0435 \u0447\u0456\u043F\u0430\u0454",
+    "edit.business": "\u0414\u0456\u043B\u043E\u0432\u0438\u0439 \u0442\u043E\u043D",
+    "edit.businessNote": "\u0434\u043B\u044F \u043B\u0438\u0441\u0442\u0456\u0432 \u0456 \u0440\u043E\u0431\u043E\u0447\u0438\u0445 \u0447\u0430\u0442\u0456\u0432: \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u0456 \u0432\u0432\u0456\u0447\u043B\u0438\u0432\u0456 \u0441\u043B\u043E\u0432\u0430",
+    "edit.aiTask": "\u0417\u0430\u0432\u0434\u0430\u043D\u043D\u044F \u0434\u043B\u044F \u0428\u0406",
+    "edit.aiTaskNote": "\u0447\u0456\u0442\u043A\u0435 \u043F\u0440\u043E\u0445\u0430\u043D\u043D\u044F \u0434\u043B\u044F Claude \u0430\u0431\u043E ChatGPT; \u0442\u0435\u0440\u043C\u0456\u043D\u0438 \u0439 \u0456\u043C\u0435\u043D\u0430 \u0444\u0430\u0439\u043B\u0456\u0432 \u044F\u043A \u0454",
+    "edit.list": "\u0421\u043F\u0438\u0441\u043E\u043A",
+    "edit.listNote": "\u043A\u043E\u0436\u043D\u0430 \u0434\u0443\u043C\u043A\u0430 \u043E\u043A\u0440\u0435\u043C\u0438\u043C \u0440\u044F\u0434\u043A\u043E\u043C",
+    "edit.own": "\u0421\u0432\u043E\u044F \u0456\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0456\u044F",
+    "edit.ownNote": "\u0432\u0430\u0448\u0456 \u0441\u043B\u043E\u0432\u0430 \u043F\u0440\u043E \u0442\u0435, \u044F\u043A \u043F\u0438\u0441\u0430\u0442\u0438",
+    "edit.ownLabel": "\u0406\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0456\u044F",
+    "edit.ownPlaceholder": "\u041D\u0430\u043F\u0440\u0438\u043A\u043B\u0430\u0434: \u043F\u0438\u0448\u0438 \u043A\u043E\u0440\u043E\u0442\u0448\u0435, \u0442\u0435\u0440\u043C\u0456\u043D\u0438 \u0437\u0430\u043B\u0438\u0448\u0430\u0439 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u044E",
+    "edit.ownHint": "\u0414\u043E 500 \u0437\u043D\u0430\u043A\u0456\u0432. \u042F\u043A\u0449\u043E \u043F\u043E\u0440\u043E\u0436\u043D\u044C\u043E, \u0444\u0440\u0430\u0437\u0430 \u0434\u0440\u0443\u043A\u0443\u0454\u0442\u044C\u0441\u044F \u044F\u043A \u0441\u043A\u0430\u0437\u0430\u043D\u0430.",
+    "edit.keeps": "\u041D\u043E\u0442\u0430\u0442\u043A\u0438, \u0420\u043E\u0437\u043C\u043E\u0432\u0430 \u0439 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u0430 \u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0430 \u043D\u0435 \u0440\u0435\u0434\u0430\u0433\u0443\u044E\u0442\u044C\u0441\u044F. \u0421\u043A\u0430\u0437\u0430\u043D\u0435 \u043B\u0438\u0448\u0430\u0454\u0442\u044C\u0441\u044F \u0443 \xAB\u0424\u0440\u0430\u0437\u0430\u0445\xBB: \u043D\u0430\u0432\u0435\u0434\u0456\u0442\u044C \u043D\u0430 \u0444\u0440\u0430\u0437\u0443, \u0449\u043E\u0431 \u0439\u043E\u0433\u043E \u043F\u043E\u0431\u0430\u0447\u0438\u0442\u0438.",
+    "edit.model": "\u041C\u043E\u0434\u0435\u043B\u044C",
     "badge.fastCard": "\u0428\u0432\u0438\u0434\u043A\u0438\u0439 \xB7 \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u0437\u0430\u0439\u043D\u044F\u0442\u0430",
     "badge.fastProcessor": "\u0428\u0432\u0438\u0434\u043A\u0438\u0439 \xB7 \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440 \u0437\u0430\u0439\u043D\u044F\u0442\u0438\u0439",
     "settings.uiLanguage": "\u041C\u043E\u0432\u0430 \u0456\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0443",
@@ -3714,6 +3805,8 @@
     "dictate.noteNote": "\u0443 \u0442\u0435\u043A\u0443 \u043D\u043E\u0442\u0430\u0442\u043E\u043A",
     "dictate.againKey": "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0438 \u043E\u0441\u0442\u0430\u043D\u043D\u044E \u0444\u0440\u0430\u0437\u0443",
     "dictate.againNote": "\u043F\u043E\u0432\u0442\u043E\u0440\u044E\u0454 \u0457\u0457 \u0442\u0430\u043C, \u0434\u0435 \u043A\u0443\u0440\u0441\u043E\u0440",
+    "dictate.panel": "\u041F\u043E\u043A\u0430\u0437\u0443\u0432\u0430\u0442\u0438 \u043F\u0430\u043D\u0435\u043B\u044C \u043F\u0456\u0434 \u0447\u0430\u0441 \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
+    "dictate.panelNote": "\u0432\u0438\u043C\u043A\u043D\u0435\u043D\u043E: \u0437\u0430\u043F\u0438\u0441 \u0432\u0438\u0434\u043D\u043E \u0437\u0430 \u0447\u0435\u0440\u0432\u043E\u043D\u043E\u044E \u043A\u0440\u0430\u043F\u043A\u043E\u044E \u0432 \u0442\u0440\u0435\u0457, \u043F\u043E\u043C\u0438\u043B\u043A\u0438 \u0432\u0441\u0435 \u043E\u0434\u043D\u043E \u0437\u2019\u044F\u0432\u043B\u044F\u0442\u044C\u0441\u044F \u043D\u0430 \u043A\u0456\u043B\u044C\u043A\u0430 \u0441\u0435\u043A\u0443\u043D\u0434",
     "dictate.escNote": "\u0421\u043B\u043E\u0432\u0430 \u0437\u2019\u044F\u0432\u043B\u044F\u044E\u0442\u044C\u0441\u044F, \u043F\u043E\u043A\u0438 \u0432\u0438 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0435. Esc \u0441\u043A\u0430\u0441\u043E\u0432\u0443\u0454 \u0444\u0440\u0430\u0437\u0443, \u0434\u043E\u043A\u0438 \u0457\u0457 \u043D\u0435 \u043D\u0430\u0434\u0440\u0443\u043A\u043E\u0432\u0430\u043D\u043E.",
     "dictate.privacy": "\u041C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0440\u043E\u0437\u043F\u0456\u0437\u043D\u0430\u0454\u0442\u044C\u0441\u044F \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456; \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0456\u043A\u0443\u0434\u0438 \u043D\u0435 \u043D\u0430\u0434\u0441\u0438\u043B\u0430\u0454\u0442\u044C\u0441\u044F.",
     "vocab.wordPlaceholder": "\u0421\u043B\u043E\u0432\u043E",
@@ -4129,6 +4222,99 @@
     return node;
   }
 
+  // src/webview/lucide.ts
+  var LUCIDE = {
+    "volume-2": '<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" /> <path d="M16 9a5 5 0 0 1 0 6" /> <path d="M19.364 18.364a9 9 0 0 0 0-12.728" />',
+    "languages": '<path d="m5 8 6 6" /> <path d="m4 14 6-6 2-3" /> <path d="M2 5h12" /> <path d="M7 2h1" /> <path d="m22 22-5-10-5 10" /> <path d="M14 18h6" />',
+    "graduation-cap": '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" /> <path d="M22 10v6" /> <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />',
+    "scan": '<path d="M3 7V5a2 2 0 0 1 2-2h2" /> <path d="M17 3h2a2 2 0 0 1 2 2v2" /> <path d="M21 17v2a2 2 0 0 1-2 2h-2" /> <path d="M7 21H5a2 2 0 0 1-2-2v-2" />',
+    "mic": '<path d="M12 19v3" /> <path d="M19 10v2a7 7 0 0 1-14 0v-2" /> <rect x="9" y="2" width="6" height="13" rx="3" />',
+    "audio-lines": '<path d="M2 10v3" /> <path d="M6 6v11" /> <path d="M10 3v18" /> <path d="M14 8v7" /> <path d="M18 5v13" /> <path d="M22 10v3" />',
+    "keyboard": '<path d="M10 8h.01" /> <path d="M12 12h.01" /> <path d="M14 8h.01" /> <path d="M16 12h.01" /> <path d="M18 8h.01" /> <path d="M6 8h.01" /> <path d="M7 16h10" /> <path d="M8 12h.01" /> <rect width="20" height="16" x="2" y="4" rx="2" />',
+    "file-text": '<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M10 9H8" /> <path d="M16 13H8" /> <path d="M16 17H8" />',
+    "notebook-pen": '<path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4" /> <path d="M2 6h4" /> <path d="M2 10h4" /> <path d="M2 14h4" /> <path d="M2 18h4" /> <path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />',
+    "book-open": '<path d="M12 5v16" /> <path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" />',
+    "list-checks": '<path d="M13 5h8" /> <path d="M13 12h8" /> <path d="M13 19h8" /> <path d="m3 17 2 2 4-4" /> <path d="m3 7 2 2 4-4" />',
+    "house": '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /> <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />',
+    "info": '<circle cx="12" cy="12" r="10" /> <path d="M12 16v-4" /> <path d="M12 8h.01" />',
+    "settings": '<path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" /> <circle cx="12" cy="12" r="3" />',
+    "bird": '<path d="M16 7h.01" /> <path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20" /> <path d="m20 7 2 .5-2 .5" /> <path d="M10 18v3" /> <path d="M14 17.75V21" /> <path d="M7 18a6 6 0 0 0 3.84-10.61" />',
+    "send-horizontal": '<path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z" /> <path d="M6 12h16" />',
+    "mic-off": '<path d="M12 19v3" /> <path d="M15 9.34V5a3 3 0 0 0-5.68-1.33" /> <path d="M16.95 16.95A7 7 0 0 1 5 12v-2" /> <path d="M18.89 13.23A7 7 0 0 0 19 12v-2" /> <path d="m2 2 20 20" /> <path d="M9 9v3a3 3 0 0 0 5.12 2.12" />',
+    "pin": '<path d="M12 17v5" /> <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" />',
+    "square-pen": '<path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /> <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />',
+    "history": '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /> <path d="M12 7v5l4 2" />',
+    "list-ordered": '<path d="M11 5h10" /> <path d="M11 12h10" /> <path d="M11 19h10" /> <path d="M4 4h1v5" /> <path d="M4 9h2" /> <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02" />',
+    "message-square-text": '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z" /> <path d="M7 11h10" /> <path d="M7 15h6" /> <path d="M7 7h8" />',
+    "arrow-left": '<path d="m12 19-7-7 7-7" /> <path d="M19 12H5" />',
+    "bug": '<path d="M12 20v-9" /> <path d="M14 7a4 4 0 0 1 4 4v3a6 6 0 0 1-12 0v-3a4 4 0 0 1 4-4z" /> <path d="M14.12 3.88 16 2" /> <path d="M21 21a4 4 0 0 0-3.81-4" /> <path d="M21 5a4 4 0 0 1-3.55 3.97" /> <path d="M22 13h-4" /> <path d="M3 21a4 4 0 0 1 3.81-4" /> <path d="M3 5a4 4 0 0 0 3.55 3.97" /> <path d="M6 13H2" /> <path d="m8 2 1.88 1.88" /> <path d="M9 7.13V6a3 3 0 1 1 6 0v1.13" />',
+    "file-audio": '<path d="M4 6.835V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2h-.343" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M2 19a2 2 0 0 1 4 0v1a2 2 0 0 1-4 0v-4a6 6 0 0 1 12 0v4a2 2 0 0 1-4 0v-1a2 2 0 0 1 4 0" />',
+    "users": '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" />',
+    "spell-check": '<path d="m20 15-5.5 5.5L12 18" /> <path d="m4 16 6-12 5.115 10.23" /> <path d="M6 12h8" />',
+    "video": '<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" /> <rect x="2" y="6" width="14" height="12" rx="2" />',
+    "cpu": '<path d="M12 20v2" /> <path d="M12 2v2" /> <path d="M17 20v2" /> <path d="M17 2v2" /> <path d="M2 12h2" /> <path d="M2 17h2" /> <path d="M2 7h2" /> <path d="M20 12h2" /> <path d="M20 17h2" /> <path d="M20 7h2" /> <path d="M7 20v2" /> <path d="M7 2v2" /> <rect x="4" y="4" width="16" height="16" rx="2" /> <rect x="8" y="8" width="8" height="8" rx="1" />',
+    "folder": '<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />',
+    "copy": '<rect width="14" height="14" x="8" y="8" rx="2" ry="2" /> <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />',
+    "external-link": '<path d="M15 3h6v6" /> <path d="M10 14 21 3" /> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />',
+    "rotate-cw": '<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /> <path d="M21 3v5h-5" />',
+    "rotate-ccw": '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" />',
+    "database": '<ellipse cx="12" cy="5" rx="9" ry="3" /> <path d="M3 5V19A9 3 0 0 0 21 19V5" /> <path d="M3 12A9 3 0 0 0 21 12" />',
+    "play": '<path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" />',
+    "pause": '<rect x="14" y="3" width="5" height="18" rx="1" /> <rect x="5" y="3" width="5" height="18" rx="1" />',
+    "power": '<path d="M12 2v10" /> <path d="M18.4 6.6a9 9 0 1 1-12.77.04" />',
+    "list": '<path d="M3 5h.01" /> <path d="M3 12h.01" /> <path d="M3 19h.01" /> <path d="M8 5h13" /> <path d="M8 12h13" /> <path d="M8 19h13" />',
+    "monitor": '<rect width="20" height="14" x="2" y="3" rx="2" /> <line x1="8" x2="16" y1="21" y2="21" /> <line x1="12" x2="12" y1="17" y2="21" />',
+    "clock": '<circle cx="12" cy="12" r="10" /> <path d="M12 6v6l4 2" />',
+    "lock": '<rect width="18" height="11" x="3" y="11" rx="2" ry="2" /> <path d="M7 11V7a5 5 0 0 1 10 0v4" />',
+    "download": '<path d="M12 15V3" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <path d="m7 10 5 5 5-5" />',
+    "globe": '<circle cx="12" cy="12" r="10" /> <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /> <path d="M2 12h20" />',
+    "type": '<path d="M12 4v16" /> <path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2" /> <path d="M9 20h6" />',
+    "message-square": '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z" />',
+    "star": '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />',
+    "search": '<path d="m21 21-4.34-4.34" /> <circle cx="11" cy="11" r="8" />',
+    "trash-2": '<path d="M10 11v6" /> <path d="M14 11v6" /> <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /> <path d="M3 6h18" /> <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />',
+    "circle-alert": '<circle cx="12" cy="12" r="10" /> <line x1="12" x2="12" y1="8" y2="12" /> <line x1="12" x2="12.01" y1="16" y2="16" />',
+    "circle-check": '<circle cx="12" cy="12" r="10" /> <path d="m16 9-5.5 5.5L8 12" />',
+    "check": '<path d="M20 6 9 17l-5-5" />',
+    "link": '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /> <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />',
+    "memory-stick": '<path d="M12 12v-2" /> <path d="M12 18v-2" /> <path d="M16 12v-2" /> <path d="M16 18v-2" /> <path d="M2 11h1.5" /> <path d="M20 18v-2" /> <path d="M20.5 11H22" /> <path d="M4 18v-2" /> <path d="M8 12v-2" /> <path d="M8 18v-2" /> <rect x="2" y="6" width="20" height="10" rx="2" />',
+    "hard-drive": '<path d="M10 16h.01" /> <path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /> <path d="M21.946 12.013H2.054" /> <path d="M6 16h.01" />',
+    "boxes": '<path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z" /> <path d="m7 16.5-4.74-2.85" /> <path d="m7 16.5 5-3" /> <path d="M7 16.5v5.17" /> <path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z" /> <path d="m17 16.5-5-3" /> <path d="m17 16.5 4.74-2.85" /> <path d="M17 16.5v5.17" /> <path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z" /> <path d="M12 8 7.26 5.15" /> <path d="m12 8 4.74-2.85" /> <path d="M12 13.5V8" />',
+    "laptop": '<path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z" /> <path d="M20.054 15.987H3.946" />',
+    "sparkles": '<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /> <path d="M20 2v4" /> <path d="M22 4h-4" /> <circle cx="4" cy="20" r="2" />',
+    "wand-sparkles": '<path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72" /> <path d="m14 7 3 3" /> <path d="M5 6v4" /> <path d="M19 14v4" /> <path d="M10 2v2" /> <path d="M7 8H3" /> <path d="M21 16h-4" /> <path d="M11 3H9" />',
+    "thumbs-up": '<path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" /> <path d="M7 10v12" />',
+    "loader": '<path d="M12 2v4" /> <path d="m16.2 7.8 2.9-2.9" /> <path d="M18 12h4" /> <path d="m16.2 16.2 2.9 2.9" /> <path d="M12 18v4" /> <path d="m4.9 19.1 2.9-2.9" /> <path d="M2 12h4" /> <path d="m4.9 4.9 2.9 2.9" />',
+    "mail": '<path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /> <rect x="2" y="4" width="20" height="16" rx="2" />',
+    "shield-check": '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /> <path d="m9 12 2 2 4-4" />',
+    "whole-word": '<circle cx="7" cy="12" r="3" /> <path d="M10 9v6" /> <circle cx="17" cy="12" r="3" /> <path d="M14 7v8" /> <path d="M22 17v1c0 .5-.5 1-1 1H3c-.5 0-1-.5-1-1v-1" />',
+    "brain": '<path d="M12 18V5" /> <path d="M15 13a4.17 4.17 0 01-3-4 4.17 4.17 0 01-3 4" /> <path d="M17.707 6.294A3 3 0 1012 5a3 3 0 10-5.707 1.294" /> <path d="M17.996 5.125a4 4 0 012.526 5.77" /> <path d="M18 18a4 4 0 002-7.465" /> <path d="M19.967 17.482a4 4 0 11-7.967.517 4 4 0 11-7.967-.517" /> <path d="M6 18a4 4 0 01-2-7.465" /> <path d="M6.004 5.125a4 4 0 00-2.526 5.77" />',
+    "app-window": '<rect x="2" y="4" width="20" height="16" rx="2" /> <path d="M10 4v4" /> <path d="M2 8h20" /> <path d="M6 4v4" />',
+    "arrow-up-right": '<path d="M7 7h10v10" /> <path d="M7 17 17 7" />',
+    "pencil-line": '<path d="M13 21h8" /> <path d="m15 5 4 4" /> <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />',
+    "monitor-speaker": '<path d="M5.5 20H8" /> <path d="M17 9h.01" /> <rect width="10" height="16" x="12" y="4" rx="2" /> <path d="M8 6H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h4" /> <circle cx="17" cy="15" r="1" />',
+    "scan-text": '<path d="M3 7V5a2 2 0 0 1 2-2h2" /> <path d="M17 3h2a2 2 0 0 1 2 2v2" /> <path d="M21 17v2a2 2 0 0 1-2 2h-2" /> <path d="M7 21H5a2 2 0 0 1-2-2v-2" /> <path d="M7 8h8" /> <path d="M7 12h10" /> <path d="M7 16h6" />',
+    "text-cursor": '<path d="M17 22h-1a4 4 0 0 1-4-4V6a4 4 0 0 1 4-4h1" /> <path d="M7 22h1a4 4 0 0 0 4-4" /> <path d="M7 2h1a4 4 0 0 1 4 4" />',
+    "panel-bottom": '<rect width="18" height="18" x="3" y="3" rx="2" /> <path d="M3 15h18" />',
+    "plus": '<path d="M5 12h14" /> <path d="M12 5v14" />',
+    "x": '<path d="M18 6 6 18" /> <path d="m6 6 12 12" />',
+    "minus": '<path d="M5 12h14" />',
+    "square": '<rect width="18" height="18" x="3" y="3" rx="2" />',
+    "chevron-right": '<path d="m9 18 6-6-6-6" />',
+    "chevron-left": '<path d="m15 18-6-6 6-6" />',
+    "chevron-down": '<path d="m6 9 6 6 6-6" />',
+    "arrow-up": '<path d="m5 12 7-7 7 7" /> <path d="M12 19V5" />',
+    "arrow-down": '<path d="M12 5v14" /> <path d="m19 12-7 7-7-7" />'
+  };
+  function lucide(name, cls = "") {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", cls ? `lu ${cls}` : "lu");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("aria-hidden", "true");
+    svg.innerHTML = LUCIDE[name];
+    return svg;
+  }
+
   // src/webview/recorder.ts
   async function microphone(close) {
     return navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: close, noiseSuppression: close, autoGainControl: true, channelCount: 1 } });
@@ -4477,8 +4663,24 @@
   }
   function show(kind, text, ...line) {
     root.className = `badge ${kind}`;
-    root.replaceChildren(...text ? [text] : [], el("div", { class: "line" }, ...line));
+    root.replaceChildren(...text ? [text] : [], el("div", { class: "line" }, ...line), ...kind === "rec" || kind === "busy" ? [tuckButton()] : []);
     if (text) toEnd(text);
+  }
+  function tuckButton() {
+    return el(
+      "button",
+      {
+        class: "tuck",
+        title: t("dict.tuck"),
+        "aria-label": t("dict.tuck"),
+        onclick: () => {
+          const fly = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+          if (fly) root.classList.add("away");
+          host.post({ type: "dictationTuck", fly });
+        }
+      },
+      lucide("chevron-down", "s")
+    );
   }
   function toEnd(text) {
     text.scrollTop = text.scrollHeight;
@@ -4582,6 +4784,8 @@
       if (message.command === "start") void start(message.mode, message.session, message.expected);
       else if (message.command === "stop") void stop();
       else void cancel();
+    } else if (message.type === "dictationEditing") {
+      show("busy", said ? wordsOf(said) : null, el("span", { class: "spin" }), el("span", { class: "what" }, t("dict.editing")));
     } else if (message.type === "dictationDone") {
       show("done", wordsOf(message.text), el("span", { class: "check" }, "\u2713"), el("span", { class: "what" }, message.note ?? (mode === "note" ? t("dict.saved") : t("dict.typed"))));
     } else if (message.type === "dictationError") {
