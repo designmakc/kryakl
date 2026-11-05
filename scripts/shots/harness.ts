@@ -4,10 +4,11 @@
 // the installed Kryakl, so it runs while that one runs.
 import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import type { UiLanguage } from '../../src/i18n'
 import { englishHtml, textOutHtml, translationHtml } from '../../src/render'
 import { splitText, translateLines, translatePairs, type Translate } from '../../src/translate'
 import { wordDiff } from '../../src/worddiff'
-import { appView, CAFE, talkWindowView, trayView } from './view'
+import { appView, CAFE, menuView, talkWindowView, trayView } from './view'
 
 import { resolve } from 'node:path'
 
@@ -88,7 +89,7 @@ ipcMain.handle('host-call', async (_e, r: { call: string; method?: string; route
 const heights = new Map<number, number>()
 ipcMain.on('to-host', (e, m: { type: string; px?: number }) => {
   log.push(`to-host ${e.sender.id} ${JSON.stringify(m).slice(0, 160)}`)
-  if ((m.type === 'dictationHeight' || m.type === 'trayHeight' || m.type === 'height') && m.px) heights.set(e.sender.id, m.px)
+  if ((m.type === 'dictationHeight' || m.type === 'trayHeight' || m.type === 'menuHeight' || m.type === 'height') && m.px) heights.set(e.sender.id, m.px)
 })
 
 // ---------------------------------------------------------------- the card
@@ -129,8 +130,14 @@ async function cardShots(theme: 'dark' | 'light'): Promise<void> {
   await sleep(300)
   send(w, { type: 'common', words: readFileSync(`${ROOT}/media/common-en.txt`, 'utf8').split(/\r?\n/).filter(Boolean) })
   const fit = async () => {
-    await sleep(350)
-    const h = heights.get(w.webContents.id)
+    // Until the height stops changing: a card still being drawn says 46 px.
+    let h: number | undefined
+    for (let tries = 0; tries < 8; tries++) {
+      await sleep(350)
+      const now = heights.get(w.webContents.id)
+      if (now && now === h) break
+      h = now
+    }
     if (h) w.setSize(440, Math.min(700, h))
     await sleep(350)
   }
@@ -284,27 +291,26 @@ async function appShots(theme: 'dark' | 'light', narrow = false): Promise<void> 
   }
   const home = async () => (await click(w, '.side [data-nav="home"]'), sleep(400))
   // A list page with its field focused: the focus ring, and the field beside its button.
-  const focused = async (name: string) => {
-    await page(name)
+  const focused = async (parent: string, name: string) => {
+    await page(parent)
+    log.push(`${name}: ${await click(w, `[data-sub="${name}"]`)}`)
+    await sleep(500)
     log.push(`${name} focus: ${await focus(w, '.pbody .field')}`)
     await sleep(300)
     await shot(w, tag(`${name}-focus`))
     await js(w, `document.activeElement?.blur(), 'ok'`)
   }
   if (narrow) {
-    await page('keyboard', ['fixing'])
+    await page('layout', ['fixing'])
     await page('settings')
     await page('models')
   } else if (theme === 'dark') {
-    await page('talk')
-    await page('listen')
-    await page('translate')
-    await page('check')
-    await page('screen')
-    await page('dictate')
-    await page('transcribe', ['meet', 'speakers'])
-    await page('keyboard', ['fixing'])
-    for (const name of ['words', 'mistakes', 'transcripts', 'translations', 'phrases', 'vocabulary', 'kept', 'learned', 'programs', 'layouts']) await page(name)
+    // Each action with its lists and its second-level pages, reached as a person reaches them.
+    await page('translate', ['translations', 'card', 'screen'])
+    await page('english', ['words', 'mistakes', 'aboutYou', 'talkWindow'])
+    await page('voice', ['vocabulary', 'phrases', 'notes'])
+    await page('recordings', ['transcripts', 'meet', 'speakers'])
+    await page('layout', ['kept', 'learned', 'programs', 'layouts', 'fixing'])
     await page('settings', ['languages'])
     // The page's end: Backup and Reset.
     await click(w, '.side [data-nav="settings"]')
@@ -322,7 +328,7 @@ async function appShots(theme: 'dark' | 'light', narrow = false): Promise<void> 
     await sleep(200)
     await shot(w, tag('storage-end'))
     for (const name of ['about', 'report']) await page(name)
-    await focused('kept')
+    await focused('layout', 'kept')
     // The search, and a find opened with its line lit.
     log.push(`search: ${await js(w, `(() => { const f = document.querySelector('.find input'); f.value = 'caps'; f.dispatchEvent(new Event('input')); return 'ok' })()`)}`)
     await sleep(500)
@@ -340,29 +346,28 @@ async function appShots(theme: 'dark' | 'light', narrow = false): Promise<void> 
     stale.speech = { ...stale.speech, extensionShipped: '0.2.1' }
     send(w, { type: 'app', view: stale })
     await sleep(300)
-    await page('transcribe', ['meet'], 'transcribe-stale')
+    await page('recordings', ['meet'], 'recordings-stale')
     // Who spoke when installed on the card; then the processor picked, so it offers to switch.
     const card = appView()
     card.speech = { ...card.speech, pack: { status: 'ready', parts: ['core', 'gpu', 'speakers'], nvidia: true, speakersOn: 'cuda' }, health: { ...card.speech.health!, diarization: 'ready', parts: { core: true, gpu: true, speakers: true } } }
     send(w, { type: 'app', view: card })
     await sleep(300)
     await home()
-    await page('transcribe', ['speakers'], 'tr-installed')
+    await page('recordings', ['speakers'], 'tr-installed')
     const cpu = appView({ speakersDevice: 'cpu' })
     cpu.speech = { ...card.speech, speakers: { ...card.speech.speakers, on: 'cpu' } }
     send(w, { type: 'app', view: cpu })
     await sleep(300)
     await home()
-    await page('transcribe', ['speakers'], 'tr-switch')
+    await page('recordings', ['speakers'], 'tr-switch')
   } else {
-    await page('talk')
-    await page('transcribe', ['meet'])
-    await page('keyboard', ['fixing'])
-    await focused('kept')
+    await page('english')
+    await page('recordings', ['meet'])
+    await page('layout', ['fixing'])
+    await focused('layout', 'kept')
     await page('settings')
     await page('models', ['forTranslate', 'forDictate'])
-    await page('listen')
-    await page('check')
+    await page('translate')
     await page('storage')
     await page('about')
   }
@@ -398,6 +403,13 @@ async function setupShots(theme: 'dark' | 'light'): Promise<void> {
   await sleep(600)
   for (let step = 1; step <= 4; step++) {
     await shot(w, `setup-${theme}-${step}`)
+    if (step === 1) {
+      log.push(`setup list: ${await click(w, '.sel')}`)
+      await sleep(250)
+      await shot(w, `setup-${theme}-1-list`)
+      await click(w, '.sel')
+      await sleep(150)
+    }
     if (step === 3) {
       await js(w, `document.querySelector('.sbody').scrollTop = 640, 'ok'`)
       await sleep(200)
@@ -459,6 +471,30 @@ async function trayShots(theme: 'dark' | 'light'): Promise<void> {
   log.push(`tray keep empty focus: ${await focus(w, '.keep-field')}`)
   await fit()
   await shot(w, `tray-${theme}-keep-empty`)
+  w.destroy()
+}
+
+// ---------------------------------------------------------------- the menu on one key
+
+async function menuShots(theme: 'dark' | 'light'): Promise<void> {
+  nativeTheme.themeSource = theme
+  const lang = (LANG || 'en') as UiLanguage
+  const w = win('menu.html', 300, 420, colors().surface)
+  await new Promise<void>(r => w.webContents.once('did-finish-load', () => r()))
+  await sleep(300)
+  for (const [name, view] of [
+    ['ready', menuView(lang)],
+    ['lit', menuView(lang, { lit: 3 })],
+    ['picked', menuView(lang, { lit: 1, fired: 1 })],
+    ['no-speech', menuView(lang, { speech: false })],
+  ] as const) {
+    send(w, { type: 'menu', view })
+    await sleep(300)
+    const h = heights.get(w.webContents.id)
+    if (h) w.setSize(300, h)
+    await sleep(300)
+    await shot(w, `menu-${theme}-${name}`)
+  }
   w.destroy()
 }
 
@@ -571,14 +607,18 @@ app.whenReady().then(async () => {
   try {
     await cardShots('dark')
     await cardShots('light')
-    // SHOTS=card: the card alone; SHOTS=tray: the tray panel; SHOTS=daily: the card, the tray panel, the badge, the talk window and the setup.
+    // SHOTS=card: the card alone; SHOTS=tray: the tray panel; SHOTS=menu: the menu on one key; SHOTS=daily: the card, the tray panel, the menu, the badge, the talk window and the setup.
     if (process.env.SHOTS === 'tray') {
       await trayShots('dark')
       await trayShots('light')
+    } else if (process.env.SHOTS === 'menu') {
+      await menuShots('dark')
+      await menuShots('light')
     } else if (process.env.SHOTS === 'daily') {
       await setupShots('dark')
       await trayShots('dark')
       await trayShots('light')
+      await menuShots('dark')
       await badgeShots('dark')
       await talkShots('dark')
       await talkShots('light')
@@ -591,6 +631,8 @@ app.whenReady().then(async () => {
       await setupShots('light')
       await trayShots('dark')
       await trayShots('light')
+      await menuShots('dark')
+      await menuShots('light')
       await badgeShots('dark')
       await badgeShots('light')
       await talkShots('dark')

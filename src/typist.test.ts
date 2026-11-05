@@ -965,6 +965,216 @@ test('another program\'s keys between two taps (a switcher answering a Ctrl tap)
   expect(desk.layout).toBe('en')
 })
 
+describe('keys bound that Windows would take: Ctrl+Esc, Shift+Caps Lock', () => {
+  test('Ctrl+Esc bound is the main process\'s and kept from Windows, so Start does not open; Esc alone is left alone', () => {
+    const desk = new Desk({ keys: { translate: 'Control+Escape' } })
+    desk.event(VK_LCONTROL, true)
+    expect(desk.typist.key(0x1b, 0, true)).toBe(true)
+    expect(desk.typist.key(0x1b, 0, false)).toBe(true)
+    desk.event(VK_LCONTROL, false)
+    expect(desk.sent).toContainEqual({ type: 'hotkey', action: 'translate' })
+    expect(desk.typist.key(0x1b, 0, true)).toBe(false)
+    expect(desk.typist.key(0x1b, 0, false)).toBe(false)
+  })
+
+  test('Shift+Caps Lock bound is kept from Windows: Caps Lock does not turn', () => {
+    const desk = new Desk({ keys: { check: 'Shift+CapsLock' } })
+    desk.event(VK_LSHIFT, true)
+    desk.tap(0x14)
+    desk.event(VK_LSHIFT, false)
+    expect(desk.caps).toBe(false)
+    expect(desk.sent).toContainEqual({ type: 'hotkey', action: 'check' })
+    // Caps Lock alone still turns.
+    desk.tap(0x14)
+    expect(desk.caps).toBe(true)
+  })
+
+  test('Ctrl+C twice is no key of the thread: Ctrl+C goes on copying', () => {
+    const desk = new Desk({ keys: { select: 'Control+C*2' } })
+    for (let i = 0; i < 2; i++) {
+      desk.event(VK_LCONTROL, true)
+      expect(desk.typist.key(VK_C, 0, true)).toBe(false)
+      expect(desk.typist.key(VK_C, 0, false)).toBe(false)
+      desk.event(VK_LCONTROL, false)
+    }
+    expect(desk.sent.filter(m => m.type === 'hotkey')).toEqual([])
+  })
+})
+
+describe('a key field waiting for a key', () => {
+  const recorded = (desk: Desk) => desk.sent.flatMap(m => (m.type === 'recorded' ? [`${m.down ? '+' : '-'}${m.code}`] : []))
+
+  test('in its window, every key goes to it and to nothing else: Ctrl+Esc, Shift+Caps Lock, Win', () => {
+    const desk = new Desk({ keys: { switch: 'LeftControl' } })
+    desk.hwnd = 7n
+    desk.typist.record(true, 7n)
+    desk.event(VK_LCONTROL, true)
+    desk.tap(0x1b)
+    desk.event(VK_LCONTROL, false)
+    desk.event(VK_LSHIFT, true)
+    desk.tap(0x14)
+    desk.event(VK_LSHIFT, false)
+    desk.tap(0x5b)
+    expect(recorded(desk)).toEqual(['+ControlLeft', '+Escape', '-Escape', '-ControlLeft', '+ShiftLeft', '+CapsLock', '-CapsLock', '-ShiftLeft', '+MetaLeft', '-MetaLeft'])
+    // Nothing reached the window: no Caps Lock, no switch on the Ctrl tap, no masked Win.
+    expect([desk.caps, desk.layout, desk.masked, desk.text]).toEqual([false, 'en', [], ''])
+  })
+
+  test('a key held down repeats once to the field', () => {
+    const desk = new Desk({})
+    desk.typist.record(true, desk.hwnd)
+    desk.event(0x41, true)
+    desk.event(0x41, true)
+    desk.event(0x41, false)
+    expect(recorded(desk)).toEqual(['+KeyA', '-KeyA'])
+  })
+
+  test('another window in front, or the field done, the keys are Windows\' again', () => {
+    const desk = new Desk({})
+    desk.typist.record(true, 9n)
+    desk.keys('a')
+    expect([recorded(desk), desk.text]).toEqual([[], 'a'])
+    desk.hwnd = 9n
+    desk.typist.record(false)
+    desk.keys('b')
+    expect([recorded(desk), desk.text]).toEqual([[], 'ab'])
+  })
+
+  test('a key pressed while it waits is kept when let go after; one held from before goes up as usual', () => {
+    const desk = new Desk({})
+    desk.event(VK_LSHIFT, true)
+    desk.typist.record(true, desk.hwnd)
+    expect(desk.typist.key(VK_LSHIFT, 0, false)).toBe(false)
+    expect(desk.typist.key(VK_LCONTROL, 0, true)).toBe(true)
+    desk.typist.record(false)
+    expect(desk.typist.key(VK_LCONTROL, 0, false)).toBe(true)
+    expect(recorded(desk)).toEqual(['+ControlLeft', '-ControlLeft'])
+  })
+
+  test('it waits 20 s at most', () => {
+    const desk = new Desk({})
+    desk.typist.record(true, desk.hwnd)
+    desk.wait(20_001)
+    desk.keys('a')
+    expect([recorded(desk), desk.text]).toEqual([[], 'a'])
+  })
+})
+
+describe('the menu on one key', () => {
+  const VK_G = 0x47
+  const VK_CAPS = 0x14
+  const VK_ESC = 0x1b
+  const VK_DOWN = 0x28
+  const taken = (desk: Desk) => desk.sent.flatMap(m => (m.type === 'menuKey' ? [m.code] : []))
+  const closed = (desk: Desk) => desk.sent.filter(m => m.type === 'menuClosed').length
+  const hotkeys = (desk: Desk) => desk.sent.filter(m => m.type === 'hotkey' && m.action === 'menu').length
+
+  test('a listed letter is the menu\'s, by its physical key in any layout, its release too', () => {
+    const desk = new Desk({})
+    desk.layout = 'ru'
+    desk.typist.menu(true, ['KeyG'])
+    expect(desk.typist.key(VK_G, 0, true)).toBe(true)
+    expect(desk.typist.key(VK_G, 0, true)).toBe(true)
+    expect(desk.typist.key(VK_G, 0, false)).toBe(true)
+    expect([taken(desk), desk.text, closed(desk)]).toEqual([['KeyG'], '', 0])
+  })
+
+  test('with Shift it is still the letter; a modifier alone leaves the menu open', () => {
+    const desk = new Desk({})
+    desk.typist.menu(true, ['KeyG'])
+    desk.event(VK_LSHIFT, true)
+    desk.tap(VK_G)
+    desk.event(VK_LSHIFT, false)
+    expect([taken(desk), desk.text, closed(desk)]).toEqual([['KeyG'], '', 0])
+  })
+
+  test('the arrows, Enter and Esc are the menu\'s; Esc closes it from the main process, and the keys are the program\'s again', () => {
+    const desk = new Desk({})
+    desk.typist.menu(true, ['KeyG'])
+    desk.tap(VK_DOWN)
+    desk.tap(VK_RETURN)
+    desk.tap(VK_ESC)
+    expect([taken(desk), desk.text]).toEqual([['ArrowDown', 'Enter', 'Escape'], ''])
+    desk.typist.menu(false)
+    desk.keys('g')
+    expect([taken(desk).length, desk.text]).toEqual([3, 'g'])
+  })
+
+  test('another key closes it and goes through', () => {
+    const desk = new Desk({})
+    desk.typist.menu(true, ['KeyG'])
+    desk.keys('a')
+    desk.keys('g')
+    expect([taken(desk), desk.text, closed(desk)]).toEqual([[], 'ag', 1])
+  })
+
+  test('a listed letter with Ctrl is the program\'s shortcut: the menu closes', () => {
+    const desk = new Desk({})
+    desk.typist.menu(true, ['KeyG'])
+    desk.event(VK_LCONTROL, true)
+    expect(desk.typist.key(VK_G, 0, true)).toBe(false)
+    expect([taken(desk), closed(desk)]).toEqual([[], 1])
+  })
+
+  test('the menu key again is the key as ever, kept from the program, and no other key: the main process closes it', () => {
+    const desk = new Desk({ keys: { menu: 'CapsLock' } })
+    desk.tap(VK_CAPS)
+    desk.typist.menu(true, ['KeyG'])
+    desk.tap(VK_CAPS)
+    expect([hotkeys(desk), closed(desk), desk.caps]).toEqual([2, 0, false])
+  })
+
+  test('a click outside closes it; a click on it leaves what was typed for the fix item', () => {
+    const desk = new Desk({})
+    desk.keys('ghbdtn')
+    desk.typist.menu(true, ['KeyG'], { x: 100, y: 0, width: 300, height: 400 })
+    desk.mouse('left-down', 120)
+    desk.mouse('left-up', 120)
+    expect(closed(desk)).toBe(0)
+    desk.typist.menu(false)
+    desk.typist.fixNow()
+    desk.flush()
+    expect(desk.text).toBe('привет')
+    desk.typist.menu(true, ['KeyG'], { x: 100, y: 0, width: 300, height: 400 })
+    desk.mouse('left-down', 20)
+    expect(closed(desk)).toBe(1)
+  })
+
+  test('what was typed before it stays for the fix item, past the menu key and the letter', () => {
+    const desk = new Desk({ keys: { menu: 'CapsLock' } })
+    desk.keys('ghbdtn')
+    desk.tap(VK_CAPS)
+    desk.typist.menu(true, ['KeyB'])
+    desk.tap(0x42)
+    desk.typist.menu(false)
+    desk.typist.fixNow()
+    desk.flush()
+    expect([desk.text, desk.layout]).toEqual(['привет', 'ru'])
+  })
+
+  test('another window in front, or two minutes gone, the keys are the program\'s', () => {
+    const desk = new Desk({})
+    desk.typist.menu(true, ['KeyG'])
+    desk.hwnd = 2n
+    desk.tick(150)
+    expect(closed(desk)).toBe(1)
+    desk.keys('g')
+    expect(desk.text).toBe('g')
+    desk.typist.menu(true, ['KeyG'])
+    desk.wait(120_001)
+    desk.keys('g')
+    expect([closed(desk), desk.text]).toEqual([2, 'gg'])
+  })
+
+  test('the menu key stops a dictation on the full screen too', () => {
+    const desk = new Desk({ keys: { menu: 'CapsLock' } })
+    desk.typist.setDictating(true)
+    desk.fullScreen = true
+    desk.tap(VK_CAPS)
+    expect(hotkeys(desk)).toBe(1)
+  })
+})
+
 describe('the layout and Caps Lock as Windows has them', () => {
   test('R3, Ctrl, нравится: typed right, nothing is touched, even while Windows names the old layout', () => {
     const desk = new Desk({ autoFix: true, keys: { switch: 'LeftControl' } })

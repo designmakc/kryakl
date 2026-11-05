@@ -1,24 +1,27 @@
-// The app window, Kryakl's back office. A sidebar holds every place in groups
-// (Home; the actions; the library; the person's lists; Kryakl itself), the
-// open one lit, and a search over every line of every page. The bar over the
-// content says where the person is (a second-level page as a crumb), carries
-// the action's keys, Back, and the window's buttons. Home comes first, always:
-// one line that shows what Kryakl does (on the first opening it plays as a
-// moment: a word typed in the wrong layout is fixed, translated and read
-// aloud, each step lighting the person's own key; then the line rises into
-// Home's head and the keys drop into their actions), whether the translator
-// and the voice are here, and the actions with their keys. Back and Esc go
-// back through the places visited, as a browser does (from a transcript, to
-// the library first). Everything shown comes from the main process in one
-// `app` message, sent again whenever any of it changes; every change goes back
-// as a message.
+// The app window, Kryakl's back office. A sidebar holds eleven places in four
+// groups split by hairlines (Home; the five actions; Settings, Models, Disk
+// space; About, Report a problem), the open one lit, and a search over every
+// line of every page. The bar over the content only says where the person is:
+// the page's name, as a crumb under its parent (a list opened from a tile, a
+// second-level page), then the window's buttons; Esc goes back through the
+// places visited, as a browser does (from a transcript, to the library first).
+// An action's page has three layers: the person's own lists as tiles on top,
+// its actions and settings as lines, the models it runs on in a plate at its
+// foot. Home comes first, always, and is a summary: how Kryakl stands, what is
+// downloading, every key set and where it lives, and one line that shows what
+// Kryakl does (on the first opening it plays as a moment: a word typed in the
+// wrong layout is fixed, translated and read aloud, each step lighting the
+// person's own key; then the line goes into its place and the keys drop into
+// their lines). Everything shown comes from the main process in one `app`
+// message, sent again whenever any of it changes; every change goes back as a
+// message.
 
 import { NATURAL_PREFIX, NATURAL_VOICES, naturalLabel } from '../natural'
 import { DOUBLE_MS, HotkeyRecorder, hotkeyLabel, type Recorded } from '../hotkey'
 import type { AppTab, AppView, DiffPart, Feature, KeyboardLayout, MistakeEntry, SavedWord, Settings, StorageId, StoragePart, StorageView, ToView, TutorHost } from '../protocol'
 import { LANGUAGES } from '../languages'
 import { translationAdvice, type LevelFit } from '../hardware'
-import { DEFAULTS, keptForm, myLanguages, RATES, SWITCH_SOUNDS, TALK_ABOUT_MAX, TALK_LEVELS, type AppRule, type LlmModel, type TalkLevel, type ThemeMode, type TranslationLevel } from '../settings'
+import { COPY_TWICE_KEYS, DEFAULTS, keptForm, myLanguages, RATES, SWITCH_SOUNDS, TALK_ABOUT_MAX, TALK_LEVELS, type AppRule, type LlmModel, type TalkLevel, type ThemeMode, type TranslationLevel } from '../settings'
 import type { AppPart } from '../typist'
 // app.ts has a languageName of its own (a code's English name); the interface's is langName here.
 import { formatDate, languageName as langName, levelName, setUiLanguage, t, uiLanguage, type Key } from '../i18n'
@@ -29,15 +32,15 @@ import { el, icon, setIcon } from './dom'
 import { glyph } from './glyphs'
 import { caps, COPY_TWICE } from './keycaps'
 import { lucide, type LucideName } from './lucide'
-import { aside, bad, bar, btn, card, chip, grp, ib, link, linkBtn, listPage, liveField, navCard, post, row, seg, select, radioRow, recommended, toggle, toggleCard, toggleKnob, uiLanguageCard, warn } from './ui'
-import { minutes, seconds } from '../speechplan'
+import { aside, bad, bar, btn, card, chip, enginePlate, grp, ib, lineList, linkBtn, listPage, liveField, navCard, post, row, seg, select, radioRow, recommended, tiles, toggleCard, toggleKnob, twoNames, uiLanguageCard, warn, wordChips } from './ui'
+import { seconds } from '../speechplan'
 import { recommend, recommendedModels } from '../setup'
 import { resetSetup, setupNodes } from './setup'
 import { aboutOf, api, computerRows, diarizationOf, engineRows, engineSettings, fault, forgetEngine, gpuRow, hasPart, installed, onRedraw, pickKb, preferRow, running, saveEngine, size as speechSize, speakerRows, speechChoiceRows, testOffer, toast } from './speech'
 import { TOPICS } from '../topics'
 import { isBeta, versionText } from '../version'
 import { withMarks } from './marks'
-import { backToList, enterTranscripts, leaveTranscripts, newRows, openTranscript, setTranscriptHooks, transcriptsBody, transcriptsCap } from './transcripts'
+import { backToList, enterTranscripts, leaveTranscripts, newRows, openTranscript, setTranscriptHooks, transcriptOpen, transcriptsBody } from './transcripts'
 
 declare global {
   interface Window {
@@ -61,22 +64,31 @@ function phrases<K extends string>(keys: Record<K, Key>): Record<K, string> {
   return out
 }
 
-type Action = 'talk' | 'listen' | 'translate' | 'check' | 'screen' | 'dictate' | 'transcribe' | 'keyboard'
+type Action = 'translate' | 'english' | 'voice' | 'recordings' | 'layout'
 type Page = Action | 'words' | 'mistakes' | 'transcripts' | 'translations' | 'phrases' | 'vocabulary' | 'kept' | 'learned' | 'programs' | 'layouts' | 'settings' | 'models' | 'storage' | 'about' | 'report' | 'search'
 
-const ACTIONS: readonly Action[] = ['talk', 'listen', 'translate', 'check', 'screen', 'dictate', 'transcribe', 'keyboard']
-const isAction = (name: Page): name is Action => (ACTIONS as readonly string[]).includes(name)
-/** Each action's icon, on its Home card and its page. */
-const ICONS: Record<Action, LucideName> = { talk: 'bird', listen: 'volume-2', translate: 'languages', check: 'graduation-cap', screen: 'scan', dictate: 'mic', transcribe: 'audio-lines', keyboard: 'keyboard' }
+const ACTIONS: readonly Action[] = ['translate', 'english', 'voice', 'recordings', 'layout']
+/** Each action's icon, in the sidebar. */
+const ICONS: Record<Action, LucideName> = { translate: 'languages', english: 'graduation-cap', voice: 'mic', recordings: 'audio-lines', layout: 'keyboard' }
+/** The action a list belongs to: the sidebar lights it, the bar names it first. */
+const PARENT: Partial<Record<Page, Action>> = {
+  translations: 'translate',
+  words: 'english',
+  mistakes: 'english',
+  phrases: 'voice',
+  vocabulary: 'voice',
+  transcripts: 'recordings',
+  kept: 'layout',
+  learned: 'layout',
+  programs: 'layout',
+  layouts: 'layout',
+}
 const TITLES: Record<Page, string> = phrases({
-  talk: 'nav.talk',
-  listen: 'nav.listen',
   translate: 'nav.translate',
-  check: 'nav.check',
-  screen: 'nav.screen',
-  dictate: 'nav.dictate',
-  transcribe: 'nav.transcribe',
-  keyboard: 'nav.keyboard',
+  english: 'nav.english',
+  voice: 'nav.voice',
+  recordings: 'nav.recordings',
+  layout: 'nav.layout',
   words: 'nav.words',
   mistakes: 'nav.mistakes',
   transcripts: 'nav.transcripts',
@@ -105,6 +117,8 @@ let search = ''
 let finding = ''
 /** Why the last key recorded was not kept: by the setting's name, or a layout's id. */
 let keyTrouble: { name: string; text: string } | undefined
+/** The key field listening now, fed the keyboard thread's keys (`keyEvent`) while it does. */
+let keyTarget: ((code: string, down: boolean, at: number) => void) | undefined
 /** The program whose page is open (Keyboard › Programs › one of them). */
 let programOpen = ''
 /** The programs with a window open now, asked when the Programs page opens. */
@@ -166,55 +180,6 @@ const usage = (hotkey: string) => t(isTap(hotkey) ? 'keys.tap' : 'keys.press', {
 /** The Chrome extension's key for recording a meeting (extension/manifest.json). */
 const MEET_KEY = 'Alt+Shift+M'
 
-type KeyLine = { label: string; hotkey: string; chain?: 'listen' | 'translate' | 'fix' }
-
-/** The keys an action shows by its name, the person's own; the chain marks the three the moment lights. */
-function keyLines(action: Action, s: Settings): KeyLine[] {
-  switch (action) {
-    case 'talk':
-      return [{ label: t('keys.talk'), hotkey: s.talkKey }]
-    case 'listen':
-      // One action: its key, else Ctrl+C twice.
-      return [{ label: t('keys.selection'), hotkey: s.selectKey || (s.doubleCopy ? COPY_TWICE : ''), chain: 'listen' }]
-    case 'translate':
-      return [
-        { label: t('keys.selection'), hotkey: s.translateKey, chain: 'translate' },
-        ...(s.typeKey ? [{ label: t('keys.type'), hotkey: s.typeKey }] : []),
-        { label: t('keys.pasteBack'), hotkey: 'Enter' },
-      ]
-    case 'check':
-      return [
-        { label: t('keys.selection'), hotkey: s.checkKey },
-        ...(s.typeCheckKey ? [{ label: t('keys.type'), hotkey: s.typeCheckKey }] : []),
-        { label: t('keys.byVoice'), hotkey: s.practiceKey },
-      ]
-    case 'screen':
-      return [
-        { label: t('keys.listen'), hotkey: s.snipKey },
-        { label: t('keys.translate'), hotkey: s.textKey },
-      ]
-    case 'dictate':
-      return [
-        { label: t('keys.dictate'), hotkey: s.dictateKey },
-        { label: t('keys.note'), hotkey: s.noteKey },
-      ]
-    case 'transcribe':
-      return [{ label: t('keys.inMeet'), hotkey: MEET_KEY }]
-    case 'keyboard':
-      return [
-        { label: t('keys.switch'), hotkey: s.switchKey },
-        { label: t('keys.fix'), hotkey: s.fixKey, chain: 'fix' },
-      ]
-  }
-}
-
-/** An action's keys as caps; `setOnly` leaves out those not set (the bar, where "not set" only crowds the title). */
-function keysOf(action: Action, s: Settings, chained = false, setOnly = false): HTMLElement[] {
-  return keyLines(action, s)
-    .filter(k => !setOnly || k.hotkey)
-    .flatMap(k => [el('span', { class: 'kl' }, k.label), caps(k.hotkey, chained ? k.chain : undefined)])
-}
-
 /** The layouts the keys go through, in order: those chosen that Windows has, or all of them. */
 function cycleOf(v: AppView): KeyboardLayout[] {
   const chosen = v.settings.layouts.map(id => v.layouts.find(l => l.id === id)).filter((l): l is KeyboardLayout => !!l)
@@ -229,89 +194,29 @@ function cycleOf(v: AppView): KeyboardLayout[] {
 const naturalOn = (v: AppView) => v.natural.status === 'ready' && (v.settings.voice === '' || v.settings.voice.startsWith(NATURAL_PREFIX))
 const pairOf = (v: AppView) => t('lang.pairEnglish', { lang: langName(v.settings.native) })
 
-/** What Dictate runs on, and how quick it is here: the speech engine's model, once the engine is here. */
-function engineCap(v: AppView): string {
-  const p = v.speech.pack
-  if (p.status === 'installing' && !installed(v)) return t('home.downloadingPct', { pct: Math.round((p.progress ?? 0) * 100) })
-  if (!installed(v)) return t('home.downloadsOnce')
-  if (!running(v)) return t('home.speechToText')
-  const c = v.speech.plan.dictation.chosen
-  return t(c.device === 'cuda' ? 'home.speechOnCard' : 'home.speechOnProcessor')
-}
-
-/** What an action is called, what it runs on, and what it does. */
-function actionText(action: Action, v: AppView): { title: string; cap: string; desc: string } {
-  const title = TITLES[action]
-  switch (action) {
-    case 'talk':
-      return { title, cap: talkCap(v), desc: t('home.talkDesc') }
-    case 'listen':
-      return { title, cap: t(naturalOn(v) ? 'home.natural' : 'home.windowsVoice'), desc: t('home.listenDesc') }
-    case 'translate':
-      return { title, cap: pairOf(v), desc: t('home.translateDesc') }
-    case 'check':
-      return { title, cap: checkCap(v), desc: t('home.checkDesc') }
-    case 'screen':
-      return { title, cap: t('home.screenCap'), desc: t('home.screenDesc') }
-    case 'dictate':
-      return { title, cap: engineCap(v), desc: t('home.dictateDesc', { lang: langName(v.settings.native) }) }
-    case 'transcribe':
-      return { title, cap: t('home.transcribeCap'), desc: t('home.transcribeDesc') }
-    case 'keyboard':
-      return {
-        title,
-        cap: cycleOf(v)
-          .map(l => l.short)
-          .join(' · '),
-        desc: t(v.settings.autoFix ? 'home.keyboardAuto' : 'home.keyboardDesc'),
-      }
-  }
-}
-
 // ---------------------------------------------------------------- skeleton
 // The window has no Windows frame: the sidebar's mark and the bar's empty
 // parts drag it, and the bar ends in the window's own minimize, maximize and
 // close. Every place is in the sidebar, in groups, each once.
 
-/** A place in the sidebar: what it opens, its icon and name, and a quiet value after it (a count). */
+/** A place in the sidebar: what it opens, its icon and name, and a quiet value after it. */
 type NavItem = { page: Page | 'home'; icon: LucideName; title: string; value?: (v: AppView) => string }
 
-const many = (n: number) => (n ? String(n) : '')
-
-const NAV: { label: string; items: NavItem[] }[] = [
-  { label: '', items: [{ page: 'home', icon: 'house', title: t('nav.home') }] },
-  { label: t('nav.actions'), items: ACTIONS.map(a => ({ page: a, icon: ICONS[a], title: TITLES[a] })) },
-  {
-    label: t('nav.library'),
-    items: [
-      { page: 'words', icon: 'book-open', title: TITLES.words, value: v => many(v.words.length) },
-      { page: 'mistakes', icon: 'list-checks', title: TITLES.mistakes, value: v => many(v.mistakes.length) },
-      { page: 'transcripts', icon: 'file-text', title: TITLES.transcripts },
-      { page: 'translations', icon: 'clock', title: TITLES.translations, value: v => many(v.translations.length) },
-      { page: 'phrases', icon: 'message-square-text', title: TITLES.phrases, value: v => many(v.dictation.recent.length) },
-    ],
-  },
-  {
-    label: t('nav.lists'),
-    items: [
-      { page: 'vocabulary', icon: 'spell-check', title: TITLES.vocabulary, value: v => many(v.settings.vocabulary.length) },
-      { page: 'kept', icon: 'lock', title: TITLES.kept, value: v => many(v.settings.keepWords.length) },
-      { page: 'learned', icon: 'sparkles', title: TITLES.learned, value: v => many(v.learned.alwaysFix.length + v.learned.myWords.length) },
-      { page: 'programs', icon: 'monitor', title: TITLES.programs, value: v => many(v.settings.apps.length) },
-      { page: 'layouts', icon: 'list-ordered', title: TITLES.layouts, value: v => cycleOf(v).map(l => l.short).join('·') },
-    ],
-  },
-  {
-    label: t('app.name'),
-    items: [
-      { page: 'settings', icon: 'settings', title: TITLES.settings },
-      { page: 'models', icon: 'boxes', title: TITLES.models },
-      { page: 'storage', icon: 'database', title: TITLES.storage, value: v => (v.storage?.parts.length ? speechSize(downloadsMb(v.storage)) : '') },
-      { page: 'about', icon: 'info', title: TITLES.about },
-      { page: 'report', icon: 'bug', title: TITLES.report },
-    ],
-  },
+/** The groups, split by hairlines. */
+const NAV: NavItem[][] = [
+  [{ page: 'home', icon: 'house', title: t('nav.home') }],
+  ACTIONS.map(a => ({ page: a, icon: ICONS[a], title: TITLES[a] })),
+  [
+    { page: 'settings', icon: 'settings', title: TITLES.settings },
+    { page: 'models', icon: 'boxes', title: TITLES.models },
+    { page: 'storage', icon: 'hard-drive', title: TITLES.storage, value: v => (v.storage?.parts.length ? speechSize(downloadsMb(v.storage)) : '') },
+  ],
+  [
+    { page: 'about', icon: 'info', title: TITLES.about },
+    { page: 'report', icon: 'bug', title: TITLES.report },
+  ],
 ]
+
 
 const findField = el('input', {
   type: 'text',
@@ -335,15 +240,15 @@ const findField = el('input', {
 })
 const tree = el('nav', { class: 'tree' })
 const navValues = new Map<Page | 'home', HTMLElement>()
-for (const g of NAV) {
-  if (g.label) tree.append(el('div', { class: 'gl' }, g.label))
-  for (const i of g.items) {
+NAV.forEach((items, at) => {
+  if (at) tree.append(el('div', { class: 'dv' }))
+  for (const i of items) {
     const value = el('span', { class: 'v' })
     navValues.set(i.page, value)
     const page = i.page
     tree.append(el('button', { class: 'it', 'data-nav': page, title: i.title, onclick: () => (page === 'home' ? goHome() : go(page)) }, lucide(i.icon), el('span', { class: 'lb' }, i.title), value))
   }
-}
+})
 const side = el(
   'aside',
   { class: 'side' },
@@ -370,14 +275,11 @@ function windowState(maximized: boolean): void {
   maxButton.setAttribute('aria-label', label)
   root.classList.toggle('maxed', maximized)
 }
-// The bar says where the person is: Back, the page's name (a second-level page as a crumb), a few words on it, the action's keys.
-const pBack = el('button', { class: 'icon-btn back', title: t('nav.backEsc'), 'aria-label': t('nav.back'), onclick: () => back() }, lucide('arrow-left', 's'))
+// The bar says only where the person is: the page's name, a list or a second-level page as a crumb.
 const pTitle = el('div', { class: 'ptitle' })
-const pCap = el('span', { class: 'pcap' })
-const pKeys = el('div', { class: 'pkeys' })
 // The logo in the bar is for the setup, which has no sidebar.
 const barMark = el('div', { class: 'brand bb' }, logo())
-const top = el('header', { class: 'top' }, barMark, pBack, pTitle, pCap, el('span', { class: 'gap' }), pKeys, winButtons)
+const top = el('header', { class: 'top' }, barMark, pTitle, el('span', { class: 'gap' }), winButtons)
 const home = el('main', { class: 'home' })
 const pBody = el('div', { class: 'pbody' })
 
@@ -388,13 +290,13 @@ root.append(side, mainCol)
 let making: { id: string; progress: number } | undefined
 
 function updateNav(): void {
-  const lit = open?.name ?? 'home'
+  const lit = open ? (PARENT[open.name] ?? open.name) : 'home'
   for (const b of tree.querySelectorAll<HTMLElement>('.it')) b.classList.toggle('on', b.dataset.nav === lit)
   const v = view
   if (!v) return
-  for (const g of NAV) for (const i of g.items) if (i.value) navValues.get(i.page)?.replaceChildren(i.value(v))
+  for (const g of NAV) for (const i of g) if (i.value) navValues.get(i.page)?.replaceChildren(i.value(v))
   const busy = running(v) ? v.speech.health?.busy : null
-  const live = navValues.get('transcripts')
+  const live = navValues.get('recordings')
   if (!live) return
   live.classList.toggle('live', !!busy)
   live.title = busy ? t('nav.making') : ''
@@ -421,42 +323,78 @@ window.setInterval(() => void followMaking(), 3000)
 
 // ---------------------------------------------------------------- home
 
-function readiness(v: AppView): (Node | string)[] {
-  const translator = t(
-    (
-      {
-        ready: 'home.translatorReady',
-        absent: 'home.translatorAbsent',
-        downloading: 'home.translatorDownloading',
-        failed: 'home.translatorFailed',
-        unsupported: 'home.translatorUnsupported',
-      } as const
-    )[v.translator],
+/** A key on Home: what it does, the page it is set on and that page's section; `chain` marks the three the moment lights, `speech` the keys that work once the speech engine is here. */
+type HomeKey = { key: KeyName; title: Key; page: Action | 'settings'; section?: Key; chain?: 'listen' | 'translate' | 'fix'; speech?: boolean }
+
+const HOME_KEYS: readonly HomeKey[] = [
+  { key: 'menuKey', title: 'menu.keyTitle', page: 'settings', section: 'keys.group' },
+  { key: 'translateKey', title: 'act.translate', page: 'translate', section: 'act.selected', chain: 'translate' },
+  { key: 'selectKey', title: 'act.listen', page: 'translate', section: 'act.selected', chain: 'listen' },
+  { key: 'inPlaceKey', title: 'act.inPlace', page: 'translate', section: 'act.selected' },
+  { key: 'textKey', title: 'act.translate', page: 'translate', section: 'act.screen' },
+  { key: 'snipKey', title: 'act.listen', page: 'translate', section: 'act.screen' },
+  { key: 'typeKey', title: 'act.ownKey', page: 'translate', section: 'act.own' },
+  { key: 'talkKey', title: 'act.talk', page: 'english', section: 'act.talkGroup', speech: true },
+  { key: 'checkKey', title: 'check.keySelected', page: 'english', section: 'page.checkEnglish' },
+  { key: 'typeCheckKey', title: 'check.typeKey', page: 'english', section: 'page.checkEnglish' },
+  { key: 'practiceKey', title: 'act.say', page: 'english', section: 'page.checkEnglish', speech: true },
+  { key: 'dictateKey', title: 'dict.type', page: 'voice', speech: true },
+  { key: 'englishKey', title: 'dict.english', page: 'voice', speech: true },
+  { key: 'againKey', title: 'dictate.againKey', page: 'voice', speech: true },
+  { key: 'noteKey', title: 'dict.note', page: 'voice', speech: true },
+  { key: 'fixKey', title: 'kb.fixKey', page: 'layout', section: 'act.fixGroup', chain: 'fix' },
+  { key: 'switchKey', title: 'kb.switchKey', page: 'layout', section: 'act.switchGroup' },
+  { key: 'pauseKey', title: 'settings.pauseKey', page: 'settings', section: 'keys.group' },
+  { key: 'windowKey', title: 'settings.windowKey', page: 'settings', section: 'keys.group' },
+]
+
+/** How Kryakl stands: ready, or paused until Resume, here or in the tray. */
+function statusCard(v: AppView): HTMLElement {
+  const paused = v.settings.paused
+  return el(
+    'div',
+    { class: paused ? 'status paused' : 'status' },
+    el('span', { class: 'sdot' }),
+    el('div', { class: 'st' }, t(paused ? 'home.paused' : 'home.ready'), el('small', {}, t(paused ? 'home.pausedNote' : 'home.readyNote'))),
+    btn(t(paused ? 'tray.resume' : 'tray.pause'), () => save({ paused: !paused }), paused ? 'primary' : ''),
   )
-  const n = v.natural
-  const voice: (Node | string)[] =
-    n.status === 'downloading'
-      ? [el('b', {}, t('home.natural')), ` ${Math.round(n.progress * 100)}%`]
-      : n.status === 'failed'
-        ? [el('b', {}, t('home.windowsVoice')), ` ${t('home.voiceFailed')}`]
-        : [el('b', {}, t(naturalOn(v) ? 'home.natural' : 'home.windowsVoice')), ` ${t('home.voiceReady')}`]
-  const sp = v.speech
-  const speech: (Node | string)[] = !installed(v)
-    ? sp.pack.status === 'installing'
-      ? [', ', el('b', {}, t('home.speech')), ` ${Math.round((sp.pack.progress ?? 0) * 100)}%`]
-      : []
-    : [', ', el('b', {}, t('home.speech')), ` ${t(running(v) ? 'home.speechReady' : sp.service === 'down' ? 'home.speechStopped' : 'home.speechStarting')}`]
-  return [el('b', {}, pairOf(v)), ` ${translator}, `, ...voice, ...speech, `. ${t('home.everything')}`]
 }
 
-function homeRow(action: Action, v: AppView): HTMLElement {
-  const a = actionText(action, v)
-  const open = () => go(action)
+/** What stands in the way, said on Home so it is not found by chance. */
+function homeTrouble(v: AppView): HTMLElement[] {
+  const lines: (HTMLElement | null)[] = [
+    v.translator === 'failed' ? warn(t('home.troubleTranslator')) : null,
+    v.natural.status === 'failed' ? warn(t('home.troubleVoice')) : null,
+    installed(v) && v.speech.service === 'down' ? warn(t('home.troubleSpeech')) : null,
+  ]
+  return lines.filter(n => n !== null)
+}
+
+/** What is downloading now, each with how far it has got (the dictionary does not say). */
+function downloadsNow(v: AppView): { name: string; progress?: number }[] {
+  const out: { name: string; progress?: number }[] = []
+  const add = (name: string, state: { status: string; progress: number }) => {
+    if (state.status === 'downloading') out.push({ name, progress: state.progress })
+  }
+  add(levelName('fast'), v.translation.fast)
+  add(levelName('accurate'), v.models.accurate)
+  add(levelName('most'), v.models.most)
+  add(t('settings.natural'), v.natural)
+  if (v.speech.pack.status === 'installing') out.push({ name: t('storage.speech'), progress: v.speech.pack.progress ?? 0 })
+  const models = v.speech.health?.models
+  const fetching = [models?.dictation, models?.transcripts].filter(m => m?.state === 'downloading')
+  for (const m of new Map(fetching.map(m => [m?.name, m])).values()) if (m) out.push({ name: speechChoice(v, m.name)?.label ?? m.name, progress: m.progress ?? 0 })
+  if (v.dictionary.status === 'downloading') out.push({ name: t('storage.dict') })
+  return out
+}
+
+/** A key set: what it does, the page and section it lives on, its caps; a tap opens the page with its line lit. */
+function keyLine(k: HomeKey, s: Settings): HTMLElement {
+  const open = () => go(k.page, undefined, k.key)
   return el(
-    'li',
+    'div',
     {
-      class: 'act',
-      'data-page': action,
+      class: 'hkey',
       role: 'button',
       tabindex: 0,
       onclick: open,
@@ -465,47 +403,52 @@ function homeRow(action: Action, v: AppView): HTMLElement {
         if (key === 'Enter' || key === ' ') (event.preventDefault(), open())
       },
     },
-    lucide(ICONS[action]),
-    el('div', {}, el('div', { class: 'an' }, el('b', {}, a.title), el('i', {}, a.cap)), el('div', { class: 'ad' }, a.desc)),
-    el('div', { class: 'keys' }, ...keysOf(action, v.settings, true)),
-    lucide('chevron-right', 'chev'),
-  )
-}
-
-/** Kryakl is paused: every key and reaction is off until Resume, here or in the tray. */
-function pausedNotice(v: AppView): HTMLElement | null {
-  if (!v.settings.paused) return null
-  return el(
-    'div',
-    { class: 'row notice paused' },
-    lucide('pause'),
-    el('div', { class: 'l' }, t('home.paused'), el('small', {}, t('home.pausedNote'))),
-    btn(t('tray.resume'), () => save({ paused: false }), 'primary'),
+    el('span', { class: 'kn' }, t(k.title)),
+    el('span', { class: 'kw' }, k.section ? `${TITLES[k.page]} › ${t(k.section)}` : TITLES[k.page]),
+    el('span', { class: 'kc' }, caps(s[k.key], k.chain)),
   )
 }
 
 function homeNodes(v: AppView): HTMLElement[] {
-  const sample = sampleOf(v.settings.native)
+  const s = v.settings
+  const sample = sampleOf(s.native)
+  const keys = HOME_KEYS.filter(k => !k.speech || installed(v))
+  const set = keys.filter(k => s[k.key])
+  const unset = keys.length - set.length
   return [
     el(
       'div',
-      { class: 'head' },
+      { class: 'hsum' },
+      statusCard(v),
+      ...homeTrouble(v),
+      ...downloadsNow(v).map(d =>
+        el(
+          'div',
+          { class: 'dl' },
+          el('span', {}, t('home.downloading', { name: d.name })),
+          d.progress !== undefined ? bar(d.progress) : null,
+          d.progress !== undefined ? pct(d.progress) : null,
+        ),
+      ),
+      grp(t('home.yourKeys'), set.length || undefined),
+      ...set.map(k => keyLine(k, s)),
+      unset ? el('p', { class: 'unset' }, t('home.unset', { n: unset })) : null,
       el(
         'div',
-        { class: 'hline' },
-        el('span', { class: 'hs h1' }, sample.typed),
-        el('span', { class: 'arr a1' }, '→'),
-        el('span', { class: 'hs h2' }, sample.fixed),
-        el('span', { class: 'arr a2' }, '→'),
-        el('span', { class: 'hs h3' }, 'hello world'),
-        el('button', { class: 'replay', title: t('home.replayTitle'), onclick: () => playMoment(false) }, icon('play'), el('span', {}, t('home.replay'))),
+        { class: 'head' },
+        el(
+          'div',
+          { class: 'hline' },
+          el('span', { class: 'hs h1' }, sample.typed),
+          el('span', { class: 'arr a1' }, '→'),
+          el('span', { class: 'hs h2' }, sample.fixed),
+          el('span', { class: 'arr a2' }, '→'),
+          el('span', { class: 'hs h3' }, 'hello world'),
+          el('button', { class: 'replay', title: t('home.replayTitle'), onclick: () => playMoment(false) }, icon('play'), el('span', {}, t('home.replay'))),
+        ),
       ),
-      el('p', { class: 'hcap' }, ...readiness(v)),
     ),
-    pausedNotice(v),
-    el('ul', { class: 'acts' }, ...ACTIONS.map(a => homeRow(a, v))),
-    el('p', { class: 'foot' }, t('home.foot')),
-  ].filter((n): n is HTMLElement => n !== null)
+  ]
 }
 
 function renderHome(force = false): void {
@@ -556,7 +499,7 @@ type Moment = {
   eyebrow: HTMLElement
   smalls: HTMLElement[]
   rail: { fix: HTMLElement; translate: HTMLElement; listen: HTMLElement }
-  /** Home's own pieces, which the travellers become. */
+  /** Home's own pieces, which the travellers become, and what settles around them. */
   h: {
     head: HTMLElement
     h1: HTMLElement
@@ -565,14 +508,11 @@ type Moment = {
     arrows: HTMLElement[]
     replay: HTMLElement
     replayLabel: HTMLElement
-    hcap: HTMLElement
-    foot: HTMLElement
     rows: HTMLElement[]
-    kf: HTMLElement
-    kt: HTMLElement
-    kl: HTMLElement
   }
-  g: Record<'t1' | 't2' | 'line' | 'line2' | 'play' | 'h1' | 'h2' | 'h3' | 'replay' | 'rf' | 'rt' | 'rl' | 'kf' | 'kt' | 'kl', Box>
+  /** The three keys on their way down to Home's lines; a key not set has none and fades out. */
+  flights: { keys: HTMLElement; from: Box; target: HTMLElement | null; to?: Box; d: number }[]
+  g: Record<'t1' | 't2' | 'line' | 'line2' | 'play' | 'h1' | 'h2' | 'h3' | 'replay', Box>
   /** Font sizes: the trail, the big line, the header line. */
   f: { trail: number; big: number; head: number }
 }
@@ -581,9 +521,9 @@ let moment: Moment | undefined
 
 function buildMoment(v: AppView, markSeen: boolean): Moment | undefined {
   const q = <T extends HTMLElement>(s: string) => home.querySelector<T>(s)
-  const head = q('.head'), h1 = q('.h1'), h2 = q('.h2'), h3 = q('.h3'), replay = q('.replay'), hcap = q('.hcap'), foot = q('.foot')
+  const head = q('.head'), h1 = q('.h1'), h2 = q('.h2'), h3 = q('.h3'), replay = q('.replay')
   const kf = q('[data-chain=fix]'), kt = q('[data-chain=translate]'), kl = q('[data-chain=listen]')
-  if (!head || !h1 || !h2 || !h3 || !replay || !hcap || !foot || !kf || !kt || !kl) return undefined
+  if (!head || !h1 || !h2 || !h3 || !replay) return undefined
   const s = v.settings
   const sample = sampleOf(s.native)
   const cells = [...sample.typed].map((ch, i) => {
@@ -602,13 +542,12 @@ function buildMoment(v: AppView, markSeen: boolean): Moment | undefined {
   const t1 = el('div', { class: 'trail t1' }, sample.typed)
   const t2 = el('div', { class: 'trail t2' }, sample.fixed)
   const eyebrow = el('div', { class: 'eyebrow' }, t('home.eyebrow'))
-  const listenKey = keyLines('listen', s)[0]?.hotkey ?? ''
   const step = (n: number, hotkey: string, what: string) => {
     const keys = caps(hotkey)
     const small = el('small', {}, el('em', {}, String(n)), what)
     return { keys, small, node: el('div', { class: 'step' }, keys, small) }
   }
-  const sf = step(1, s.fixKey, t('home.stepFix')), st = step(2, s.translateKey, t('home.stepTranslate')), sl = step(3, listenKey, t('home.stepListen'))
+  const sf = step(1, s.fixKey, t('home.stepFix')), st = step(2, s.translateKey, t('home.stepTranslate')), sl = step(3, s.selectKey, t('home.stepListen'))
   const rail = el('div', { class: 'rail' }, sf.node, st.node, sl.node)
   const stage = el('div', { class: 'stage' }, eyebrow, t1, t2, line, line2, play, rail)
   // The composition is drawn for a 620 px window; a shorter or taller one keeps it in the middle.
@@ -623,6 +562,7 @@ function buildMoment(v: AppView, markSeen: boolean): Moment | undefined {
   const l2 = rel(line2)
   play.style.left = `${l2.x + l2.w + 18}px`
   play.style.top = `${l2.y - (parseFloat(stage.style.top) || 0) + (l2.h - 40) / 2}px`
+  const flight = (keys: HTMLElement, target: HTMLElement | null, d: number) => ({ keys, from: rel(keys), target, to: target ? rel(target) : undefined, d })
   const m: Moment = {
     raf: 0,
     markSeen,
@@ -642,7 +582,8 @@ function buildMoment(v: AppView, markSeen: boolean): Moment | undefined {
     eyebrow,
     smalls: [sf.small, st.small, sl.small],
     rail: { fix: sf.keys, translate: st.keys, listen: sl.keys },
-    h: { head, h1, h2, h3, arrows: [...home.querySelectorAll<HTMLElement>('.arr')], replay, replayLabel: replay.querySelector('span') ?? replay, hcap, foot, rows: [...home.querySelectorAll<HTMLElement>('.act')], kf, kt, kl },
+    h: { head, h1, h2, h3, arrows: [...home.querySelectorAll<HTMLElement>('.arr')], replay, replayLabel: replay.querySelector('span') ?? replay, rows: [...home.querySelectorAll<HTMLElement>('.status, .warn, .dl, .hsum > .grp, .hkey, .unset')] },
+    flights: [flight(sl.keys, kl, 0), flight(st.keys, kt, 0.06), flight(sf.keys, kf, 0.12)],
     g: {
       t1: rel(t1),
       t2: rel(t2),
@@ -653,12 +594,6 @@ function buildMoment(v: AppView, markSeen: boolean): Moment | undefined {
       h2: rel(h2),
       h3: rel(h3),
       replay: rel(replay),
-      rf: rel(sf.keys),
-      rt: rel(st.keys),
-      rl: rel(sl.keys),
-      kf: rel(kf),
-      kt: rel(kt),
-      kl: rel(kl),
     },
     f: { trail: fontOf(t1), big: fontOf(line), head: fontOf(h3) },
   }
@@ -751,14 +686,10 @@ function renderMoment(m: Moment, t: number): void {
     m.play.style.opacity = '1'
     move(m.play, g.play, { x: g.replay.x, y: g.replay.y, w: 28, h: 28 }, T(0.02), 28 / 40)
   }
-  const flights: [HTMLElement, Box, Box, number][] = [
-    [m.rail.listen, g.rl, g.kl, 0],
-    [m.rail.translate, g.rt, g.kt, 0.06],
-    [m.rail.fix, g.rf, g.kf, 0.12],
-  ]
-  for (const [node, from, to, d] of flights) {
-    const p = T(0.1 + d)
-    node.style.transform = t >= TRAVEL ? `translate(${(to.x - from.x) * p}px, ${(to.y - from.y) * p}px)` : ''
+  for (const fl of m.flights) {
+    const p = T(0.1 + fl.d)
+    if (fl.to) fl.keys.style.transform = t >= TRAVEL ? `translate(${(fl.to.x - fl.from.x) * p}px, ${(fl.to.y - fl.from.y) * p}px)` : ''
+    else if (t >= TRAVEL) fl.keys.style.opacity = String(1 - prog(t, TRAVEL, TRAVEL + 0.25))
   }
   // The moment's captions give way.
   const fade = 1 - prog(t, TRAVEL, TRAVEL + 0.25)
@@ -767,23 +698,23 @@ function renderMoment(m: Moment, t: number): void {
 
   // Home settles around them.
   h.rows.forEach((row, i) => {
-    const p = spring(prog(t, TRAVEL + 0.22 + i * 0.06, TRAVEL + 0.92 + i * 0.06))
+    const p = spring(prog(t, TRAVEL + 0.22 + i * 0.03, TRAVEL + 0.92 + i * 0.03))
     setStyle(row, clamp(p * 1.3), `translateY(${(1 - p) * 14}px)`)
   })
   const hp = spring(prog(t, TRAVEL + 0.45, TRAVEL + 1.0))
   for (const a of h.arrows) setStyle(a, hp, `translateX(${(1 - hp) * -8}px)`)
-  setStyle(h.hcap, hp, `translateY(${(1 - hp) * 6}px)`)
-  h.head.style.borderBottomColor = `color-mix(in srgb, var(--border-soft) ${hp * 100}%, transparent)`
-  h.foot.style.opacity = String(spring(prog(t, TRAVEL + 0.8, TRAVEL + 1.2)))
+  h.head.style.borderColor = `color-mix(in srgb, var(--border) ${hp * 100}%, transparent)`
 
   // Each traveller gives way to the real thing once it has landed.
   const landed = (d: number) => t >= TRAVEL + d + 0.8
   shown(h.h3, landed(0)), shown(m.line2, !landed(0))
   shown(h.h2, landed(0.06)), shown(m.t2, !landed(0.06))
   shown(h.h1, landed(0.12)), shown(m.t1, !landed(0.12))
-  shown(h.kl, landed(0.1)), shown(m.rail.listen, !landed(0.1))
-  shown(h.kt, landed(0.16)), shown(m.rail.translate, !landed(0.16))
-  shown(h.kf, landed(0.22)), shown(m.rail.fix, !landed(0.22))
+  for (const fl of m.flights) {
+    const there = landed(0.1 + fl.d)
+    if (fl.target) shown(fl.target, there)
+    shown(fl.keys, !there)
+  }
   shown(m.play, !landed(0.02))
   // Replay grows out of the landed play button.
   const rp = spring(prog(t, TRAVEL + 0.82, TRAVEL + 1.3))
@@ -836,8 +767,8 @@ function finishMoment(): void {
 // is kept, so Back and Esc go back through the places visited, each where it
 // was scrolled to, as a browser does.
 
-/** A page of a page: a long part of it, opened from a card with a chevron. */
-type SubId = 'meet' | 'speakers' | 'fixing' | 'program' | 'languages' | 'forTranslate' | 'forCheck' | 'forDictate' | 'forTranscribe' | 'forVoice'
+/** A page of a page: a long part of it, opened from a line with a chevron or a tile. */
+type SubId = 'card' | 'screen' | 'aboutYou' | 'talkWindow' | 'notes' | 'meet' | 'speakers' | 'fixing' | 'program' | 'languages' | 'forTranslate' | 'forCheck' | 'forDictate' | 'forTranscribe' | 'forVoice'
 
 type Place = { name: Page; sub?: SubId }
 
@@ -925,51 +856,38 @@ function fade(node: HTMLElement): void {
   node.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 160, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' })
 }
 
-/** A line found by the search, lit for a moment where it is. */
+/** A line lit for a moment where it is: a key's by its setting's name (from Home), else by its title (a search's find). */
 function flashRow(title: string): void {
-  const rows = [...pBody.querySelectorAll<HTMLElement>('.row')]
-  const row = rows.find(r => lineTitle(r) === title) ?? rows.find(r => lineTitle(r).startsWith(title))
-  if (!row) return
-  row.scrollIntoView({ block: 'center' })
-  row.classList.add('flash')
-  window.setTimeout(() => row.classList.remove('flash'), 1600)
+  const lines = [...pBody.querySelectorAll<HTMLElement>('.row, .tcell')]
+  const line = lines.find(r => r.dataset.key === title) ?? lines.find(r => lineTitle(r) === title) ?? lines.find(r => lineTitle(r).startsWith(title))
+  if (!line) return
+  line.scrollIntoView({ block: 'center' })
+  line.classList.add('flash')
+  window.setTimeout(() => line.classList.remove('flash'), 1600)
 }
 
-type Sub = { title: string | (() => string); cap?: (v: AppView) => string; body: (v: AppView) => HTMLElement[]; valid?: (v: AppView) => boolean }
+type Sub = { title: string | (() => string); body: (v: AppView) => HTMLElement[]; valid?: (v: AppView) => boolean }
 
 const SUBS: Record<SubId, Sub> = {
-  meet: { title: 'Google Meet', cap: () => t('page.meetCap'), body: meetPage },
-  speakers: { title: () => t('page.speakers'), cap: () => t('page.speakersCap'), body: speakerRows, valid: installed },
-  fixing: { title: () => t('page.fixing'), cap: () => t('page.fixingCap'), body: fixingPage },
+  card: { title: () => t('listen.cardGroup'), body: cardPage },
+  screen: { title: () => t('screen.how'), body: screenHowPage },
+  aboutYou: { title: () => t('talkPage.aboutYou'), body: aboutYouPage },
+  talkWindow: { title: () => t('act.talkWindow'), body: talkWindowPage },
+  notes: { title: () => t('dictate.notesFolder'), body: kbRows },
+  meet: { title: 'Google Meet', body: meetPage },
+  speakers: { title: () => t('page.speakers'), body: speakerRows, valid: installed },
+  fixing: { title: () => t('page.fixing'), body: fixingPage },
   program: { title: () => programOpen, body: programPage, valid: () => !!programOpen },
   languages: { title: () => t('page.languages'), body: languagesPage },
-  forTranslate: { title: () => TITLES.translate, cap: () => t('page.forTranslateCap'), body: translateChoicePage },
-  forCheck: { title: () => t('page.checkEnglish'), cap: () => t('page.forCheckCap'), body: checkChoicePage },
-  forDictate: { title: () => TITLES.dictate, cap: () => t('page.forDictateCap'), body: v => speechChoicePage(v, 'dictation') },
-  forTranscribe: { title: () => TITLES.transcribe, cap: () => t('page.forTranscribeCap'), body: v => speechChoicePage(v, 'transcripts') },
-  forVoice: { title: () => t('page.voice'), cap: () => t('page.forVoiceCap'), body: voiceChoicePage },
+  forTranslate: { title: () => TITLES.translate, body: translateChoicePage },
+  forCheck: { title: () => t('models.checkTalk'), body: checkChoicePage },
+  forDictate: { title: () => TITLES.voice, body: v => speechChoicePage(v, 'dictation') },
+  forTranscribe: { title: () => TITLES.recordings, body: v => speechChoicePage(v, 'transcripts') },
+  forVoice: { title: () => t('page.voice'), body: voiceChoicePage },
 }
 const subTitle = (id: SubId) => {
   const title = SUBS[id].title
   return typeof title === 'string' ? title : title()
-}
-
-/** A few words by the page's name in the bar. */
-const CAPS: Partial<Record<Page, (v: AppView) => string>> = {
-  words: v => (v.words.length ? t('page.wordsCap', { n: v.words.length }) : t('page.wordsNone')),
-  mistakes: () => t('page.mistakesCap'),
-  transcripts: () => transcriptsCap(),
-  translations: () => t('page.translationsCap'),
-  phrases: () => t('page.phrasesCap'),
-  vocabulary: () => t('page.vocabularyCap'),
-  kept: () => t('page.keptCap'),
-  learned: () => t('page.learnedCap'),
-  programs: () => t('page.programsCap'),
-  layouts: () => t('page.layoutsCap'),
-  models: () => t('page.modelsCap'),
-  storage: v => (v.storage?.measuring ? t('page.measuring') : v.storage ? t('page.freeOn', { size: speechSize(v.storage.freeMb), drive: v.storage.drive }) : t('page.storageCap')),
-  about: v => `${t('app.name')} ${v.version}`,
-  report: () => t('page.reportCap'),
 }
 
 let sliding: Animation[] = []
@@ -1002,27 +920,18 @@ function openSub(id: SubId): void {
 
 function fillHeader(): void {
   if (!view) return
-  const v = view
-  pBack.hidden = !open && visited.length === 0
-  if (!open) {
-    pTitle.replaceChildren(t('nav.home'))
-    pCap.textContent = ''
-    pKeys.replaceChildren()
-    return
-  }
-  const name = open.name
-  if (open.sub) {
-    const sub = SUBS[open.sub]
-    pTitle.replaceChildren(el('button', { class: 'pcrumb', onclick: () => go(name) }, TITLES[name]), el('span', { class: 'psep' }, '›'), subTitle(open.sub))
-    pCap.textContent = sub.cap?.(v) ?? ''
-    pKeys.replaceChildren()
-    return
-  }
-  pTitle.replaceChildren(TITLES[name])
-  pCap.textContent = isAction(name) ? actionText(name, v).cap : name === 'search' ? searchCap(v) : (CAPS[name]?.(v) ?? '')
-  const keys = isAction(name) ? keysOf(name, v.settings, false, true) : []
-  const next = el('div', {}, ...keys)
-  if (next.innerHTML !== pKeys.innerHTML) pKeys.replaceChildren(...next.childNodes)
+  if (!open) return pTitle.replaceChildren(t('nav.home'))
+  const { name, sub } = open
+  const parent = PARENT[name]
+  const way = (title: string, to: () => void) => el('button', { class: 'pcrumb', onclick: to }, title)
+  const sep = () => el('span', { class: 'psep' }, '›')
+  pTitle.replaceChildren(
+    ...(parent ? [way(TITLES[parent], () => go(parent)), sep()] : []),
+    ...(sub
+      ? [way(TITLES[name], () => go(name)), sep(), subTitle(sub)]
+      : // A transcript open: its page's name is the way back to the library.
+        [name === 'transcripts' && transcriptOpen() ? way(TITLES[name], () => backToList()) : TITLES[name]]),
+  )
 }
 
 /** Set when the body changed while it was in use (a key being recorded, a box typed in): drawn once it is let go. */
@@ -1087,22 +996,16 @@ function bodyOf(v: AppView): HTMLElement[] {
   if (!open) return []
   if (open.sub) return SUBS[open.sub].body(v)
   switch (open.name) {
-    case 'talk':
-      return talkPage(v)
-    case 'listen':
-      return listenPage(v)
     case 'translate':
       return translatePage(v)
-    case 'check':
-      return checkPage(v)
-    case 'screen':
-      return screenPage(v)
-    case 'dictate':
-      return dictatePage(v)
-    case 'transcribe':
-      return transcribePage(v)
-    case 'keyboard':
-      return keyboardPage(v)
+    case 'english':
+      return englishPage(v)
+    case 'voice':
+      return voicePage(v)
+    case 'recordings':
+      return recordingsPage(v)
+    case 'layout':
+      return layoutPage(v)
     case 'words':
       return wordsPage(v)
     case 'mistakes':
@@ -1146,9 +1049,14 @@ function bodyOf(v: AppView): HTMLElement[] {
 /** The places the search reads, second-level pages too. */
 const SEARCHED: Place[] = [
   ...ACTIONS.map(name => ({ name })),
-  { name: 'keyboard', sub: 'fixing' },
-  { name: 'transcribe', sub: 'speakers' },
-  { name: 'transcribe', sub: 'meet' },
+  { name: 'translate', sub: 'card' },
+  { name: 'translate', sub: 'screen' },
+  { name: 'english', sub: 'aboutYou' },
+  { name: 'english', sub: 'talkWindow' },
+  { name: 'voice', sub: 'notes' },
+  { name: 'layout', sub: 'fixing' },
+  { name: 'recordings', sub: 'speakers' },
+  { name: 'recordings', sub: 'meet' },
   { name: 'vocabulary' },
   { name: 'kept' },
   { name: 'learned' },
@@ -1169,8 +1077,8 @@ const SEARCHED: Place[] = [
 /** A line found by the search; `en` is its title and note in English, so English words find it in any interface language. */
 type Line = { place: Place; section: string; title: string; note: string; en: string }
 
-/** A line's name: the first thing in its text. */
-const lineTitle = (row: Element) => (row.querySelector(':scope > .l')?.firstChild?.textContent ?? '').trim()
+/** A line's name: the first thing in its text; a tile's, its name. */
+const lineTitle = (row: Element) => ((row.matches('.tcell') ? row.querySelector('.tn') : row.querySelector(':scope > .l')?.firstChild)?.textContent ?? '').trim()
 
 /** A place's body drawn aside, as it would be if it were open. */
 function bodyFor(v: AppView, place: Place): HTMLElement[] {
@@ -1198,9 +1106,9 @@ function drawnLines(v: AppView, place: Place): DrawnLine[] {
       section = (node.firstChild?.textContent ?? '').trim()
       continue
     }
-    for (const row of node.matches('.row') ? [node] : [...node.querySelectorAll('.row')]) {
+    for (const row of node.matches('.row') ? [node] : [...node.querySelectorAll('.row, .tcell')]) {
       const title = lineTitle(row)
-      const note = [...row.querySelectorAll(':scope > .l > small')].map(s => s.textContent ?? '').join(' · ')
+      const note = [...row.querySelectorAll(':scope > .l > small, :scope > .ts')].map(s => s.textContent ?? '').join(' · ')
       if (title) lines.push({ section, title, note })
     }
   }
@@ -1247,15 +1155,10 @@ const found = (v: AppView) => {
   return q ? linesOf(v).filter(l => `${l.title} ${l.note}`.toLowerCase().includes(q) || l.en.toLowerCase().includes(q)) : []
 }
 
-function searchCap(v: AppView): string {
-  const n = found(v).length
-  const q = finding.trim()
-  return q ? (n ? t('search.places', { n, q }) : t('search.none', { q })) : ''
-}
-
-/** Where a place is, in words, as its header says it: "Kept as typed", "Keyboard › Fixing as I type". */
+/** Where a place is, in words, as its bar says it: "Kept as typed" under its action, "Keyboard layout › Fixing as I type". */
 function whereOf(place: Place): string {
-  return place.sub ? `${TITLES[place.name]} › ${subTitle(place.sub)}` : TITLES[place.name]
+  const parent = PARENT[place.name]
+  return [parent ? TITLES[parent] : '', TITLES[place.name], place.sub ? subTitle(place.sub) : ''].filter(Boolean).join(' › ')
 }
 
 /** A text with the words searched for marked. */
@@ -1311,6 +1214,7 @@ function tryIt(text: string, how: string): HTMLElement {
 // ---------------------------------------------------------------- keys on pages
 
 type KeyName =
+  | 'menuKey'
   | 'selectKey'
   | 'snipKey'
   | 'translateKey'
@@ -1331,6 +1235,7 @@ type KeyName =
   | 'windowKey'
 
 const KEY_USE: Record<KeyName, string> = phrases({
+  menuKey: 'keys.useMenu',
   selectKey: 'keys.useSelect',
   snipKey: 'keys.useSnip',
   translateKey: 'keys.useTranslate',
@@ -1362,8 +1267,12 @@ function keyTakenBy(key: string, self: string): string | undefined {
   return layout ? t('keys.toLayout', { layout: view?.layouts.find(l => l.id === layout)?.name ?? t('keys.aLayout') }) : undefined
 }
 
-/** Saves a key unless another use has it already. */
+/** Saves a key unless another use has it already; Ctrl+C twice only for an action on the selected text. */
 function saveKey(name: KeyName, key: string): void {
+  if (key === COPY_TWICE && !(COPY_TWICE_KEYS as readonly string[]).includes(name)) {
+    keyTrouble = { name, text: t('keys.copyTwiceOnly') }
+    return renderBody()
+  }
   const other = keyTakenBy(key, name)
   if (other) {
     keyTrouble = { name, text: t('keys.taken', { key: said(key), use: other }) }
@@ -1377,13 +1286,16 @@ function saveKey(name: KeyName, key: string): void {
 function keyRow(name: KeyName, label: string, note: string, taken = false, iconName?: LucideName, extra?: HTMLElement | null): HTMLElement {
   const key = view?.settings[name] ?? ''
   const menu = menuNote(key)
-  return keyRecorder(name, key, key => saveKey(name, key), label, menu ? `${note}; ${menu}` : note, taken, iconName, extra, DEFAULTS[name])
+  const node = keyRecorder(name, key, key => saveKey(name, key), label, menu ? `${note}; ${menu}` : note, taken, iconName, extra, DEFAULTS[name])
+  node.dataset.key = name
+  return node
 }
 
 /** Alt or Win alone as a key: Kryakl keeps it from opening a menu (typist.ts), so the line says where the menu went. */
 function menuNote(key: string): string {
   if (/^(Left|Right)Alt(\*2)?$/.test(key)) return t('keys.menuAlt')
   if (/^(Left|Right)Super(\*2)?$/.test(key)) return t('keys.menuWin')
+  if (key === 'Control+Escape') return t('keys.menuCtrlEsc')
   return ''
 }
 
@@ -1397,6 +1309,10 @@ function layoutKeyRow(l: KeyboardLayout, label: string, note: (string | HTMLElem
     save({ layoutKeys: next })
   }
   const saveIt = (key: string) => {
+    if (key === COPY_TWICE) {
+      keyTrouble = { name: l.id, text: t('keys.copyTwiceOnly') }
+      return renderBody()
+    }
     const other = key ? keyTakenBy(key, l.id) : undefined
     if (other) {
       keyTrouble = { name: l.id, text: t('keys.taken', { key: said(key), use: other }) }
@@ -1412,9 +1328,15 @@ function layoutKeyRow(l: KeyboardLayout, label: string, note: (string | HTMLElem
  * A key recorded from a press: Change (or a tap on the keys) listens for keys
  * with modifiers, a modifier tapped alone or twice (it waits a moment for a
  * second tap), modifiers pressed together, Pause or Caps Lock alone, the
- * mouse's side buttons. Esc gives up; × clears the key; ↺ brings back the key
+ * mouse's side buttons, Ctrl+C twice (once is copying: nothing). Esc alone
+ * gives up, with a modifier it is a key; × clears the key; ↺ brings back the key
  * it came with (`byDefault`), when it had one and has another now. `id` names
  * it for the trouble line under it; `extra` sits after its controls (a switch).
+ * While it listens, the keyboard thread reads the keys before Windows does
+ * (`recordKeys`, then `keyEvent`), so Ctrl+Esc, Shift+Caps Lock and Alt reach
+ * it; a key the thread keeps never comes as a page's key event, so the two
+ * never feed the recorder the same key, and without the thread the page's own
+ * events do it all.
  */
 function keyRecorder(
   id: string,
@@ -1435,26 +1357,47 @@ function keyRecorder(
     title: t('keys.recordTitle'),
     'aria-label': t('keys.aria', { label, key: current ? said(current) : t('keys.notSet') }),
   })
-  field.append(caps(current))
+  const resting = () => (current ? caps(current) : el('span', { class: 'link' }, t('keys.set')))
+  field.append(resting())
   const showing = (...nodes: HTMLElement[]) => field.replaceChildren(...nodes)
   const done = (key: string) => {
     window.clearTimeout(waiting)
     field.blur()
     saveKeyAs(key)
   }
+  const pressKeys = () => showing(el('span', { class: 'key rec' }, t('keys.pressKeys')))
   const recorded = (r: Recorded | undefined) => {
-    window.clearTimeout(waiting)
     if (!r) return
+    window.clearTimeout(waiting)
     if (!r.more) return done(r.hotkey)
-    // A tap: a second one within a moment makes it a double.
+    // A tap: a second one within a moment makes it a double. Ctrl+C once is copying: without a second, nothing.
     showing(caps(r.hotkey), el('span', { class: 'x2' }, '…'))
-    waiting = window.setTimeout(() => done(r.hotkey), DOUBLE_MS)
+    waiting = window.setTimeout(() => (r.partial ? pressKeys() : done(r.hotkey)), DOUBLE_MS)
+  }
+  // Times in ms since 1970, the page's and the keyboard thread's alike.
+  const press = (code: string, at: number) => {
+    if (code === 'Escape' && !recorder.holding()) return field.blur()
+    window.clearTimeout(waiting)
+    recorded(recorder.keydown(code, at))
+  }
+  const lift = (code: string, at: number) => recorded(recorder.keyup(code, at))
+  const fromHook = (code: string, down: boolean, at: number) => {
+    if (!field.isConnected || !field.classList.contains('recording')) return stopHook()
+    if (down) press(code, at)
+    else lift(code, at)
+  }
+  const stopHook = () => {
+    if (keyTarget !== fromHook) return
+    keyTarget = undefined
+    post({ type: 'recordKeys', on: false })
   }
   const listen = () => {
     if (field.classList.contains('recording')) return
     recorder.reset()
     field.classList.add('recording')
-    showing(el('span', { class: 'key rec' }, t('keys.pressKeys')))
+    pressKeys()
+    keyTarget = fromHook
+    post({ type: 'recordKeys', on: true })
   }
   // Focus starts it; so does the click itself, should the window not have the focus yet.
   field.addEventListener('focus', listen)
@@ -1462,20 +1405,19 @@ function keyRecorder(
   field.addEventListener('blur', () => {
     window.clearTimeout(waiting)
     field.classList.remove('recording')
-    showing(caps(current))
+    showing(resting())
+    stopHook()
   })
   field.addEventListener('keydown', event => {
     if (!field.classList.contains('recording')) return
     event.preventDefault()
-    if (event.key === 'Escape') return field.blur()
     if (event.repeat) return
-    window.clearTimeout(waiting)
-    recorded(recorder.keydown(event.code, event.timeStamp))
+    press(event.code, performance.timeOrigin + event.timeStamp)
   })
   field.addEventListener('keyup', event => {
     if (!field.classList.contains('recording')) return
     event.preventDefault()
-    recorded(recorder.keyup(event.code, event.timeStamp))
+    lift(event.code, performance.timeOrigin + event.timeStamp)
   })
   field.addEventListener('mousedown', event => {
     if (document.activeElement !== field || (event.button !== 3 && event.button !== 4)) return
@@ -1522,7 +1464,7 @@ function keyRecorder(
   const node = row(
     label,
     [...notes, taken && current ? bad(t('keys.takenProgram')) : null, trouble ? bad(trouble) : null],
-    el('span', { class: 'kchg' }, field, clear, restore, linkBtn(t(current ? 'keys.change' : 'keys.set'), () => field.click()), extra ?? null),
+    el('span', { class: 'kchg' }, field, clear, restore, extra ?? null),
   )
   if (iconName) node.prepend(lucide(iconName))
   return node
@@ -1533,23 +1475,13 @@ const fixedKey = (label: string, hotkey: string, note?: string) => row(label, [n
 
 // ---------------------------------------------------------------- action pages
 
-function listenPage(v: AppView): HTMLElement[] {
+/** A short English text to select and try Translate and read aloud on. */
+const TRY_LISTEN = 'The morning was quiet. A small boat drifted along the river, and two children watched the ducks from the bridge.'
+
+/** Translate › The card: what it does when it opens, and how it is used. */
+function cardPage(v: AppView): HTMLElement[] {
   const s = v.settings
-  const how = s.selectKey ? t('listen.tryKey', { how: usage(s.selectKey) }) : t(s.doubleCopy ? 'listen.tryTwice' : 'listen.tryNone')
   return [
-    grp(t('keys.group')),
-    keyRow('selectKey', t('listen.select'), t('listen.selectNote'), !v.keysOk.select, 'volume-2'),
-    card(
-      'copy',
-      t('listen.alsoTwice'),
-      [t('listen.alsoTwiceNote')],
-      el('span', { class: 'kchg' }, caps(COPY_TWICE), el('span', { class: 'tgwrap' }, toggleKnob(s.doubleCopy, doubleCopy => save({ doubleCopy }), t('keys.copyTwice')))),
-    ),
-    keyRow('snipKey', t('listen.snip'), t('listen.boxNote'), !v.keysOk.snip, 'scan'),
-    grp(t('listen.voiceGroup')),
-    navCard('volume-2', t('listen.voiceGroup'), t('listen.voiceNote'), voiceValue(v), () => go('models', 'forVoice'), 'models'),
-    speedCard(v),
-    grp(t('listen.cardGroup')),
     toggleCard('volume-2', t('listen.autoRead'), s.autoRead, autoRead => save({ autoRead })),
     toggleCard('spell-check', t('listen.rareWords'), s.rareWords, rareWords => save({ rareWords })),
     toggleCard('list', t('listen.oneAtATime'), s.oneAtATime, oneAtATime => save({ oneAtATime })),
@@ -1568,12 +1500,21 @@ function listenPage(v: AppView): HTMLElement[] {
       ),
     ),
     grp(t('listen.inCard')),
+    fixedKey(t('translate.pasteBack'), 'Enter'),
     card('play', t('listen.playKeys'), [], el('span', { class: 'kg2' }, caps('Space'), caps('←'), caps('→'))),
     card('book-open', t('listen.clickWord'), [t('listen.clickWordNote')], null),
     card('languages', t('listen.clickSentence'), [t('listen.clickSentenceNote')], null),
     card('x', t('listen.closeCard'), [], caps('Esc')),
-    tryIt('The morning was quiet. A small boat drifted along the river, and two children watched the ducks from the bridge.', how),
-  ].filter((n): n is HTMLElement => n !== null)
+  ]
+}
+
+/** Translate › How it works: text on the screen, read on this computer. */
+function screenHowPage(): HTMLElement[] {
+  return [
+    card('scan', t('screen.draw'), [t('screen.drawNote')], null),
+    card('type', t('screen.reads'), [t('screen.readsNote')], linkBtn(t('screen.languages'), () => post({ type: 'openLanguageSettings' }))),
+    card('spell-check', t('screen.fix'), [t('screen.fixNote')], null),
+  ]
 }
 
 const TRY_TRANSLATE: Record<string, string> = {
@@ -1792,7 +1733,7 @@ function checkChoicePage(v: AppView): HTMLElement[] {
 
 /** Models › Dictate, Models › Transcribe: Automatic or a model of the action's own; the engine's download until it runs. */
 function speechChoicePage(v: AppView, feature: Feature): HTMLElement[] {
-  const name = feature === 'dictation' ? TITLES.dictate : TITLES.transcribe
+  const name = feature === 'dictation' ? TITLES.voice : TITLES.recordings
   // engineRows takes the feature's English id and words the offer itself (speech.ts).
   const offer = engineRows(v, feature === 'dictation' ? 'Dictate' : 'Transcribe')
   if (offer.length) return [grp(t('models.engine')), ...offer]
@@ -1803,7 +1744,7 @@ function speechChoicePage(v: AppView, feature: Feature): HTMLElement[] {
     grp(t('models.options')),
     preferRow(v),
     gpuRow(v),
-    feature === 'transcripts' ? speakersCard(v, () => go('transcribe', 'speakers'), true) : null,
+    feature === 'transcripts' ? speakersCard(v, () => go('recordings', 'speakers'), true) : null,
   ].filter((n): n is HTMLElement => n !== null)
 }
 
@@ -1906,10 +1847,10 @@ function modelsPage(v: AppView): HTMLElement[] {
     unusedNotice(v),
     grp(t('models.eachAction')),
     navCard('languages', TITLES.translate, t('models.translateNote'), levelValue(v), () => go('models', 'forTranslate'), 'forTranslate'),
-    navCard('graduation-cap', t('page.checkEnglish'), t('page.forCheckCap'), checkValue(v), () => go('models', 'forCheck'), 'forCheck'),
-    navCard('mic', TITLES.dictate, t('models.dictateNote'), speechValue(v, 'dictation'), () => go('models', 'forDictate'), 'forDictate'),
-    navCard('audio-lines', TITLES.transcribe, t('models.transcribeNote'), speechValue(v, 'transcripts'), () => go('models', 'forTranscribe'), 'forTranscribe'),
-    speakersCard(v, () => go('transcribe', 'speakers'), true),
+    navCard('graduation-cap', t('models.checkTalk'), t('page.forCheckCap'), checkValue(v), () => go('models', 'forCheck'), 'forCheck'),
+    navCard('mic', TITLES.voice, t('models.dictateNote'), speechValue(v, 'dictation'), () => go('models', 'forDictate'), 'forDictate'),
+    navCard('audio-lines', TITLES.recordings, t('models.transcribeNote'), speechValue(v, 'transcripts'), () => go('models', 'forTranscribe'), 'forTranscribe'),
+    speakersCard(v, () => go('recordings', 'speakers'), true),
     navCard('volume-2', t('page.voice'), t('page.forVoiceCap'), voiceValue(v), () => go('models', 'forVoice'), 'forVoice'),
     aside('info', t('models.shared')),
   ].filter((n): n is HTMLElement => n !== null)
@@ -1939,45 +1880,51 @@ function translatePage(v: AppView): HTMLElement[] {
   const [state, note] = translatorChip(v)
   const text = TRY_TRANSLATE[s.native] ?? 'Of course, I will send the updated layouts before the call.'
   const how = s.translateKey ? t('translate.tryKey', { how: usage(s.translateKey) }) : t('translate.tryNone')
+  const listenHow = s.selectKey ? t('listen.tryKey', { how: usage(s.selectKey) }) : t('listen.tryNone')
   return [
     shareOffer(v),
-    grp(t('keys.group')),
-    keyRow('translateKey', t('translate.select'), s.translateKey ? t('translate.selectNote', { how: usage(s.translateKey) }) : t('translate.selectNoKey'), !v.keysOk.translate, 'languages'),
-    keyRow('typeKey', t('translate.type'), t('translate.typeNote'), !v.keysOk.type, 'type'),
-    keyRow('inPlaceKey', t('translate.inPlace'), t('translate.inPlaceNote'), !v.keysOk.inPlace, 'wand-sparkles'),
-    keyRow('textKey', t('translate.text'), t('listen.boxNote'), !v.keysOk.text, 'scan'),
-    fixedKey(t('translate.pasteBack'), 'Enter'),
-    grp(t('translate.group')),
-    navCard('boxes', t('translate.model'), t('translate.modelNote'), levelValue(v), () => go('models', 'forTranslate'), 'models'),
-    grp(t('translate.languages')),
+    tiles([{ icon: 'history', title: TITLES.translations, count: v.translations.length || '', open: () => go('translations'), id: 'translations' }]),
+    grp(t('act.selected')),
+    keyRow('translateKey', t('act.translate'), t('act.translateNote'), !v.keysOk.translate),
+    keyRow('selectKey', t('act.listen'), t('act.listenNote'), !v.keysOk.select),
+    keyRow('inPlaceKey', t('act.inPlace'), t('act.inPlaceNote'), !v.keysOk.inPlace),
+    grp(t('act.screen')),
+    keyRow('textKey', t('act.translate'), t('act.screenNote'), !v.keysOk.text),
+    keyRow('snipKey', t('act.listen'), t('act.screenNote'), !v.keysOk.snip),
+    navCard(null, t('screen.how'), t('act.screenHowNote'), null, () => openSub('screen'), 'screen'),
+    grp(t('act.own')),
+    keyRow('typeKey', t('act.ownKey'), t('translate.typeNote'), !v.keysOk.type),
+    grp(t('nav.settings')),
+    speedCard(v),
     card('globe', pairOf(v), [note], state),
     languagesCard(v),
-    grp(t('translate.history')),
-    navCard('clock', t('translate.recent'), t('translate.recentNote'), v.translations.length ? String(v.translations.length) : t('translate.none'), () => go('translations'), 'translations'),
+    navCard(null, t('listen.cardGroup'), t('act.cardNote'), null, () => openSub('card'), 'card'),
+    grp(t('act.try')),
     tryIt(text, how),
+    tryIt(TRY_LISTEN, listenHow),
+    enginePlate([
+      { title: t('act.quality'), value: levelValue(v), open: () => go('models', 'forTranslate') },
+      { title: t('talkPage.voice'), value: voiceValue(v), open: () => go('models', 'forVoice') },
+    ]),
   ].filter((n): n is HTMLElement => n !== null)
 }
 
-/** The texts translated lately (translationlog.ts), each to copy; Kryakl forgets them after 30 days by itself. */
+/** The texts translated lately (translationlog.ts), one line each: a tap copies the translation, a cross forgets it; Kryakl forgets them after 30 days by itself. */
 function translationsPage(v: AppView): HTMLElement[] {
   const list = v.translations
   return [
     grp(TITLES.translations, list.length || undefined, list.length ? linkBtn(t('keys.clear'), () => post({ type: 'clearTranslations' })) : null),
-    ...(list.length
-      ? list.map(e =>
-          el(
-            'div',
-            { class: 'row phrase' },
-            el(
-              'div',
-              { class: 'l' },
-              el('span', { class: 'said translated', title: `${e.text}\n\n${e.translation}` }, e.translation),
-              el('small', {}, `${e.text.length > 80 ? `${e.text.slice(0, 80)}…` : e.text} · ${whenSaid(e.at, Date.now())}`),
-            ),
-            linkBtn(t('common.copy'), () => copyText(e.translation)),
-          ),
+    list.length
+      ? lineList(
+          list.map(e => ({
+            text: e.text,
+            more: e.translation,
+            title: `${e.text}\n\n${e.translation}\n\n${whenSaid(e.at, Date.now())}`,
+            open: () => copyText(e.translation),
+            remove: () => post({ type: 'forgetTranslation', at: e.at }),
+          })),
         )
-      : [aside('info', t('translate.empty'))]),
+      : aside('info', t('translate.empty')),
   ]
 }
 
@@ -1995,15 +1942,6 @@ const SLOW_CHECK_S = 4
 
 /** A topic's name (topics.ts); an unknown one, as it was saved. */
 const topicTitle = (id: string) => (TOPICS.some(x => x.id === id) ? t(`topic.${id}` as Key) : id)
-
-/** The Talk page and Home: what stands in the way, else what it does. */
-function talkCap(v: AppView): string {
-  if (v.speech.device.at && translationAdvice(v.speech.device).accurate.where !== 'card') return t('talkPage.needsCard')
-  const m = v.models[v.settings.model]
-  if (m.status === 'downloading') return t('check.downloadingPct', { pct: Math.round(m.progress * 100) })
-  if (m.status !== 'ready') return t('check.downloadsOnce')
-  return t('check.capNotes', { lang: languageName(v.settings.native) })
-}
 
 /** What keeps the talk window from working here, said on its page with what to do. */
 function talkNotice(v: AppView): HTMLElement | null {
@@ -2028,7 +1966,7 @@ function talkNotice(v: AppView): HTMLElement | null {
     )
   }
   if (!installed(v))
-    return el('div', { class: 'row notice' }, lucide('mic'), el('div', { class: 'l' }, t('talkPage.engineTitle'), el('small', {}, t('talkPage.engineNote'))), linkBtn(t('talkPage.openDictate'), () => go('dictate')))
+    return el('div', { class: 'row notice' }, lucide('mic'), el('div', { class: 'l' }, t('talkPage.engineTitle'), el('small', {}, t('talkPage.engineNote'))), linkBtn(t('talkPage.openDictate'), () => go('voice')))
   return null
 }
 
@@ -2058,65 +1996,63 @@ function aboutField(value: string): HTMLTextAreaElement {
   return field
 }
 
-/** The Talk page: the window's button, then its settings. */
-function talkPage(v: AppView): HTMLElement[] {
+/** English: the person's words and mistakes on top, then the talk and the check, each with its keys; the model and the voice at the foot. */
+function englishPage(v: AppView): HTMLElement[] {
   const s = v.settings
   const going = v.talk
-  const keyNote = !installed(v) ? t('talkPage.needsEngine') : s.talkKey ? t('talkPage.keyNote', { keys: usage(s.talkKey) }) : t('talkPage.keyNoteNone')
+  const talkNote = [
+    going ? t('talkPage.openGoing', { topic: topicTitle(going.topic), lines: t('talk.lines', { n: going.lines }) }) : t('act.talkNote'),
+    installed(v) ? '' : t('talkPage.needsEngine'),
+  ]
+    .filter(Boolean)
+    .join('; ')
+  const typed = s.typeCheckKey ? t('check.typedKey', { keys: usage(s.typeCheckKey) }) : t('check.typedTray')
+  const how = s.checkKey ? t('check.tryKey', { keys: usage(s.checkKey), typed }) : t('check.tryNoKey', { typed })
   return [
-    el(
-      'div',
-      { class: 'row notice talk-open' },
-      tile(36),
-      el('div', { class: 'l' }, 'Talk to the duck', el('small', {}, going ? t('talkPage.openGoing', { topic: topicTitle(going.topic), lines: t('talk.lines', { n: going.lines }) }) : t('talkPage.openIdle'))),
-      btn([lucide('message-square'), t('talkPage.open')], () => post({ type: 'talkOpen' }), 'primary'),
-    ),
+    tiles([
+      { icon: 'book-open', title: TITLES.words, count: v.words.length || '', open: () => go('words'), id: 'words' },
+      { icon: 'spell-check', title: TITLES.mistakes, count: v.mistakes.length || '', open: () => go('mistakes'), id: 'mistakes' },
+    ]),
     talkNotice(v),
-    grp(t('talkPage.you')),
-    el('div', { class: 'row add' }, el('div', { class: 'l' }, t('talkPage.aboutYou')), aboutField(s.talkAbout), el('small', {}, t('talkPage.aboutNote'))),
+    grp(t('act.talkGroup')),
+    keyRow('talkKey', t('act.talk'), talkNote, !v.speech.keysOk.talk, undefined, btn(t('tray.open'), () => post({ type: 'talkOpen' }), 'primary')),
     row(
       t('talkPage.level'),
       [t(`talkPage.level${s.talkLevel}`)],
       seg(s.talkLevel, TALK_LEVELS.map(l => [l, l] as [TalkLevel, string]), talkLevel => save({ talkLevel }), true),
     ),
-    grp(t('talkPage.keys')),
-    keyRow('talkKey', 'Talk to the duck', keyNote, !v.speech.keysOk.talk, 'bird'),
-    fixedKey(t('talkPage.spaceKey'), 'Space'),
-    fixedKey(t('talkPage.escKey'), 'Escape'),
-    grp(t('talkPage.duck')),
+    navCard(null, t('talkPage.aboutYou'), null, s.talkAbout.trim() ? s.talkAbout.trim().slice(0, 32) : t('act.empty'), () => openSub('aboutYou'), 'aboutYou'),
+    navCard(null, t('act.talkWindow'), t('act.talkWindowNote'), null, () => openSub('talkWindow'), 'talkWindow'),
+    grp(t('page.checkEnglish')),
+    keyRow('checkKey', t('check.keySelected'), t('act.checkNote'), !v.keysOk.check),
+    keyRow('typeCheckKey', t('check.typeKey'), t('check.typeKeyNote'), !v.keysOk.typeCheck),
+    keyRow('practiceKey', t('act.say'), installed(v) ? t('act.sayNote') : t('talkPage.needsEngine'), !v.speech.keysOk.practice),
+    aside('info', t('check.speechNote')),
+    grp(t('act.try')),
+    tryIt(TRY_CHECK, how),
+    enginePlate([
+      { title: t('talkPage.model'), value: checkValue(v), open: () => go('models', 'forCheck') },
+      { title: t('talkPage.voice'), value: voiceValue(v), open: () => go('models', 'forVoice') },
+    ]),
+  ].filter((n): n is HTMLElement => n !== null)
+}
+
+/** English › About you: what the duck knows of the person. */
+function aboutYouPage(v: AppView): HTMLElement[] {
+  return [el('div', { class: 'row add' }, el('div', { class: 'l' }, t('talkPage.aboutYou')), aboutField(v.settings.talkAbout), el('small', {}, t('talkPage.aboutNote')))]
+}
+
+/** English › The talk window: how it behaves, its keys, where the talks are. */
+function talkWindowPage(v: AppView): HTMLElement[] {
+  const s = v.settings
+  return [
     toggleCard('volume-2', t('talkPage.aloud'), s.talkAloud, talkAloud => save({ talkAloud }), t('talkPage.aloudNote')),
     toggleCard('pin', t('talkPage.onTop'), s.talkOnTop, talkOnTop => save({ talkOnTop }), t('talkPage.onTopNote')),
-    navCard('boxes', t('talkPage.model'), t('talkPage.modelNote'), checkValue(v), () => go('models', 'forCheck'), 'models'),
-    navCard('volume-2', t('talkPage.voice'), t('talkPage.voiceNote'), voiceValue(v), () => go('models', 'forVoice'), 'models'),
+    grp(t('talkPage.keys')),
+    fixedKey(t('talkPage.spaceKey'), 'Space'),
+    fixedKey(t('talkPage.escKey'), 'Escape'),
     grp(t('talkPage.kept')),
     aside('history', t('talkPage.history')),
-    navCard('list-checks', t('mistakes.title'), t('talkPage.mistakesNote'), v.mistakes.length ? String(v.mistakes.length) : t('kb.none'), () => go('mistakes'), 'mistakes'),
-  ].filter((n): n is HTMLElement => !!n)
-}
-
-/** What the checker does, for the bar and Home: the language it checks, or its model's download. */
-function checkCap(v: AppView): string {
-  const m = v.models[v.settings.model]
-  if (m.status === 'downloading') return t('check.downloadingPct', { pct: Math.round(m.progress * 100) })
-  return m.status === 'ready' ? t('check.capNotes', { lang: languageName(v.settings.native) }) : t('check.downloadsOnce')
-}
-
-function checkPage(v: AppView): HTMLElement[] {
-  const s = v.settings
-  const typed = s.typeCheckKey ? t('check.typedKey', { keys: usage(s.typeCheckKey) }) : t('check.typedTray')
-  const how = s.checkKey ? t('check.tryKey', { keys: usage(s.checkKey), typed }) : t('check.tryNoKey', { typed })
-  return [
-    grp(t('talkPage.keys')),
-    keyRow('checkKey', t('check.keySelected'), s.checkKey ? t('check.keySelectedNote', { keys: usage(s.checkKey) }) : t('check.keySelectedNone'), !v.keysOk.check, 'graduation-cap'),
-    keyRow('typeCheckKey', t('check.typeKey'), t('check.typeKeyNote'), !v.keysOk.typeCheck, 'type'),
-    keyRow('practiceKey', t('check.practiceKey'), installed(v) ? t('check.practiceNote') : t('talkPage.needsEngine'), !v.speech.keysOk.practice, 'mic'),
-    fixedKey(t('check.enterKey'), 'Enter'),
-    aside('info', t('check.speechNote')),
-    grp(t('talkPage.model')),
-    navCard('boxes', t('talkPage.model'), t('check.modelNote'), checkValue(v), () => go('models', 'forCheck'), 'models'),
-    grp(t('check.history')),
-    navCard('list-checks', t('mistakes.title'), t('check.mistakesNote'), v.mistakes.length ? String(v.mistakes.length) : t('kb.none'), () => go('mistakes'), 'mistakes'),
-    tryIt(TRY_CHECK, how),
   ]
 }
 
@@ -2135,9 +2071,10 @@ function changeText(wrong: string, right: string): HTMLElement {
 }
 
 /**
- * Library › Mistakes: the changes made more than once, most first, then every
- * checked text that had a mistake, newest first, marked as in the card, with
- * its note; searched by the words; a cross forgets one, Clear all of them.
+ * English › My mistakes: the changes made more than once, most first, then every
+ * checked text that had a mistake, newest first, on one line, marked as in
+ * the card, with its note; searched by the words; a tap copies the corrected
+ * text, a cross forgets one, Clear all of them.
  */
 function mistakesPage(v: AppView): HTMLElement[] {
   // A mistake repeats when the same words are struck out again ("made" → "make", "make a"); a word only missing, when the same one is put in.
@@ -2164,17 +2101,18 @@ function mistakesPage(v: AppView): HTMLElement[] {
     const q = search.trim().toLowerCase()
     const shown = q ? all.filter(e => `${e.text} ${e.corrected} ${e.note}`.toLowerCase().includes(q)) : all
     list.replaceChildren(
-      ...(shown.length
-        ? shown.map(e =>
-            el(
-              'div',
-              { class: 'row phrase mistake' },
-              el('div', { class: 'l' }, el('span', { class: 'said marks', title: e.corrected }, ...withMarks(partsOf(e))), el('small', {}, [e.note, whenSaid(e.at, Date.now())].filter(Boolean).join(' · '))),
-              linkBtn(t('common.copy'), () => copyText(e.corrected)),
-              ib('x', t('mistakes.forget'), () => post({ type: 'forgetMistake', at: e.at })),
-            ),
+      shown.length
+        ? lineList(
+            shown.map(e => ({
+              text: el('span', { class: 'marks' }, ...withMarks(partsOf(e))),
+              more: e.note,
+              title: [e.corrected, e.note, whenSaid(e.at, Date.now())].filter(Boolean).join('\n\n'),
+              open: () => copyText(e.corrected),
+              remove: () => post({ type: 'forgetMistake', at: e.at }),
+              removeLabel: t('mistakes.forget'),
+            })),
           )
-        : [aside('info', all.length ? t('mistakes.noSuch') : t('mistakes.empty'))]),
+        : aside('info', all.length ? t('mistakes.noSuch') : t('mistakes.empty')),
     )
   }
   fill()
@@ -2207,18 +2145,6 @@ function mistakesPage(v: AppView): HTMLElement[] {
   ]
 }
 
-function screenPage(v: AppView): HTMLElement[] {
-  return [
-    grp(t('talkPage.keys')),
-    keyRow('snipKey', t('screen.snipKey'), t('screen.keyNote'), !v.keysOk.snip, 'volume-2'),
-    keyRow('textKey', t('screen.textKey'), t('screen.keyNote'), !v.keysOk.text, 'languages'),
-    grp(t('screen.how')),
-    card('scan', t('screen.draw'), [t('screen.drawNote')], null),
-    card('type', t('screen.reads'), [t('screen.readsNote')], linkBtn(t('screen.languages'), () => post({ type: 'openLanguageSettings' }))),
-    card('spell-check', t('screen.fix'), [t('screen.fixNote')], null),
-  ]
-}
-
 /** A folder or file, in a note: its end shows when it is long. */
 const pathNote = (path: string) => el('small', { class: 'path', title: path }, el('bdi', {}, path))
 
@@ -2242,12 +2168,6 @@ function kbRows(v: AppView): HTMLElement[] {
   ]
 }
 
-/** The card that opens the words to spell: how many there are. */
-function vocabularyCard(v: AppView): HTMLElement {
-  const n = v.settings.vocabulary.length
-  return navCard('spell-check', t('vocab.title'), t('vocab.note'), n ? t('backup.words', { n }) : t('vocab.noneYet'), () => go('vocabulary'), 'vocabulary')
-}
-
 /** A speech action's model in a few words: Automatic and the one it picked, or the one picked; its download. */
 function speechValue(v: AppView, feature: Feature): string {
   if (!installed(v)) return t('dictate.needsEngine')
@@ -2257,45 +2177,39 @@ function speechValue(v: AppView, feature: Feature): string {
   return `${p.pinned ? p.chosen.label : t('dictate.automatic', { model: p.chosen.label })}${state}`
 }
 
-/** The line to the Models page at a feature's speech model: the one in use, and its download. */
-function modelCard(v: AppView, feature: Feature): HTMLElement | null {
-  if (!running(v)) return null
-  const p = v.speech.plan[feature]
-  const how = feature === 'dictation' ? t('dictate.modelNote', { time: seconds(p.chosen.estimate) }) : t('transcribe.modelNote', { time: minutes(p.chosen.estimate) })
-  return navCard('boxes', t('dictate.speechModel'), how, speechValue(v, feature), () => go('models', feature === 'dictation' ? 'forDictate' : 'forTranscribe'), 'models')
-}
+/** The end of a folder's path, for a tile: "Documents\Notes". */
+const pathTail = (path: string) => path.split(/[\\/]/).filter(Boolean).slice(-2).join('\\')
 
-function dictatePage(v: AppView): HTMLElement[] {
+/** Voice typing: the person's names and phrases and the notes folder on top, the keys, the speech model at the foot. */
+function voicePage(v: AppView): HTMLElement[] {
   const s = v.settings
   const k = v.speech.keysOk
   const offer = engineRows(v, 'Dictate')
-  const recent = v.dictation.recent
+  const kb = engineSettings(v)?.kbDir
   return [
+    tiles([
+      { icon: 'whole-word', title: TITLES.vocabulary, count: s.vocabulary.length || '', open: () => go('vocabulary'), id: 'vocabulary' },
+      { icon: 'message-square-text', title: TITLES.phrases, count: v.dictation.recent.length || '', open: () => go('phrases'), id: 'phrases' },
+      { icon: 'folder', title: t('dictate.notesFolder'), sub: kb ? pathTail(kb) : t('act.notChosen'), open: () => openSub('notes'), id: 'notes' },
+    ]),
     ...(offer.length ? [grp(t('dictate.engine')), ...offer] : []),
     testOffer(v),
-    grp(t('talkPage.keys')),
-    keyRow('dictateKey', t('dictate.typeKey'), t('dictate.typeNote'), !k.dictate, 'mic'),
-    keyRow('englishKey', t('dictate.englishKey'), t('dictate.englishNote', { lang: languageName(s.native) }), !k.english, 'languages'),
-    keyRow('noteKey', t('dictate.noteKey'), t('dictate.noteNote'), !k.note, 'notebook-pen'),
-    keyRow('againKey', t('dictate.againKey'), t('dictate.againNote'), !k.again, 'rotate-cw'),
-    keyRow('practiceKey', t('check.practiceKey'), t('check.practiceNote'), !k.practice, 'graduation-cap'),
+    keyRow('dictateKey', t('dict.type'), t('dictate.typeNote'), !k.dictate),
+    keyRow('englishKey', t('dict.english'), t('dictate.englishNote', { lang: languageName(s.native) }), !k.english),
+    keyRow('againKey', t('dictate.againKey'), t('dictate.againNote'), !k.again),
+    keyRow('noteKey', t('dict.note'), t('dictate.noteNote'), !k.note),
     aside('info', t('dictate.escNote')),
-    grp(t('dictate.notes')),
-    ...kbRows(v),
-    grp(t('dictate.wordsPhrases')),
-    vocabularyCard(v),
-    navCard('clock', t('dictate.recent'), t('dictate.recentNote'), recent.length ? recent[0]?.text ?? '' : t('vocab.noneYet'), () => go('phrases'), 'phrases'),
-    modelCard(v, 'dictation'),
     el('p', { class: 'privacy' }, lucide('lock', 's'), t('dictate.privacy')),
+    enginePlate([{ title: t('dictate.speechModel'), value: speechValue(v, 'dictation'), open: () => go('models', 'forDictate') }]),
   ].filter((n): n is HTMLElement => n !== null)
 }
 
 /**
- * Words to spell: names and terms dictation and transcripts write as the
+ * Names and terms: what dictation and transcripts write as the
  * person does, each with what it may be heard as (vocabulary.ts). Kryakl's own
  * setting, sent to the engine with its plan, so it can be filled in before the
  * engine is here. Two fields add one: the word as written, and the heard
- * forms; a tap on a word puts it back into the fields to change it.
+ * forms; a tap on a chip puts it back into the fields to change it.
  */
 function vocabularyPage(v: AppView): HTMLElement[] {
   const s = v.settings
@@ -2326,12 +2240,13 @@ function vocabularyPage(v: AppView): HTMLElement[] {
   }
   const items = s.vocabulary.map(line => {
     const { word: w, heard: hs } = parseEntry(line)
-    return el(
-      'div',
-      { class: 'row' },
-      el('button', { class: 'l', title: t('vocab.change'), onclick: () => edit(line) }, w, hs.length ? el('small', {}, t('vocab.heardAs', { forms: hs.join(', ') })) : null),
-      ib('x', t('vocab.remove', { word: w }), () => save({ vocabulary: (view?.settings.vocabulary ?? s.vocabulary).filter(l => l !== line) })),
-    )
+    return {
+      text: w,
+      more: hs.join(', '),
+      title: t('vocab.change'),
+      open: () => edit(line),
+      remove: () => save({ vocabulary: (view?.settings.vocabulary ?? s.vocabulary).filter(l => l !== line) }),
+    }
   })
   return [
     grp(t('vocab.addGroup')),
@@ -2342,26 +2257,28 @@ function vocabularyPage(v: AppView): HTMLElement[] {
       el('small', {}, t('vocab.addNote')),
     ),
     grp(t('vocab.words'), items.length || undefined, items.length ? linkBtn(t('vocab.clearAll'), () => save({ vocabulary: [] })) : null),
-    ...(items.length ? items : [aside('info', t('vocab.empty'))]),
+    items.length ? wordChips(items) : aside('info', t('vocab.empty')),
     aside('info', t('vocab.shared')),
   ]
 }
 
-/** The phrases typed lately (dictationlog.ts), each to copy; Kryakl forgets them after 30 days by itself. */
+/** The phrases typed lately (dictationlog.ts), one line each: a tap copies it, a cross forgets it; Kryakl forgets them after 30 days by itself. */
 function recentPage(v: AppView): HTMLElement[] {
   const recent = v.dictation.recent
   return [
     grp(t('dictate.phrases'), recent.length || undefined, recent.length ? linkBtn(t('mistakes.clear'), () => post({ type: 'clearDictation' })) : null),
-    ...(recent.length
-      ? recent.map(e =>
-          el(
-            'div',
-            { class: 'row phrase' },
-            el('div', { class: 'l' }, el('span', { class: 'said', title: e.heard ? `${e.text}\n\n${t('dictate.said', { heard: e.heard })}` : e.text }, e.text), el('small', {}, whenSaid(e.at, Date.now()))),
-            linkBtn(t('common.copy'), () => copyText(e.text)),
-          ),
+    recent.length
+      ? lineList(
+          recent.map(e => ({
+            text: e.text,
+            more: whenSaid(e.at, Date.now()),
+            title: e.heard ? `${e.text}\n\n${t('dictate.said', { heard: e.heard })}` : e.text,
+            open: () => copyText(e.text),
+            remove: () => post({ type: 'forgetPhrase', at: e.at }),
+          })),
+          'time',
         )
-      : [aside('info', t('dictate.recentEmpty'))]),
+      : aside('info', t('dictate.recentEmpty')),
   ]
 }
 
@@ -2428,6 +2345,9 @@ const extensionReload = (v: AppView) => {
   return !!ext && olderVersion(ext.version, FIXED_ID_SINCE)
 }
 
+/** The extension's page that asks for the microphone (its fixed id, chrome.ts EXTENSION_ID). */
+const MIC_PAGE = 'chrome-extension://phokhlmnodckgejnaogjgpmfjnjkefpa/permission.html'
+
 /** The extensions page, at Kryakl's own card when Chrome has told its id. */
 const extensionsPage = (v: AppView) => {
   const id = extensionSeen(v)?.id
@@ -2477,7 +2397,14 @@ function meetPage(v: AppView): HTMLElement[] {
       [pathNote(dir), t('meet.step2Note')],
       el('span', { class: 'kchg' }, linkBtn(t('meet.showFolder'), () => post({ type: 'showInFolder', path: dir })), btn([lucide('copy', 's'), t('meet.copyPath')], () => copyText(dir), 'primary')),
     ),
-    card('mic', t('meet.step3'), [t('meet.step3Note')], caps(MEET_KEY)),
+    // Chrome asks for the microphone only on the extension's own page; it opens once the extension is in.
+    card(
+      'mic',
+      t('meet.stepMic'),
+      [t('meet.stepMicNote')],
+      ext && !extensionReload(v) ? btn(t('meet.openInChrome'), () => openChrome(MIC_PAGE)) : null,
+    ),
+    card('video', t('meet.step3'), [t('meet.step3Note')], caps(MEET_KEY)),
     grp(t('meet.off')),
     card('keyboard', t('meet.keyNothing'), [t('meet.keyNothingNote')], btn(t('meet.openInChrome'), () => openChrome('chrome://extensions/shortcuts'))),
     card('rotate-cw', t('meet.afterUpdate'), [t('meet.afterUpdateNote')], btn(t('meet.openInChrome'), () => openChrome(extensionsPage(v)))),
@@ -2515,21 +2442,23 @@ function speakersCard(v: AppView, open = () => openSub('speakers'), quiet = fals
   return navCard('users', title, note, ok ? `${value} · ${t(onCard ? 'busy.card' : 'busy.processor')}` : value, open, 'speakers', ok)
 }
 
-function transcribePage(v: AppView): HTMLElement[] {
+/** Recordings and meetings: the transcripts and the names on top, a new one, what it needs; the speech model at the foot. */
+function recordingsPage(v: AppView): HTMLElement[] {
   const offer = engineRows(v, 'Transcribe')
   const dataDir = v.speech.health?.dataDir
   return [
+    tiles([
+      { icon: 'file-audio', title: TITLES.transcripts, open: () => go('transcripts'), id: 'transcripts' },
+      { icon: 'whole-word', title: TITLES.vocabulary, count: v.settings.vocabulary.length || '', open: () => go('vocabulary'), id: 'vocabulary' },
+    ]),
     ...(offer.length ? [grp(t('dictate.engine')), ...offer] : []),
     testOffer(v),
     ...(running(v) ? [grp(t('transcribe.new')), ...newRows(v)] : []),
     grp(t('transcribe.setup')),
-    speakersCard(v),
-    vocabularyCard(v),
     meetCard(v),
-    modelCard(v, 'transcripts'),
+    speakersCard(v),
     dataDir ? card('folder', t('transcribe.keptIn'), [pathNote(dataDir)], linkBtn(t('tray.open'), () => post({ type: 'openPath', path: dataDir }))) : null,
-    grp(t('transcribe.library')),
-    navCard('file-text', t('tray.transcripts'), t('transcribe.allNote'), null, () => go('transcripts')),
+    enginePlate([{ title: t('dictate.speechModel'), value: speechValue(v, 'transcripts'), open: () => go('models', 'forTranscribe') }]),
   ].filter((n): n is HTMLElement => n !== null)
 }
 
@@ -2694,20 +2623,18 @@ function programPage(v: AppView): HTMLElement[] {
 /** What Kryakl learned from the person's typing: words it fixes always, words of theirs; each can go, or everything. */
 function learnedPage(v: AppView): HTMLElement[] {
   const { alwaysFix, myWords } = v.learned
-  const name = (code: string) => languageName(code)
-  const item = (list: 'alwaysFix' | 'myWords', w: { word: string; lang: string }, note: string) =>
-    card(list === 'alwaysFix' ? 'wand-sparkles' : 'book-open', w.word, [note], ib('x', t('kb.forget', { word: w.word }), () => post({ type: 'unlearn', list, word: w.word })))
+  const forget = (list: 'alwaysFix' | 'myWords', word: string) => () => post({ type: 'unlearn', list, word })
   return [
     toggleCard('sparkles', t('kb.learn'), v.settings.learn, learn => save({ learn }), t('kb.learnNote')),
     grp(t('kb.fixedAlways'), alwaysFix.length || undefined),
-    ...(alwaysFix.length ? alwaysFix.map(w => item('alwaysFix', w, t('kb.into', { lang: name(w.lang) }))) : [aside('info', t('kb.fixedAlwaysEmpty'))]),
-    grp(t('tray.yourWords'), myWords.length || undefined),
-    ...(myWords.length ? myWords.map(w => item('myWords', w, t('kb.myWordNote', { lang: name(w.lang) }))) : [aside('info', t('kb.myWordsEmpty'))]),
-    grp(t('kb.neverFixed')),
-    navCard('lock', t('kb.kept'), t('kb.keptNote'), String(v.settings.keepWords.length || t('kb.none')), () => go('kept'), 'kept'),
-    alwaysFix.length || myWords.length
-      ? card('trash-2', t('kb.forgetAll'), [t('kb.forgetAllNote')], linkBtn(t('kb.forgetBtn'), () => post({ type: 'forgetLearned' })))
-      : null,
+    alwaysFix.length
+      ? wordChips(alwaysFix.map(w => ({ text: w.word, more: languageName(w.lang), title: t('kb.into', { lang: languageName(w.lang) }), remove: forget('alwaysFix', w.word) })), '→')
+      : aside('info', t('kb.fixedAlwaysEmpty')),
+    grp(t('act.newWords'), myWords.length || undefined),
+    myWords.length
+      ? wordChips(myWords.map(w => ({ text: w.word, more: w.lang.toUpperCase(), title: t('kb.myWordNote', { lang: languageName(w.lang) }), remove: forget('myWords', w.word) })))
+      : aside('info', t('kb.myWordsEmpty')),
+    alwaysFix.length || myWords.length ? card('trash-2', t('kb.forgetAll'), [t('kb.forgetAllNote')], linkBtn(t('kb.forgetBtn'), () => post({ type: 'forgetLearned' }))) : null,
   ].filter((n): n is HTMLElement => n !== null)
 }
 
@@ -2746,7 +2673,7 @@ function askRunningApps(): void {
   }, fault)
 }
 
-function keyboardPage(v: AppView): HTMLElement[] {
+function layoutPage(v: AppView): HTMLElement[] {
   const s = v.settings
   const sample = sampleOf(s.native)
   const [typed = '', fixed = ''] = [sample.typed.split(' ')[0], sample.fixed.split(' ')[0]]
@@ -2754,21 +2681,25 @@ function keyboardPage(v: AppView): HTMLElement[] {
   const learnedCount = v.learned.alwaysFix.length + v.learned.myWords.length
   const onOff = (on: boolean, key: 'switchOn' | 'fixKeyOn', label: string, has: boolean) => (has ? el('span', { class: 'tgwrap' }, toggleKnob(on, next => save({ [key]: next }), label)) : null)
   return [
-    grp(t('talkPage.keys')),
+    tiles([
+      { icon: 'lock', title: TITLES.kept, count: s.keepWords.length || '', open: () => go('kept'), id: 'kept' },
+      { icon: 'brain', title: TITLES.learned, count: learnedCount || '', open: () => go('learned'), id: 'learned' },
+      { icon: 'app-window', title: TITLES.programs, count: s.apps.length || '', open: () => go('programs'), id: 'programs' },
+    ]),
+    grp(t('act.fixGroup')),
+    keyRow('fixKey', t('kb.fixKey'), t('kb.fixKeyNote'), false, undefined, onOff(s.fixKeyOn, 'fixKeyOn', t('kb.theFixKey'), !!s.fixKey)),
+    toggleCard('spell-check', t('kb.autoFix'), s.autoFix, autoFix => save({ autoFix }), t('kb.autoFixNote', { typed, fixed })),
+    s.autoFix ? navCard(null, t('kb.fixing'), t('kb.fixingNote'), null, () => openSub('fixing'), 'fixing') : null,
+    grp(t('act.switchGroup')),
     keyRow(
       'switchKey',
       t('kb.switchKey'),
       s.switchKey && isTap(s.switchKey) ? t('kb.switchTap') : t('kb.switchNote'),
       false,
-      'keyboard',
+      undefined,
       onOff(s.switchOn, 'switchOn', t('kb.switchingByKeys'), !!s.switchKey || ownKeys > 0),
     ),
-    keyRow('fixKey', t('kb.fixKey'), t('kb.fixKeyNote'), false, 'rotate-cw', onOff(s.fixKeyOn, 'fixKeyOn', t('kb.theFixKey'), !!s.fixKey)),
-    grp(t('kb.asYouType')),
-    toggleCard('spell-check', t('kb.autoFix'), s.autoFix, autoFix => save({ autoFix }), t('kb.autoFixNote', { typed, fixed })),
-    s.autoFix ? navCard('type', t('kb.fixing'), t('kb.fixingNote'), null, () => openSub('fixing'), 'fixing') : null,
-    toggleCard('type', t('tray.layoutBadge'), s.layoutBadge, layoutBadge => save({ layoutBadge }), t('kb.badgeNote')),
-    toggleCard('keyboard', t('tray.trayLayout'), s.trayLayout, trayLayout => save({ trayLayout }), t('kb.trayNote')),
+    navCard(null, TITLES.layouts, ownKeys ? t('kb.layoutsOwn', { n: ownKeys }) : t('kb.layoutsNote'), cycleOf(v).map(l => l.short).join(' · '), () => go('layouts'), 'layouts'),
     toggleCard('volume-2', t('kb.chime'), s.switchSound, switchSound => (switchSound && hearSwitch(s.switchSoundName), save({ switchSound })), t('kb.chimeNote')),
     s.switchSound
       ? card(
@@ -2782,12 +2713,10 @@ function keyboardPage(v: AppView): HTMLElement[] {
           ),
         )
       : null,
+    toggleCard('type', t('tray.layoutBadge'), s.layoutBadge, layoutBadge => save({ layoutBadge }), t('kb.badgeNote')),
+    toggleCard('keyboard', t('tray.trayLayout'), s.trayLayout, trayLayout => save({ trayLayout }), t('kb.trayNote')),
+    grp(t('act.general')),
     toggleCard('monitor', t('kb.fullScreen'), s.quietFullScreen, quietFullScreen => save({ quietFullScreen }), t('kb.fullScreenNote')),
-    grp(t('kb.lists')),
-    navCard('keyboard', t('kb.layouts'), ownKeys ? t('kb.layoutsOwn', { n: ownKeys }) : t('kb.layoutsNote'), cycleOf(v).map(l => l.short).join(' · '), () => go('layouts'), 'layouts'),
-    navCard('monitor', t('kb.programs'), t('kb.programsNote'), s.apps.length ? t('kb.programCount', { n: s.apps.length }) : t('kb.none'), () => go('programs'), 'programs'),
-    navCard('sparkles', t('kb.learned'), s.learn ? t('kb.learnedNote') : t('kb.learnedOff'), learnedCount ? t('backup.words', { n: learnedCount }) : t('kb.none'), () => go('learned'), 'learned'),
-    navCard('lock', t('kb.kept'), t('kb.keptNever'), s.keepWords.length ? t('backup.words', { n: s.keepWords.length }) : t('kb.none'), () => go('kept'), 'kept'),
     v.rivals.length ? warn(t('kb.rivals', { n: v.rivals.length, names: v.rivals.join(` ${t('common.and')} `) })) : null,
     v.elevatedApp ? warn(t('kb.elevated', { app: v.elevatedApp })) : null,
     v.keyboardTrouble ? warn(t('kb.trouble', { trouble: v.keyboardTrouble })) : null,
@@ -2800,54 +2729,25 @@ function keyboardPage(v: AppView): HTMLElement[] {
 
 const matches = (w: SavedWord, q: string) => `${w.word} ${w.base} ${w.sentence} ${w.senses.map(s => s[1]).join(' ')}`.toLowerCase().includes(q)
 
-function dateOf(iso: string): string {
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return ''
-  const now = new Date()
-  if (d.toDateString() === now.toDateString()) return t('words.today')
-  return d.toLocaleDateString(uiLanguage() === 'en' ? 'en-US' : uiLanguage(), d.getFullYear() === now.getFullYear() ? { month: 'short', day: 'numeric' } : { month: 'short', day: 'numeric', year: 'numeric' })
-}
-
-/** The sentence, with the word as it was met in it marked. */
-function sentenceOf(w: SavedWord): HTMLElement {
-  const at = w.word ? w.sentence.toLowerCase().indexOf(w.word.toLowerCase()) : -1
-  if (at < 0) return el('div', { class: 'ws' }, w.sentence)
-  return el('div', { class: 'ws' }, w.sentence.slice(0, at), el('mark', {}, w.sentence.slice(at, at + w.word.length)), w.sentence.slice(at + w.word.length))
-}
-
-function wordRow(w: SavedWord): HTMLElement {
-  const senses = w.senses.map(([, s]) => s).join('; ')
-  const full = w.senses.map(([pos, s]) => (pos ? `${pos}: ${s}` : s)).join('\n')
-  return el(
-    'li',
-    { class: 'wi' },
-    el(
-      'div',
-      { class: 'wh' },
-      el('b', {}, w.base),
-      w.word.toLowerCase() !== w.base.toLowerCase() ? el('span', { class: 'form' }, t('word.from', { word: w.word })) : null,
-      el('span', { class: 'tr', title: full }, senses),
-    ),
-    w.sentence ? sentenceOf(w) : null,
-    el(
-      'div',
-      { class: 'wr' },
-      el('button', { class: 'star', title: t('word.remove'), 'aria-label': t('words.removeAria', { word: w.base }), onclick: () => post({ type: 'removeWord', id: w.id }) }, icon('star-full')),
-      el('span', { class: 'd' }, dateOf(w.addedAt)),
-    ),
-  )
+/** A word as a chip: its dictionary form and first meaning; every meaning and the sentence it was met in under the pointer. */
+function wordChip(w: SavedWord) {
+  const senses = w.senses.map(([pos, s]) => (pos ? `${pos}: ${s}` : s)).join('\n')
+  return {
+    text: w.base,
+    more: w.senses[0]?.[1] ?? '',
+    title: [w.word.toLowerCase() !== w.base.toLowerCase() ? t('word.from', { word: w.word }) : '', senses, w.sentence].filter(Boolean).join('\n\n'),
+    remove: () => post({ type: 'removeWord', id: w.id }),
+  }
 }
 
 function wordsPage(v: AppView): HTMLElement[] {
-  const list = el('ul', { class: 'wl' })
+  const list = el('div', {})
   const fill = () => {
     // The newest words: this list may outlive the message it was drawn from.
     const words = view?.words ?? v.words
     const q = search.trim().toLowerCase()
     const shown = q ? words.filter(w => matches(w, q)) : words
-    list.replaceChildren(
-      ...(shown.length ? shown.map(wordRow) : [el('li', { class: 'empty' }, words.length ? t('words.noSuch') : t('words.empty'))]),
-    )
+    list.replaceChildren(shown.length ? wordChips(shown.map(wordChip)) : aside('info', words.length ? t('words.noSuch') : t('words.empty')))
   }
   fill()
   const none = v.words.length === 0
@@ -2873,6 +2773,7 @@ function wordsPage(v: AppView): HTMLElement[] {
       el('button', { class: 'btn', disabled: none, onclick: () => post({ type: 'copyWords' }) }, icon('copy'), t('common.copy')),
     ),
     list,
+    aside('star', t('words.hint')),
   ]
 }
 
@@ -2997,7 +2898,7 @@ function removable(v: AppView, p: StoragePart): boolean {
 
 /** An action a part serves (storage.ts names them in English, as data), as the page writes it. */
 const USER_NAMES: Record<string, string> = { Translate: t('storage.userTranslate'), Listen: t('storage.userListen'), Check: t('storage.userCheck'), Dictate: t('storage.userDictate'), Transcribe: t('storage.userTranscribe') }
-const usersText = (names: readonly string[]) => names.map(n => USER_NAMES[n] ?? n).join(` ${t('common.and')} `)
+const usersText = (names: readonly string[]) => [...new Set(names.map(n => USER_NAMES[n] ?? n))].join(` ${t('common.and')} `)
 
 /** A removal tapped once on a part something uses: that part's key, while its line asks. */
 let asking = ''
@@ -3096,7 +2997,7 @@ function languagesPage(v: AppView): HTMLElement[] {
       'plus',
       t('settings.addLanguage'),
       [t('settings.addLanguageNote')],
-      select<string>('', [['', t('settings.pickLanguage')], ...rest.map((l): [string, string] => [l.code, `${languageName(l.code)} · ${l.native}`])], code => code && save({ languages: [...mine(), code] })),
+      select<string>('', [['', t('settings.pickLanguage')], ...rest.map((l): [string, string] => [l.code, twoNames(languageName(l.code), l.native)])], code => code && save({ languages: [...mine(), code] })),
     ),
     grp(t('settings.languagesGroup'), used.length),
     card('globe', languageName(used[0] ?? ''), [t('settings.yourLangNote')], null),
@@ -3132,7 +3033,12 @@ function voiceValue(v: AppView): string {
 function settingsPage(v: AppView): HTMLElement[] {
   const s = v.settings
   return [
-    grp(t('settings.language')),
+    grp(t('keys.group')),
+    keyRow('menuKey', t('menu.keyTitle'), t('menu.keyNote')),
+    keyRow('pauseKey', t('settings.pauseKey'), t('settings.pauseKeyNote'), !v.keysOk.pause),
+    keyRow('windowKey', t('settings.windowKey'), t('settings.windowKeyNote'), !v.keysOk.window),
+    card('rotate-ccw', t('settings.resetKeys'), [t('settings.resetKeysNote')], linkBtn(t('main.resetKeys'), () => post({ type: 'resetKeys' }))),
+    grp(t('act.general')),
     uiLanguageCard(s.uiLanguage, uiLanguage => save({ uiLanguage })),
     card(
       'languages',
@@ -3140,12 +3046,11 @@ function settingsPage(v: AppView): HTMLElement[] {
       [t('settings.yourLanguageNote')],
       select(
         s.native,
-        v.languages.map(l => [l.name, `${l.native} · ${languageName(l.name)}`]),
+        v.languages.map(l => [l.name, twoNames(l.native, languageName(l.name))]),
         native => save({ native }),
       ),
     ),
     languagesCard(v),
-    grp(t('app.name')),
     card(
       'monitor',
       t('settings.theme'),
@@ -3162,9 +3067,6 @@ function settingsPage(v: AppView): HTMLElement[] {
     ),
     toggleCard('power', t('settings.startWithWindows'), s.startWithWindows, startWithWindows => save({ startWithWindows })),
     toggleCard('pause', t('settings.pause'), s.paused, paused => save({ paused }), t('settings.pauseNote')),
-    keyRow('pauseKey', t('settings.pauseKey'), t('settings.pauseKeyNote'), !v.keysOk.pause, 'pause'),
-    keyRow('windowKey', t('settings.windowKey'), t('settings.windowKeyNote'), !v.keysOk.window, 'house'),
-    card('rotate-ccw', t('settings.resetKeys'), [t('settings.resetKeysNote')], linkBtn(t('main.resetKeys'), () => post({ type: 'resetKeys' }))),
     // New versions are downloaded by hand from GitHub (the owner, 2026-10-30): nothing installs itself.
     card(
       'rotate-cw',
@@ -3186,40 +3088,50 @@ function settingsPage(v: AppView): HTMLElement[] {
 
 // ---------------------------------------------------------------- about
 
+/** The author's places, by their own names (main.ts LINKS has each). */
+const AUTHOR_LINKS: [string, string][] = [
+  ['ikstro.com', 'https://ikstro.com'],
+  ['GitHub', 'https://github.com/ikstro'],
+  ['LinkedIn', 'https://linkedin.com/in/ikstro'],
+  ['Telegram', 'https://t.me/ikstrovert'],
+  ['Behance', 'https://behance.net/ikstro'],
+]
+const AUTHOR_MAIL = 'hello@ikstro.com'
+/** What Kryakl is made of, by the names they go by in any language. */
+const CREDITS =
+  'Firefox Translations (Mozilla) · Gemma 4 (Google) · llama.cpp · Whisper (OpenAI) · Parakeet (NVIDIA) · pyannote · Kokoro · eSpeak NG · Windows OCR · WikDict · FrequencyWords · Inter, JetBrains Mono · Electron · Lucide · VS Code icons'
+
+/** Links as quiet chips, each opened outside Kryakl. */
+const linkChips = (links: [string, string][]) =>
+  el(
+    'div',
+    { class: 'links' },
+    ...links.map(([text, url]) => el('a', { class: 'lchip', href: url, onclick: (event: Event) => (event.preventDefault(), post({ type: 'openLink', url })) }, text, lucide('arrow-up-right'))),
+  )
+
 function aboutPage(v: AppView): HTMLElement[] {
-  const fact = (term: string, ...detail: (HTMLElement | string)[]) => [el('dt', {}, term), el('dd', {}, ...detail)]
   return [
-    el(
-      'div',
-      { class: 'about' },
-      el('div', { class: 'mk' }, tile(88), logo()),
-      el('p', { class: 'tag' }, 'Talk to the duck.'),
-      // A run from source says when it was built, so it is never taken for the last release.
-      el('p', { class: 'ver' }, v.dev ? t('about.versionDev', { version: versionText(v.version), build: v.build }) : t('about.version', { version: versionText(v.version) })),
-      isBeta(v.version) ? el('p', { class: 'ver' }, t('about.betaNote')) : null,
-      el(
-        'dl',
-        { class: 'facts' },
-        ...fact(t('about.madeBy'), t('about.author'), el('br'), link('https://ikstro.com', 'ikstro.com')),
-        ...fact(
-          t('about.runsOffline'),
-          t('about.credits'),
-          el('span', { class: 'q' }, t('about.neverSent')),
-        ),
-        ...fact(t('about.madeWith'), t('about.madeWithList')),
-        ...fact(t('about.online'), t('about.onlineList', { size: v.natural.size })),
-        ...fact(
-          t('about.links'),
-          link(RELEASES, t('about.newVersions')),
-          ' · ',
-          link('https://github.com/ikstro/kryakl', t('about.source')),
-          ' · ',
-          link('https://github.com/ikstro/kryakl/blob/main/NOTICE', t('about.licenses')),
-          ' · ',
-          linkBtn(t('report.title'), () => go('report')),
-        ),
-      ),
-    ),
+    el('div', { class: 'hero' }, tile(48), el('div', { class: 'ht' }, logo(), el('small', {}, 'Talk to the duck'))),
+    grp(t('about.story')),
+    el('p', { class: 'para' }, t('about.storyText')),
+    grp(t('about.authorGroup')),
+    row('Yevhen Peshynskyi', [t('about.role')]),
+    el('p', { class: 'para' }, t('about.bio')),
+    linkChips(AUTHOR_LINKS),
+    row(t('about.mail'), [], el('span', { class: 'kchg' }, el('span', { class: 'mail' }, AUTHOR_MAIL), btn(t('about.write'), () => post({ type: 'openLink', url: `mailto:${AUTHOR_MAIL}` })))),
+    grp(t('app.name')),
+    // A run from source says when it was built, so it is never taken for the last release.
+    row(t('about.versionTitle'), [v.dev ? t('settings.built', { build: v.build }) : null], el('span', { class: 'v' }, v.dev ? `${versionText(v.version)} dev` : versionText(v.version))),
+    row(t('about.license'), [], el('span', { class: 'v' }, t('about.licenseValue'))),
+    row(t('about.offline'), [t('about.offlineNote'), `${t('about.online')} ${t('about.onlineList', { size: v.natural.size })}`]),
+    row(t('about.bug'), [isBeta(v.version) ? t('about.bugNote') : null], btn(t('about.report'), () => go('report'))),
+    linkChips([
+      [t('about.newVersions'), RELEASES],
+      [t('about.source'), 'https://github.com/ikstro/kryakl'],
+      [t('about.licenses'), 'https://github.com/ikstro/kryakl/blob/main/NOTICE'],
+    ]),
+    grp(t('about.thanks')),
+    el('p', { class: 'para credits' }, CREDITS),
   ]
 }
 
@@ -3275,12 +3187,15 @@ function restartRow(v: AppView): HTMLElement {
 
 // ---------------------------------------------------------------- messages
 
+/** The old names of the places, which a second start or an older page may still send. */
+const OLD_TABS: Partial<Record<AppTab, Page>> = { talk: 'english', check: 'english', listen: 'translate', screen: 'translate', dictate: 'voice', transcribe: 'recordings', keyboard: 'layout' }
+
 /** A place asked for by the tray or a second start; Home is a fresh opening, with no way back. */
 function showTab(tab: AppTab): void {
   // The talk window's model: the choice of the model Check my English and the duck use.
   if (tab === 'checkModel') return go('models', 'forCheck')
   if (tab !== 'home' && tab !== 'howto') {
-    go(tab)
+    go(OLD_TABS[tab] ?? (tab as Page))
     // From the tray's Your words: the word is typed at once.
     if (tab === 'vocabulary' || tab === 'kept') pBody.querySelector<HTMLInputElement>('input[data-live]')?.focus()
     return
@@ -3318,6 +3233,7 @@ window.addEventListener('message', (event: MessageEvent<ToView>) => {
     return
   }
   if (m.type === 'appWindow') return windowState(m.maximized)
+  if (m.type === 'keyEvent') return keyTarget?.(m.code, m.down, m.at)
   if (m.type === 'reported') {
     reported = { file: m.file, error: m.error }
     if (open?.name === 'report') renderBody()
@@ -3389,7 +3305,7 @@ setTranscriptHooks({
   view: () => view,
   shown: () => open?.name === 'transcripts',
   show: () => go('transcripts'),
-  setup: () => go('transcribe', 'speakers'),
+  setup: () => go('recordings', 'speakers'),
 })
 
 post({ type: 'appReady' })

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { HotkeyRecorder, hotkeyLabel, isAccelerator, isExtendedKey, parseHotkey } from './hotkey'
+import { codeOfVk, COPY_TWICE, HotkeyRecorder, hotkeyLabel, isAccelerator, isCopyTwice, isExtendedKey, parseHotkey } from './hotkey'
 
 /** Events in order: "+Code" down, "-Code" up, "@ms" time passes, "mouse4" a side button; what they record. */
 function record(...events: string[]): string[] {
@@ -14,7 +14,7 @@ function record(...events: string[]): string[] {
     }
     now += 50
     const r = e.startsWith('mouse') ? recorder.mouse(Number(e.slice(5))) : e.startsWith('+') ? recorder.keydown(e.slice(1), now) : recorder.keyup(e.slice(1), now)
-    if (r) out.push(r.more ? `${r.hotkey}?` : r.hotkey)
+    if (r) out.push(r.partial ? `(${r.hotkey})` : r.more ? `${r.hotkey}?` : r.hotkey)
   }
   return out
 }
@@ -45,6 +45,33 @@ describe('recording keys', () => {
     expect(record('+KeyQ', '-KeyQ')).toEqual([])
     expect(record('+Space')).toEqual([])
   })
+
+  test('Esc with a modifier is a key; alone it is nothing (the field gives up on it)', () => {
+    expect(record('+ControlLeft', '+Escape')).toEqual(['Control+Escape'])
+    expect(record('+ShiftLeft', '+AltLeft', '+Escape')).toEqual(['Alt+Shift+Escape'])
+    expect(record('+Escape')).toEqual([])
+    const recorder = new HotkeyRecorder()
+    expect(recorder.holding()).toBe(false)
+    recorder.keydown('ControlLeft')
+    expect(recorder.holding()).toBe(true)
+  })
+
+  test('Shift+Caps Lock', () => {
+    expect(record('+ShiftLeft', '+CapsLock')).toEqual(['Shift+CapsLock'])
+  })
+
+  test('Ctrl+C once is copying, no key; twice within a moment it is Ctrl+C twice', () => {
+    expect(record('+ControlLeft', '+KeyC', '-KeyC', '-ControlLeft')).toEqual(['(Control+C)'])
+    expect(record('+ControlLeft', '+KeyC', '-KeyC', '+KeyC')).toEqual(['(Control+C)', COPY_TWICE])
+    // Ctrl let go between the two presses: still twice.
+    expect(record('+ControlLeft', '+KeyC', '-KeyC', '-ControlLeft', '+ControlLeft', '+KeyC')).toEqual(['(Control+C)', COPY_TWICE])
+    // Too slow: two single copies.
+    expect(record('+ControlLeft', '+KeyC', '-KeyC', '@500', '+KeyC')).toEqual(['(Control+C)', '(Control+C)'])
+    // Another key between them.
+    expect(record('+ControlLeft', '+KeyC', '+KeyV', '+KeyC')).toEqual(['(Control+C)', 'Control+V', '(Control+C)'])
+    // Ctrl+Shift+C is a key of its own.
+    expect(record('+ControlLeft', '+ShiftLeft', '+KeyC')).toEqual(['Control+Shift+C'])
+  })
 })
 
 describe('reading keys back', () => {
@@ -54,6 +81,10 @@ describe('reading keys back', () => {
     expect(parseHotkey('Shift+Control')).toEqual({ kind: 'chord', mods: ['Control', 'Shift'] })
     expect(parseHotkey('Pause')).toEqual({ kind: 'key', mods: [], vk: 0x13 })
     expect(parseHotkey('Control+MouseBack')).toEqual({ kind: 'mouse', mods: ['Control'], button: 1 })
+    expect(parseHotkey('Control+Escape')).toEqual({ kind: 'key', mods: ['Control'], vk: 0x1b })
+    expect(parseHotkey('Shift+CapsLock')).toEqual({ kind: 'key', mods: ['Shift'], vk: 0x14 })
+    expect(parseHotkey(COPY_TWICE)).toEqual({ kind: 'copyTwice' })
+    expect(parseHotkey('Escape')).toBeUndefined()
     expect(parseHotkey('Q')).toBeUndefined()
     expect(parseHotkey('')).toBeUndefined()
   })
@@ -65,6 +96,13 @@ describe('reading keys back', () => {
     expect(isAccelerator('Pause')).toBe(false)
     expect(isAccelerator('Control+Pause')).toBe(false)
     expect(isAccelerator('MouseForward')).toBe(false)
+    // Windows takes Ctrl+Esc for Start: the hook holds Esc's keys.
+    expect(isAccelerator('Control+Escape')).toBe(false)
+    expect(isAccelerator('Shift+CapsLock')).toBe(false)
+    // Ctrl+C twice is the clipboard's.
+    expect(isAccelerator(COPY_TWICE)).toBe(false)
+    expect(isCopyTwice(COPY_TWICE)).toBe(true)
+    expect(isCopyTwice('Control+C')).toBe(false)
   })
 
   test('shown the Windows way', () => {
@@ -74,6 +112,24 @@ describe('reading keys back', () => {
     expect(hotkeyLabel('Control+Shift')).toBe('Ctrl+Shift')
     expect(hotkeyLabel('CapsLock')).toBe('Caps Lock')
     expect(hotkeyLabel('Control+MouseBack')).toBe('Ctrl+Mouse Back')
+    expect(hotkeyLabel('Control+Escape')).toBe('Ctrl+Esc')
+    expect(hotkeyLabel(COPY_TWICE)).toBe('Ctrl+C twice')
+  })
+
+  test("the hook's keys named as a page names them", () => {
+    expect(codeOfVk(0x43)).toBe('KeyC')
+    expect(codeOfVk(0x37)).toBe('Digit7')
+    expect(codeOfVk(0x7b)).toBe('F12')
+    expect(codeOfVk(0x1b)).toBe('Escape')
+    expect(codeOfVk(0x14)).toBe('CapsLock')
+    expect(codeOfVk(0xa2)).toBe('ControlLeft')
+    expect(codeOfVk(0xa5)).toBe('AltRight')
+    expect(codeOfVk(0x5b)).toBe('MetaLeft')
+    expect(codeOfVk(0x26)).toBe('ArrowUp')
+    expect(codeOfVk(0x20)).toBe('Space')
+    expect(codeOfVk(0xbf)).toBe('Slash')
+    expect(codeOfVk(0x13)).toBe('Pause')
+    expect(codeOfVk(0x5d)).toBeUndefined()
   })
 })
 

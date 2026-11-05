@@ -64,6 +64,13 @@ export class TranslationLog {
     return added.filter(e => this.entries.includes(e)).length
   }
 
+  /** One translation forgotten, by when it was kept. */
+  remove(at: string): void {
+    const n = this.entries.length
+    this.entries = this.entries.filter(e => e.at !== at)
+    if (this.entries.length !== n) this.save()
+  }
+
   clear(): void {
     if (this.entries.length === 0) return
     this.entries = []

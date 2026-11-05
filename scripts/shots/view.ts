@@ -2,8 +2,9 @@
 // (a real plan from planSpeech, an i9 with an RTX 2080 SUPER, the engine running).
 import type { DeviceProfile } from '../../src/hardware'
 import { LANGUAGES } from '../../src/languages'
-import type { AppView, TalkSummary, TalksView, TalkTurn, TalkWindowView, TrayView } from '../../src/protocol'
-import { isUiLanguage } from '../../src/i18n'
+import type { AppView, MenuView, TalkSummary, TalksView, TalkTurn, TalkWindowView, TrayView } from '../../src/protocol'
+import { isUiLanguage, setUiLanguage, t, type UiLanguage } from '../../src/i18n'
+import { menuGroups } from '../../src/menu'
 import { DEFAULTS } from '../../src/settings'
 import { planSpeech } from '../../src/speechplan'
 import { wordDiff } from '../../src/worddiff'
@@ -241,6 +242,13 @@ function full(over: Partial<AppView['settings']>, plan: AppView['speech']['plan'
   }
 }
 
+/** The menu on one key in `lang`: the item lit and the one just picked, with or without the speech engine. */
+export function menuView(lang: UiLanguage, o: { lit?: number; fired?: number; speech?: boolean } = {}): MenuView {
+  setUiLanguage(lang)
+  const groups = menuGroups(lang, o.speech ?? true).map(group => group.map(item => ({ letter: item.letter, label: t(`menu.${item.id}`) })))
+  return { groups, lit: o.lit ?? 0, fired: o.fired ?? -1 }
+}
+
 export function trayView(over: Partial<TrayView> = {}): TrayView {
   return {
     keys: { listenCopied: 'Control+C*2', typeToTranslate: '', checkEnglish: 'RightControl*2', snipListen: 'Control+Alt+S', snipTranslate: 'Control+Alt+T', switch: 'LeftControl', talk: '' },
@@ -248,7 +256,6 @@ export function trayView(over: Partial<TrayView> = {}): TrayView {
     switchOn: true,
     layoutBadge: true,
     trayLayout: false,
-    doubleCopy: true,
     paused: false,
     keep: { on: true, word: 'ghbdtn', fixed: 'привет' },
     speech: { installed: true, recording: false, noteKey: 'Control+Alt+N' },

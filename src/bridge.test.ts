@@ -14,7 +14,7 @@ describe('which page sent a message', () => {
 })
 
 describe('a page that shows text from outside opens, removes and exports nothing', () => {
-  const dangerous = ['openPath', 'showInFolder', 'openLink', 'installSpeech', 'removeStored', 'cleanUp', 'useRecommended', 'moveToKryakl', 'importBackup', 'exportBackup', 'resetSettings', 'restartSpeech', 'reportProblem', 'openLogs']
+  const dangerous = ['openPath', 'showInFolder', 'openLink', 'installSpeech', 'removeStored', 'cleanUp', 'useRecommended', 'moveToKryakl', 'importBackup', 'exportBackup', 'resetSettings', 'restartSpeech', 'reportProblem', 'openLogs', 'recordKeys']
   test.each(['card', 'tray', 'dictation', 'talk'] as const)('the %s', page => {
     for (const type of dangerous) expect(messageAllowed(page, type), type).toBe(false)
   })
@@ -44,6 +44,22 @@ describe('a page that shows text from outside opens, removes and exports nothing
   })
 })
 
+describe('the menu on one key', () => {
+  test('is a page of its own, sends its own messages and no other, and no other page sends them', () => {
+    expect(pageOf('file:///C:/app/media/menu.html?lang=ru')).toBe('menu')
+    for (const type of ['menuReady', 'menuHeight', 'menuHover', 'menuPick']) {
+      expect(messageAllowed('menu', type), type).toBe(true)
+      for (const page of ['app', 'card', 'tray', 'dictation', 'talk'] as const) expect(messageAllowed(page, type), `${page} ${type}`).toBe(false)
+    }
+    for (const type of ['saveSettings', 'copyText', 'speak', 'tray', 'lookup', 'openLink']) expect(messageAllowed('menu', type), type).toBe(false)
+  })
+
+  test('changes no setting and calls nothing', () => {
+    expect(patchAllowed('menu', { paused: true })).toBe(false)
+    expect(callAllowed('menu', { call: 'speech', method: 'POST', route: '/dictate' })).toBe(false)
+  })
+})
+
 describe('which settings a page may change', () => {
   test('the card its reading mode, the tray panel its switches, the app window any', () => {
     expect(patchAllowed('card', { oneAtATime: true })).toBe(true)
@@ -55,6 +71,9 @@ describe('which settings a page may change', () => {
     expect(patchAllowed('card', { oneAtATime: true, translationLevel: 'most', model: 'most' })).toBe(false)
     expect(patchAllowed('tray', { keepWords: [] })).toBe(false)
     expect(patchAllowed('card', { doubleCopy: false })).toBe(false)
+    // Ctrl+C twice is a key now, set in the window only.
+    expect(patchAllowed('tray', { doubleCopy: false })).toBe(false)
+    expect(patchAllowed('tray', { selectKey: 'Control+C*2' })).toBe(false)
     for (const page of ['dictation', 'other'] as const) expect(patchAllowed(page, { paused: true })).toBe(false)
     expect(patchAllowed('tray', undefined)).toBe(false)
   })

@@ -42,7 +42,16 @@ test('2Talker\'s folder moves over to Kryakl\'s, item by item, never over what i
   expect(adoptOldFolders(appData, userDir)).toEqual([])
 })
 
-test('Altype\'s folder moves over to Kryakl\'s first: every file of the app\'s, the log under its new name; Electron\'s caches stay', () => {
+test('Krya\'s talks and the engine\'s key move over with the rest', () => {
+  const appData = temp('kryakl-appdata-')
+  const userDir = path.join(appData, 'Kryakl')
+  put(path.join(appData, 'Krya/talks.json'), '{"past":[]}')
+  put(path.join(appData, 'Krya/speech-token'), 'key')
+  expect(adoptOldFolders(appData, userDir).sort()).toEqual(['Krya/speech-token', 'Krya/talks.json'])
+  expect(fs.readFileSync(path.join(userDir, 'talks.json'), 'utf8')).toBe('{"past":[]}')
+})
+
+test('Altype\'s folder moves over to Kryakl\'s first:every file of the app\'s, the log under its new name; Electron\'s caches stay', () => {
   const appData = temp('kryakl-appdata-')
   const at = (file: string) => path.join(appData, file)
   put(at('Altype/settings.json'), '{"native":"Ukrainian"}')

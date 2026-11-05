@@ -2,6 +2,7 @@
 // (%APPDATA%\Kryakl). The learned language is English: the natural voice and
 // the word dictionaries are English ones.
 
+import { COPY_TWICE } from './hotkey'
 import { isUiLanguage, type UiLanguage } from './i18n'
 import { findLanguage, LANGUAGES } from './languages'
 import type { WordHintMode } from './protocol'
@@ -72,9 +73,12 @@ export type Settings = {
   /** The card's width, and how tall it may grow (0: automatic), as last set by dragging its edge. */
   cardWidth: number
   cardHeight: number
-  /** Ctrl+C pressed twice: listen to the copied text. */
-  doubleCopy: boolean
-  /** Keys (hotkey.ts; empty for none): listen to the selection (Kryakl copies it), or to a piece of the screen; */
+  /** One key for every action: it opens Kryakl's menu by the text cursor, a letter picks (menu.ts); empty for none. */
+  menuKey: string
+  /**
+   * Keys (hotkey.ts; empty for none): listen to the selection (Kryakl copies it), or to a piece of the screen;
+   * Ctrl+C twice ("Control+C*2") may be the key of one action on the selection: select, translate, inPlace or check.
+   */
   selectKey: string
   snipKey: string
   /** translate the selection, or a piece of the screen. */
@@ -192,6 +196,8 @@ export type Settings = {
   introSeen: boolean
   /** Kryakl paused: all its keys and reactions off (Ctrl+C twice, the keyboard helper, dictation) until turned back on. */
   paused: boolean
+  /** The settings file's keys are of this kind (`KEYS_VERSION`); an older file held Ctrl+C twice as a switch, `doubleCopy`. */
+  keysVersion: number
   /**
    * The first-run setup (the window's wizard: language, this computer, what to
    * download) was finished or skipped. A settings file from before the wizard
@@ -213,7 +219,7 @@ export const DEFAULTS: Settings = {
   uiLanguage: 'en',
   cardWidth: 440,
   cardHeight: 0,
-  doubleCopy: true,
+  menuKey: '',
   selectKey: '',
   snipKey: 'Control+Alt+S',
   translateKey: '',
@@ -271,7 +277,26 @@ export const DEFAULTS: Settings = {
   shareOfferSeen: [],
   introSeen: false,
   paused: false,
+  keysVersion: 2,
   setupDone: true,
+}
+
+/** Since 0.16 Ctrl+C twice is a key of an action (`COPY_TWICE`), no longer the switch `doubleCopy`. */
+export const KEYS_VERSION = 2
+
+/** The actions on the selected text, the only ones Ctrl+C twice may be the key of (it copies the selection itself). */
+export const COPY_TWICE_KEYS = ['selectKey', 'translateKey', 'inPlaceKey', 'checkKey'] as const
+
+/**
+ * A settings file (or a backup's) from before Ctrl+C twice was a key held it as
+ * a switch, on unless turned off (absent: on, the default then): it becomes
+ * the key of "Translate and read aloud" (`selectKey`) when that has none; one
+ * that has a key keeps it, and Ctrl+C twice is off. A fresh install has none.
+ */
+function movedSelectKey(raw: unknown, r: Record<string, unknown>, selectKey: string): string {
+  if (!raw || typeof raw !== 'object' || r.keysVersion === KEYS_VERSION) return selectKey
+  if (selectKey || r.doubleCopy === false || Object.values(r).includes(COPY_TWICE)) return selectKey
+  return COPY_TWICE
 }
 
 export const VOCABULARY = { lines: 200, chars: 120 }
@@ -366,7 +391,7 @@ function levelAndModel(level: unknown, model: unknown): Pick<Settings, 'translat
 }
 
 export function normalize(raw: unknown, native = DEFAULTS.native): Settings {
-  const r = (raw && typeof raw === 'object' ? raw : {}) as Partial<Record<keyof Settings | 'fixApps', unknown>>
+  const r = (raw && typeof raw === 'object' ? raw : {}) as Partial<Record<keyof Settings | 'fixApps' | 'doubleCopy', unknown>>
   const flag = (v: unknown, d: boolean) => (typeof v === 'boolean' ? v : d)
   const key = (v: unknown, d: string) => (typeof v === 'string' ? v.trim() : d)
   const within = (v: unknown, range: { min: number; max: number }, d: number) =>
@@ -390,8 +415,8 @@ export function normalize(raw: unknown, native = DEFAULTS.native): Settings {
     uiLanguage: isUiLanguage(r.uiLanguage) ? r.uiLanguage : DEFAULTS.uiLanguage,
     cardWidth: within(r.cardWidth, CARD_WIDTH, DEFAULTS.cardWidth),
     cardHeight: r.cardHeight === 0 ? 0 : within(r.cardHeight, CARD_HEIGHT, DEFAULTS.cardHeight),
-    doubleCopy: flag(r.doubleCopy, DEFAULTS.doubleCopy),
-    selectKey: key(r.selectKey, DEFAULTS.selectKey),
+    menuKey: key(r.menuKey, DEFAULTS.menuKey),
+    selectKey: movedSelectKey(raw, r, key(r.selectKey, DEFAULTS.selectKey)),
     snipKey: key(r.snipKey, DEFAULTS.snipKey),
     translateKey: key(r.translateKey, DEFAULTS.translateKey),
     textKey: key(r.textKey, DEFAULTS.textKey),
@@ -449,5 +474,6 @@ export function normalize(raw: unknown, native = DEFAULTS.native): Settings {
     shareOfferSeen: strings(r.shareOfferSeen).filter((m): m is LlmModel => m === 'accurate' || m === 'most'),
     introSeen: flag(r.introSeen, DEFAULTS.introSeen),
     paused: flag(r.paused, DEFAULTS.paused),
+    keysVersion: KEYS_VERSION,
   }
 }

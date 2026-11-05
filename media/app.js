@@ -91,6 +91,7 @@
     "common.copy": "Copy",
     "common.copied": "Copied",
     "common.notNow": "Not now",
+    "common.beta": "beta",
     "common.retry": "Retry",
     "common.tryAgain": "Try again",
     "common.openSettings": "Open settings",
@@ -115,7 +116,7 @@
     "main.resetDetail": "Keys, switches and lists go back to how they came. Your language, words, transcripts and what Kryakl learned from your typing stay.",
     "main.reset": "Reset",
     "main.resetKeysAsk": "Reset all keys?",
-    "main.resetKeysDetail": "Every shortcut goes back to how it came: Ctrl+Alt+S, Ctrl+Alt+T, Ctrl+Alt+D, Ctrl+Alt+N and Ctrl+C twice; the others are cleared. Nothing else changes.",
+    "main.resetKeysDetail": "Every shortcut goes back to how it came: Ctrl+Alt+S, Ctrl+Alt+T, Ctrl+Alt+D and Ctrl+Alt+N; the others are cleared, Ctrl+C twice too. Nothing else changes.",
     "main.resetKeys": "Reset keys",
     "main.saveTranscript": "Save the transcript",
     "main.notTranslated": "Could not translate: {why}",
@@ -144,30 +145,29 @@
     "tray.openKryakl": "Open Kryakl",
     "tray.built": "Built {build}",
     "tray.actions": "Actions",
-    "tray.listenCopied": "Listen to the copied text",
-    "tray.translateCopied": "Translate the copied text",
-    "tray.typeToTranslate": "Type to translate\u2026",
-    "tray.checkEnglish": "Check my English\u2026",
-    "tray.listenScreen": "Listen to a screen snip",
-    "tray.translateScreen": "Translate a screen snip",
+    "tray.listenCopied": "Translate and read aloud",
+    "tray.translateCopied": "Translate",
+    "tray.typeToTranslate": "Type a text to translate\u2026",
+    "tray.checkEnglish": "Type a text to check\u2026",
+    "tray.listenScreen": "Translate and read from the screen",
+    "tray.translateScreen": "Translate from the screen",
     "tray.saveNote": "Save the note",
-    "tray.newNote": "New note",
-    "tray.transcripts": "Transcripts",
+    "tray.newNote": "Voice note",
+    "tray.transcripts": "All transcripts",
     "tray.quick": "Quick settings",
     "tray.autoFix": "Fix the layout as I type",
     "tray.switchWith": "Switch layouts with {key}",
     "tray.layoutBadge": "Show the layout by the cursor",
     "tray.trayLayout": "Show the layout in the tray",
-    "tray.doubleCopy": "Ctrl+C twice listens",
     "tray.yourWords": "Your words",
     "tray.keepWord": "Keep a word as typed\u2026",
     "tray.keepWordTitle": "Never fix this word by itself (Kept as typed)",
     "tray.keepPlaceholder": "a word, as you type it",
     "tray.keepAria": "Keep a word as typed",
     "tray.kept": "Kept: {word}",
-    "tray.vocabulary": "Add a word to spell\u2026",
-    "tray.keptList": "Words kept as typed",
-    "tray.pausedTitle": "Keys and Ctrl+C twice are off",
+    "tray.vocabulary": "Add a name or term\u2026",
+    "tray.keptList": "Kept as typed",
+    "tray.pausedTitle": "Keys are off",
     "tray.pauseTitle": "Every key and reaction off until resumed",
     "tray.resume": "Resume",
     "tray.pause": "Pause",
@@ -182,11 +182,10 @@
     "tray.firstUse": "translator on first use",
     "tray.tipRecording": "Recording",
     "tray.tipPaused": "Kryakl \xB7 paused",
-    "tray.tipListen": "{keys} to listen",
+    "tray.tipListen": "{keys}: translate and read aloud",
     "tray.tipTranslate": "{key} to translate",
-    "tray.tipTwice": "Ctrl+C twice",
     // ------------------------------------------------------------ the card
-    "kind.listen": "Listen",
+    "kind.listen": "Read aloud",
     "kind.translate": "Translate",
     "kind.check": "Check",
     "kind.screen": "screen",
@@ -303,7 +302,7 @@
     "talk.downloadIt": "download it in the settings; Check my English and Translate can use it too",
     "talk.needsModel": "The duck needs its model: {name}, {size}",
     "talk.noEngine": "Type to the duck, or add speech to talk",
-    "talk.noEngineNote": "Talk hears you through the speech engine Dictate uses; download it in the settings.",
+    "talk.noEngineNote": "Talk hears you through the speech engine voice typing uses; download it in the settings.",
     "talk.engineStarting": "The speech engine is starting\u2026",
     "talk.slow": "{name} is slow on this computer: the duck may take a while to answer. {accurate} answers in about 3 seconds.",
     "talk.busyCard": "Another program is using the graphics card: the duck may answer slowly.",
@@ -345,10 +344,10 @@
     "mic.denied": "No access to the microphone: allow it in Windows Settings \u2192 Privacy \u2192 Microphone",
     "mic.none": "No microphone found",
     "mic.busy": "Another program holds the microphone",
-    "dict.type": "Dictate",
-    "dict.english": "Dictate in English",
-    "dict.note": "A note",
-    "dict.check": "Practice English",
+    "dict.type": "Type by voice",
+    "dict.english": "Type by voice into English",
+    "dict.note": "Voice note",
+    "dict.check": "Say it and check",
     "dict.gettingModel": "Getting the speech model {pct}%",
     "dict.savingNote": "Saving the note\u2026",
     "dict.catchingUp": "Catching up\u2026",
@@ -424,13 +423,13 @@
     "setup.freeUnknown": "free space unknown",
     "setup.noRoom": "Not enough room: turn something off, or free some space.",
     "setup.alwaysGroup": "Always",
-    "setup.listenTranslate": "Listen & Translate",
+    "setup.listenTranslate": "Translate and read aloud",
     "setup.alwaysOn": "always on",
     "setup.voice": "Voice",
     "setup.naturalHere": "Natural \xB7 here",
     "setup.naturalSize": "Natural \xB7 {size}",
     "setup.windowsVoice": "Windows voice",
-    "setup.keyboard": "Keyboard",
+    "setup.keyboard": "Keyboard layout",
     "setup.badgeNote": "a small badge whenever the layout changes",
     "setup.speech": "Speech",
     "setup.dictateNote": "{why} \xB7 the speech engine {engine} + {model} {size}",
@@ -487,14 +486,15 @@
     "setup.item.core": "speech to text",
     "setup.item.gpu": "the graphics card\u2019s part",
     "setup.item.speakers": "the speakers\u2019 part",
-    "rec.check": "Check my English",
-    "rec.voice": "Listen voice",
-    "rec.transcribe": "Transcribe",
+    "rec.check": "Check and talk",
+    "rec.dictate": "Voice typing",
+    "rec.voice": "Voice",
+    "rec.transcribe": "Recordings and meetings",
     "rec.automatic": "Automatic",
     "rec.speechModels": "Automatic speech models",
     "rec.speed": "Speed first",
     "rec.accuracy": "Accuracy first",
-    "rec.dictateTranscribe": "Dictate and Transcribe",
+    "rec.dictateTranscribe": "Voice typing and recordings",
     "rec.naturalVoice": "Natural voice",
     "speech.sec": "{n} s",
     "speech.min": "{n} min",
@@ -526,8 +526,8 @@
     "speech.dlSpeakers": "Downloading the speakers part",
     "speech.dlEngine": "Downloading the speech engine",
     "speech.download": "Download",
-    "speech.needsDictate": "Dictate needs the speech engine",
-    "speech.needsTranscribe": "Transcribe needs the speech engine",
+    "speech.needsDictate": "Voice typing needs the speech engine",
+    "speech.needsTranscribe": "Recordings need the speech engine",
     "speech.needsMeet": "Google Meet needs the speech engine",
     "speech.needs": "{feature} needs the speech engine",
     "speech.dlStopped": "The download stopped: {why}",
@@ -544,11 +544,11 @@
     "speech.restart": "Restart",
     "speech.onCard": "on the graphics card",
     "speech.onProcessor": "on the processor",
-    "speech.sharedDictate": "Dictate uses it too: downloaded once, loaded once",
-    "speech.sharedTranscribe": "Transcribe uses it too: downloaded once, loaded once",
-    "speech.keptDictate": "kept for Dictate on the processor, if the graphics card fails",
-    "speech.keptTranscribe": "kept for Transcribe on the processor, if the graphics card fails",
-    "speech.keptBoth": "kept for Dictate and Transcribe on the processor, if the graphics card fails",
+    "speech.sharedDictate": "Voice typing uses it too: downloaded once, loaded once",
+    "speech.sharedTranscribe": "Recordings use it too: downloaded once, loaded once",
+    "speech.keptDictate": "kept for voice typing on the processor, if the graphics card fails",
+    "speech.keptTranscribe": "kept for recordings on the processor, if the graphics card fails",
+    "speech.keptBoth": "kept for voice typing and recordings on the processor, if the graphics card fails",
     "speech.budgetPhrase": "a phrase in \u2248{time}",
     "speech.budgetHour": "an hour in \u2248{time}",
     "speech.automatic": "Automatic",
@@ -569,7 +569,7 @@
     "speech.speed": "Speed",
     "speech.gpuTitle": "Speech on the graphics card",
     "speech.installed": "Installed",
-    "speech.gpuOffer": "{size} to download; Dictate and Transcribe get several times quicker",
+    "speech.gpuOffer": "{size} to download; voice typing and recordings get several times quicker",
     "speech.add": "Add",
     "speech.testWaits": "waits until the engine is free",
     "speech.testStep": "{model} \xB7 step {n} of {total}",
@@ -678,12 +678,9 @@
     "tr.stopTranscribe": "Stop and transcribe",
     "tr.lostPiece": "A piece of the recording did not reach the engine",
     "tr.dropHere": "Drop to transcribe",
-    "tr.searched": "searched by their words",
-    "tr.countSearched": "{n} \xB7 searched by their words",
-    "tr.noneYet": "none yet",
     "tr.needEngine": "Transcripts need the speech engine",
-    "tr.needEngineNote": "it downloads once, on the Transcribe page",
-    "tr.transcribeLink": "Transcribe\u2026",
+    "tr.needEngineNote": "it downloads once, on the Recordings and meetings page",
+    "tr.transcribeLink": "Recordings and meetings\u2026",
     "tr.startingNote": "the transcripts show once it runs",
     "tr.search": "Search every transcript",
     "tr.new": "New",
@@ -694,7 +691,7 @@
     "tr.nothing": "Nothing found.",
     "tr.emptyTitle": "Transcripts will be here",
     "tr.tipDrop": "Drop a video or audio file into this window",
-    "tr.tipMic": "Record from the microphone on the Transcribe page",
+    "tr.tipMic": "Record from the microphone on the Recordings and meetings page",
     "tr.tipNote": "Dictate a note: {keys} in any program",
     "tr.tipMeet": "Record a Google Meet call with the Chrome extension",
     "tr.failed": "failed",
@@ -743,129 +740,78 @@
     "tr.playSpace": "Play or pause \xB7 Space",
     "tr.play": "Play or pause",
     "nav.home": "Home",
-    "nav.actions": "Actions",
-    "nav.library": "Library",
-    "nav.lists": "Your lists",
-    "nav.talk": "Talk",
-    "nav.listen": "Listen",
+    "nav.english": "English",
+    "nav.voice": "Voice typing",
+    "nav.recordings": "Recordings and meetings",
+    "nav.layout": "Keyboard layout",
     "nav.translate": "Translate",
-    "nav.check": "Check",
-    "nav.screen": "Screen",
-    "nav.dictate": "Dictate",
-    "nav.transcribe": "Transcribe",
-    "nav.keyboard": "Keyboard",
-    "nav.words": "Words",
-    "nav.mistakes": "Mistakes",
-    "nav.transcripts": "Transcripts",
-    "nav.translations": "Translations",
-    "nav.phrases": "Phrases",
-    "nav.vocabulary": "Words to spell",
+    "nav.words": "My words",
+    "nav.mistakes": "My mistakes",
+    "nav.transcripts": "All transcripts",
+    "nav.translations": "Translation history",
+    "nav.phrases": "Dictated phrases",
+    "nav.vocabulary": "Names and terms",
     "nav.kept": "Kept as typed",
     "nav.learned": "Learned words",
     "nav.programs": "Programs",
-    "nav.layouts": "Layouts",
+    "nav.layouts": "Layout order",
     "nav.settings": "Settings",
     "nav.models": "Models",
-    "nav.storage": "Storage",
-    "nav.about": "About",
+    "nav.storage": "Disk space",
+    "nav.about": "About Kryakl",
     "nav.report": "Report a problem",
     "nav.search": "Search",
     "nav.minimize": "Minimize",
-    "nav.back": "Back",
-    "nav.backEsc": "Back (Esc)",
     "nav.making": "A transcript is being made",
     "search.placeholder": "Search settings",
     "search.title": "Search settings (Ctrl+F)",
-    "search.places": { one: "{n} place for \u201C{q}\u201D", other: "{n} places for \u201C{q}\u201D" },
-    "search.none": "no places for \u201C{q}\u201D",
     "search.nothing": "Nothing has \u201C{q}\u201D. Words, transcripts and translations have searches of their own.",
     "search.hint": "Type above: every line of every page is found by its name or its note.",
-    "page.meetCap": "the Kryakl extension for Chrome",
     "page.speakers": "Who spoke when",
-    "page.speakersCap": "the voices told apart",
     "page.fixing": "Fixing as I type",
-    "page.fixingCap": "what else Kryakl sets right while you type",
     "page.languages": "Languages you use",
-    "page.forTranslateCap": "the model that translates",
     "page.checkEnglish": "Check my English",
     "page.forCheckCap": "the model that finds your mistakes",
-    "page.forDictateCap": "the model that writes what you say",
-    "page.forTranscribeCap": "the model that writes recordings down",
-    "page.voice": "Listen voice",
+    "page.voice": "Voice",
     "page.forVoiceCap": "the voice that reads English aloud",
-    "page.wordsCap": { one: "{n} saved \xB7 from your cards", other: "{n} saved \xB7 from your cards" },
-    "page.wordsNone": "none yet \xB7 from your cards",
-    "page.mistakesCap": "from Check \xB7 on this computer",
-    "page.translationsCap": "kept 30 days on this computer",
-    "page.phrasesCap": "dictated lately \xB7 kept 30 days on this computer",
-    "page.vocabularyCap": "for Dictate and Transcribe",
-    "page.keptCap": "never fixed by themselves",
-    "page.learnedCap": "on this computer only",
-    "page.programsCap": "left out of parts, or with a layout of their own",
-    "page.layoutsCap": "in the order the keys go through them",
-    "page.modelsCap": "what each action uses, and what this computer runs best",
-    "page.measuring": "measuring\u2026",
-    "page.freeOn": "{size} free on {drive}",
-    "page.storageCap": "what Kryakl keeps on this computer",
-    "page.reportCap": "with Kryakl\u2019s logs, sent by you",
-    "home.translatorReady": "ready",
-    "home.translatorAbsent": "downloads on first use",
-    "home.translatorDownloading": "downloading",
-    "home.translatorFailed": "could not download; tries again on the next translation",
-    "home.translatorUnsupported": "has no offline translator yet",
-    "home.natural": "natural voice",
-    "home.windowsVoice": "Windows voice",
-    "home.voiceReady": "ready",
-    "home.voiceFailed": "ready (the natural voice could not download)",
-    "home.speech": "speech",
-    "home.speechReady": "ready",
-    "home.speechStopped": "stopped",
-    "home.speechStarting": "starting",
-    "home.everything": "Everything runs on this computer.",
     "home.paused": "Kryakl is paused",
-    "home.pausedNote": "shortcuts and layout fixing are off until you resume",
+    "home.pausedNote": "keys and fixes are off",
     "home.replayTitle": "Play the line again",
     "home.replay": "Replay",
-    "home.foot": "Tap an action to change its keys.",
+    "home.ready": "Kryakl is ready",
+    "home.readyNote": "everything runs on this computer",
+    "home.downloading": "Downloading: {name}",
+    "home.yourKeys": "Your keys",
+    "home.unset": "Without a key: {n}. Set them on the action pages.",
+    "home.troubleTranslator": "The translator could not download; it tries again on the next translation.",
+    "home.troubleVoice": "The natural voice could not download; a Windows voice reads for now.",
+    "home.troubleSpeech": "The speech engine has stopped: Report a problem can restart it.",
     "home.eyebrow": "One line, three keys",
     "home.stepFix": "fix",
     "home.stepTranslate": "translate",
     "home.stepListen": "listen",
-    "home.talkDesc": "Speak English with the duck: it answers aloud, and your mistakes are marked.",
-    "home.listenDesc": "Reads English text aloud and shows its translation.",
-    "home.translateDesc": "Translates the selected text; Enter pastes the translation back.",
-    "home.checkDesc": "Marks the mistakes in your English and shows the fix.",
-    "home.screenCap": "text from the screen",
-    "home.screenDesc": "Draw a box around text you can\u2019t select, then listen or translate.",
-    "home.dictateDesc": "Speak and it types where the cursor is. Speak {lang}, get English.",
-    "home.transcribeCap": "files \xB7 microphone \xB7 Meet",
-    "home.transcribeDesc": "Talks and meetings into text, speaker by speaker.",
-    "home.keyboardAuto": "Fixes words typed in the wrong layout as you type.",
-    "home.keyboardDesc": "Switches the layout and fixes text typed in the wrong one.",
-    "home.downloadingPct": "downloading {pct}%",
     "home.downloadsOnce": "downloads once",
-    "home.speechToText": "speech to text",
-    "home.speechOnCard": "speech to text \xB7 on your graphics card",
-    "home.speechOnProcessor": "speech to text \xB7 on your processor",
+    "menu.translate": "Translate",
+    "menu.listen": "Translate and read aloud",
+    "menu.inPlace": "Replace with translation",
+    "menu.screen": "Translate from the screen",
+    "menu.check": "Check my English",
+    "menu.talk": "Talk to the duck",
+    "menu.dictate": "Type by voice",
+    "menu.english": "Type by voice into English",
+    "menu.fix": "Fix the layout",
+    "menu.foot": "Letter to pick \xB7 Esc to close",
+    "menu.nothingToRead": "Nothing to read: select a text",
+    "menu.nothingToReplace": "Nothing to replace: select a text",
+    "menu.keyTitle": "Kryakl menu",
+    "menu.keyNote": "one key for every action",
     "keys.group": "Keys",
-    "keys.talk": "talk",
-    "keys.selection": "selection",
-    "keys.type": "type",
-    "keys.pasteBack": "paste back",
-    "keys.byVoice": "by voice",
-    "keys.listen": "listen",
-    "keys.translate": "translate",
-    "keys.dictate": "dictate",
-    "keys.note": "note",
-    "keys.inMeet": "in Meet",
-    "keys.switch": "switch",
-    "keys.fix": "fix",
     "keys.copyTwice": "Ctrl + C twice",
     "keys.twice": "{key} twice",
     "keys.tap": "tap {key}",
     "keys.press": "press {key}",
-    "keys.useSelect": "listening to the selection",
-    "keys.useSnip": "listening to text on the screen",
+    "keys.useSelect": "translating and reading the selection aloud",
+    "keys.useSnip": "translating and reading text on the screen",
     "keys.useTranslate": "translating the selection",
     "keys.useText": "translating text on the screen",
     "keys.useInPlace": "replacing the selection with its translation",
@@ -882,11 +828,14 @@
     "keys.useTalk": "talking to the duck",
     "keys.usePause": "pausing Kryakl",
     "keys.useWindow": "opening Kryakl",
+    "keys.useMenu": "opening Kryakl\u2019s menu",
     "keys.toLayout": "going to {layout}",
     "keys.aLayout": "a layout",
     "keys.taken": "{key} is already for {use}.",
+    "keys.copyTwiceOnly": "Ctrl + C twice can only be the key of an action on the selected text.",
     "keys.menuAlt": "Alt alone no longer opens menus, F10 does",
     "keys.menuWin": "Win alone no longer opens Start, Ctrl+Esc does",
+    "keys.menuCtrlEsc": "Ctrl+Esc no longer opens Start, Win does",
     "keys.recordTitle": "Click, then press the keys: Ctrl+Alt+T, Left Ctrl twice, Pause, a mouse side button\u2026",
     "keys.aria": "{label}: {key}. Click to change.",
     "keys.notSet": "not set",
@@ -896,19 +845,10 @@
     "keys.backTo": "Back to {key}",
     "keys.backToAria": "{label}: back to {key}",
     "keys.takenProgram": "Taken by another program; choose another.",
-    "keys.change": "Change",
     "keys.set": "Set",
     "listen.tryKey": "Select this text, {how}.",
     "listen.tryTwice": "Select this text, press Ctrl + C twice.",
-    "listen.tryNone": "Set a key above or turn on Ctrl + C twice, then select this text.",
-    "listen.select": "Listen to the selected text",
-    "listen.selectNote": "select text anywhere, then press the key",
-    "listen.alsoTwice": "Also on Ctrl + C twice",
-    "listen.alsoTwiceNote": "select text, then press Ctrl + C twice, quickly; works with no key set too",
-    "listen.snip": "Listen to text on the screen",
-    "listen.boxNote": "for text you can\u2019t select: draw a box around it",
-    "listen.voiceGroup": "Voice",
-    "listen.voiceNote": "the voice that reads",
+    "listen.tryNone": "Set a key above (Ctrl + C twice can be it), then select this text.",
     "listen.cardGroup": "The card",
     "listen.autoRead": "Read aloud when a card opens",
     "listen.rareWords": "Dotted line under less common words",
@@ -936,23 +876,11 @@
     "translate.unsupportedNote": "no offline translator for this language yet",
     "translate.tryKey": "Select it, {how}.",
     "translate.tryNone": "Set a key above, then select it and press the key.",
-    "translate.select": "Translate the selected text",
-    "translate.selectNote": "select it anywhere, {how}",
-    "translate.selectNoKey": "select it anywhere, then press one key, such as Left Ctrl twice",
-    "translate.type": "Type a text to translate",
     "translate.typeNote": "an empty card by the pointer, from any program; also in the tray menu",
-    "translate.inPlace": "Replace the selection with its translation",
-    "translate.inPlaceNote": "no card",
-    "translate.text": "Translate text on the screen",
     "translate.pasteBack": "In the card: paste the translation back",
-    "translate.group": "Translation",
-    "translate.model": "Translation model",
-    "translate.modelNote": "how well and how quickly it translates; the same model can check your English",
-    "translate.languages": "Languages",
-    "translate.history": "History",
-    "translate.recent": "Recent translations",
-    "translate.recentNote": "kept for 30 days, on this computer only",
-    "translate.none": "none",
+    "translate.shareAsk": "{model} is on this computer already",
+    "translate.shareNote": "Check my English and Talk use it. Translate can use it too, with nothing to download: {fast} shows a draft at once, then {model} sets it right.",
+    "translate.shareUse": "Translate with {model}",
     "translate.empty": "Nothing yet. Translations are kept here 30 days, 200 at most.",
     "models.aboutFast": "Instant; short phrases may come out word for word",
     "models.aboutAccurateLevel": "Understands the whole sentence",
@@ -1026,9 +954,10 @@
     "models.computer": "This computer",
     "models.eachAction": "What each action uses",
     "models.translateNote": "how well and how quickly texts are translated",
+    "models.checkTalk": "Check and talk",
     "models.dictateNote": "writes what you say",
     "models.transcribeNote": "writes recordings and meetings down",
-    "models.shared": "A model two actions use is downloaded and loaded once: Translate and Check share the language model, Dictate and Transcribe a speech model where that costs nothing.",
+    "models.shared": "A model two actions use is downloaded and loaded once: Translate and Check share the language model, voice typing and recordings a speech model where that costs nothing.",
     "models.stateDownloading": "downloading {pct}%",
     "models.stateFailed": "download failed",
     "engine.notRunning": "The speech engine is not running",
@@ -1074,25 +1003,17 @@
     "engine.hfError": "Hugging Face answered with an error",
     "engine.hfOffline": "No connection to Hugging Face",
     "engine.downloadFailed": "The download failed: {why}",
-    "talkPage.needsCard": "needs a graphics card",
     "check.downloadingPct": "downloading {pct}%",
-    "check.downloadsOnce": "downloads once",
-    "check.capNotes": "English \xB7 notes in {lang}",
     "talkPage.downloading": "downloading; the talk starts once it is here",
     "talkPage.downloadOnce": "downloaded once; Check my English and Translate can use it too",
     "settings.download": "Download",
     "talkPage.engineTitle": "Talk hears you through the speech engine",
-    "talkPage.engineNote": "Until it is here, type to the duck. Download it on the Dictate page; it is the same one Dictate uses.",
-    "talkPage.openDictate": "Open Dictate",
+    "talkPage.engineNote": "Until it is here, type to the duck. Download it on the Voice typing page; it is the same engine.",
+    "talkPage.openDictate": "Open Voice typing",
     "talkPage.aboutPlaceholder": 'A few words the duck can talk about: your name, your work, what you like. "I am Alex, a designer. I love hiking and progressive metal."',
     "talkPage.aboutYou": "About you",
-    "talkPage.needsEngine": "needs the speech engine (see Dictate)",
-    "talkPage.keyNote": "from any program: {keys} opens the talk and listens, again sends",
-    "talkPage.keyNoteNone": "one key from any program: it opens the talk and listens, again sends",
+    "talkPage.needsEngine": "needs the speech engine (see Voice typing)",
     "talkPage.openGoing": "in its own window \xB7 going on: {topic}, {lines}",
-    "talkPage.openIdle": "in its own window: speak English, the duck answers aloud, your mistakes are marked",
-    "talkPage.open": "Open Talk",
-    "talkPage.you": "You",
     "talkPage.aboutNote": "The duck reads it in every talk, to ask about your life and work. Kept only on this computer.",
     "talkPage.level": "Your English level",
     "talkPage.levelA2": "Elementary: the duck speaks in short sentences of everyday words, simple tenses, no idioms",
@@ -1101,35 +1022,22 @@
     "talkPage.keys": "Keys",
     "talkPage.spaceKey": "In the talk window: talk, then send",
     "talkPage.escKey": "Drop the line, or quiet the duck",
-    "talkPage.duck": "The duck",
     "talkPage.aloud": "Read the duck aloud",
     "talkPage.aloudNote": "its answers are read as they come; a tap on a line reads it again",
     "talkPage.onTop": "Keep the talk on top",
     "talkPage.onTopNote": "over other windows, as with the pin in its bar",
     "talkPage.model": "Model",
-    "talkPage.modelNote": "answers and finds your mistakes; the same one as Check my English",
     "talkPage.voice": "Voice",
-    "talkPage.voiceNote": "the duck speaks with the Listen voice",
     "talkPage.kept": "Kept",
     "talkPage.history": "Your talks are in the talk window: its history button lists them, to go on with one or delete it. Kept 30 days on this computer, 50 at most.",
-    "talkPage.mistakesNote": "each line of yours with a mistake is kept there",
-    "kb.none": "none",
     "check.typedKey": "{keys} and type it",
     "check.typedTray": "use Check my English\u2026 in the tray menu",
     "check.tryKey": "This text has mistakes on purpose. Select it, {keys}, or {typed}.",
     "check.tryNoKey": "This text has mistakes on purpose. Select it and press your key, or {typed}.",
     "check.keySelected": "Check the selected text",
-    "check.keySelectedNote": "select it anywhere, {keys}",
-    "check.keySelectedNone": "select it anywhere, then press one key, such as Right Ctrl twice",
     "check.typeKey": "Type a text to check",
     "check.typeKeyNote": "an empty card by the pointer, from any program; also in the tray menu",
-    "check.practiceKey": "Check what I say",
-    "check.practiceNote": "press, say a phrase in English, press again",
-    "check.enterKey": "In the card: paste the corrected text back",
     "check.speechNote": "Speech recognition fixes some mistakes as it writes, so typing shows more of them.",
-    "check.modelNote": "the language model that checks; Translate can use the same one",
-    "check.history": "History",
-    "check.mistakesNote": "what Check found in your texts, repeated ones first",
     "mistakes.title": "Mistakes",
     "mistakes.forget": "Forget it",
     "mistakes.noSuch": "No such mistake.",
@@ -1138,9 +1046,6 @@
     "mistakes.times": { one: "{n} time", other: "{n} times" },
     "mistakes.clear": "Clear",
     "mistakes.search": "Search your mistakes",
-    "screen.snipKey": "Listen to text on the screen",
-    "screen.textKey": "Translate text on the screen",
-    "screen.keyNote": "for text you can\u2019t select: draw a box around it",
     "screen.how": "How it works",
     "screen.draw": "Draw a box around the text",
     "screen.drawNote": "Windows dims the screen while you draw",
@@ -1148,7 +1053,7 @@
     "screen.readsNote": "it reads the languages Windows has installed; add more there (Windows OCR)",
     "screen.languages": "Languages\u2026",
     "screen.fix": "Fix misread words in the card",
-    "screen.fixNote": "then listen or translate",
+    "screen.fixNote": "then translate it or read it aloud",
     "dictate.notesFolder": "Notes folder",
     "dictate.folderShown": "shown once the speech engine runs",
     "dictate.folderChosen": "chosen once the speech engine is installed",
@@ -1159,36 +1064,23 @@
     "dictate.choose": "Choose\u2026",
     "dictate.subfolder": "Subfolder for notes",
     "dictate.subfolderNote": "a folder inside it; leave empty to use the folder itself",
-    "vocab.title": "Words to spell",
-    "vocab.note": "names and terms, written the way you want them",
-    "vocab.noneYet": "none yet",
     "dictate.needsEngine": "needs the speech engine",
     "dictate.automatic": "Automatic \xB7 {model}",
     "settings.automatic": "Automatic",
-    "dictate.modelNote": "about {time} per phrase on this computer",
-    "transcribe.modelNote": "about {time} per hour of recording on this computer",
     "dictate.speechModel": "Speech model",
     "dictate.engine": "Speech engine",
-    "dictate.typeKey": "Type what I say",
-    "dictate.typeNote": "press, speak, press again; the words appear where the cursor is",
-    "dictate.englishKey": "Type what I say, in English",
+    "dictate.typeNote": "the text appears where the cursor is",
     "dictate.englishNote": "press, speak {lang}, press again; English is typed",
-    "dictate.noteKey": "Dictate a note",
-    "dictate.noteNote": "saved as a Markdown file in your notes folder",
+    "dictate.noteNote": "into your notes folder",
     "dictate.againKey": "Type the last phrase again",
     "dictate.againNote": "repeats it where the cursor is",
     "dictate.escNote": "The words appear as you speak. Esc cancels the phrase before it is typed.",
-    "dictate.notes": "Notes",
-    "dictate.wordsPhrases": "Words and phrases",
-    "dictate.recent": "Recent phrases",
-    "dictate.recentNote": "phrases you dictated lately, to copy again",
     "dictate.privacy": "Speech is recognized on this computer; nothing is sent anywhere.",
-    "vocab.wordPlaceholder": "Word, as it should be written",
-    "vocab.wordAria": "Word to spell",
-    "vocab.heardPlaceholder": "Heard as (optional): \u043A\u0440\u044F\u043A\u043B, \u043A\u0440\u0430\u043A\u043B",
+    "vocab.wordPlaceholder": "Word",
+    "vocab.wordAria": "Name or term",
+    "vocab.heardPlaceholder": "How it sounds, comma-separated",
     "vocab.heardAria": "What it is heard as",
     "vocab.change": "Change it",
-    "vocab.heardAs": "heard as {forms}",
     "vocab.remove": "Remove {word}",
     "vocab.addGroup": "Add a word",
     "vocab.add": "Add",
@@ -1196,7 +1088,7 @@
     "vocab.words": "Words",
     "vocab.clearAll": "Clear all",
     "vocab.empty": "Nothing yet. Add a name or a word above.",
-    "vocab.shared": "Shared by Dictate and Transcribe.",
+    "vocab.shared": "Voice typing and recordings both use them.",
     "dictate.phrases": "Phrases",
     "dictate.said": "Said: {heard}",
     "dictate.recentEmpty": "Nothing yet. Dictated phrases (not notes) are kept here 30 days, 200 at most.",
@@ -1214,30 +1106,32 @@
     "meet.installed": "Installed \xB7 v{version}",
     "meet.note": "record a call in Chrome with the Kryakl extension",
     "meet.notSetUp": "Not set up yet",
-    "meet.threeSteps": "three steps in Chrome, once; this line says when the extension is in",
+    "meet.threeSteps": "four steps in Chrome, once; this line says when the extension is in",
     "meet.needsEngine": "the speech engine must run for the extension to work",
     "meet.oldId": "Chrome runs v{version}, which Kryakl no longer takes recordings from",
     "meet.oldIdNote": "remove it on Chrome\u2019s extensions page (Remove on its card), then Load unpacked again: steps 1 and 2 below; Chrome asks for the microphone once more",
     "meet.stale": "Chrome runs v{from}; Kryakl has v{to}",
-    "meet.staleNote": "press Reload on the extension\u2019s card in Chrome: Open in Chrome goes straight to it",
+    "meet.staleNote": "press the round arrow \u21BB on the Kryakl card in Chrome: Open in Chrome goes straight to it",
     "meet.openInChrome": "Open in Chrome",
     "meet.installedIn": "Installed in Chrome \xB7 v{version}",
     "meet.seen": "seen {ago} \xB7 the call\u2019s sound and your microphone go to the speech engine on this computer",
     "meet.extension": "Chrome extension",
     "meet.setItUp": "Set it up",
     "meet.step1": "1 \xB7 Open Chrome\u2019s extensions page and turn on Developer mode",
-    "meet.step1Note": "chrome://extensions \xB7 the switch is at the top right",
-    "meet.step2": "2 \xB7 Load unpacked, paste the folder\u2019s path",
-    "meet.step2Note": "Ctrl+V into the folder picker\u2019s address line, then Select folder",
+    "meet.step1Note": "the Developer mode switch is at the top right of that page",
+    "meet.step2": "2 \xB7 Copy path, then Load unpacked",
+    "meet.step2Note": "Load unpacked is at the top left once Developer mode is on \xB7 in the window that opens, click the address line at the top, Ctrl+V, Enter, then Select folder",
+    "meet.stepMic": "3 \xB7 Allow the microphone, once",
+    "meet.stepMicNote": "after step 2: on the page that opens, press Allow the microphone, then Allow when Chrome asks \xB7 without it, only the others are in the transcript",
     "meet.showFolder": "Show the folder",
     "meet.copyPath": "Copy path",
-    "meet.step3": "3 \xB7 In a meeting: the Kryakl icon \u2192 Record, or the key",
-    "meet.step3Note": "the call\u2019s sound and your microphone \xB7 the transcript appears in Transcripts",
+    "meet.step3": "4 \xB7 In a meeting: the Kryakl icon in Chrome\u2019s toolbar \u2192 Record, or the key",
+    "meet.step3Note": "no icon? It is under the puzzle piece at the top right: pin it there \xB7 the transcript appears in Transcripts",
     "meet.off": "If something is off",
     "meet.keyNothing": "The key does nothing",
-    "meet.keyNothingNote": "set it at chrome://extensions/shortcuts",
-    "meet.afterUpdate": "After Kryakl updates, press Reload on the extension",
-    "meet.afterUpdateNote": "Chrome keeps the old copy until then",
+    "meet.keyNothingNote": "Keyboard shortcuts, on the left of the extensions page: set one for Kryakl: meeting recorder",
+    "meet.afterUpdate": "After Kryakl updates, reload the extension",
+    "meet.afterUpdateNote": "the round arrow \u21BB on the Kryakl card, beside its switch \xB7 Chrome keeps the old copy until then",
     "transcribe.speakers": "Who spoke when",
     "transcribe.speakersNote": "the words are recognized already; this tells the voices apart",
     "transcribe.downloading": "downloading\u2026",
@@ -1254,8 +1148,6 @@
     "transcribe.new": "New transcription",
     "transcribe.setup": "Setup",
     "transcribe.keptIn": "Transcripts are kept in",
-    "transcribe.library": "Library",
-    "transcribe.allNote": "every transcript, searched by its words",
     "kb.inOrder": "In this order",
     "kb.earlier": "Earlier",
     "kb.later": "Later",
@@ -1276,10 +1168,10 @@
     "kb.keepCapsNote": "abbreviations in capitals are never fixed",
     "kb.when": "When",
     "kb.onPause": "Also fix after a pause",
-    "kb.onPauseNote": "a clearly wrong word is fixed about a second after you stop typing",
+    "kb.onPauseNote": "a wrong word is fixed a second after you stop typing",
     "kb.sound": "Play a quiet click when a word is fixed",
     "kb.chime": "Play a sound when the layout switches",
-    "kb.chimeNote": "when you switch it, with Kryakl\u2019s keys or Windows\u2019 own; English sounds higher than your other layouts",
+    "kb.chimeNote": "when you switch it; English sounds higher",
     "kb.chimeName": "Sound",
     "kb.chimePick": "tap one to hear it: English, then another layout",
     "kb.chime.glass": "Glass",
@@ -1323,13 +1215,9 @@
     "kb.learnNote": "never in a password field, a program left out of fixing, or on the full screen",
     "kb.fixedAlways": "Fixed always",
     "kb.into": "into {lang}",
-    "kb.forget": "Forget {word}",
     "kb.fixedAlwaysEmpty": "A word you fix by hand twice (the fix key, or erased and typed again in the other layout) is fixed by itself from then on.",
-    "kb.myWordNote": "{lang} \xB7 never fixed, and fixed into",
-    "kb.myWordsEmpty": "A word in no dictionary that you type right three times becomes yours: Kryakl leaves it as typed, and fixes it into when it is typed in the wrong layout. Until then only an unreadable fingerprint of it is kept.",
-    "kb.neverFixed": "Never fixed",
-    "kb.kept": "Kept as typed",
-    "kb.keptNote": "words never fixed by themselves",
+    "kb.myWordNote": "{lang} \xB7 left as typed, and fixed into it from another layout",
+    "kb.myWordsEmpty": "A word in no dictionary that you type right three times becomes yours: Kryakl leaves it as typed, and fixes into it what is typed in the wrong layout. Until then only an unreadable fingerprint of it is kept.",
     "kb.forgetAll": "Forget all",
     "kb.forgetAllNote": "what Kryakl learned goes; Kept as typed stays",
     "kb.forgetBtn": "Forget",
@@ -1344,36 +1232,26 @@
     "kb.switchNote": "goes to the next of the layouts listed below",
     "kb.switchingByKeys": "Switching by keys",
     "kb.fixKey": "Fix the last words",
-    "kb.fixKeyNote": "retypes words or signs (&& \u2192 ??) that came out in the wrong layout; press again for the next one",
+    "kb.fixKeyNote": "retypes what came out in the wrong layout; press again for the next one",
     "kb.theFixKey": "The fix key",
-    "kb.asYouType": "As you type",
     "kb.autoFix": "Fix words as I type",
-    "kb.autoFixNote": "{typed} \u2192 {fixed} when you press space; the fix key right after undoes it",
+    "kb.autoFixNote": "{typed} \u2192 {fixed} on space; the fix key right after undoes it",
     "kb.fixing": "Fixing as I type",
     "kb.fixingNote": "capitals, short words, fixing after a pause",
     "kb.badgeNote": "a small badge appears when the layout or Caps Lock changes",
     "kb.trayNote": "the tray icon shows the current layout, such as en or ru",
     "kb.fullScreen": "Stay off in full screen",
     "kb.fullScreenNote": "games, presentations, videos",
-    "kb.lists": "Lists",
-    "kb.layouts": "Layouts",
     "kb.layoutsOwn": "the layouts the switch key goes through; {n} with a key of their own",
     "kb.layoutsNote": "the layouts the switch key goes through, in order",
-    "kb.programsNote": "turn parts of Kryakl off in a program, or give it its own layout",
-    "kb.programCount": { one: "{n} program", other: "{n} programs" },
-    "kb.learned": "Learned words",
-    "kb.learnedNote": "words Kryakl learned from your typing",
-    "kb.learnedOff": "learning from your typing is off",
-    "kb.keptNever": "words Kryakl never fixes by itself",
     "kb.rivals": { one: "{names} is running: turn off its layout switching, or words get fixed twice.", other: "{names} are running: turn off its layout switching, or words get fixed twice." },
     "kb.elevated": "{app} runs as administrator: Windows keeps its keys from Kryakl, so nothing is fixed or switched there.",
     "kb.trouble": "The keyboard helper: {trouble}",
     "kb.privacy": "Kryakl reads your keystrokes only to fix the layout, and sends nothing anywhere. It keeps only the words it learned, on this computer.",
-    "words.removeAria": "Remove {word} from Words",
-    "words.today": "today",
     "words.noSuch": "No such word.",
     "words.empty": "No words yet. Click a word in a card and tap its star.",
     "words.search": "Search words and sentences",
+    "words.hint": "The star in a word\u2019s card adds it here",
     "words.export": "Export for Anki\u2026",
     "settings.natural": "Natural voice",
     "settings.naturalNote": "{size} MB to download, then it reads offline (Kokoro)",
@@ -1404,7 +1282,7 @@
     "storage.cudaNote": "NVIDIA\u2019s build, for a model that does not fit the graphics card (llama.cpp CUDA)",
     "storage.lossTranslate": "Translate goes back to Fast, and Check my English downloads it again at its next check",
     "storage.lossCheck": "Check my English downloads it again at its next check",
-    "storage.lossSpeech": "Dictate and Transcribe stop until it is downloaded again; transcripts and notes stay",
+    "storage.lossSpeech": "Voice typing and recordings stop until it is downloaded again; transcripts and notes stay",
     "storage.lossGpu": "speech goes back to the processor, several times slower",
     "storage.lossSpeakers": "transcripts stop telling the voices apart until it is added again",
     "storage.lossDefault": "it downloads again at its next use",
@@ -1414,10 +1292,10 @@
     "storage.usedBy": "used by {users}",
     "storage.reserve": "kept for {reserve} on the processor, if the graphics card fails",
     "storage.userTranslate": "Translate",
-    "storage.userListen": "Listen",
-    "storage.userCheck": "Check",
-    "storage.userDictate": "Dictate",
-    "storage.userTranscribe": "Transcribe",
+    "storage.userListen": "Translate",
+    "storage.userCheck": "English",
+    "storage.userDictate": "Voice typing",
+    "storage.userTranscribe": "Recordings and meetings",
     "storage.frees": "removing it frees {free}: {shared} of its files are shared with other Python tools here",
     "storage.removeAskTitle": "Remove\u2026",
     "storage.removeTitle": "Remove; it downloads again if you pick it later",
@@ -1447,7 +1325,6 @@
     "settings.englishNote": "always: the language Kryakl teaches",
     "settings.speed": "Speed",
     "settings.speedNote": "how fast it reads",
-    "settings.language": "Language",
     "settings.yourLanguage": "Your language",
     "settings.yourLanguageNote": "Kryakl translates into it and shows word meanings in it",
     "settings.theme": "Theme",
@@ -1457,16 +1334,17 @@
     "settings.startWithWindows": "Start with Windows",
     "settings.pause": "Pause Kryakl",
     "settings.pauseNote": "all shortcuts and fixing stop until you turn it back on; also in the tray menu",
-    "settings.pauseKey": "Pause or resume with a key",
-    "settings.pauseKeyNote": "works while paused too",
-    "settings.windowKey": "Open this window with a key",
+    "settings.pauseKey": "Pause",
+    "settings.pauseKeyNote": "Kryakl stays quiet until you press it again",
+    "settings.windowKey": "Open Kryakl\u2019s window",
     "settings.windowKeyNote": "from any program",
     "settings.resetKeys": "Reset all keys",
-    "settings.resetKeysNote": "every shortcut back to how it came; \u21BA by a key brings back just that one",
+    "settings.resetKeysNote": "every key back to how it came",
     "settings.version": "Version {version}",
     "settings.versionDev": "Version {version} dev",
     "settings.built": "built {build}",
     "settings.versionNote": "new versions: download the installer from GitHub and run it; your settings and downloads stay",
+    "settings.betaNote": "a beta: some things may still break; Report a problem helps fix them",
     "settings.newVersions": "New versions",
     "settings.backup": "Backup",
     "settings.backupTitle": "Back up or move to another computer",
@@ -1475,22 +1353,27 @@
     "settings.importNote": "Import replaces your settings with the backup\u2019s and adds its words and history to yours; nothing of yours is removed.",
     "settings.resetAll": "Reset all settings",
     "settings.resetAllNote": "keys, switches and lists back to how they came; your words and history stay",
-    "about.version": "Version {version} \xB7 free and open source, MIT",
-    "about.versionDev": "Version {version} dev, built {build} \xB7 free and open source, MIT",
-    "about.madeBy": "made by",
-    "about.author": "Yevhen Peshynskyi \xB7 Design automation engineer",
-    "about.runsOffline": "runs offline",
-    "about.credits": "Firefox Translations by Mozilla \xB7 Gemma 4 by Google (Apache 2.0), run by llama.cpp \xB7 Kokoro-82M by hexgrad, eSpeak NG \xB7 Windows OCR \xB7 WikDict, from Wiktionary \xB7 FrequencyWords by Hermit Dave ",
-    "about.neverSent": "\u2014 your text is never sent anywhere",
-    "about.madeWith": "made with",
-    "about.madeWithList": "Inter and JetBrains Mono (SIL OFL) \xB7 Electron \xB7 VS Code icons",
     "about.online": "goes online only for",
     "about.onlineList": "a one-time download of each part: the translator for your language, the natural voice ({size} MB), word meanings",
-    "about.links": "links",
-    "about.newVersions": "New versions and what changed",
-    "about.source": "Source on GitHub",
+    "about.newVersions": "New versions",
+    "about.source": "Code on GitHub",
     "about.licenses": "Licenses",
-    "report.title": "Report a problem",
+    "about.story": "How Kryakl began",
+    "about.storyText": "I wanted a tool for myself: to work faster and to learn English. The first versions were simple and grew with every wish. Then I showed it to friends, and it took off.",
+    "about.authorGroup": "Author",
+    "about.role": "Design automation engineer \xB7 Odesa, Ukraine",
+    "about.bio": "I turn design work into tools and AI workflows. Designing since 1997.",
+    "about.mail": "Email",
+    "about.write": "Write",
+    "about.versionTitle": "Version",
+    "about.license": "License",
+    "about.licenseValue": "free, open source (MIT)",
+    "about.offline": "Works offline",
+    "about.offlineNote": "your text never leaves the computer",
+    "about.bug": "Found a bug?",
+    "about.bugNote": "this is a beta, something may not work right",
+    "about.report": "Report",
+    "about.thanks": "Thanks to",
     "report.placeholder": "What did you do, what happened, and what did you expect? The steps that make it happen again help most.",
     "report.what": "What happened",
     "report.anyLanguage": "In any language; it goes as you wrote it.",
@@ -1512,19 +1395,50 @@
     "report.computer": "This computer and Kryakl",
     "report.computerNote": "Processor, memory, graphics card, Windows and Kryakl\u2019s versions",
     "report.settings": "Your settings",
-    "report.settingsNote": "Your own lists only counted: words kept as typed, words to spell, programs",
+    "report.settingsNote": "Your own lists only counted: words kept as typed, names and terms, programs",
     "report.never": "Never in it: your texts, words, mistakes, translations, phrases, transcripts or Hugging Face key. Your Windows name and the computer\u2019s are replaced. Nothing is sent until you send it.",
     "report.folder": "Kryakl\u2019s folder",
     "report.folderNote": "Where the logs are, to look at them yourself",
     "report.stopped": "If something stopped working",
     "report.restart": "Restart the speech engine",
-    "report.restartNote": "Dictate and Transcribe run in it \xB7 {state}",
+    "report.restartNote": "Voice typing and recordings run in it \xB7 {state}",
     "report.stateOff": "off",
     "report.stateStarting": "starting\u2026",
     "report.stateRunning": "running",
     "report.stateBusy": "running \xB7 transcribing now",
     "report.stateDown": "stopped",
-    "report.restartBtn": "Restart"
+    "report.restartBtn": "Restart",
+    // The action pages
+    "act.translate": "Translate",
+    "act.translateNote": "Enter puts the translation in place of the text",
+    "act.listen": "Translate and read aloud",
+    "act.listenNote": "the English is read aloud, the translation under it",
+    "act.inPlace": "Replace with translation",
+    "act.inPlaceNote": "no window, right in the text",
+    "act.selected": "Selected text",
+    "act.screen": "Text on the screen",
+    "act.screenNote": "draw a box around the text",
+    "act.own": "Your own text",
+    "act.ownKey": "Type a text to translate",
+    "act.quality": "Translation quality",
+    "act.cardNote": "reading, word meanings, its keys",
+    "act.screenHowNote": "the text is read on this computer, in the languages Windows has",
+    "act.try": "Try it",
+    "act.talkGroup": "Talk to the duck",
+    "act.talk": "Start a talk",
+    "act.talkNote": "speak English, the duck answers aloud",
+    "act.empty": "empty",
+    "act.talkWindow": "Talk window",
+    "act.talkWindowNote": "reading aloud, on top, its keys and history",
+    "act.checkNote": "mistakes struck out, the fix beside them; Enter puts it back",
+    "act.say": "Say it and check",
+    "act.sayNote": "speak English, mistakes get marked",
+    "act.fixGroup": "Fixing",
+    "act.switchGroup": "Switching",
+    "act.general": "General",
+    "act.notChosen": "not chosen",
+    "act.newWords": "New words",
+    "ui.forget": "Forget"
   };
 
   // src/i18n/ru.ts
@@ -1537,6 +1451,7 @@
     "common.copy": "\u041A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C",
     "common.copied": "\u0421\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u043E",
     "common.notNow": "\u041D\u0435 \u0441\u0435\u0439\u0447\u0430\u0441",
+    "common.beta": "\u0431\u0435\u0442\u0430",
     "common.retry": "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C",
     "common.tryAgain": "\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0435\u0449\u0451 \u0440\u0430\u0437",
     "common.openSettings": "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438",
@@ -1561,7 +1476,7 @@
     "main.resetDetail": "\u041A\u043B\u0430\u0432\u0438\u0448\u0438, \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u0438 \u0438 \u0441\u043F\u0438\u0441\u043A\u0438 \u0432\u0435\u0440\u043D\u0443\u0442\u0441\u044F \u043A \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u043C. \u0412\u0430\u0448 \u044F\u0437\u044B\u043A, \u0441\u043B\u043E\u0432\u0430, \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0438 \u0442\u043E, \u0447\u0435\u043C\u0443 \u041A\u0440\u044F\u043A\u043B \u043D\u0430\u0443\u0447\u0438\u043B\u0441\u044F \u043F\u043E \u0432\u0430\u0448\u0435\u043C\u0443 \u043D\u0430\u0431\u043E\u0440\u0443, \u043E\u0441\u0442\u0430\u043D\u0443\u0442\u0441\u044F.",
     "main.reset": "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C",
     "main.resetKeysAsk": "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0432\u0441\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0438?",
-    "main.resetKeysDetail": "\u041A\u0430\u0436\u0434\u043E\u0435 \u0441\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u0435 \u043A\u043B\u0430\u0432\u0438\u0448 \u0432\u0435\u0440\u043D\u0451\u0442\u0441\u044F \u043A \u0438\u0441\u0445\u043E\u0434\u043D\u043E\u043C\u0443: Ctrl+Alt+S, Ctrl+Alt+T, Ctrl+Alt+D, Ctrl+Alt+N \u0438 Ctrl+C \u0434\u0432\u0430\u0436\u0434\u044B; \u043E\u0441\u0442\u0430\u043B\u044C\u043D\u044B\u0435 \u0431\u0443\u0434\u0443\u0442 \u043E\u0447\u0438\u0449\u0435\u043D\u044B. \u0411\u043E\u043B\u044C\u0448\u0435 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0441\u044F.",
+    "main.resetKeysDetail": "\u041A\u0430\u0436\u0434\u043E\u0435 \u0441\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u0435 \u043A\u043B\u0430\u0432\u0438\u0448 \u0432\u0435\u0440\u043D\u0451\u0442\u0441\u044F \u043A \u0438\u0441\u0445\u043E\u0434\u043D\u043E\u043C\u0443: Ctrl+Alt+S, Ctrl+Alt+T, Ctrl+Alt+D \u0438 Ctrl+Alt+N; \u043E\u0441\u0442\u0430\u043B\u044C\u043D\u044B\u0435 \u0431\u0443\u0434\u0443\u0442 \u043E\u0447\u0438\u0449\u0435\u043D\u044B, Ctrl+C \u0434\u0432\u0430\u0436\u0434\u044B \u0442\u043E\u0436\u0435. \u0411\u043E\u043B\u044C\u0448\u0435 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0441\u044F.",
     "main.resetKeys": "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043A\u043B\u0430\u0432\u0438\u0448\u0438",
     "main.saveTranscript": "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0443",
     "main.notTranslated": "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438: {why}",
@@ -1590,30 +1505,29 @@
     "tray.openKryakl": "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u041A\u0440\u044F\u043A\u043B",
     "tray.built": "\u0421\u043E\u0431\u0440\u0430\u043D\u043E {build}",
     "tray.actions": "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u044F",
-    "tray.listenCopied": "\u041F\u0440\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0441\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u043E\u0435",
-    "tray.translateCopied": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0441\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u043E\u0435",
+    "tray.listenCopied": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0438 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0432\u0441\u043B\u0443\u0445",
+    "tray.translateCopied": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438",
     "tray.typeToTranslate": "\u0412\u0432\u0435\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430\u2026",
-    "tray.checkEnglish": "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u0439\u2026",
-    "tray.listenScreen": "\u041F\u0440\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0444\u0440\u0430\u0433\u043C\u0435\u043D\u0442 \u044D\u043A\u0440\u0430\u043D\u0430",
-    "tray.translateScreen": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0444\u0440\u0430\u0433\u043C\u0435\u043D\u0442 \u044D\u043A\u0440\u0430\u043D\u0430",
+    "tray.checkEnglish": "\u0412\u0432\u0435\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0434\u043B\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438\u2026",
+    "tray.listenScreen": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0438 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0441 \u044D\u043A\u0440\u0430\u043D\u0430",
+    "tray.translateScreen": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0441 \u044D\u043A\u0440\u0430\u043D\u0430",
     "tray.saveNote": "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0437\u0430\u043C\u0435\u0442\u043A\u0443",
-    "tray.newNote": "\u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043C\u0435\u0442\u043A\u0430",
-    "tray.transcripts": "\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438",
+    "tray.newNote": "\u0417\u0430\u043C\u0435\u0442\u043A\u0430 \u0433\u043E\u043B\u043E\u0441\u043E\u043C",
+    "tray.transcripts": "\u0412\u0441\u0435 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438",
     "tray.quick": "\u0411\u044B\u0441\u0442\u0440\u044B\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438",
     "tray.autoFix": "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0443 \u043F\u0440\u0438 \u043D\u0430\u0431\u043E\u0440\u0435",
     "tray.switchWith": "\u041F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0443: {key}",
     "tray.layoutBadge": "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0443 \u0443 \u043A\u0443\u0440\u0441\u043E\u0440\u0430",
     "tray.trayLayout": "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0443 \u0432 \u0442\u0440\u0435\u0435",
-    "tray.doubleCopy": "Ctrl+C \u0434\u0432\u0430\u0436\u0434\u044B \u2014 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C",
     "tray.yourWords": "\u0412\u0430\u0448\u0438 \u0441\u043B\u043E\u0432\u0430",
     "tray.keepWord": "\u041D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0441\u043B\u043E\u0432\u043E\u2026",
     "tray.keepWordTitle": "\u041D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u044D\u0442\u043E \u0441\u043B\u043E\u0432\u043E \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u043E (\u041D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C)",
     "tray.keepPlaceholder": "\u0441\u043B\u043E\u0432\u043E, \u043A\u0430\u043A \u0432\u044B \u0435\u0433\u043E \u043D\u0430\u0431\u0438\u0440\u0430\u0435\u0442\u0435",
     "tray.keepAria": "\u041D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0441\u043B\u043E\u0432\u043E",
     "tray.kept": "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043E: {word}",
-    "tray.vocabulary": "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0441\u043B\u043E\u0432\u043E \u0434\u043B\u044F \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0438\u2026",
-    "tray.keptList": "\u0421\u043B\u043E\u0432\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C",
-    "tray.pausedTitle": "\u041A\u043B\u0430\u0432\u0438\u0448\u0438 \u0438 Ctrl+C \u0434\u0432\u0430\u0436\u0434\u044B \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u044B",
+    "tray.vocabulary": "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0438\u043C\u044F \u0438\u043B\u0438 \u0442\u0435\u0440\u043C\u0438\u043D\u2026",
+    "tray.keptList": "\u041D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C",
+    "tray.pausedTitle": "\u041A\u043B\u0430\u0432\u0438\u0448\u0438 \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u044B",
     "tray.pauseTitle": "\u0412\u0441\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0438 \u0438 \u0440\u0435\u0430\u043A\u0446\u0438\u0438 \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u044B, \u043F\u043E\u043A\u0430 \u043D\u0435 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u0435",
     "tray.resume": "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C",
     "tray.pause": "\u041F\u0430\u0443\u0437\u0430",
@@ -1628,11 +1542,10 @@
     "tray.firstUse": "\u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0447\u0438\u043A \u2014 \u043F\u0440\u0438 \u043F\u0435\u0440\u0432\u043E\u043C \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D\u0438\u0438",
     "tray.tipRecording": "\u0417\u0430\u043F\u0438\u0441\u044C",
     "tray.tipPaused": "\u041A\u0440\u044F\u043A\u043B \xB7 \u043F\u0430\u0443\u0437\u0430",
-    "tray.tipListen": "{keys} \u2014 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C",
+    "tray.tipListen": "{keys} \u2014 \u043F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0438 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C",
     "tray.tipTranslate": "{key} \u2014 \u043F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438",
-    "tray.tipTwice": "Ctrl+C \u0434\u0432\u0430\u0436\u0434\u044B",
     // ------------------------------------------------------------ the card
-    "kind.listen": "\u0421\u043B\u0443\u0448\u0430\u0442\u044C",
+    "kind.listen": "\u041F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0432\u0441\u043B\u0443\u0445",
     "kind.translate": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438",
     "kind.check": "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C",
     "kind.screen": "\u044D\u043A\u0440\u0430\u043D",
@@ -1723,7 +1636,7 @@
     "talk.toEnd": "\u041A \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0439 \u0440\u0435\u043F\u043B\u0438\u043A\u0435",
     "talk.typePlaceholder": "\u0418\u043B\u0438 \u043D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u0440\u0435\u043F\u043B\u0438\u043A\u0443",
     "talk.typeOnly": "\u041D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u0438 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 Enter",
-    "talk.typeAria": "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0440\u0435\u043F\u043B\u0438\u043A\u0443 \u0443\u0442\u043A\u0435",
+    "talk.typeAria": "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0440\u0435\u043F\u043B\u0438\u043A\u0443 \u041A\u0440\u044F\u043A\u043B\u0443",
     "talk.newTitle": "\u0423\u0431\u0440\u0430\u0442\u044C \u044D\u0442\u043E\u0442 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0432 \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u0438 \u043D\u0430\u0447\u0430\u0442\u044C \u043D\u043E\u0432\u044B\u0439",
     "talk.new": "\u041D\u043E\u0432\u044B\u0439 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440",
     "talk.closeList": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0441\u043F\u0438\u0441\u043E\u043A",
@@ -1735,7 +1648,7 @@
     "talk.goingOnMeta": "\u0438\u0434\u0451\u0442",
     "talk.goingOnTitle": "\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440",
     "talk.goOn": "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C \u044D\u0442\u043E\u0442 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440",
-    "talk.firstLine": "\u041F\u0435\u0440\u0432\u0430\u044F \u0440\u0435\u043F\u043B\u0438\u043A\u0430 \u0443\u0442\u043A\u0438",
+    "talk.firstLine": "\u041F\u0435\u0440\u0432\u0430\u044F \u0440\u0435\u043F\u043B\u0438\u043A\u0430 \u041A\u0440\u044F\u043A\u043B\u0430",
     "talk.delete": "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u044D\u0442\u043E\u0442 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440",
     "talk.goingOn": "\u0418\u0434\u0451\u0442 \u0441\u0435\u0439\u0447\u0430\u0441",
     "talk.historyEmpty": "\xAB\u041D\u043E\u0432\u044B\u0439 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440\xBB \u043F\u0435\u0440\u0435\u043D\u043E\u0441\u0438\u0442 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0441\u044E\u0434\u0430, \u0447\u0442\u043E\u0431\u044B \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C \u0435\u0433\u043E \u043F\u043E\u0437\u0436\u0435. \u0425\u0440\u0430\u043D\u0438\u0442\u0441\u044F 30 \u0434\u043D\u0435\u0439 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435, \u043D\u0435 \u0431\u043E\u043B\u044C\u0448\u0435 50.",
@@ -1743,36 +1656,36 @@
     "talk.sureAll": "\u0422\u043E\u0447\u043D\u043E? \u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0432\u0441\u0435 ({n})",
     "talk.clearAll": "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0451",
     "talk.needsCard": "\u0414\u043B\u044F \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440\u0430 \u043D\u0443\u0436\u043D\u0430 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u0441 4 \u0413\u0411 \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u043F\u0430\u043C\u044F\u0442\u0438 \u0438\u043B\u0438 \u0431\u043E\u043B\u044C\u0448\u0435",
-    "talk.needsCardNote": "\u041D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435 \u0443\u0442\u043A\u0430 \u043E\u0442\u0432\u0435\u0447\u0430\u043B\u0430 \u0431\u044B 15 \u0441\u0435\u043A\u0443\u043D\u0434 \u0438 \u0434\u043E\u043B\u044C\u0448\u0435 \u2014 \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E \u0434\u043B\u044F \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440\u0430. \xAB\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E\xBB \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043A\u0430\u043A \u043F\u0440\u0435\u0436\u0434\u0435.",
+    "talk.needsCardNote": "\u041D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435 \u041A\u0440\u044F\u043A\u043B \u043E\u0442\u0432\u0435\u0447\u0430\u043B \u0431\u044B 15 \u0441\u0435\u043A\u0443\u043D\u0434 \u0438 \u0434\u043E\u043B\u044C\u0448\u0435 \u2014 \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E \u0434\u043B\u044F \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440\u0430. \xAB\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E\xBB \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043A\u0430\u043A \u043F\u0440\u0435\u0436\u0434\u0435.",
     "talk.downloading": "\u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0430, {pct}%; \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u043D\u0430\u0447\u043D\u0451\u0442\u0441\u044F, \u043A\u0430\u043A \u0442\u043E\u043B\u044C\u043A\u043E \u043C\u043E\u0434\u0435\u043B\u044C \u0431\u0443\u0434\u0435\u0442 \u0437\u0434\u0435\u0441\u044C",
     "talk.downloadFailed": "\u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u043D\u0435 \u0443\u0434\u0430\u043B\u0430\u0441\u044C",
     "talk.downloadIt": "\u0441\u043A\u0430\u0447\u0430\u0439\u0442\u0435 \u0435\u0451 \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445; \u0435\u0451 \u0442\u0430\u043A\u0436\u0435 \u043C\u043E\u0433\u0443\u0442 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \xAB\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E\xBB \u0438 \xAB\u041F\u0435\u0440\u0435\u0432\u043E\u0434\xBB",
-    "talk.needsModel": "\u0423\u0442\u043A\u0435 \u043D\u0443\u0436\u043D\u0430 \u0435\u0451 \u043C\u043E\u0434\u0435\u043B\u044C: {name}, {size}",
-    "talk.noEngine": "\u041F\u0438\u0448\u0438\u0442\u0435 \u0443\u0442\u043A\u0435 \u0438\u043B\u0438 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0440\u0430\u0441\u043F\u043E\u0437\u043D\u0430\u0432\u0430\u043D\u0438\u0435 \u0440\u0435\u0447\u0438, \u0447\u0442\u043E\u0431\u044B \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C",
-    "talk.noEngineNote": "\u0420\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0441\u043B\u044B\u0448\u0438\u0442 \u0432\u0430\u0441 \u0447\u0435\u0440\u0435\u0437 \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442 \xAB\u0414\u0438\u043A\u0442\u043E\u0432\u043A\u0430\xBB; \u0441\u043A\u0430\u0447\u0430\u0439\u0442\u0435 \u0435\u0433\u043E \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445.",
+    "talk.needsModel": "\u041A\u0440\u044F\u043A\u043B\u0443 \u043D\u0443\u0436\u043D\u0430 \u0435\u0433\u043E \u043C\u043E\u0434\u0435\u043B\u044C: {name}, {size}",
+    "talk.noEngine": "\u041F\u0438\u0448\u0438\u0442\u0435 \u041A\u0440\u044F\u043A\u043B\u0443 \u0438\u043B\u0438 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0440\u0430\u0441\u043F\u043E\u0437\u043D\u0430\u0432\u0430\u043D\u0438\u0435 \u0440\u0435\u0447\u0438, \u0447\u0442\u043E\u0431\u044B \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C",
+    "talk.noEngineNote": "\u0420\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0441\u043B\u044B\u0448\u0438\u0442 \u0432\u0430\u0441 \u0447\u0435\u0440\u0435\u0437 \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434; \u0441\u043A\u0430\u0447\u0430\u0439\u0442\u0435 \u0435\u0433\u043E \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445.",
     "talk.engineStarting": "\u0414\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0435\u0442\u0441\u044F\u2026",
-    "talk.slow": "\xAB{name}\xBB \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E: \u0443\u0442\u043A\u0430 \u043C\u043E\u0436\u0435\u0442 \u043E\u0442\u0432\u0435\u0447\u0430\u0442\u044C \u0434\u043E\u043B\u0433\u043E. \xAB{accurate}\xBB \u043E\u0442\u0432\u0435\u0447\u0430\u0435\u0442 \u043F\u0440\u0438\u043C\u0435\u0440\u043D\u043E \u0437\u0430 3 \u0441\u0435\u043A\u0443\u043D\u0434\u044B.",
-    "talk.busyCard": "\u0412\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0443 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442 \u0434\u0440\u0443\u0433\u0430\u044F \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430: \u0443\u0442\u043A\u0430 \u043C\u043E\u0436\u0435\u0442 \u043E\u0442\u0432\u0435\u0447\u0430\u0442\u044C \u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E.",
-    "talk.busyProcessor": "\u041F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442 \u0434\u0440\u0443\u0433\u0430\u044F \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430: \u0443\u0442\u043A\u0430 \u043C\u043E\u0436\u0435\u0442 \u043E\u0442\u0432\u0435\u0447\u0430\u0442\u044C \u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E.",
-    "talk.intro": "\u0413\u043E\u0432\u043E\u0440\u0438\u0442\u0435 \u043F\u043E-\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438. \u0423\u0442\u043A\u0430 \u043E\u0442\u0432\u0435\u0447\u0430\u0435\u0442 \u0432\u0441\u043B\u0443\u0445, \u0430 \u0432\u0430\u0448\u0438 \u043E\u0448\u0438\u0431\u043A\u0438 \u043E\u0442\u043C\u0435\u0447\u0430\u044E\u0442\u0441\u044F \u0432 \u0432\u0430\u0448\u0438\u0445 \u0440\u0435\u043F\u043B\u0438\u043A\u0430\u0445.",
+    "talk.slow": "\xAB{name}\xBB \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E: \u041A\u0440\u044F\u043A\u043B \u043C\u043E\u0436\u0435\u0442 \u043E\u0442\u0432\u0435\u0447\u0430\u0442\u044C \u0434\u043E\u043B\u0433\u043E. \xAB{accurate}\xBB \u043E\u0442\u0432\u0435\u0447\u0430\u0435\u0442 \u043F\u0440\u0438\u043C\u0435\u0440\u043D\u043E \u0437\u0430 3 \u0441\u0435\u043A\u0443\u043D\u0434\u044B.",
+    "talk.busyCard": "\u0412\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0443 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442 \u0434\u0440\u0443\u0433\u0430\u044F \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430: \u041A\u0440\u044F\u043A\u043B \u043C\u043E\u0436\u0435\u0442 \u043E\u0442\u0432\u0435\u0447\u0430\u0442\u044C \u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E.",
+    "talk.busyProcessor": "\u041F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442 \u0434\u0440\u0443\u0433\u0430\u044F \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430: \u041A\u0440\u044F\u043A\u043B \u043C\u043E\u0436\u0435\u0442 \u043E\u0442\u0432\u0435\u0447\u0430\u0442\u044C \u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E.",
+    "talk.intro": "\u0413\u043E\u0432\u043E\u0440\u0438\u0442\u0435 \u043F\u043E-\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438. \u041A\u0440\u044F\u043A\u043B \u043E\u0442\u0432\u0435\u0447\u0430\u0435\u0442 \u0432\u0441\u043B\u0443\u0445, \u0430 \u0432\u0430\u0448\u0438 \u043E\u0448\u0438\u0431\u043A\u0438 \u043E\u0442\u043C\u0435\u0447\u0430\u044E\u0442\u0441\u044F \u0432 \u0432\u0430\u0448\u0438\u0445 \u0440\u0435\u043F\u043B\u0438\u043A\u0430\u0445.",
     "talk.orTypeHello": "\u0418\u043B\u0438 \u043D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 hello \u043D\u0438\u0436\u0435.",
     "talk.orSayHello": "\u0418\u043B\u0438 \u043F\u0440\u043E\u0441\u0442\u043E \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043D\u043E\u043F\u043A\u0443 \u0438 \u0441\u043A\u0430\u0436\u0438\u0442\u0435 hello.",
     "talk.unpin": "\u041D\u0435 \u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043F\u043E\u0432\u0435\u0440\u0445 \u0434\u0440\u0443\u0433\u0438\u0445 \u043E\u043A\u043E\u043D",
     "talk.pin": "\u0414\u0435\u0440\u0436\u0430\u0442\u044C \u043F\u043E\u0432\u0435\u0440\u0445 \u0434\u0440\u0443\u0433\u0438\u0445 \u043E\u043A\u043E\u043D",
-    "talk.modelTitle": "\u0423\u0442\u043A\u0430 \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043D\u0430 {model} \u2014 \u0442\u043E\u0439 \u0436\u0435 \u043C\u043E\u0434\u0435\u043B\u0438, \u0447\u0442\u043E \u0438 \xAB\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E\xBB, \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435. \u041D\u0430\u0436\u043C\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C.",
-    "talk.failed": "\u0423\u0442\u043A\u0430 \u043D\u0435 \u0441\u043C\u043E\u0433\u043B\u0430 \u043E\u0442\u0432\u0435\u0442\u0438\u0442\u044C: {message}. \u0421\u043A\u0430\u0436\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437 \u0438\u043B\u0438 \u043D\u0430\u043F\u0438\u0448\u0438\u0442\u0435.",
+    "talk.modelTitle": "\u041A\u0440\u044F\u043A\u043B \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043D\u0430 {model} \u2014 \u0442\u043E\u0439 \u0436\u0435 \u043C\u043E\u0434\u0435\u043B\u0438, \u0447\u0442\u043E \u0438 \xAB\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E\xBB, \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435. \u041D\u0430\u0436\u043C\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C.",
+    "talk.failed": "\u041A\u0440\u044F\u043A\u043B \u043D\u0435 \u0441\u043C\u043E\u0433 \u043E\u0442\u0432\u0435\u0442\u0438\u0442\u044C: {message}. \u0421\u043A\u0430\u0436\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437 \u0438\u043B\u0438 \u043D\u0430\u043F\u0438\u0448\u0438\u0442\u0435.",
     "talk.noAnswer": "\u043D\u0435\u0442 \u043E\u0442\u0432\u0435\u0442\u0430",
     "talk.startingMic": "\u0412\u043A\u043B\u044E\u0447\u0430\u044E \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D\u2026",
     "talk.send": "\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C",
     "talk.talk": "\u0413\u043E\u0432\u043E\u0440\u0438\u0442\u044C",
     "talk.notPossible": "\u0420\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u043F\u043E\u043A\u0430 \u043D\u0435\u0432\u043E\u0437\u043C\u043E\u0436\u0435\u043D: \u0441\u043C. \u0432\u044B\u0448\u0435.",
-    "talk.speaking": "\u0423\u0442\u043A\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442",
-    "talk.thinking": "\u0423\u0442\u043A\u0430 \u0434\u0443\u043C\u0430\u0435\u0442\u2026",
+    "talk.speaking": "\u041A\u0440\u044F\u043A\u043B \u0433\u043E\u0432\u043E\u0440\u0438\u0442",
+    "talk.thinking": "\u041A\u0440\u044F\u043A\u043B \u0434\u0443\u043C\u0430\u0435\u0442\u2026",
     "talk.typingOnly": "\u0422\u043E\u043B\u044C\u043A\u043E \u0442\u0435\u043A\u0441\u0442\u043E\u043C, \u043F\u043E\u043A\u0430 \u043D\u0435\u0442 \u0440\u0430\u0441\u043F\u043E\u0437\u043D\u0430\u0432\u0430\u043D\u0438\u044F \u0440\u0435\u0447\u0438",
     "talk.pressAgain": "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437, \u0447\u0442\u043E\u0431\u044B \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C.",
     "talk.listeningPress": "\u0421\u043B\u0443\u0448\u0430\u044E \xB7 {keys} \u2014 \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C",
-    "talk.speakingPress": "\u0423\u0442\u043A\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442 \xB7 {keys} \u2014 \u043E\u0442\u0432\u0435\u0442\u0438\u0442\u044C",
-    "talk.thinkingPress": "\u0423\u0442\u043A\u0430 \u0434\u0443\u043C\u0430\u0435\u0442 \xB7 {keys} \u2014 \u043F\u0435\u0440\u0435\u0431\u0438\u0442\u044C",
+    "talk.speakingPress": "\u041A\u0440\u044F\u043A\u043B \u0433\u043E\u0432\u043E\u0440\u0438\u0442 \xB7 {keys} \u2014 \u043E\u0442\u0432\u0435\u0442\u0438\u0442\u044C",
+    "talk.thinkingPress": "\u041A\u0440\u044F\u043A\u043B \u0434\u0443\u043C\u0430\u0435\u0442 \xB7 {keys} \u2014 \u043F\u0435\u0440\u0435\u0431\u0438\u0442\u044C",
     "talk.press": "{keys} \u2014 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C",
     "talk.finishing": "\u0417\u0430\u0432\u0435\u0440\u0448\u0430\u044E \u0440\u0435\u043F\u043B\u0438\u043A\u0443\u2026",
     "talk.nothingHeard": "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0443\u0441\u043B\u044B\u0448\u0430\u043D\u043E.",
@@ -1791,10 +1704,10 @@
     "mic.denied": "\u041D\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u0430 \u043A \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D\u0443: \u0440\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u0435 \u0435\u0433\u043E \u0432 \u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u0430\u0445 Windows \u2192 \u041A\u043E\u043D\u0444\u0438\u0434\u0435\u043D\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u2192 \u041C\u0438\u043A\u0440\u043E\u0444\u043E\u043D",
     "mic.none": "\u041C\u0438\u043A\u0440\u043E\u0444\u043E\u043D \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D",
     "mic.busy": "\u041C\u0438\u043A\u0440\u043E\u0444\u043E\u043D \u0437\u0430\u043D\u044F\u0442 \u0434\u0440\u0443\u0433\u043E\u0439 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u043E\u0439",
-    "dict.type": "\u0414\u0438\u043A\u0442\u043E\u0432\u043A\u0430",
-    "dict.english": "\u0414\u0438\u043A\u0442\u043E\u0432\u043A\u0430 \u043D\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u043C",
-    "dict.note": "\u0417\u0430\u043C\u0435\u0442\u043A\u0430",
-    "dict.check": "\u041F\u0440\u0430\u043A\u0442\u0438\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E",
+    "dict.type": "\u041F\u0435\u0447\u0430\u0442\u0430\u0442\u044C \u0433\u043E\u043B\u043E\u0441\u043E\u043C",
+    "dict.english": "\u041F\u0435\u0447\u0430\u0442\u0430\u0442\u044C \u0433\u043E\u043B\u043E\u0441\u043E\u043C \u0441 \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u043E\u043C",
+    "dict.note": "\u0417\u0430\u043C\u0435\u0442\u043A\u0430 \u0433\u043E\u043B\u043E\u0441\u043E\u043C",
+    "dict.check": "\u0421\u043A\u0430\u0437\u0430\u0442\u044C \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C",
     "dict.gettingModel": "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u043C\u043E\u0434\u0435\u043B\u0438 \u0440\u0435\u0447\u0438 {pct}%",
     "dict.savingNote": "\u0421\u043E\u0445\u0440\u0430\u043D\u044F\u044E \u0437\u0430\u043C\u0435\u0442\u043A\u0443\u2026",
     "dict.catchingUp": "\u0414\u043E\u0433\u043E\u043D\u044F\u044E\u2026",
@@ -1870,13 +1783,13 @@
     "setup.freeUnknown": "\u0441\u0432\u043E\u0431\u043E\u0434\u043D\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E",
     "setup.noRoom": "\u041D\u0435 \u0445\u0432\u0430\u0442\u0430\u0435\u0442 \u043C\u0435\u0441\u0442\u0430: \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0447\u0442\u043E-\u043D\u0438\u0431\u0443\u0434\u044C \u0438\u043B\u0438 \u043E\u0441\u0432\u043E\u0431\u043E\u0434\u0438\u0442\u0435 \u043C\u0435\u0441\u0442\u043E.",
     "setup.alwaysGroup": "\u0412\u0441\u0435\u0433\u0434\u0430",
-    "setup.listenTranslate": "\u0421\u043B\u0443\u0448\u0430\u0442\u044C \u0438 \u043F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438",
+    "setup.listenTranslate": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0438 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0432\u0441\u043B\u0443\u0445",
     "setup.alwaysOn": "\u0432\u0441\u0435\u0433\u0434\u0430 \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u043E",
     "setup.voice": "\u0413\u043E\u043B\u043E\u0441",
     "setup.naturalHere": "\u0415\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \xB7 \u0443\u0436\u0435 \u0437\u0434\u0435\u0441\u044C",
     "setup.naturalSize": "\u0415\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \xB7 {size}",
     "setup.windowsVoice": "\u0413\u043E\u043B\u043E\u0441 Windows",
-    "setup.keyboard": "\u041A\u043B\u0430\u0432\u0438\u0430\u0442\u0443\u0440\u0430",
+    "setup.keyboard": "\u0420\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0430",
     "setup.badgeNote": "\u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u0437\u043D\u0430\u0447\u043E\u043A \u043F\u0440\u0438 \u043A\u0430\u0436\u0434\u043E\u0439 \u0441\u043C\u0435\u043D\u0435 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438",
     "setup.speech": "\u0420\u0435\u0447\u044C",
     "setup.dictateNote": "{why} \xB7 \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438 {engine} + \u043C\u043E\u0434\u0435\u043B\u044C {model}: {size}",
@@ -1933,14 +1846,15 @@
     "setup.item.core": "\u0440\u0435\u0447\u044C \u0432 \u0442\u0435\u043A\u0441\u0442",
     "setup.item.gpu": "\u0447\u0430\u0441\u0442\u044C \u0434\u043B\u044F \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u044B",
     "setup.item.speakers": "\u0447\u0430\u0441\u0442\u044C \xAB\u041A\u0442\u043E \u043A\u043E\u0433\u0434\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u043B\xBB",
-    "rec.check": "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E",
-    "rec.voice": "\u0413\u043E\u043B\u043E\u0441 \u0434\u043B\u044F \xAB\u0421\u043B\u0443\u0448\u0430\u0442\u044C\xBB",
-    "rec.transcribe": "\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u0430\u0442\u044C",
+    "rec.check": "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440",
+    "rec.dictate": "\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434",
+    "rec.voice": "\u0413\u043E\u043B\u043E\u0441",
+    "rec.transcribe": "\u0417\u0430\u043F\u0438\u0441\u0438 \u0438 \u0432\u0441\u0442\u0440\u0435\u0447\u0438",
     "rec.automatic": "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438",
     "rec.speechModels": "\u0410\u0432\u0442\u043E\u0432\u044B\u0431\u043E\u0440 \u043C\u043E\u0434\u0435\u043B\u0435\u0439 \u0440\u0435\u0447\u0438",
     "rec.speed": "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u044C",
     "rec.accuracy": "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0442\u043E\u0447\u043D\u043E\u0441\u0442\u044C",
-    "rec.dictateTranscribe": "\u0414\u0438\u043A\u0442\u043E\u0432\u043A\u0430 \u0438 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430",
+    "rec.dictateTranscribe": "\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434 \u0438 \u0437\u0430\u043F\u0438\u0441\u0438",
     "rec.naturalVoice": "\u0415\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u0433\u043E\u043B\u043E\u0441",
     "speech.sec": "{n} \u0441",
     "speech.min": "{n} \u043C\u0438\u043D",
@@ -1972,8 +1886,8 @@
     "speech.dlSpeakers": "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0447\u0430\u0441\u0442\u0438 \u0434\u043B\u044F \u0441\u043F\u0438\u043A\u0435\u0440\u043E\u0432",
     "speech.dlEngine": "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0434\u0432\u0438\u0436\u043A\u0430 \u0440\u0435\u0447\u0438",
     "speech.download": "\u0421\u043A\u0430\u0447\u0430\u0442\u044C",
-    "speech.needsDictate": "\u0414\u043B\u044F \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0438 \u043D\u0443\u0436\u0435\u043D \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
-    "speech.needsTranscribe": "\u0414\u043B\u044F \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u043D\u0443\u0436\u0435\u043D \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
+    "speech.needsDictate": "\u0414\u043B\u044F \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0433\u043E \u0432\u0432\u043E\u0434\u0430 \u043D\u0443\u0436\u0435\u043D \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
+    "speech.needsTranscribe": "\u0414\u043B\u044F \u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u043D\u0443\u0436\u0435\u043D \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
     "speech.needsMeet": "\u0414\u043B\u044F Google Meet \u043D\u0443\u0436\u0435\u043D \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
     "speech.needs": "\xAB{feature}\xBB: \u043D\u0443\u0436\u0435\u043D \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
     "speech.dlStopped": "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u043B\u0430\u0441\u044C: {why}",
@@ -1990,11 +1904,11 @@
     "speech.restart": "\u041F\u0435\u0440\u0435\u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C",
     "speech.onCard": "\u043D\u0430 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0435",
     "speech.onProcessor": "\u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440\u0435",
-    "speech.sharedDictate": "\u0414\u0438\u043A\u0442\u043E\u0432\u043A\u0430 \u0442\u043E\u0436\u0435 \u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442: \u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0438 \u0437\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
-    "speech.sharedTranscribe": "\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \u0442\u043E\u0436\u0435 \u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442: \u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0438 \u0437\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
-    "speech.keptDictate": "\u0437\u0430\u043F\u0430\u0441\u043D\u0430\u044F \u0434\u043B\u044F \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0438 \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440\u0435, \u0435\u0441\u043B\u0438 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u043E\u0434\u0432\u0435\u0434\u0451\u0442",
-    "speech.keptTranscribe": "\u0437\u0430\u043F\u0430\u0441\u043D\u0430\u044F \u0434\u043B\u044F \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440\u0435, \u0435\u0441\u043B\u0438 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u043E\u0434\u0432\u0435\u0434\u0451\u0442",
-    "speech.keptBoth": "\u0437\u0430\u043F\u0430\u0441\u043D\u0430\u044F \u0434\u043B\u044F \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0438 \u0438 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440\u0435, \u0435\u0441\u043B\u0438 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u043E\u0434\u0432\u0435\u0434\u0451\u0442",
+    "speech.sharedDictate": "\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434 \u0442\u043E\u0436\u0435 \u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442: \u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0438 \u0437\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
+    "speech.sharedTranscribe": "\u0417\u0430\u043F\u0438\u0441\u0438 \u0442\u043E\u0436\u0435 \u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u044E\u0442: \u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0438 \u0437\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
+    "speech.keptDictate": "\u0437\u0430\u043F\u0430\u0441\u043D\u0430\u044F \u0434\u043B\u044F \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0433\u043E \u0432\u0432\u043E\u0434\u0430 \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440\u0435, \u0435\u0441\u043B\u0438 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u043E\u0434\u0432\u0435\u0434\u0451\u0442",
+    "speech.keptTranscribe": "\u0437\u0430\u043F\u0430\u0441\u043D\u0430\u044F \u0434\u043B\u044F \u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440\u0435, \u0435\u0441\u043B\u0438 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u043E\u0434\u0432\u0435\u0434\u0451\u0442",
+    "speech.keptBoth": "\u0437\u0430\u043F\u0430\u0441\u043D\u0430\u044F \u0434\u043B\u044F \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0433\u043E \u0432\u0432\u043E\u0434\u0430 \u0438 \u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440\u0435, \u0435\u0441\u043B\u0438 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u043E\u0434\u0432\u0435\u0434\u0451\u0442",
     "speech.budgetPhrase": "\u0444\u0440\u0430\u0437\u0430 \u0437\u0430 \u2248{time}",
     "speech.budgetHour": "\u0447\u0430\u0441 \u0437\u0430\u043F\u0438\u0441\u0438 \u0437\u0430 \u2248{time}",
     "speech.automatic": "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438",
@@ -2015,7 +1929,7 @@
     "speech.speed": "\u0421\u043A\u043E\u0440\u043E\u0441\u0442\u044C",
     "speech.gpuTitle": "\u0420\u0435\u0447\u044C \u043D\u0430 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0435",
     "speech.installed": "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E",
-    "speech.gpuOffer": "\u0441\u043A\u0430\u0447\u0430\u0442\u044C {size}; \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0430 \u0438 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \u0441\u0442\u0430\u043D\u0443\u0442 \u0432 \u043D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0440\u0430\u0437 \u0431\u044B\u0441\u0442\u0440\u0435\u0435",
+    "speech.gpuOffer": "\u0441\u043A\u0430\u0447\u0430\u0442\u044C {size}; \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434 \u0438 \u0437\u0430\u043F\u0438\u0441\u0438 \u0441\u0442\u0430\u043D\u0443\u0442 \u0432 \u043D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0440\u0430\u0437 \u0431\u044B\u0441\u0442\u0440\u0435\u0435",
     "speech.add": "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C",
     "speech.testWaits": "\u0436\u0434\u0451\u0442, \u043F\u043E\u043A\u0430 \u0434\u0432\u0438\u0436\u043E\u043A \u043E\u0441\u0432\u043E\u0431\u043E\u0434\u0438\u0442\u0441\u044F",
     "speech.testStep": "{model} \xB7 \u0448\u0430\u0433 {n} \u0438\u0437 {total}",
@@ -2124,12 +2038,9 @@
     "tr.stopTranscribe": "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0438 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u0430\u0442\u044C",
     "tr.lostPiece": "\u0427\u0430\u0441\u0442\u044C \u0437\u0430\u043F\u0438\u0441\u0438 \u043D\u0435 \u0434\u043E\u0448\u043B\u0430 \u0434\u043E \u0434\u0432\u0438\u0436\u043A\u0430",
     "tr.dropHere": "\u041E\u0442\u043F\u0443\u0441\u0442\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u0430\u0442\u044C",
-    "tr.searched": "\u043F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u043B\u043E\u0432\u0430\u043C",
-    "tr.countSearched": "{n} \xB7 \u043F\u043E\u0438\u0441\u043A \u043F\u043E \u0441\u043B\u043E\u0432\u0430\u043C",
-    "tr.noneYet": "\u043F\u043E\u043A\u0430 \u043D\u0435\u0442",
     "tr.needEngine": "\u0414\u043B\u044F \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043E\u043A \u043D\u0443\u0436\u0435\u043D \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
-    "tr.needEngineNote": "\u043E\u043D \u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437, \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \xAB\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u0430\u0442\u044C\xBB",
-    "tr.transcribeLink": "\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u0430\u0442\u044C\u2026",
+    "tr.needEngineNote": "\u043E\u043D \u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437, \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \xAB\u0417\u0430\u043F\u0438\u0441\u0438 \u0438 \u0432\u0441\u0442\u0440\u0435\u0447\u0438\xBB",
+    "tr.transcribeLink": "\u0417\u0430\u043F\u0438\u0441\u0438 \u0438 \u0432\u0441\u0442\u0440\u0435\u0447\u0438\u2026",
     "tr.startingNote": "\u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u043F\u043E\u044F\u0432\u044F\u0442\u0441\u044F, \u043A\u0430\u043A \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u043D \u0437\u0430\u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442",
     "tr.search": "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0432\u0441\u0435\u043C \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430\u043C",
     "tr.new": "\u041D\u043E\u0432\u0430\u044F",
@@ -2140,7 +2051,7 @@
     "tr.nothing": "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E.",
     "tr.emptyTitle": "\u0417\u0434\u0435\u0441\u044C \u0431\u0443\u0434\u0443\u0442 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438",
     "tr.tipDrop": "\u041F\u0435\u0440\u0435\u0442\u0430\u0449\u0438\u0442\u0435 \u0432\u0438\u0434\u0435\u043E- \u0438\u043B\u0438 \u0430\u0443\u0434\u0438\u043E\u0444\u0430\u0439\u043B \u0432 \u044D\u0442\u043E \u043E\u043A\u043D\u043E",
-    "tr.tipMic": "\u0417\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u0441 \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D\u0430 \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \xAB\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u0430\u0442\u044C\xBB",
+    "tr.tipMic": "\u0417\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u0441 \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D\u0430 \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \xAB\u0417\u0430\u043F\u0438\u0441\u0438 \u0438 \u0432\u0441\u0442\u0440\u0435\u0447\u0438\xBB",
     "tr.tipNote": "\u041D\u0430\u0434\u0438\u043A\u0442\u0443\u0439\u0442\u0435 \u0437\u0430\u043C\u0435\u0442\u043A\u0443: {keys} \u0432 \u043B\u044E\u0431\u043E\u0439 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0435",
     "tr.tipMeet": "\u0417\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u0437\u0432\u043E\u043D\u043E\u043A Google Meet \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0435\u043C \u0434\u043B\u044F Chrome",
     "tr.failed": "\u043E\u0448\u0438\u0431\u043A\u0430",
@@ -2189,129 +2100,78 @@
     "tr.playSpace": "\u0412\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0441\u0442\u0438 \u0438\u043B\u0438 \u043F\u0430\u0443\u0437\u0430 \xB7 Space",
     "tr.play": "\u0412\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0441\u0442\u0438 \u0438\u043B\u0438 \u043F\u0430\u0443\u0437\u0430",
     "nav.home": "\u0413\u043B\u0430\u0432\u043D\u0430\u044F",
-    "nav.actions": "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u044F",
-    "nav.library": "\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430",
-    "nav.lists": "\u0412\u0430\u0448\u0438 \u0441\u043F\u0438\u0441\u043A\u0438",
-    "nav.talk": "\u0420\u0430\u0437\u0433\u043E\u0432\u043E\u0440",
-    "nav.listen": "\u0421\u043B\u0443\u0448\u0430\u0442\u044C",
-    "nav.translate": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438",
-    "nav.check": "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430",
-    "nav.screen": "\u042D\u043A\u0440\u0430\u043D",
-    "nav.dictate": "\u0414\u0438\u043A\u0442\u043E\u0432\u043A\u0430",
-    "nav.transcribe": "\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u0430\u0442\u044C",
-    "nav.keyboard": "\u041A\u043B\u0430\u0432\u0438\u0430\u0442\u0443\u0440\u0430",
-    "nav.words": "\u0421\u043B\u043E\u0432\u0430",
-    "nav.mistakes": "\u041E\u0448\u0438\u0431\u043A\u0438",
-    "nav.transcripts": "\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438",
-    "nav.translations": "\u041F\u0435\u0440\u0435\u0432\u043E\u0434\u044B",
-    "nav.phrases": "\u0424\u0440\u0430\u0437\u044B",
-    "nav.vocabulary": "\u0421\u043B\u043E\u0432\u0430\u0440\u044C \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0438",
+    "nav.english": "\u0410\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u0439",
+    "nav.voice": "\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434",
+    "nav.recordings": "\u0417\u0430\u043F\u0438\u0441\u0438 \u0438 \u0432\u0441\u0442\u0440\u0435\u0447\u0438",
+    "nav.layout": "\u0420\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0430",
+    "nav.translate": "\u041F\u0435\u0440\u0435\u0432\u043E\u0434",
+    "nav.words": "\u041C\u043E\u0438 \u0441\u043B\u043E\u0432\u0430",
+    "nav.mistakes": "\u041C\u043E\u0438 \u043E\u0448\u0438\u0431\u043A\u0438",
+    "nav.transcripts": "\u0412\u0441\u0435 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438",
+    "nav.translations": "\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u043E\u0432",
+    "nav.phrases": "\u041D\u0430\u0434\u0438\u043A\u0442\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u0444\u0440\u0430\u0437\u044B",
+    "nav.vocabulary": "\u0418\u043C\u0435\u043D\u0430 \u0438 \u0442\u0435\u0440\u043C\u0438\u043D\u044B",
     "nav.kept": "\u041D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C",
     "nav.learned": "\u0412\u044B\u0443\u0447\u0435\u043D\u043D\u044B\u0435 \u0441\u043B\u043E\u0432\u0430",
     "nav.programs": "\u041F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u044B",
-    "nav.layouts": "\u0420\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438",
+    "nav.layouts": "\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043E\u043A",
     "nav.settings": "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438",
     "nav.models": "\u041C\u043E\u0434\u0435\u043B\u0438",
-    "nav.storage": "\u0425\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435",
+    "nav.storage": "\u041C\u0435\u0441\u0442\u043E \u043D\u0430 \u0434\u0438\u0441\u043A\u0435",
     "nav.about": "\u041E \u041A\u0440\u044F\u043A\u043B\u0435",
     "nav.report": "\u0421\u043E\u043E\u0431\u0449\u0438\u0442\u044C \u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0435",
     "nav.search": "\u041F\u043E\u0438\u0441\u043A",
     "nav.minimize": "\u0421\u0432\u0435\u0440\u043D\u0443\u0442\u044C",
-    "nav.back": "\u041D\u0430\u0437\u0430\u0434",
-    "nav.backEsc": "\u041D\u0430\u0437\u0430\u0434 (Esc)",
     "nav.making": "\u0421\u043E\u0437\u0434\u0430\u0451\u0442\u0441\u044F \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430",
     "search.placeholder": "\u041F\u043E\u0438\u0441\u043A",
     "search.title": "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u043C (Ctrl+F)",
-    "search.places": { one: "{n} \u043C\u0435\u0441\u0442\u043E \u043F\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0443 \xAB{q}\xBB", few: "{n} \u043C\u0435\u0441\u0442\u0430 \u043F\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0443 \xAB{q}\xBB", many: "{n} \u043C\u0435\u0441\u0442 \u043F\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0443 \xAB{q}\xBB", other: "{n} \u043C\u0435\u0441\u0442\u0430 \u043F\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0443 \xAB{q}\xBB" },
-    "search.none": "\u043D\u0438\u0447\u0435\u0433\u043E \u043F\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0443 \xAB{q}\xBB",
     "search.nothing": "\u041D\u0438\u0433\u0434\u0435 \u043D\u0435\u0442 \xAB{q}\xBB. \u0412 \u0441\u043B\u043E\u0432\u0430\u0445, \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430\u0445 \u0438 \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430\u0445 \u0441\u0432\u043E\u0439 \u043F\u043E\u0438\u0441\u043A.",
     "search.hint": "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0432\u0432\u0435\u0440\u0445\u0443: \u043B\u044E\u0431\u0430\u044F \u0441\u0442\u0440\u043E\u043A\u0430 \u043B\u044E\u0431\u043E\u0439 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043D\u0430\u0445\u043E\u0434\u0438\u0442\u0441\u044F \u043F\u043E \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044E \u0438\u043B\u0438 \u043F\u0440\u0438\u043C\u0435\u0447\u0430\u043D\u0438\u044E, \u043F\u043E-\u0440\u0443\u0441\u0441\u043A\u0438 \u0438\u043B\u0438 \u043F\u043E-\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438.",
-    "page.meetCap": "\u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0435 \u041A\u0440\u044F\u043A\u043B\u0430 \u0434\u043B\u044F Chrome",
     "page.speakers": "\u041A\u0442\u043E \u043A\u043E\u0433\u0434\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u043B",
-    "page.speakersCap": "\u0440\u0430\u0437\u043B\u0438\u0447\u0430\u0435\u0442 \u0433\u043E\u043B\u043E\u0441\u0430",
     "page.fixing": "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u0440\u0438 \u043D\u0430\u0431\u043E\u0440\u0435",
-    "page.fixingCap": "\u0447\u0442\u043E \u0435\u0449\u0451 \u041A\u0440\u044F\u043A\u043B \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442, \u043F\u043E\u043A\u0430 \u0432\u044B \u043F\u0435\u0447\u0430\u0442\u0430\u0435\u0442\u0435",
     "page.languages": "\u0412\u0430\u0448\u0438 \u044F\u0437\u044B\u043A\u0438",
-    "page.forTranslateCap": "\u043C\u043E\u0434\u0435\u043B\u044C, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0438\u0442",
     "page.checkEnglish": "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E",
     "page.forCheckCap": "\u043C\u043E\u0434\u0435\u043B\u044C, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u043D\u0430\u0445\u043E\u0434\u0438\u0442 \u0432\u0430\u0448\u0438 \u043E\u0448\u0438\u0431\u043A\u0438",
-    "page.forDictateCap": "\u043C\u043E\u0434\u0435\u043B\u044C, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0442 \u0441\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0435",
-    "page.forTranscribeCap": "\u043C\u043E\u0434\u0435\u043B\u044C, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u044B\u0432\u0430\u0435\u0442 \u0437\u0430\u043F\u0438\u0441\u0438",
-    "page.voice": "\u0413\u043E\u043B\u043E\u0441 \u0447\u0442\u0435\u043D\u0438\u044F",
+    "page.voice": "\u0413\u043E\u043B\u043E\u0441",
     "page.forVoiceCap": "\u0433\u043E\u043B\u043E\u0441, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0447\u0438\u0442\u0430\u0435\u0442 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u0439 \u0432\u0441\u043B\u0443\u0445",
-    "page.wordsCap": { one: "{n} \u0441\u043B\u043E\u0432\u043E \xB7 \u0438\u0437 \u0432\u0430\u0448\u0438\u0445 \u043A\u0430\u0440\u0442\u043E\u0447\u0435\u043A", few: "{n} \u0441\u043B\u043E\u0432\u0430 \xB7 \u0438\u0437 \u0432\u0430\u0448\u0438\u0445 \u043A\u0430\u0440\u0442\u043E\u0447\u0435\u043A", many: "{n} \u0441\u043B\u043E\u0432 \xB7 \u0438\u0437 \u0432\u0430\u0448\u0438\u0445 \u043A\u0430\u0440\u0442\u043E\u0447\u0435\u043A", other: "{n} \u0441\u043B\u043E\u0432\u0430 \xB7 \u0438\u0437 \u0432\u0430\u0448\u0438\u0445 \u043A\u0430\u0440\u0442\u043E\u0447\u0435\u043A" },
-    "page.wordsNone": "\u043F\u043E\u043A\u0430 \u043D\u0435\u0442 \xB7 \u0438\u0437 \u0432\u0430\u0448\u0438\u0445 \u043A\u0430\u0440\u0442\u043E\u0447\u0435\u043A",
-    "page.mistakesCap": "\u0438\u0437 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438 \xB7 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435",
-    "page.translationsCap": "\u0445\u0440\u0430\u043D\u044F\u0442\u0441\u044F 30 \u0434\u043D\u0435\u0439 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435",
-    "page.phrasesCap": "\u043D\u0430\u0434\u0438\u043A\u0442\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u043D\u0435\u0434\u0430\u0432\u043D\u043E \xB7 \u0445\u0440\u0430\u043D\u044F\u0442\u0441\u044F 30 \u0434\u043D\u0435\u0439 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435",
-    "page.vocabularyCap": "\u0434\u043B\u044F \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0438 \u0438 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438",
-    "page.keptCap": "\u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0441\u0430\u043C\u0438",
-    "page.learnedCap": "\u0442\u043E\u043B\u044C\u043A\u043E \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435",
-    "page.programsCap": "\u0431\u0435\u0437 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0445 \u0444\u0443\u043D\u043A\u0446\u0438\u0439 \u0438\u043B\u0438 \u0441\u043E \u0441\u0432\u043E\u0435\u0439 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u043E\u0439",
-    "page.layoutsCap": "\u0432 \u043F\u043E\u0440\u044F\u0434\u043A\u0435, \u0432 \u043A\u043E\u0442\u043E\u0440\u043E\u043C \u0438\u0445 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u044E\u0442 \u043A\u043B\u0430\u0432\u0438\u0448\u0438",
-    "page.modelsCap": "\u0447\u0442\u043E \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442 \u043A\u0430\u0436\u0434\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0438 \u0447\u0442\u043E \u043B\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0433\u043E \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435",
-    "page.measuring": "\u0438\u0437\u043C\u0435\u0440\u0435\u043D\u0438\u0435\u2026",
-    "page.freeOn": "\u0441\u0432\u043E\u0431\u043E\u0434\u043D\u043E {size} \u043D\u0430 {drive}",
-    "page.storageCap": "\u0447\u0442\u043E \u041A\u0440\u044F\u043A\u043B \u0445\u0440\u0430\u043D\u0438\u0442 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435",
-    "page.reportCap": "\u0441 \u0436\u0443\u0440\u043D\u0430\u043B\u0430\u043C\u0438 \u041A\u0440\u044F\u043A\u043B\u0430, \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0435 \u0432\u044B",
-    "home.translatorReady": "\u0433\u043E\u0442\u043E\u0432\u043E",
-    "home.translatorAbsent": "\u0441\u043A\u0430\u0447\u0430\u0435\u0442\u0441\u044F \u043F\u0440\u0438 \u043F\u0435\u0440\u0432\u043E\u043C \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D\u0438\u0438",
-    "home.translatorDownloading": "\u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F",
-    "home.translatorFailed": "\u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043A\u0430\u0447\u0430\u0442\u044C; \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0435\u0442 \u0441\u043D\u043E\u0432\u0430 \u043F\u0440\u0438 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u043C \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0435",
-    "home.translatorUnsupported": "\u043E\u0444\u043B\u0430\u0439\u043D-\u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0447\u0438\u043A\u0430 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442",
-    "home.natural": "\u0435\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u0433\u043E\u043B\u043E\u0441",
-    "home.windowsVoice": "\u0433\u043E\u043B\u043E\u0441 Windows",
-    "home.voiceReady": "\u0433\u043E\u0442\u043E\u0432",
-    "home.voiceFailed": "\u0433\u043E\u0442\u043E\u0432 (\u0435\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u0433\u043E\u043B\u043E\u0441 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043A\u0430\u0447\u0430\u0442\u044C)",
-    "home.speech": "\u0440\u0435\u0447\u044C",
-    "home.speechReady": "\u0433\u043E\u0442\u043E\u0432\u0430",
-    "home.speechStopped": "\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u0430",
-    "home.speechStarting": "\u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0435\u0442\u0441\u044F",
-    "home.everything": "\u0412\u0441\u0451 \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435.",
     "home.paused": "\u041A\u0440\u044F\u043A\u043B \u043D\u0430 \u043F\u0430\u0443\u0437\u0435",
-    "home.pausedNote": "\u0441\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u044F \u043A\u043B\u0430\u0432\u0438\u0448 \u0438 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438 \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u044B, \u043F\u043E\u043A\u0430 \u0432\u044B \u043D\u0435 \u0432\u043E\u0437\u043E\u0431\u043D\u043E\u0432\u0438\u0442\u0435 \u0440\u0430\u0431\u043E\u0442\u0443",
+    "home.pausedNote": "\u043A\u043B\u0430\u0432\u0438\u0448\u0438 \u0438 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u044E\u0442",
     "home.replayTitle": "\u041F\u0440\u043E\u0438\u0433\u0440\u0430\u0442\u044C \u0441\u0442\u0440\u043E\u043A\u0443 \u0435\u0449\u0451 \u0440\u0430\u0437",
     "home.replay": "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C",
-    "home.foot": "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043D\u0430 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435, \u0447\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0435\u0433\u043E \u043A\u043B\u0430\u0432\u0438\u0448\u0438.",
+    "home.ready": "\u041A\u0440\u044F\u043A\u043B \u0433\u043E\u0442\u043E\u0432",
+    "home.readyNote": "\u0432\u0441\u0451 \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435",
+    "home.downloading": "\u041A\u0430\u0447\u0430\u0435\u0442\u0441\u044F: {name}",
+    "home.yourKeys": "\u0412\u0430\u0448\u0438 \u043A\u043B\u0430\u0432\u0438\u0448\u0438",
+    "home.unset": "\u0411\u0435\u0437 \u043A\u043B\u0430\u0432\u0438\u0448\u0438: {n}. \u0417\u0430\u0434\u0430\u044E\u0442\u0441\u044F \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430\u0445 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0439.",
+    "home.troubleTranslator": "\u041F\u0435\u0440\u0435\u0432\u043E\u0434\u0447\u0438\u043A \u043D\u0435 \u0441\u043A\u0430\u0447\u0430\u043B\u0441\u044F; \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0435\u0442 \u0441\u043D\u043E\u0432\u0430.",
+    "home.troubleVoice": "\u0415\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u0433\u043E\u043B\u043E\u0441 \u043D\u0435 \u0441\u043A\u0430\u0447\u0430\u043B\u0441\u044F; \u043F\u043E\u043A\u0430 \u0447\u0438\u0442\u0430\u0435\u0442 \u0433\u043E\u043B\u043E\u0441 Windows.",
+    "home.troubleSpeech": "\u0414\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438 \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u043B\u0441\u044F: \u043F\u0435\u0440\u0435\u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C \u0435\u0433\u043E \u043C\u043E\u0436\u043D\u043E \u0432 \xAB\u0421\u043E\u043E\u0431\u0449\u0438\u0442\u044C \u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0435\xBB.",
     "home.eyebrow": "\u041E\u0434\u043D\u0430 \u0441\u0442\u0440\u043E\u043A\u0430, \u0442\u0440\u0438 \u043A\u043B\u0430\u0432\u0438\u0448\u0438",
     "home.stepFix": "\u0438\u0441\u043F\u0440\u0430\u0432\u0438\u0442\u044C",
     "home.stepTranslate": "\u043F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438",
     "home.stepListen": "\u0441\u043B\u0443\u0448\u0430\u0442\u044C",
-    "home.talkDesc": "\u0413\u043E\u0432\u043E\u0440\u0438\u0442\u0435 \u043F\u043E-\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438 \u0441 \u0443\u0442\u043A\u043E\u0439: \u043E\u043D\u0430 \u043E\u0442\u0432\u0435\u0447\u0430\u0435\u0442 \u0432\u0441\u043B\u0443\u0445, \u0430 \u0432\u0430\u0448\u0438 \u043E\u0448\u0438\u0431\u043A\u0438 \u043E\u0442\u043C\u0435\u0447\u0430\u044E\u0442\u0441\u044F.",
-    "home.listenDesc": "\u0427\u0438\u0442\u0430\u0435\u0442 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u0439 \u0442\u0435\u043A\u0441\u0442 \u0432\u0441\u043B\u0443\u0445 \u0438 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u043F\u0435\u0440\u0435\u0432\u043E\u0434.",
-    "home.translateDesc": "\u041F\u0435\u0440\u0435\u0432\u043E\u0434\u0438\u0442 \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442; Enter \u0432\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u0442 \u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u043D\u0430 \u0435\u0433\u043E \u043C\u0435\u0441\u0442\u043E.",
-    "home.checkDesc": "\u041E\u0442\u043C\u0435\u0447\u0430\u0435\u0442 \u043E\u0448\u0438\u0431\u043A\u0438 \u0432 \u0432\u0430\u0448\u0435\u043C \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u043C \u0438 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435.",
-    "home.screenCap": "\u0442\u0435\u043A\u0441\u0442 \u0441 \u044D\u043A\u0440\u0430\u043D\u0430",
-    "home.screenDesc": "\u041E\u0431\u0432\u0435\u0434\u0438\u0442\u0435 \u0440\u0430\u043C\u043A\u043E\u0439 \u0442\u0435\u043A\u0441\u0442, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u044F\u0435\u0442\u0441\u044F, \u0438 \u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0430\u0439\u0442\u0435 \u0438\u043B\u0438 \u043F\u0435\u0440\u0435\u0432\u0435\u0434\u0438\u0442\u0435 \u0435\u0433\u043E.",
-    "home.dictateDesc": "\u0413\u043E\u0432\u043E\u0440\u0438\u0442\u0435, \u0438 \u041A\u0440\u044F\u043A\u043B \u043F\u0435\u0447\u0430\u0442\u0430\u0435\u0442 \u0442\u0430\u043C, \u0433\u0434\u0435 \u043A\u0443\u0440\u0441\u043E\u0440. \u0421\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0435 ({lang}) \u043C\u043E\u0436\u0435\u0442 \u0441\u0442\u0430\u0442\u044C \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u043C \u0442\u0435\u043A\u0441\u0442\u043E\u043C.",
-    "home.transcribeCap": "\u0444\u0430\u0439\u043B\u044B \xB7 \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D \xB7 Meet",
-    "home.transcribeDesc": "\u0420\u0430\u0437\u0433\u043E\u0432\u043E\u0440\u044B \u0438 \u0432\u0441\u0442\u0440\u0435\u0447\u0438 \u0432 \u0442\u0435\u043A\u0441\u0442, \u0441 \u0440\u0430\u0437\u0431\u0438\u0432\u043A\u043E\u0439 \u043F\u043E \u0433\u043E\u0432\u043E\u0440\u044F\u0449\u0438\u043C.",
-    "home.keyboardAuto": "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u0441\u043B\u043E\u0432\u0430, \u043D\u0430\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u043D\u0435 \u0432 \u0442\u043E\u0439 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0435, \u043F\u0440\u044F\u043C\u043E \u043F\u0440\u0438 \u043D\u0430\u0431\u043E\u0440\u0435.",
-    "home.keyboardDesc": "\u041F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0435\u0442 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0443 \u0438 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u0442\u0435\u043A\u0441\u0442, \u043D\u0430\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u043D\u0435 \u0432 \u0442\u043E\u0439.",
-    "home.downloadingPct": "\u0441\u043A\u0430\u0447\u0438\u0432\u0430\u043D\u0438\u0435 {pct}%",
     "home.downloadsOnce": "\u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
-    "home.speechToText": "\u0440\u0435\u0447\u044C \u0432 \u0442\u0435\u043A\u0441\u0442",
-    "home.speechOnCard": "\u0440\u0435\u0447\u044C \u0432 \u0442\u0435\u043A\u0441\u0442 \xB7 \u043D\u0430 \u0432\u0430\u0448\u0435\u0439 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0435",
-    "home.speechOnProcessor": "\u0440\u0435\u0447\u044C \u0432 \u0442\u0435\u043A\u0441\u0442 \xB7 \u043D\u0430 \u0432\u0430\u0448\u0435\u043C \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440\u0435",
+    "menu.translate": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438",
+    "menu.listen": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0438 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0432\u0441\u043B\u0443\u0445",
+    "menu.inPlace": "\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u043E\u043C",
+    "menu.screen": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0441 \u044D\u043A\u0440\u0430\u043D\u0430",
+    "menu.check": "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u0439",
+    "menu.talk": "\u0420\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0441 \u041A\u0440\u044F\u043A\u043B\u043E\u043C",
+    "menu.dictate": "\u041F\u0435\u0447\u0430\u0442\u0430\u0442\u044C \u0433\u043E\u043B\u043E\u0441\u043E\u043C",
+    "menu.english": "\u041F\u0435\u0447\u0430\u0442\u0430\u0442\u044C \u0433\u043E\u043B\u043E\u0441\u043E\u043C \u0441 \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u043E\u043C",
+    "menu.fix": "\u0418\u0441\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0443",
+    "menu.foot": "\u0411\u0443\u043A\u0432\u0430 \u2014 \u0432\u044B\u0431\u0440\u0430\u0442\u044C \xB7 Esc \u2014 \u0437\u0430\u043A\u0440\u044B\u0442\u044C",
+    "menu.nothingToRead": "\u041D\u0435\u0447\u0435\u0433\u043E \u0447\u0438\u0442\u0430\u0442\u044C: \u0432\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0442\u0435\u043A\u0441\u0442",
+    "menu.nothingToReplace": "\u041D\u0435\u0447\u0435\u0433\u043E \u0437\u0430\u043C\u0435\u043D\u0438\u0442\u044C: \u0432\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0442\u0435\u043A\u0441\u0442",
+    "menu.keyTitle": "\u041C\u0435\u043D\u044E \u041A\u0440\u044F\u043A\u043B\u0430",
+    "menu.keyNote": "\u043E\u0434\u043D\u0430 \u043A\u043B\u0430\u0432\u0438\u0448\u0430 \u2014 \u0432\u0441\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F",
     "keys.group": "\u041A\u043B\u0430\u0432\u0438\u0448\u0438",
-    "keys.talk": "\u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440",
-    "keys.selection": "\u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u043E\u0435",
-    "keys.type": "\u0432\u0432\u0435\u0441\u0442\u0438",
-    "keys.pasteBack": "\u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044C",
-    "keys.byVoice": "\u0433\u043E\u043B\u043E\u0441\u043E\u043C",
-    "keys.listen": "\u0441\u043B\u0443\u0448\u0430\u0442\u044C",
-    "keys.translate": "\u043F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438",
-    "keys.dictate": "\u0434\u0438\u043A\u0442\u043E\u0432\u0430\u0442\u044C",
-    "keys.note": "\u0437\u0430\u043C\u0435\u0442\u043A\u0430",
-    "keys.inMeet": "\u0432 Meet",
-    "keys.switch": "\u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0438\u0442\u044C",
-    "keys.fix": "\u0438\u0441\u043F\u0440\u0430\u0432\u0438\u0442\u044C",
     "keys.copyTwice": "Ctrl + C \u0434\u0432\u0430\u0436\u0434\u044B",
     "keys.twice": "{key} \u0434\u0432\u0430\u0436\u0434\u044B",
     "keys.tap": "\u043D\u0430\u0436\u043C\u0438\u0442\u0435 {key}",
     "keys.press": "\u043D\u0430\u0436\u043C\u0438\u0442\u0435 {key}",
-    "keys.useSelect": "\u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0435 \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u043E\u0433\u043E",
-    "keys.useSnip": "\u043F\u0440\u043E\u0441\u043B\u0443\u0448\u0438\u0432\u0430\u043D\u0438\u0435 \u0442\u0435\u043A\u0441\u0442\u0430 \u0441 \u044D\u043A\u0440\u0430\u043D\u0430",
+    "keys.useSelect": "\u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u0438 \u0447\u0442\u0435\u043D\u0438\u0435 \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u043E\u0433\u043E \u0432\u0441\u043B\u0443\u0445",
+    "keys.useSnip": "\u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u0438 \u0447\u0442\u0435\u043D\u0438\u0435 \u0442\u0435\u043A\u0441\u0442\u0430 \u0441 \u044D\u043A\u0440\u0430\u043D\u0430",
     "keys.useTranslate": "\u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u043E\u0433\u043E",
     "keys.useText": "\u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u0442\u0435\u043A\u0441\u0442\u0430 \u0441 \u044D\u043A\u0440\u0430\u043D\u0430",
     "keys.useInPlace": "\u0437\u0430\u043C\u0435\u043D\u0430 \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u043E\u0433\u043E \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u043E\u043C",
@@ -2325,14 +2185,17 @@
     "keys.useNote": "\u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0430 \u0437\u0430\u043C\u0435\u0442\u043A\u0438",
     "keys.useAgain": "\u043F\u043E\u0432\u0442\u043E\u0440\u043D\u044B\u0439 \u0432\u0432\u043E\u0434 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0439 \u0444\u0440\u0430\u0437\u044B",
     "keys.usePractice": "\u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0441\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E",
-    "keys.useTalk": "\u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0441 \u0443\u0442\u043A\u043E\u0439",
+    "keys.useTalk": "\u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0441 \u041A\u0440\u044F\u043A\u043B\u043E\u043C",
     "keys.usePause": "\u043F\u0430\u0443\u0437\u0430 \u041A\u0440\u044F\u043A\u043B\u0430",
     "keys.useWindow": "\u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0435 \u041A\u0440\u044F\u043A\u043B\u0430",
+    "keys.useMenu": "\u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0435 \u043C\u0435\u043D\u044E \u041A\u0440\u044F\u043A\u043B\u0430",
     "keys.toLayout": "\u043F\u0435\u0440\u0435\u0445\u043E\u0434 \u043D\u0430 {layout}",
     "keys.aLayout": "\u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0443",
     "keys.taken": "{key} \u0443\u0436\u0435 \u0437\u0430\u043D\u044F\u0442\u043E: {use}.",
+    "keys.copyTwiceOnly": "Ctrl + C \u0434\u0432\u0430\u0436\u0434\u044B \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u043A\u043B\u0430\u0432\u0438\u0448\u0435\u0439 \u0442\u043E\u043B\u044C\u043A\u043E \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u0441 \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u044B\u043C \u0442\u0435\u043A\u0441\u0442\u043E\u043C.",
     "keys.menuAlt": "Alt \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u043C\u0435\u043D\u044E, \u044D\u0442\u043E \u0434\u0435\u043B\u0430\u0435\u0442 F10",
     "keys.menuWin": "Win \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \xAB\u041F\u0443\u0441\u043A\xBB, \u044D\u0442\u043E \u0434\u0435\u043B\u0430\u0435\u0442 Ctrl+Esc",
+    "keys.menuCtrlEsc": "Ctrl+Esc \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \xAB\u041F\u0443\u0441\u043A\xBB, \u044D\u0442\u043E \u0434\u0435\u043B\u0430\u0435\u0442 Win",
     "keys.recordTitle": "\u0429\u0451\u043B\u043A\u043D\u0438\u0442\u0435, \u0437\u0430\u0442\u0435\u043C \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0438: Ctrl+Alt+T, Left Ctrl \u0434\u0432\u0430\u0436\u0434\u044B, Pause, \u0431\u043E\u043A\u043E\u0432\u0443\u044E \u043A\u043D\u043E\u043F\u043A\u0443 \u043C\u044B\u0448\u0438\u2026",
     "keys.aria": "{label}: {key}. \u0429\u0451\u043B\u043A\u043D\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C.",
     "keys.notSet": "\u043D\u0435 \u0437\u0430\u0434\u0430\u043D\u043E",
@@ -2342,19 +2205,10 @@
     "keys.backTo": "\u0412\u0435\u0440\u043D\u0443\u0442\u044C {key}",
     "keys.backToAria": "{label}: \u0432\u0435\u0440\u043D\u0443\u0442\u044C {key}",
     "keys.takenProgram": "\u0417\u0430\u043D\u044F\u0442\u043E \u0434\u0440\u0443\u0433\u043E\u0439 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u043E\u0439; \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0435.",
-    "keys.change": "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C",
     "keys.set": "\u0417\u0430\u0434\u0430\u0442\u044C",
     "listen.tryKey": "\u0412\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u044D\u0442\u043E\u0442 \u0442\u0435\u043A\u0441\u0442 \u0438 {how}.",
     "listen.tryTwice": "\u0412\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u044D\u0442\u043E\u0442 \u0442\u0435\u043A\u0441\u0442 \u0438 \u0434\u0432\u0430\u0436\u0434\u044B \u043D\u0430\u0436\u043C\u0438\u0442\u0435 Ctrl + C.",
-    "listen.tryNone": "\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0443 \u0432\u044B\u0448\u0435 \u0438\u043B\u0438 \u0432\u043A\u043B\u044E\u0447\u0438\u0442\u0435 Ctrl + C \u0434\u0432\u0430\u0436\u0434\u044B, \u0437\u0430\u0442\u0435\u043C \u0432\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u044D\u0442\u043E\u0442 \u0442\u0435\u043A\u0441\u0442.",
-    "listen.select": "\u041F\u0440\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442",
-    "listen.selectNote": "\u0432\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0442\u0435\u043A\u0441\u0442 \u0433\u0434\u0435 \u0443\u0433\u043E\u0434\u043D\u043E \u0438 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0443",
-    "listen.alsoTwice": "\u0422\u0430\u043A\u0436\u0435 \u043D\u0430 Ctrl + C \u0434\u0432\u0430\u0436\u0434\u044B",
-    "listen.alsoTwiceNote": "\u0432\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0442\u0435\u043A\u0441\u0442 \u0438 \u0431\u044B\u0441\u0442\u0440\u043E \u0434\u0432\u0430\u0436\u0434\u044B \u043D\u0430\u0436\u043C\u0438\u0442\u0435 Ctrl + C; \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0438 \u0431\u0435\u0437 \u0437\u0430\u0434\u0430\u043D\u043D\u043E\u0439 \u043A\u043B\u0430\u0432\u0438\u0448\u0438",
-    "listen.snip": "\u041F\u0440\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0442\u0435\u043A\u0441\u0442 \u0441 \u044D\u043A\u0440\u0430\u043D\u0430",
-    "listen.boxNote": "\u0434\u043B\u044F \u0442\u0435\u043A\u0441\u0442\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u044F\u0435\u0442\u0441\u044F: \u043E\u0431\u0432\u0435\u0434\u0438\u0442\u0435 \u0435\u0433\u043E \u0440\u0430\u043C\u043A\u043E\u0439",
-    "listen.voiceGroup": "\u0413\u043E\u043B\u043E\u0441",
-    "listen.voiceNote": "\u0433\u043E\u043B\u043E\u0441, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0447\u0438\u0442\u0430\u0435\u0442",
+    "listen.tryNone": "\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0443 \u0432\u044B\u0448\u0435 (\u043C\u043E\u0436\u043D\u043E Ctrl + C \u0434\u0432\u0430\u0436\u0434\u044B), \u0437\u0430\u0442\u0435\u043C \u0432\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u044D\u0442\u043E\u0442 \u0442\u0435\u043A\u0441\u0442.",
     "listen.cardGroup": "\u041A\u0430\u0440\u0442\u043E\u0447\u043A\u0430",
     "listen.autoRead": "\u0427\u0438\u0442\u0430\u0442\u044C \u0432\u0441\u043B\u0443\u0445 \u043F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438",
     "listen.rareWords": "\u041F\u0443\u043D\u043A\u0442\u0438\u0440 \u043F\u043E\u0434 \u0440\u0435\u0434\u043A\u0438\u043C\u0438 \u0441\u043B\u043E\u0432\u0430\u043C\u0438",
@@ -2382,23 +2236,11 @@
     "translate.unsupportedNote": "\u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u044F\u0437\u044B\u043A\u0430 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442 \u043E\u0444\u043B\u0430\u0439\u043D-\u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0447\u0438\u043A\u0430",
     "translate.tryKey": "\u0412\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0435\u0433\u043E \u0438 {how}.",
     "translate.tryNone": "\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0443 \u0432\u044B\u0448\u0435, \u0437\u0430\u0442\u0435\u043C \u0432\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0442\u0435\u043A\u0441\u0442 \u0438 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u0435\u0451.",
-    "translate.select": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442",
-    "translate.selectNote": "\u0432\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0435\u0433\u043E \u0433\u0434\u0435 \u0443\u0433\u043E\u0434\u043D\u043E \u0438 {how}",
-    "translate.selectNoKey": "\u0432\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0435\u0433\u043E \u0433\u0434\u0435 \u0443\u0433\u043E\u0434\u043D\u043E \u0438 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043E\u0434\u043D\u0443 \u043A\u043B\u0430\u0432\u0438\u0448\u0443, \u043D\u0430\u043F\u0440\u0438\u043C\u0435\u0440 Left Ctrl \u0434\u0432\u0430\u0436\u0434\u044B",
-    "translate.type": "\u0412\u0432\u0435\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430",
     "translate.typeNote": "\u043F\u0443\u0441\u0442\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u0443 \u0443\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044F, \u0438\u0437 \u043B\u044E\u0431\u043E\u0439 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u044B; \u0442\u0430\u043A\u0436\u0435 \u0432 \u043C\u0435\u043D\u044E \u0432 \u0442\u0440\u0435\u0435",
-    "translate.inPlace": "\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u043E\u0435 \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u043E\u043C",
-    "translate.inPlaceNote": "\u0431\u0435\u0437 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438",
-    "translate.text": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0441 \u044D\u043A\u0440\u0430\u043D\u0430",
     "translate.pasteBack": "\u0412 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435: \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u043D\u0430 \u043C\u0435\u0441\u0442\u043E",
-    "translate.group": "\u041F\u0435\u0440\u0435\u0432\u043E\u0434",
-    "translate.model": "\u041C\u043E\u0434\u0435\u043B\u044C \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430",
-    "translate.modelNote": "\u043D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0445\u043E\u0440\u043E\u0448\u043E \u0438 \u0431\u044B\u0441\u0442\u0440\u043E \u043E\u043D\u0430 \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0438\u0442; \u0442\u0430 \u0436\u0435 \u043C\u043E\u0434\u0435\u043B\u044C \u043C\u043E\u0436\u0435\u0442 \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0442\u044C \u0432\u0430\u0448 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u0439",
-    "translate.languages": "\u042F\u0437\u044B\u043A\u0438",
-    "translate.history": "\u0418\u0441\u0442\u043E\u0440\u0438\u044F",
-    "translate.recent": "\u041D\u0435\u0434\u0430\u0432\u043D\u0438\u0435 \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u044B",
-    "translate.recentNote": "\u0445\u0440\u0430\u043D\u044F\u0442\u0441\u044F 30 \u0434\u043D\u0435\u0439, \u0442\u043E\u043B\u044C\u043A\u043E \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435",
-    "translate.none": "\u043D\u0435\u0442",
+    "translate.shareAsk": "\u041C\u043E\u0434\u0435\u043B\u044C \xAB{model}\xBB \u0443\u0436\u0435 \u0435\u0441\u0442\u044C \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435",
+    "translate.shareNote": "\u0415\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u044E\u0442 \xAB\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E\xBB \u0438 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0441 \u041A\u0440\u044F\u043A\u043B\u043E\u043C. \u041F\u0435\u0440\u0435\u0432\u043E\u0434 \u0442\u043E\u0436\u0435 \u043C\u043E\u0436\u0435\u0442 \u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C, \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0441\u043A\u0430\u0447\u0438\u0432\u0430\u044F: \xAB{fast}\xBB \u0441\u0440\u0430\u0437\u0443 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A, \u0430 \xAB{model}\xBB \u0435\u0433\u043E \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442.",
+    "translate.shareUse": "\u041F\u0435\u0440\u0435\u0432\u043E\u0434\u0438\u0442\u044C \u043C\u043E\u0434\u0435\u043B\u044C\u044E \xAB{model}\xBB",
     "translate.empty": "\u041F\u043E\u043A\u0430 \u043D\u0438\u0447\u0435\u0433\u043E. \u041F\u0435\u0440\u0435\u0432\u043E\u0434\u044B \u0445\u0440\u0430\u043D\u044F\u0442\u0441\u044F \u0437\u0434\u0435\u0441\u044C 30 \u0434\u043D\u0435\u0439, \u043D\u0435 \u0431\u043E\u043B\u0435\u0435 200.",
     "models.aboutFast": "\u041C\u0433\u043D\u043E\u0432\u0435\u043D\u043D\u043E; \u043A\u043E\u0440\u043E\u0442\u043A\u0438\u0435 \u0444\u0440\u0430\u0437\u044B \u043C\u043E\u0433\u0443\u0442 \u0432\u044B\u0439\u0442\u0438 \u0434\u043E\u0441\u043B\u043E\u0432\u043D\u044B\u043C\u0438",
     "models.aboutAccurateLevel": "\u041F\u043E\u043D\u0438\u043C\u0430\u0435\u0442 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0446\u0435\u043B\u0438\u043A\u043E\u043C",
@@ -2472,9 +2314,10 @@
     "models.computer": "\u042D\u0442\u043E\u0442 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440",
     "models.eachAction": "\u0427\u0442\u043E \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442 \u043A\u0430\u0436\u0434\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435",
     "models.translateNote": "\u043D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0445\u043E\u0440\u043E\u0448\u043E \u0438 \u0431\u044B\u0441\u0442\u0440\u043E \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u044F\u0442\u0441\u044F \u0442\u0435\u043A\u0441\u0442\u044B",
+    "models.checkTalk": "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440",
     "models.dictateNote": "\u0437\u0430\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0442 \u0441\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0435",
     "models.transcribeNote": "\u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u044B\u0432\u0430\u0435\u0442 \u0437\u0430\u043F\u0438\u0441\u0438 \u0438 \u0432\u0441\u0442\u0440\u0435\u0447\u0438",
-    "models.shared": "\u041C\u043E\u0434\u0435\u043B\u044C, \u043A\u043E\u0442\u043E\u0440\u0443\u044E \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u044E\u0442 \u0434\u0432\u0430 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F, \u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0438 \u0437\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437: \xAB\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438\xBB \u0438 \xAB\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430\xBB \u0434\u0435\u043B\u044F\u0442 \u044F\u0437\u044B\u043A\u043E\u0432\u0443\u044E \u043C\u043E\u0434\u0435\u043B\u044C, \xAB\u0414\u0438\u043A\u0442\u043E\u0432\u043A\u0430\xBB \u0438 \xAB\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u0430\u0442\u044C\xBB \u2014 \u043C\u043E\u0434\u0435\u043B\u044C \u0440\u0435\u0447\u0438, \u0433\u0434\u0435 \u044D\u0442\u043E \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0441\u0442\u043E\u0438\u0442.",
+    "models.shared": "\u041C\u043E\u0434\u0435\u043B\u044C, \u043A\u043E\u0442\u043E\u0440\u0443\u044E \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u044E\u0442 \u0434\u0432\u0430 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F, \u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0438 \u0437\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437: \xAB\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438\xBB \u0438 \xAB\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430\xBB \u0434\u0435\u043B\u044F\u0442 \u044F\u0437\u044B\u043A\u043E\u0432\u0443\u044E \u043C\u043E\u0434\u0435\u043B\u044C, \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434 \u0438 \u0437\u0430\u043F\u0438\u0441\u0438 \u2014 \u043C\u043E\u0434\u0435\u043B\u044C \u0440\u0435\u0447\u0438, \u0433\u0434\u0435 \u044D\u0442\u043E \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0441\u0442\u043E\u0438\u0442.",
     "models.stateDownloading": "\u0441\u043A\u0430\u0447\u0438\u0432\u0430\u043D\u0438\u0435 {pct}%",
     "models.stateFailed": "\u043E\u0448\u0438\u0431\u043A\u0430 \u0441\u043A\u0430\u0447\u0438\u0432\u0430\u043D\u0438\u044F",
     "engine.notRunning": "\u0414\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438 \u043D\u0435 \u0437\u0430\u043F\u0443\u0449\u0435\u043D",
@@ -2520,62 +2363,41 @@
     "engine.hfError": "Hugging Face \u043E\u0442\u0432\u0435\u0442\u0438\u043B \u043E\u0448\u0438\u0431\u043A\u043E\u0439",
     "engine.hfOffline": "\u041D\u0435\u0442 \u0441\u0432\u044F\u0437\u0438 \u0441 Hugging Face",
     "engine.downloadFailed": "\u0421\u043A\u0430\u0447\u0438\u0432\u0430\u043D\u0438\u0435 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C: {why}",
-    "talkPage.needsCard": "\u043D\u0443\u0436\u043D\u0430 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430",
     "check.downloadingPct": "\u0441\u043A\u0430\u0447\u0438\u0432\u0430\u043D\u0438\u0435 {pct}%",
-    "check.downloadsOnce": "\u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
-    "check.capNotes": "\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u0439 \xB7 \u043F\u043E\u044F\u0441\u043D\u0435\u043D\u0438\u044F: {lang}",
     "talkPage.downloading": "\u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F; \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u043D\u0430\u0447\u043D\u0451\u0442\u0441\u044F, \u043A\u0430\u043A \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u043D\u0430 \u0431\u0443\u0434\u0435\u0442 \u0437\u0434\u0435\u0441\u044C",
     "talkPage.downloadOnce": "\u0441\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437; \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E \u0438 \u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u0442\u043E\u0436\u0435 \u043C\u043E\u0433\u0443\u0442 \u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C",
     "settings.download": "\u0421\u043A\u0430\u0447\u0430\u0442\u044C",
     "talkPage.engineTitle": "\u0420\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0441\u043B\u044B\u0448\u0438\u0442 \u0432\u0430\u0441 \u0447\u0435\u0440\u0435\u0437 \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
-    "talkPage.engineNote": "\u041F\u043E\u043A\u0430 \u0435\u0433\u043E \u043D\u0435\u0442, \u043F\u0438\u0448\u0438\u0442\u0435 \u0443\u0442\u043A\u0435. \u0421\u043A\u0430\u0447\u0430\u0439\u0442\u0435 \u0435\u0433\u043E \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \xAB\u0414\u0438\u043A\u0442\u043E\u0432\u043A\u0430\xBB; \u044D\u0442\u043E \u0442\u043E\u0442 \u0436\u0435 \u0434\u0432\u0438\u0436\u043E\u043A, \u0447\u0442\u043E \u0438 \u0434\u043B\u044F \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0438.",
-    "talkPage.openDictate": "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \xAB\u0414\u0438\u043A\u0442\u043E\u0432\u043A\u0443\xBB",
-    "talkPage.aboutPlaceholder": '\u041D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0441\u043B\u043E\u0432, \u043E \u043A\u043E\u0442\u043E\u0440\u044B\u0445 \u0443\u0442\u043A\u0430 \u043C\u043E\u0436\u0435\u0442 \u043F\u043E\u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C: \u0432\u0430\u0448\u0435 \u0438\u043C\u044F, \u0440\u0430\u0431\u043E\u0442\u0430, \u0447\u0442\u043E \u0432\u0430\u043C \u043D\u0440\u0430\u0432\u0438\u0442\u0441\u044F. "I am Alex, a designer. I love hiking and progressive metal."',
+    "talkPage.engineNote": "\u041F\u043E\u043A\u0430 \u0435\u0433\u043E \u043D\u0435\u0442, \u043F\u0438\u0448\u0438\u0442\u0435 \u041A\u0440\u044F\u043A\u043B\u0443. \u0421\u043A\u0430\u0447\u0430\u0439\u0442\u0435 \u0435\u0433\u043E \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \xAB\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434\xBB; \u044D\u0442\u043E \u0442\u043E\u0442 \u0436\u0435 \u0434\u0432\u0438\u0436\u043E\u043A.",
+    "talkPage.openDictate": "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \xAB\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434\xBB",
+    "talkPage.aboutPlaceholder": '\u041D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0441\u043B\u043E\u0432, \u043E \u043A\u043E\u0442\u043E\u0440\u044B\u0445 \u041A\u0440\u044F\u043A\u043B \u043C\u043E\u0436\u0435\u0442 \u043F\u043E\u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C: \u0432\u0430\u0448\u0435 \u0438\u043C\u044F, \u0440\u0430\u0431\u043E\u0442\u0430, \u0447\u0442\u043E \u0432\u0430\u043C \u043D\u0440\u0430\u0432\u0438\u0442\u0441\u044F. "I am Alex, a designer. I love hiking and progressive metal."',
     "talkPage.aboutYou": "\u041E \u0432\u0430\u0441",
-    "talkPage.needsEngine": "\u043D\u0443\u0436\u0435\u043D \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438 (\u0441\u043C. \xAB\u0414\u0438\u043A\u0442\u043E\u0432\u043A\u0430\xBB)",
-    "talkPage.keyNote": "\u0438\u0437 \u043B\u044E\u0431\u043E\u0439 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u044B: {keys} \u2014 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0438 \u0441\u043B\u0443\u0448\u0430\u0435\u0442, \u0435\u0449\u0451 \u0440\u0430\u0437 \u2014 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442",
-    "talkPage.keyNoteNone": "\u043E\u0434\u043D\u0430 \u043A\u043B\u0430\u0432\u0438\u0448\u0430 \u0438\u0437 \u043B\u044E\u0431\u043E\u0439 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u044B: \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0438 \u0441\u043B\u0443\u0448\u0430\u0435\u0442, \u0435\u0449\u0451 \u0440\u0430\u0437 \u2014 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442",
+    "talkPage.needsEngine": "\u043D\u0443\u0436\u0435\u043D \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438 (\u0441\u043C. \xAB\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434\xBB)",
     "talkPage.openGoing": "\u0432 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u043C \u043E\u043A\u043D\u0435 \xB7 \u0438\u0434\u0451\u0442: {topic}, {lines}",
-    "talkPage.openIdle": "\u0432 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u043C \u043E\u043A\u043D\u0435: \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0435 \u043F\u043E-\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438, \u0443\u0442\u043A\u0430 \u043E\u0442\u0432\u0435\u0447\u0430\u0435\u0442 \u0432\u0441\u043B\u0443\u0445, \u0432\u0430\u0448\u0438 \u043E\u0448\u0438\u0431\u043A\u0438 \u043E\u0442\u043C\u0435\u0447\u0435\u043D\u044B",
-    "talkPage.open": "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440",
-    "talkPage.you": "\u0412\u044B",
-    "talkPage.aboutNote": "\u0423\u0442\u043A\u0430 \u0447\u0438\u0442\u0430\u0435\u0442 \u044D\u0442\u043E \u0432 \u043A\u0430\u0436\u0434\u043E\u043C \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440\u0435, \u0447\u0442\u043E\u0431\u044B \u0441\u043F\u0440\u0430\u0448\u0438\u0432\u0430\u0442\u044C \u043E \u0432\u0430\u0448\u0435\u0439 \u0436\u0438\u0437\u043D\u0438 \u0438 \u0440\u0430\u0431\u043E\u0442\u0435. \u0425\u0440\u0430\u043D\u0438\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435.",
+    "talkPage.aboutNote": "\u041A\u0440\u044F\u043A\u043B \u0447\u0438\u0442\u0430\u0435\u0442 \u044D\u0442\u043E \u0432 \u043A\u0430\u0436\u0434\u043E\u043C \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440\u0435, \u0447\u0442\u043E\u0431\u044B \u0441\u043F\u0440\u0430\u0448\u0438\u0432\u0430\u0442\u044C \u043E \u0432\u0430\u0448\u0435\u0439 \u0436\u0438\u0437\u043D\u0438 \u0438 \u0440\u0430\u0431\u043E\u0442\u0435. \u0425\u0440\u0430\u043D\u0438\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435.",
     "talkPage.level": "\u0412\u0430\u0448 \u0443\u0440\u043E\u0432\u0435\u043D\u044C \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E",
-    "talkPage.levelA2": "\u042D\u043B\u0435\u043C\u0435\u043D\u0442\u0430\u0440\u043D\u044B\u0439: \u0443\u0442\u043A\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442 \u043A\u043E\u0440\u043E\u0442\u043A\u0438\u043C\u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F\u043C\u0438 \u0438\u0437 \u043F\u043E\u0432\u0441\u0435\u0434\u043D\u0435\u0432\u043D\u044B\u0445 \u0441\u043B\u043E\u0432, \u043F\u0440\u043E\u0441\u0442\u044B\u043C\u0438 \u0432\u0440\u0435\u043C\u0435\u043D\u0430\u043C\u0438, \u0431\u0435\u0437 \u0438\u0434\u0438\u043E\u043C",
-    "talkPage.levelB1": "\u0421\u0440\u0435\u0434\u043D\u0438\u0439: \u0443\u0442\u043A\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442 \u043F\u043E\u0432\u0441\u0435\u0434\u043D\u0435\u0432\u043D\u044B\u043C\u0438 \u0441\u043B\u043E\u0432\u0430\u043C\u0438 \u0438 \u0447\u0430\u0441\u0442\u044B\u043C\u0438 \u0444\u0440\u0430\u0437\u043E\u0432\u044B\u043C\u0438 \u0433\u043B\u0430\u0433\u043E\u043B\u0430\u043C\u0438; \u0440\u0435\u0434\u043A\u043E\u0435 \u0441\u043B\u043E\u0432\u043E \u043E\u0431\u044A\u044F\u0441\u043D\u044F\u0435\u0442",
-    "talkPage.levelB2": "\u0412\u044B\u0448\u0435 \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E: \u0443\u0442\u043A\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442 \u0435\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u043E: \u0434\u043B\u0438\u043D\u043D\u044B\u0435 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F, \u0444\u0440\u0430\u0437\u043E\u0432\u044B\u0435 \u0433\u043B\u0430\u0433\u043E\u043B\u044B, \u0438\u043D\u043E\u0433\u0434\u0430 \u0438\u0434\u0438\u043E\u043C\u0430",
+    "talkPage.levelA2": "\u042D\u043B\u0435\u043C\u0435\u043D\u0442\u0430\u0440\u043D\u044B\u0439: \u041A\u0440\u044F\u043A\u043B \u0433\u043E\u0432\u043E\u0440\u0438\u0442 \u043A\u043E\u0440\u043E\u0442\u043A\u0438\u043C\u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F\u043C\u0438 \u0438\u0437 \u043F\u043E\u0432\u0441\u0435\u0434\u043D\u0435\u0432\u043D\u044B\u0445 \u0441\u043B\u043E\u0432, \u043F\u0440\u043E\u0441\u0442\u044B\u043C\u0438 \u0432\u0440\u0435\u043C\u0435\u043D\u0430\u043C\u0438, \u0431\u0435\u0437 \u0438\u0434\u0438\u043E\u043C",
+    "talkPage.levelB1": "\u0421\u0440\u0435\u0434\u043D\u0438\u0439: \u041A\u0440\u044F\u043A\u043B \u0433\u043E\u0432\u043E\u0440\u0438\u0442 \u043F\u043E\u0432\u0441\u0435\u0434\u043D\u0435\u0432\u043D\u044B\u043C\u0438 \u0441\u043B\u043E\u0432\u0430\u043C\u0438 \u0438 \u0447\u0430\u0441\u0442\u044B\u043C\u0438 \u0444\u0440\u0430\u0437\u043E\u0432\u044B\u043C\u0438 \u0433\u043B\u0430\u0433\u043E\u043B\u0430\u043C\u0438; \u0440\u0435\u0434\u043A\u043E\u0435 \u0441\u043B\u043E\u0432\u043E \u043E\u0431\u044A\u044F\u0441\u043D\u044F\u0435\u0442",
+    "talkPage.levelB2": "\u0412\u044B\u0448\u0435 \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E: \u041A\u0440\u044F\u043A\u043B \u0433\u043E\u0432\u043E\u0440\u0438\u0442 \u0435\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u043E: \u0434\u043B\u0438\u043D\u043D\u044B\u0435 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F, \u0444\u0440\u0430\u0437\u043E\u0432\u044B\u0435 \u0433\u043B\u0430\u0433\u043E\u043B\u044B, \u0438\u043D\u043E\u0433\u0434\u0430 \u0438\u0434\u0438\u043E\u043C\u0430",
     "talkPage.keys": "\u041A\u043B\u0430\u0432\u0438\u0448\u0438",
     "talkPage.spaceKey": "\u0412 \u043E\u043A\u043D\u0435 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440\u0430: \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C, \u043F\u043E\u0442\u043E\u043C \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C",
-    "talkPage.escKey": "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u0440\u0435\u043F\u043B\u0438\u043A\u0443 \u0438\u043B\u0438 \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0443\u0442\u043A\u0443",
-    "talkPage.duck": "\u0423\u0442\u043A\u0430",
-    "talkPage.aloud": "\u0427\u0438\u0442\u0430\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B \u0443\u0442\u043A\u0438 \u0432\u0441\u043B\u0443\u0445",
+    "talkPage.escKey": "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u0440\u0435\u043F\u043B\u0438\u043A\u0443 \u0438\u043B\u0438 \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u041A\u0440\u044F\u043A\u043B",
+    "talkPage.aloud": "\u0427\u0438\u0442\u0430\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B \u041A\u0440\u044F\u043A\u043B\u0430 \u0432\u0441\u043B\u0443\u0445",
     "talkPage.aloudNote": "\u043E\u0442\u0432\u0435\u0442\u044B \u0447\u0438\u0442\u0430\u044E\u0442\u0441\u044F, \u043A\u0430\u043A \u0442\u043E\u043B\u044C\u043A\u043E \u043F\u0440\u0438\u0445\u043E\u0434\u044F\u0442; \u043D\u0430\u0436\u0430\u0442\u0438\u0435 \u043D\u0430 \u0440\u0435\u043F\u043B\u0438\u043A\u0443 \u0447\u0438\u0442\u0430\u0435\u0442 \u0435\u0451 \u0441\u043D\u043E\u0432\u0430",
     "talkPage.onTop": "\u0420\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u043F\u043E\u0432\u0435\u0440\u0445 \u0434\u0440\u0443\u0433\u0438\u0445 \u043E\u043A\u043E\u043D",
     "talkPage.onTopNote": "\u043A\u0430\u043A \u0441 \u0431\u0443\u043B\u0430\u0432\u043A\u043E\u0439 \u043D\u0430 \u043F\u0430\u043D\u0435\u043B\u0438 \u043E\u043A\u043D\u0430 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440\u0430",
     "talkPage.model": "\u041C\u043E\u0434\u0435\u043B\u044C",
-    "talkPage.modelNote": "\u043E\u0442\u0432\u0435\u0447\u0430\u0435\u0442 \u0438 \u043D\u0430\u0445\u043E\u0434\u0438\u0442 \u0432\u0430\u0448\u0438 \u043E\u0448\u0438\u0431\u043A\u0438; \u0442\u0430 \u0436\u0435, \u0447\u0442\u043E \u0438 \u0434\u043B\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E",
     "talkPage.voice": "\u0413\u043E\u043B\u043E\u0441",
-    "talkPage.voiceNote": "\u0443\u0442\u043A\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442 \u0433\u043E\u043B\u043E\u0441\u043E\u043C \u0444\u0443\u043D\u043A\u0446\u0438\u0438 \xAB\u0421\u043B\u0443\u0448\u0430\u0442\u044C\xBB",
     "talkPage.kept": "\u0421\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u043E\u0435",
     "talkPage.history": "\u0412\u0430\u0448\u0438 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440\u044B \u2014 \u0432 \u043E\u043A\u043D\u0435 \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440\u0430: \u043A\u043D\u043E\u043F\u043A\u0430 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0438\u0445, \u0447\u0442\u043E\u0431\u044B \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0438\u043B\u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C. \u0425\u0440\u0430\u043D\u044F\u0442\u0441\u044F 30 \u0434\u043D\u0435\u0439 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435, \u043D\u0435 \u0431\u043E\u043B\u044C\u0448\u0435 50.",
-    "talkPage.mistakesNote": "\u0442\u0430\u043C \u0445\u0440\u0430\u043D\u0438\u0442\u0441\u044F \u043A\u0430\u0436\u0434\u0430\u044F \u0432\u0430\u0448\u0430 \u0440\u0435\u043F\u043B\u0438\u043A\u0430 \u0441 \u043E\u0448\u0438\u0431\u043A\u043E\u0439",
-    "kb.none": "\u043D\u0435\u0442",
     "check.typedKey": "{keys} \u0438 \u0432\u0432\u0435\u0434\u0438\u0442\u0435 \u0435\u0433\u043E",
     "check.typedTray": "\u0432\u043E\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435\u0441\u044C \xAB\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u0439\u2026\xBB \u0432 \u043C\u0435\u043D\u044E \u0442\u0440\u0435\u044F",
     "check.tryKey": "\u0412 \u044D\u0442\u043E\u043C \u0442\u0435\u043A\u0441\u0442\u0435 \u043D\u0430\u043C\u0435\u0440\u0435\u043D\u043D\u044B\u0435 \u043E\u0448\u0438\u0431\u043A\u0438. \u0412\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0435\u0433\u043E, {keys}, \u0438\u043B\u0438 {typed}.",
     "check.tryNoKey": "\u0412 \u044D\u0442\u043E\u043C \u0442\u0435\u043A\u0441\u0442\u0435 \u043D\u0430\u043C\u0435\u0440\u0435\u043D\u043D\u044B\u0435 \u043E\u0448\u0438\u0431\u043A\u0438. \u0412\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0435\u0433\u043E \u0438 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u0441\u0432\u043E\u044E \u043A\u043B\u0430\u0432\u0438\u0448\u0443, \u0438\u043B\u0438 {typed}.",
     "check.keySelected": "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442",
-    "check.keySelectedNote": "\u0432\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0435\u0433\u043E \u0433\u0434\u0435 \u0443\u0433\u043E\u0434\u043D\u043E, {keys}",
-    "check.keySelectedNone": "\u0432\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0435\u0433\u043E \u0433\u0434\u0435 \u0443\u0433\u043E\u0434\u043D\u043E, \u043F\u043E\u0442\u043E\u043C \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043E\u0434\u043D\u0443 \u043A\u043B\u0430\u0432\u0438\u0448\u0443, \u043D\u0430\u043F\u0440\u0438\u043C\u0435\u0440 Right Ctrl \u0434\u0432\u0430\u0436\u0434\u044B",
     "check.typeKey": "\u0412\u0432\u0435\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0434\u043B\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438",
     "check.typeKeyNote": "\u043F\u0443\u0441\u0442\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u0443 \u0443\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044F, \u0438\u0437 \u043B\u044E\u0431\u043E\u0439 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u044B; \u0442\u0430\u043A\u0436\u0435 \u0432 \u043C\u0435\u043D\u044E \u0442\u0440\u0435\u044F",
-    "check.practiceKey": "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0441\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0435",
-    "check.practiceNote": "\u043D\u0430\u0436\u043C\u0438\u0442\u0435, \u0441\u043A\u0430\u0436\u0438\u0442\u0435 \u0444\u0440\u0430\u0437\u0443 \u043F\u043E-\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438, \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437",
-    "check.enterKey": "\u0412 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435: \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442 \u043E\u0431\u0440\u0430\u0442\u043D\u043E",
     "check.speechNote": "\u0420\u0430\u0441\u043F\u043E\u0437\u043D\u0430\u0432\u0430\u043D\u0438\u0435 \u0440\u0435\u0447\u0438 \u0441\u0430\u043C\u043E \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u043D\u0435\u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043E\u0448\u0438\u0431\u043A\u0438, \u043F\u043E\u044D\u0442\u043E\u043C\u0443 \u0432 \u043D\u0430\u0431\u0440\u0430\u043D\u043D\u043E\u043C \u0442\u0435\u043A\u0441\u0442\u0435 \u0438\u0445 \u0432\u0438\u0434\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435.",
-    "check.modelNote": "\u044F\u0437\u044B\u043A\u043E\u0432\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u0442; \u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u043C\u043E\u0436\u0435\u0442 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0442\u0443 \u0436\u0435",
-    "check.history": "\u0418\u0441\u0442\u043E\u0440\u0438\u044F",
-    "check.mistakesNote": "\u0447\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u043D\u0430\u0448\u043B\u0430 \u0432 \u0432\u0430\u0448\u0438\u0445 \u0442\u0435\u043A\u0441\u0442\u0430\u0445, \u0441\u043D\u0430\u0447\u0430\u043B\u0430 \u043F\u043E\u0432\u0442\u043E\u0440\u044F\u044E\u0449\u0438\u0435\u0441\u044F",
     "mistakes.title": "\u041E\u0448\u0438\u0431\u043A\u0438",
     "mistakes.forget": "\u0417\u0430\u0431\u044B\u0442\u044C",
     "mistakes.noSuch": "\u0422\u0430\u043A\u043E\u0439 \u043E\u0448\u0438\u0431\u043A\u0438 \u043D\u0435\u0442.",
@@ -2584,9 +2406,6 @@
     "mistakes.times": { one: "{n} \u0440\u0430\u0437", few: "{n} \u0440\u0430\u0437\u0430", many: "{n} \u0440\u0430\u0437", other: "{n} \u0440\u0430\u0437\u0430" },
     "mistakes.clear": "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C",
     "mistakes.search": "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u043E\u0448\u0438\u0431\u043A\u0430\u043C",
-    "screen.snipKey": "\u041F\u0440\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0442\u0435\u043A\u0441\u0442 \u043D\u0430 \u044D\u043A\u0440\u0430\u043D\u0435",
-    "screen.textKey": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u043D\u0430 \u044D\u043A\u0440\u0430\u043D\u0435",
-    "screen.keyNote": "\u0434\u043B\u044F \u0442\u0435\u043A\u0441\u0442\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u0438\u0442\u044C: \u043E\u0431\u0432\u0435\u0434\u0438\u0442\u0435 \u0435\u0433\u043E \u0440\u0430\u043C\u043A\u043E\u0439",
     "screen.how": "\u041A\u0430\u043A \u044D\u0442\u043E \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442",
     "screen.draw": "\u041E\u0431\u0432\u0435\u0434\u0438\u0442\u0435 \u0442\u0435\u043A\u0441\u0442 \u0440\u0430\u043C\u043A\u043E\u0439",
     "screen.drawNote": "Windows \u0437\u0430\u0442\u0435\u043C\u043D\u044F\u0435\u0442 \u044D\u043A\u0440\u0430\u043D, \u043F\u043E\u043A\u0430 \u0432\u044B \u043E\u0431\u0432\u043E\u0434\u0438\u0442\u0435",
@@ -2594,7 +2413,7 @@
     "screen.readsNote": "\u043E\u043D\u0430 \u0447\u0438\u0442\u0430\u0435\u0442 \u044F\u0437\u044B\u043A\u0438, \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044B\u0435 \u0432 Windows; \u0434\u0440\u0443\u0433\u0438\u0435 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0442\u0430\u043C (Windows OCR)",
     "screen.languages": "\u042F\u0437\u044B\u043A\u0438\u2026",
     "screen.fix": "\u0418\u0441\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u043D\u0435\u0432\u0435\u0440\u043D\u043E \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u043D\u043D\u044B\u0435 \u0441\u043B\u043E\u0432\u0430 \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435",
-    "screen.fixNote": "\u043F\u043E\u0442\u043E\u043C \u0441\u043B\u0443\u0448\u0430\u0439\u0442\u0435 \u0438\u043B\u0438 \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0438\u0442\u0435",
+    "screen.fixNote": "\u043F\u043E\u0442\u043E\u043C \u043F\u0435\u0440\u0435\u0432\u0435\u0434\u0438\u0442\u0435 \u0438\u043B\u0438 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u0432\u0441\u043B\u0443\u0445",
     "dictate.notesFolder": "\u041F\u0430\u043F\u043A\u0430 \u0437\u0430\u043C\u0435\u0442\u043E\u043A",
     "dictate.folderShown": "\u043F\u043E\u044F\u0432\u0438\u0442\u0441\u044F, \u043A\u043E\u0433\u0434\u0430 \u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u0441\u044F \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
     "dictate.folderChosen": "\u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442\u0441\u044F \u043F\u043E\u0441\u043B\u0435 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0438 \u0434\u0432\u0438\u0436\u043A\u0430 \u0440\u0435\u0447\u0438",
@@ -2605,36 +2424,23 @@
     "dictate.choose": "\u0412\u044B\u0431\u0440\u0430\u0442\u044C\u2026",
     "dictate.subfolder": "\u041F\u043E\u0434\u043F\u0430\u043F\u043A\u0430 \u0434\u043B\u044F \u0437\u0430\u043C\u0435\u0442\u043E\u043A",
     "dictate.subfolderNote": "\u043F\u0430\u043F\u043A\u0430 \u0432\u043D\u0443\u0442\u0440\u0438 \u043D\u0435\u0451; \u043E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043F\u0443\u0441\u0442\u044B\u043C, \u0447\u0442\u043E\u0431\u044B \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0441\u0430\u043C\u0443 \u043F\u0430\u043F\u043A\u0443",
-    "vocab.title": "\u0421\u043B\u043E\u0432\u0430\u0440\u044C \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0438",
-    "vocab.note": "\u0438\u043C\u0435\u043D\u0430 \u0438 \u0442\u0435\u0440\u043C\u0438\u043D\u044B, \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u044B\u0435 \u0442\u0430\u043A, \u043A\u0430\u043A \u0432\u0430\u043C \u043D\u0443\u0436\u043D\u043E",
-    "vocab.noneYet": "\u043F\u043E\u043A\u0430 \u043D\u0435\u0442",
     "dictate.needsEngine": "\u043D\u0443\u0436\u0435\u043D \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
     "dictate.automatic": "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \xB7 {model}",
     "settings.automatic": "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438",
-    "dictate.modelNote": "\u043E\u043A\u043E\u043B\u043E {time} \u043D\u0430 \u0444\u0440\u0430\u0437\u0443 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435",
-    "transcribe.modelNote": "\u043E\u043A\u043E\u043B\u043E {time} \u043D\u0430 \u0447\u0430\u0441 \u0437\u0430\u043F\u0438\u0441\u0438 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435",
-    "dictate.speechModel": "\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u0435\u0447\u0438",
+    "dictate.speechModel": "\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u0430\u0441\u043F\u043E\u0437\u043D\u0430\u0432\u0430\u043D\u0438\u044F",
     "dictate.engine": "\u0414\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
-    "dictate.typeKey": "\u041F\u0435\u0447\u0430\u0442\u0430\u0442\u044C \u0441\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0435",
-    "dictate.typeNote": "\u043D\u0430\u0436\u043C\u0438\u0442\u0435, \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0435, \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437; \u0441\u043B\u043E\u0432\u0430 \u043F\u043E\u044F\u0432\u044F\u0442\u0441\u044F \u0442\u0430\u043C, \u0433\u0434\u0435 \u043A\u0443\u0440\u0441\u043E\u0440",
-    "dictate.englishKey": "\u041F\u0435\u0447\u0430\u0442\u0430\u0442\u044C \u0441\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0435 \u043F\u043E-\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438",
+    "dictate.typeNote": "\u0442\u0435\u043A\u0441\u0442 \u043F\u043E\u044F\u0432\u0438\u0442\u0441\u044F \u0442\u0430\u043C, \u0433\u0434\u0435 \u043A\u0443\u0440\u0441\u043E\u0440",
     "dictate.englishNote": "\u043D\u0430\u0436\u043C\u0438\u0442\u0435, \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0435 ({lang}), \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437; \u043F\u0435\u0447\u0430\u0442\u0430\u0435\u0442\u0441\u044F \u043F\u043E-\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438",
-    "dictate.noteKey": "\u041D\u0430\u0434\u0438\u043A\u0442\u043E\u0432\u0430\u0442\u044C \u0437\u0430\u043C\u0435\u0442\u043A\u0443",
-    "dictate.noteNote": "\u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u0442\u0441\u044F \u043A\u0430\u043A \u0444\u0430\u0439\u043B Markdown \u0432 \u0432\u0430\u0448\u0435\u0439 \u043F\u0430\u043F\u043A\u0435 \u0437\u0430\u043C\u0435\u0442\u043E\u043A",
-    "dictate.againKey": "\u041D\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u0442\u044C \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u044E\u044E \u0444\u0440\u0430\u0437\u0443 \u0435\u0449\u0451 \u0440\u0430\u0437",
+    "dictate.noteNote": "\u0432 \u043F\u0430\u043F\u043A\u0443 \u0437\u0430\u043C\u0435\u0442\u043E\u043A",
+    "dictate.againKey": "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u044E\u044E \u0444\u0440\u0430\u0437\u0443",
     "dictate.againNote": "\u043F\u043E\u0432\u0442\u043E\u0440\u044F\u0435\u0442 \u0435\u0451 \u0442\u0430\u043C, \u0433\u0434\u0435 \u043A\u0443\u0440\u0441\u043E\u0440",
     "dictate.escNote": "\u0421\u043B\u043E\u0432\u0430 \u043F\u043E\u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F, \u043F\u043E\u043A\u0430 \u0432\u044B \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0435. Esc \u043E\u0442\u043C\u0435\u043D\u044F\u0435\u0442 \u0444\u0440\u0430\u0437\u0443, \u043F\u043E\u043A\u0430 \u0435\u0451 \u043D\u0435 \u043D\u0430\u043F\u0435\u0447\u0430\u0442\u0430\u043B\u0438.",
-    "dictate.notes": "\u0417\u0430\u043C\u0435\u0442\u043A\u0438",
-    "dictate.wordsPhrases": "\u0421\u043B\u043E\u0432\u0430 \u0438 \u0444\u0440\u0430\u0437\u044B",
-    "dictate.recent": "\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 \u0444\u0440\u0430\u0437\u044B",
-    "dictate.recentNote": "\u0444\u0440\u0430\u0437\u044B, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0432\u044B \u043D\u0435\u0434\u0430\u0432\u043D\u043E \u0434\u0438\u043A\u0442\u043E\u0432\u0430\u043B\u0438, \u0447\u0442\u043E\u0431\u044B \u0441\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u043D\u043E\u0432\u0430",
     "dictate.privacy": "\u0420\u0435\u0447\u044C \u0440\u0430\u0441\u043F\u043E\u0437\u043D\u0430\u0451\u0442\u0441\u044F \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435; \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0438\u043A\u0443\u0434\u0430 \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F.",
-    "vocab.wordPlaceholder": "\u0421\u043B\u043E\u0432\u043E, \u043A\u0430\u043A \u0435\u0433\u043E \u043D\u0443\u0436\u043D\u043E \u043F\u0438\u0441\u0430\u0442\u044C",
-    "vocab.wordAria": "\u0421\u043B\u043E\u0432\u043E \u0434\u043B\u044F \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0438",
-    "vocab.heardPlaceholder": "\u0421\u043B\u044B\u0448\u0438\u0442\u0441\u044F \u043A\u0430\u043A (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E): \u043A\u0440\u044F\u043A\u043B, \u043A\u0440\u0430\u043A\u043B",
+    "vocab.wordPlaceholder": "\u0421\u043B\u043E\u0432\u043E",
+    "vocab.wordAria": "\u0418\u043C\u044F \u0438\u043B\u0438 \u0442\u0435\u0440\u043C\u0438\u043D",
+    "vocab.heardPlaceholder": "\u041A\u0430\u043A \u0441\u043B\u044B\u0448\u0438\u0442\u0441\u044F, \u0447\u0435\u0440\u0435\u0437 \u0437\u0430\u043F\u044F\u0442\u0443\u044E",
     "vocab.heardAria": "\u041A\u0430\u043A \u043E\u043D\u043E \u0441\u043B\u044B\u0448\u0438\u0442\u0441\u044F",
     "vocab.change": "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C",
-    "vocab.heardAs": "\u0441\u043B\u044B\u0448\u0438\u0442\u0441\u044F \u043A\u0430\u043A {forms}",
     "vocab.remove": "\u0423\u0434\u0430\u043B\u0438\u0442\u044C {word}",
     "vocab.addGroup": "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0441\u043B\u043E\u0432\u043E",
     "vocab.add": "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C",
@@ -2642,7 +2448,7 @@
     "vocab.words": "\u0421\u043B\u043E\u0432\u0430",
     "vocab.clearAll": "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0451",
     "vocab.empty": "\u041F\u043E\u043A\u0430 \u043D\u0438\u0447\u0435\u0433\u043E. \u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0438\u043C\u044F \u0438\u043B\u0438 \u0441\u043B\u043E\u0432\u043E \u0432\u044B\u0448\u0435.",
-    "vocab.shared": "\u041E\u0431\u0449\u0438\u0435 \u0434\u043B\u044F \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0438 \u0438 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438.",
+    "vocab.shared": "\u0418\u0445 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u044E\u0442 \u0438 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434, \u0438 \u0437\u0430\u043F\u0438\u0441\u0438.",
     "dictate.phrases": "\u0424\u0440\u0430\u0437\u044B",
     "dictate.said": "\u0421\u043A\u0430\u0437\u0430\u043D\u043E: {heard}",
     "dictate.recentEmpty": "\u041F\u043E\u043A\u0430 \u043D\u0438\u0447\u0435\u0433\u043E. \u041D\u0430\u0434\u0438\u043A\u0442\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u0444\u0440\u0430\u0437\u044B (\u043D\u0435 \u0437\u0430\u043C\u0435\u0442\u043A\u0438) \u0445\u0440\u0430\u043D\u044F\u0442\u0441\u044F \u0437\u0434\u0435\u0441\u044C 30 \u0434\u043D\u0435\u0439, \u043D\u0435 \u0431\u043E\u043B\u044C\u0448\u0435 200.",
@@ -2660,30 +2466,32 @@
     "meet.installed": "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E \xB7 v{version}",
     "meet.note": "\u0437\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0437\u0432\u043E\u043D\u043E\u043A \u0432 Chrome \u0441 \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0435\u043C \u041A\u0440\u044F\u043A\u043B\u0430",
     "meet.notSetUp": "\u0415\u0449\u0451 \u043D\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043D\u043E",
-    "meet.threeSteps": "\u0442\u0440\u0438 \u0448\u0430\u0433\u0430 \u0432 Chrome, \u043E\u0434\u0438\u043D \u0440\u0430\u0437; \u044D\u0442\u0430 \u0441\u0442\u0440\u043E\u043A\u0430 \u043F\u043E\u043A\u0430\u0436\u0435\u0442, \u043A\u043E\u0433\u0434\u0430 \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0435 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E",
+    "meet.threeSteps": "\u0447\u0435\u0442\u044B\u0440\u0435 \u0448\u0430\u0433\u0430 \u0432 Chrome, \u043E\u0434\u0438\u043D \u0440\u0430\u0437; \u044D\u0442\u0430 \u0441\u0442\u0440\u043E\u043A\u0430 \u043F\u043E\u043A\u0430\u0436\u0435\u0442, \u043A\u043E\u0433\u0434\u0430 \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0435 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E",
     "meet.needsEngine": "\u0447\u0442\u043E\u0431\u044B \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u043B\u043E, \u0434\u043E\u043B\u0436\u0435\u043D \u0431\u044B\u0442\u044C \u0437\u0430\u043F\u0443\u0449\u0435\u043D \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
     "meet.oldId": "\u0412 Chrome \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 v{version}, \u043E\u0442 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u041A\u0440\u044F\u043A\u043B \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u043F\u0440\u0438\u043D\u0438\u043C\u0430\u0435\u0442 \u0437\u0430\u043F\u0438\u0441\u0438",
     "meet.oldIdNote": "\u0443\u0434\u0430\u043B\u0438\u0442\u0435 \u0435\u0433\u043E \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0439 Chrome (\xAB\u0423\u0434\u0430\u043B\u0438\u0442\u044C\xBB \u043D\u0430 \u0435\u0433\u043E \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435), \u043F\u043E\u0442\u043E\u043C \u0441\u043D\u043E\u0432\u0430 \xAB\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0440\u0430\u0441\u043F\u0430\u043A\u043E\u0432\u0430\u043D\u043D\u043E\u0435\xBB: \u0448\u0430\u0433\u0438 1 \u0438 2 \u043D\u0438\u0436\u0435; Chrome \u0435\u0449\u0451 \u0440\u0430\u0437 \u043F\u043E\u043F\u0440\u043E\u0441\u0438\u0442 \u0434\u043E\u0441\u0442\u0443\u043F \u043A \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D\u0443",
     "meet.stale": "\u0412 Chrome \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 v{from}; \u0443 \u041A\u0440\u044F\u043A\u043B\u0430 \u2014 v{to}",
-    "meet.staleNote": "\u043D\u0430\u0436\u043C\u0438\u0442\u0435 \xAB\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C\xBB \u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u044F \u0432 Chrome: \xAB\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432 Chrome\xBB \u0432\u0435\u0434\u0451\u0442 \u043F\u0440\u044F\u043C\u043E \u0442\u0443\u0434\u0430",
+    "meet.staleNote": "\u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u0440\u0443\u0433\u043B\u0443\u044E \u0441\u0442\u0440\u0435\u043B\u043A\u0443 \u21BB \u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u041A\u0440\u044F\u043A\u043B\u0430 \u0432 Chrome: \xAB\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432 Chrome\xBB \u0432\u0435\u0434\u0451\u0442 \u043F\u0440\u044F\u043C\u043E \u0442\u0443\u0434\u0430",
     "meet.openInChrome": "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432 Chrome",
     "meet.installedIn": "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E \u0432 Chrome \xB7 v{version}",
     "meet.seen": "\u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0439 \u0440\u0430\u0437 \u043D\u0430 \u0441\u0432\u044F\u0437\u0438: {ago} \xB7 \u0437\u0432\u0443\u043A \u0437\u0432\u043E\u043D\u043A\u0430 \u0438 \u0432\u0430\u0448 \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D \u0438\u0434\u0443\u0442 \u0432 \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435",
     "meet.extension": "\u0420\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0435 Chrome",
     "meet.setItUp": "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430",
     "meet.step1": "1 \xB7 \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443 \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0439 Chrome \u0438 \u0432\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \xAB\u0420\u0435\u0436\u0438\u043C \u0440\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A\u0430\xBB",
-    "meet.step1Note": "chrome://extensions \xB7 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u044C \u0432\u0432\u0435\u0440\u0445\u0443 \u0441\u043F\u0440\u0430\u0432\u0430",
-    "meet.step2": "2 \xB7 \xAB\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0440\u0430\u0441\u043F\u0430\u043A\u043E\u0432\u0430\u043D\u043D\u043E\u0435\xBB, \u0432\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043F\u0443\u0442\u044C \u043A \u043F\u0430\u043F\u043A\u0435",
-    "meet.step2Note": "Ctrl+V \u0432 \u0430\u0434\u0440\u0435\u0441\u043D\u0443\u044E \u0441\u0442\u0440\u043E\u043A\u0443 \u043E\u043A\u043D\u0430 \u0432\u044B\u0431\u043E\u0440\u0430 \u043F\u0430\u043F\u043A\u0438, \u043F\u043E\u0442\u043E\u043C \xAB\u0412\u044B\u0431\u043E\u0440 \u043F\u0430\u043F\u043A\u0438\xBB",
+    "meet.step1Note": "\u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u044C \xAB\u0420\u0435\u0436\u0438\u043C \u0440\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A\u0430\xBB (Developer mode) \u0432\u0432\u0435\u0440\u0445\u0443 \u0441\u043F\u0440\u0430\u0432\u0430 \u043D\u0430 \u0442\u043E\u0439 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435",
+    "meet.step2": "2 \xB7 \xAB\u041A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0443\u0442\u044C\xBB, \u043F\u043E\u0442\u043E\u043C \xAB\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0440\u0430\u0441\u043F\u0430\u043A\u043E\u0432\u0430\u043D\u043D\u043E\u0435\xBB",
+    "meet.step2Note": "\xAB\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0440\u0430\u0441\u043F\u0430\u043A\u043E\u0432\u0430\u043D\u043D\u043E\u0435\xBB (Load unpacked) \u043F\u043E\u044F\u0432\u0438\u0442\u0441\u044F \u0432\u0432\u0435\u0440\u0445\u0443 \u0441\u043B\u0435\u0432\u0430, \u043A\u0430\u043A \u0442\u043E\u043B\u044C\u043A\u043E \u0432\u043A\u043B\u044E\u0447\u0451\u043D \u0440\u0435\u0436\u0438\u043C \u0440\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A\u0430 \xB7 \u0432 \u043E\u0442\u043A\u0440\u044B\u0432\u0448\u0435\u043C\u0441\u044F \u043E\u043A\u043D\u0435 \u0449\u0451\u043B\u043A\u043D\u0438\u0442\u0435 \u0430\u0434\u0440\u0435\u0441\u043D\u0443\u044E \u0441\u0442\u0440\u043E\u043A\u0443 \u0432\u0432\u0435\u0440\u0445\u0443, Ctrl+V, Enter, \u043F\u043E\u0442\u043E\u043C \xAB\u0412\u044B\u0431\u043E\u0440 \u043F\u0430\u043F\u043A\u0438\xBB",
+    "meet.stepMic": "3 \xB7 \u0420\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u0435 \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D, \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
+    "meet.stepMicNote": "\u043F\u043E\u0441\u043B\u0435 \u0448\u0430\u0433\u0430 2: \u043D\u0430 \u043E\u0442\u043A\u0440\u044B\u0432\u0448\u0435\u0439\u0441\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \xAB\u0420\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u044C \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D\xBB (Allow the microphone), \u043F\u043E\u0442\u043E\u043C \xAB\u0420\u0430\u0437\u0440\u0435\u0448\u0438\u0442\u044C\xBB (Allow), \u043A\u043E\u0433\u0434\u0430 \u0441\u043F\u0440\u043E\u0441\u0438\u0442 Chrome \xB7 \u0431\u0435\u0437 \u044D\u0442\u043E\u0433\u043E \u0432 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0435 \u0431\u0443\u0434\u0443\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0441\u0442\u0430\u043B\u044C\u043D\u044B\u0435",
     "meet.showFolder": "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u043F\u0430\u043F\u043A\u0443",
     "meet.copyPath": "\u041A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0443\u0442\u044C",
-    "meet.step3": "3 \xB7 \u041D\u0430 \u0432\u0441\u0442\u0440\u0435\u0447\u0435: \u0437\u043D\u0430\u0447\u043E\u043A \u041A\u0440\u044F\u043A\u043B\u0430 \u2192 Record \u0438\u043B\u0438 \u043A\u043B\u0430\u0432\u0438\u0448\u0430",
-    "meet.step3Note": "\u0437\u0432\u0443\u043A \u0437\u0432\u043E\u043D\u043A\u0430 \u0438 \u0432\u0430\u0448 \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D \xB7 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \u043F\u043E\u044F\u0432\u0438\u0442\u0441\u044F \u0432 \xAB\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430\u0445\xBB",
+    "meet.step3": "4 \xB7 \u041D\u0430 \u0432\u0441\u0442\u0440\u0435\u0447\u0435: \u0437\u043D\u0430\u0447\u043E\u043A \u041A\u0440\u044F\u043A\u043B\u0430 \u043D\u0430 \u043F\u0430\u043D\u0435\u043B\u0438 Chrome \u2192 Record \u0438\u043B\u0438 \u043A\u043B\u0430\u0432\u0438\u0448\u0430",
+    "meet.step3Note": "\u043D\u0435\u0442 \u0437\u043D\u0430\u0447\u043A\u0430? \u041E\u043D \u043F\u043E\u0434 \u043F\u0430\u0437\u043B\u043E\u043C \u0432\u0432\u0435\u0440\u0445\u0443 \u0441\u043F\u0440\u0430\u0432\u0430: \u0437\u0430\u043A\u0440\u0435\u043F\u0438\u0442\u0435 \u0435\u0433\u043E \u0442\u0430\u043C \xB7 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \u043F\u043E\u044F\u0432\u0438\u0442\u0441\u044F \u0432 \xAB\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430\u0445\xBB",
     "meet.off": "\u0415\u0441\u043B\u0438 \u0447\u0442\u043E-\u0442\u043E \u043D\u0435 \u0442\u0430\u043A",
     "meet.keyNothing": "\u041A\u043B\u0430\u0432\u0438\u0448\u0430 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0434\u0435\u043B\u0430\u0435\u0442",
-    "meet.keyNothingNote": "\u0437\u0430\u0434\u0430\u0439\u0442\u0435 \u0435\u0451 \u043D\u0430 chrome://extensions/shortcuts",
-    "meet.afterUpdate": "\u041F\u043E\u0441\u043B\u0435 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u041A\u0440\u044F\u043A\u043B\u0430 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \xAB\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C\xBB \u043D\u0430 \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0438",
-    "meet.afterUpdateNote": "\u0414\u043E \u044D\u0442\u043E\u0433\u043E Chrome \u0434\u0435\u0440\u0436\u0438\u0442 \u0441\u0442\u0430\u0440\u0443\u044E \u043A\u043E\u043F\u0438\u044E",
+    "meet.keyNothingNote": "\xAB\u0411\u044B\u0441\u0442\u0440\u044B\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0438\xBB (Keyboard shortcuts) \u0441\u043B\u0435\u0432\u0430 \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0439: \u0437\u0430\u0434\u0430\u0439\u0442\u0435 \u0435\u0451 \u0434\u043B\u044F \xAB\u041A\u0440\u044F\u043A\u043B: \u0437\u0430\u043F\u0438\u0441\u044C \u0432\u0441\u0442\u0440\u0435\u0447\xBB",
+    "meet.afterUpdate": "\u041F\u043E\u0441\u043B\u0435 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u041A\u0440\u044F\u043A\u043B\u0430 \u043F\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043D\u0438\u0435",
+    "meet.afterUpdateNote": "\u043A\u0440\u0443\u0433\u043B\u0430\u044F \u0441\u0442\u0440\u0435\u043B\u043A\u0430 \u21BB \u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u041A\u0440\u044F\u043A\u043B\u0430, \u0440\u044F\u0434\u043E\u043C \u0441 \u0435\u0451 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u0435\u043C \xB7 \u0434\u043E \u044D\u0442\u043E\u0433\u043E Chrome \u0434\u0435\u0440\u0436\u0438\u0442 \u0441\u0442\u0430\u0440\u0443\u044E \u043A\u043E\u043F\u0438\u044E",
     "transcribe.speakers": "\u041A\u0442\u043E \u043A\u043E\u0433\u0434\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u043B",
     "transcribe.speakersNote": "\u0441\u043B\u043E\u0432\u0430 \u0443\u0436\u0435 \u0440\u0430\u0441\u043F\u043E\u0437\u043D\u0430\u043D\u044B; \u044D\u0442\u043E \u0440\u0430\u0437\u043B\u0438\u0447\u0430\u0435\u0442 \u0433\u043E\u043B\u043E\u0441\u0430",
     "transcribe.downloading": "\u0441\u043A\u0430\u0447\u0438\u0432\u0430\u043D\u0438\u0435\u2026",
@@ -2700,8 +2508,6 @@
     "transcribe.new": "\u041D\u043E\u0432\u0430\u044F \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430",
     "transcribe.setup": "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430",
     "transcribe.keptIn": "\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0445\u0440\u0430\u043D\u044F\u0442\u0441\u044F \u0432",
-    "transcribe.library": "\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430",
-    "transcribe.allNote": "\u0432\u0441\u0435 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438, \u0441 \u043F\u043E\u0438\u0441\u043A\u043E\u043C \u043F\u043E \u0441\u043B\u043E\u0432\u0430\u043C",
     "kb.inOrder": "\u0412 \u0442\u0430\u043A\u043E\u043C \u043F\u043E\u0440\u044F\u0434\u043A\u0435",
     "kb.earlier": "\u0420\u0430\u043D\u044C\u0448\u0435",
     "kb.later": "\u041F\u043E\u0437\u0436\u0435",
@@ -2722,10 +2528,10 @@
     "kb.keepCapsNote": "\u0430\u0431\u0431\u0440\u0435\u0432\u0438\u0430\u0442\u0443\u0440\u044B \u0437\u0430\u0433\u043B\u0430\u0432\u043D\u044B\u043C\u0438 \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u0441\u044F",
     "kb.when": "\u041A\u043E\u0433\u0434\u0430",
     "kb.onPause": "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0442\u0430\u043A\u0436\u0435 \u043F\u043E\u0441\u043B\u0435 \u043F\u0430\u0443\u0437\u044B",
-    "kb.onPauseNote": "\u044F\u0432\u043D\u043E \u043D\u0435\u0432\u0435\u0440\u043D\u043E\u0435 \u0441\u043B\u043E\u0432\u043E \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043F\u0440\u0438\u043C\u0435\u0440\u043D\u043E \u0447\u0435\u0440\u0435\u0437 \u0441\u0435\u043A\u0443\u043D\u0434\u0443 \u043F\u043E\u0441\u043B\u0435 \u0442\u043E\u0433\u043E, \u043A\u0430\u043A \u0432\u044B \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043B\u0438 \u043F\u0435\u0447\u0430\u0442\u0430\u0442\u044C",
+    "kb.onPauseNote": "\u043D\u0435\u0432\u0435\u0440\u043D\u043E\u0435 \u0441\u043B\u043E\u0432\u043E \u0438\u0441\u043F\u0440\u0430\u0432\u0438\u0442\u0441\u044F \u0447\u0435\u0440\u0435\u0437 \u0441\u0435\u043A\u0443\u043D\u0434\u0443, \u043A\u0430\u043A \u0432\u044B \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043B\u0438 \u043F\u0435\u0447\u0430\u0442\u0430\u0442\u044C",
     "kb.sound": "\u0422\u0438\u0445\u043E \u0449\u0451\u043B\u043A\u0430\u0442\u044C, \u043A\u043E\u0433\u0434\u0430 \u0441\u043B\u043E\u0432\u043E \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E",
     "kb.chime": "\u0417\u0432\u0443\u043A, \u043A\u043E\u0433\u0434\u0430 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0430",
-    "kb.chimeNote": "\u043A\u043E\u0433\u0434\u0430 \u0432\u044B \u0435\u0451 \u043C\u0435\u043D\u044F\u0435\u0442\u0435, \u043A\u043B\u0430\u0432\u0438\u0448\u0430\u043C\u0438 \u041A\u0440\u044F\u043A\u043B\u0430 \u0438\u043B\u0438 Windows; \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0430\u044F \u0437\u0432\u0443\u0447\u0438\u0442 \u0432\u044B\u0448\u0435 \u043E\u0441\u0442\u0430\u043B\u044C\u043D\u044B\u0445",
+    "kb.chimeNote": "\u043A\u043E\u0433\u0434\u0430 \u0432\u044B \u0435\u0451 \u043C\u0435\u043D\u044F\u0435\u0442\u0435; \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0430\u044F \u0437\u0432\u0443\u0447\u0438\u0442 \u0432\u044B\u0448\u0435",
     "kb.chimeName": "\u0417\u0432\u0443\u043A",
     "kb.chimePick": "\u043D\u0430\u0436\u043C\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u043F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C: \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0430\u044F, \u043F\u043E\u0442\u043E\u043C \u0434\u0440\u0443\u0433\u0430\u044F \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0430",
     "kb.chime.glass": "\u0421\u0442\u0435\u043A\u043B\u043E",
@@ -2769,13 +2575,9 @@
     "kb.learnNote": "\u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u0432 \u043F\u043E\u043B\u0435 \u043F\u0430\u0440\u043E\u043B\u044F, \u0432 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0435 \u0431\u0435\u0437 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u043D\u0430 \u043F\u043E\u043B\u043D\u043E\u043C \u044D\u043A\u0440\u0430\u043D\u0435",
     "kb.fixedAlways": "\u0412\u0441\u0435\u0433\u0434\u0430 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u0441\u044F",
     "kb.into": "\u2192 {lang}",
-    "kb.forget": "\u0417\u0430\u0431\u044B\u0442\u044C {word}",
     "kb.fixedAlwaysEmpty": "\u0421\u043B\u043E\u0432\u043E, \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0432\u044B \u0434\u0432\u0430\u0436\u0434\u044B \u0438\u0441\u043F\u0440\u0430\u0432\u0438\u043B\u0438 \u0432\u0440\u0443\u0447\u043D\u0443\u044E (\u043A\u043B\u0430\u0432\u0438\u0448\u0435\u0439 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u0441\u0442\u0435\u0440\u0435\u0432 \u0438 \u043D\u0430\u0431\u0440\u0430\u0432 \u0432 \u0434\u0440\u0443\u0433\u043E\u0439 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0435), \u0434\u0430\u043B\u044C\u0448\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u0441\u0430\u043C\u043E.",
     "kb.myWordNote": "{lang} \xB7 \u043A\u0430\u043A \u043D\u0430\u0431\u0440\u0430\u043D\u043E \u043D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F, \u0430 \u0438\u0437 \u0447\u0443\u0436\u043E\u0439 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u0432 \u043D\u0435\u0433\u043E",
     "kb.myWordsEmpty": "\u0421\u043B\u043E\u0432\u043E, \u043A\u043E\u0442\u043E\u0440\u043E\u0433\u043E \u043D\u0435\u0442 \u043D\u0438 \u0432 \u043E\u0434\u043D\u043E\u043C \u0441\u043B\u043E\u0432\u0430\u0440\u0435 \u0438 \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0432\u044B \u0442\u0440\u0438\u0436\u0434\u044B \u043D\u0430\u0431\u0440\u0430\u043B\u0438 \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E, \u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0441\u044F \u0432\u0430\u0448\u0438\u043C: \u041A\u0440\u044F\u043A\u043B \u043E\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u0442 \u0435\u0433\u043E \u043A\u0430\u043A \u043D\u0430\u0431\u0440\u0430\u043D\u043E \u0438 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u043D\u0430 \u043D\u0435\u0433\u043E, \u043A\u043E\u0433\u0434\u0430 \u0435\u0433\u043E \u043D\u0430\u0431\u0440\u0430\u043B\u0438 \u0432 \u0447\u0443\u0436\u043E\u0439 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0435. \u0414\u043E \u0442\u0435\u0445 \u043F\u043E\u0440 \u0445\u0440\u0430\u043D\u0438\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043D\u0435\u0447\u0438\u0442\u0430\u0435\u043C\u044B\u0439 \u043E\u0442\u043F\u0435\u0447\u0430\u0442\u043E\u043A \u0441\u043B\u043E\u0432\u0430.",
-    "kb.neverFixed": "\u041D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u0441\u044F",
-    "kb.kept": "\u041D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C",
-    "kb.keptNote": "\u0441\u043B\u043E\u0432\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0441\u0430\u043C\u0438",
     "kb.forgetAll": "\u0417\u0430\u0431\u044B\u0442\u044C \u0432\u0441\u0451",
     "kb.forgetAllNote": "\u0432\u044B\u0443\u0447\u0435\u043D\u043D\u043E\u0435 \u041A\u0440\u044F\u043A\u043B\u043E\u043C \u0438\u0441\u0447\u0435\u0437\u043D\u0435\u0442; \xAB\u041D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C\xBB \u043E\u0441\u0442\u0430\u043D\u0435\u0442\u0441\u044F",
     "kb.forgetBtn": "\u0417\u0430\u0431\u044B\u0442\u044C",
@@ -2790,36 +2592,26 @@
     "kb.switchNote": "\u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0435\u0442 \u043D\u0430 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0443\u044E \u0438\u0437 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043E\u043A, \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u043D\u044B\u0445 \u043D\u0438\u0436\u0435",
     "kb.switchingByKeys": "\u041F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0430\u043C\u0438",
     "kb.fixKey": "\u0418\u0441\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 \u0441\u043B\u043E\u0432\u0430",
-    "kb.fixKeyNote": "\u043F\u0435\u0440\u0435\u043F\u0435\u0447\u0430\u0442\u044B\u0432\u0430\u0435\u0442 \u0441\u043B\u043E\u0432\u0430 \u0438\u043B\u0438 \u0437\u043D\u0430\u043A\u0438 (&& \u2192 ??), \u043D\u0430\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u043D\u0435 \u0432 \u0442\u043E\u0439 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0435; \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437 \u0434\u043B\u044F \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0439",
+    "kb.fixKeyNote": "\u043F\u0435\u0440\u0435\u043F\u0435\u0447\u0430\u0442\u044B\u0432\u0430\u0435\u0442 \u043D\u0430\u0431\u0440\u0430\u043D\u043D\u043E\u0435 \u043D\u0435 \u0432 \u0442\u043E\u0439 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0435; \u0435\u0449\u0451 \u043D\u0430\u0436\u0430\u0442\u0438\u0435 \u2014 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0430\u044F \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0430",
     "kb.theFixKey": "\u041A\u043B\u0430\u0432\u0438\u0448\u0430 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F",
-    "kb.asYouType": "\u041F\u0440\u0438 \u043D\u0430\u0431\u043E\u0440\u0435",
     "kb.autoFix": "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0441\u043B\u043E\u0432\u0430 \u043F\u0440\u0438 \u043D\u0430\u0431\u043E\u0440\u0435",
-    "kb.autoFixNote": "{typed} \u2192 {fixed}, \u043A\u043E\u0433\u0434\u0430 \u0432\u044B \u043D\u0430\u0436\u0438\u043C\u0430\u0435\u0442\u0435 \u043F\u0440\u043E\u0431\u0435\u043B; \u043A\u043B\u0430\u0432\u0438\u0448\u0430 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0441\u0440\u0430\u0437\u0443 \u043F\u043E\u0441\u043B\u0435 \u044D\u0442\u043E\u0433\u043E \u043E\u0442\u043C\u0435\u043D\u044F\u0435\u0442",
+    "kb.autoFixNote": "{typed} \u2192 {fixed} \u043F\u043E \u043F\u0440\u043E\u0431\u0435\u043B\u0443; \u043A\u043B\u0430\u0432\u0438\u0448\u0430 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0441\u0440\u0430\u0437\u0443 \u043F\u043E\u0441\u043B\u0435 \u043E\u0442\u043C\u0435\u043D\u044F\u0435\u0442",
     "kb.fixing": "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u0440\u0438 \u043D\u0430\u0431\u043E\u0440\u0435",
     "kb.fixingNote": "\u0437\u0430\u0433\u043B\u0430\u0432\u043D\u044B\u0435 \u0431\u0443\u043A\u0432\u044B, \u043A\u043E\u0440\u043E\u0442\u043A\u0438\u0435 \u0441\u043B\u043E\u0432\u0430, \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0441\u043B\u0435 \u043F\u0430\u0443\u0437\u044B",
     "kb.badgeNote": "\u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u0437\u043D\u0430\u0447\u043E\u043A \u043F\u043E\u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F, \u043A\u043E\u0433\u0434\u0430 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0430 \u0438\u043B\u0438 Caps Lock",
     "kb.trayNote": "\u0437\u043D\u0430\u0447\u043E\u043A \u0432 \u0442\u0440\u0435\u0435 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0443\u044E \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0443, \u043D\u0430\u043F\u0440\u0438\u043C\u0435\u0440 en \u0438\u043B\u0438 ru",
     "kb.fullScreen": "\u041E\u0442\u043A\u043B\u044E\u0447\u0430\u0442\u044C\u0441\u044F \u043D\u0430 \u043F\u043E\u043B\u043D\u043E\u043C \u044D\u043A\u0440\u0430\u043D\u0435",
     "kb.fullScreenNote": "\u0438\u0433\u0440\u044B, \u043F\u0440\u0435\u0437\u0435\u043D\u0442\u0430\u0446\u0438\u0438, \u0432\u0438\u0434\u0435\u043E",
-    "kb.lists": "\u0421\u043F\u0438\u0441\u043A\u0438",
-    "kb.layouts": "\u0420\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438",
     "kb.layoutsOwn": "\u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438, \u043F\u043E \u043A\u043E\u0442\u043E\u0440\u044B\u043C \u043F\u0440\u043E\u0445\u043E\u0434\u0438\u0442 \u043A\u043B\u0430\u0432\u0438\u0448\u0430 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F; \u0441\u043E \u0441\u0432\u043E\u0435\u0439 \u043A\u043B\u0430\u0432\u0438\u0448\u0435\u0439: {n}",
     "kb.layoutsNote": "\u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438, \u043F\u043E \u043A\u043E\u0442\u043E\u0440\u044B\u043C \u043F\u043E \u043E\u0447\u0435\u0440\u0435\u0434\u0438 \u043F\u0440\u043E\u0445\u043E\u0434\u0438\u0442 \u043A\u043B\u0430\u0432\u0438\u0448\u0430 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F",
-    "kb.programsNote": "\u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0447\u0430\u0441\u0442\u0438 \u041A\u0440\u044F\u043A\u043B\u0430 \u0432 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0435 \u0438\u043B\u0438 \u0434\u0430\u0442\u044C \u0435\u0439 \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u0443\u044E \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0443",
-    "kb.programCount": { one: "{n} \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430", few: "{n} \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u044B", many: "{n} \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C", other: "{n} \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u044B" },
-    "kb.learned": "\u0412\u044B\u0443\u0447\u0435\u043D\u043D\u044B\u0435 \u0441\u043B\u043E\u0432\u0430",
-    "kb.learnedNote": "\u0441\u043B\u043E\u0432\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u041A\u0440\u044F\u043A\u043B \u0432\u044B\u0443\u0447\u0438\u043B \u043F\u043E \u0432\u0430\u0448\u0435\u043C\u0443 \u043D\u0430\u0431\u043E\u0440\u0443",
-    "kb.learnedOff": "\u043E\u0431\u0443\u0447\u0435\u043D\u0438\u0435 \u043F\u043E \u0432\u0430\u0448\u0435\u043C\u0443 \u043D\u0430\u0431\u043E\u0440\u0443 \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u043E",
-    "kb.keptNever": "\u0441\u043B\u043E\u0432\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u041A\u0440\u044F\u043A\u043B \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u0441\u0430\u043C",
     "kb.rivals": { one: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u0430 {names}: \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0432 \u043D\u0435\u0439 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u043D\u0430\u0447\u0435 \u0441\u043B\u043E\u0432\u0430 \u0431\u0443\u0434\u0443\u0442 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C\u0441\u044F \u0434\u0432\u0430\u0436\u0434\u044B.", few: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u044B {names}: \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0432 \u043D\u0438\u0445 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u043D\u0430\u0447\u0435 \u0441\u043B\u043E\u0432\u0430 \u0431\u0443\u0434\u0443\u0442 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C\u0441\u044F \u0434\u0432\u0430\u0436\u0434\u044B.", many: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u044B {names}: \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0432 \u043D\u0438\u0445 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u043D\u0430\u0447\u0435 \u0441\u043B\u043E\u0432\u0430 \u0431\u0443\u0434\u0443\u0442 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C\u0441\u044F \u0434\u0432\u0430\u0436\u0434\u044B.", other: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u044B {names}: \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0432 \u043D\u0438\u0445 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u043D\u0430\u0447\u0435 \u0441\u043B\u043E\u0432\u0430 \u0431\u0443\u0434\u0443\u0442 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C\u0441\u044F \u0434\u0432\u0430\u0436\u0434\u044B." },
     "kb.elevated": "{app} \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043E\u0442 \u0438\u043C\u0435\u043D\u0438 \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430: Windows \u043D\u0435 \u0434\u0430\u0451\u0442 \u041A\u0440\u044F\u043A\u043B\u0443 \u0435\u0451 \u043A\u043B\u0430\u0432\u0438\u0448, \u043F\u043E\u044D\u0442\u043E\u043C\u0443 \u0442\u0430\u043C \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u0438 \u043D\u0435 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0435\u0442\u0441\u044F.",
     "kb.trouble": "\u041F\u043E\u043C\u043E\u0449\u043D\u0438\u043A \u043A\u043B\u0430\u0432\u0438\u0430\u0442\u0443\u0440\u044B: {trouble}",
     "kb.privacy": "\u041A\u0440\u044F\u043A\u043B \u0447\u0438\u0442\u0430\u0435\u0442 \u043D\u0430\u0436\u0430\u0442\u0438\u044F \u043A\u043B\u0430\u0432\u0438\u0448 \u0442\u043E\u043B\u044C\u043A\u043E \u0434\u043B\u044F \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438 \u0438 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0438\u043A\u0443\u0434\u0430 \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442. \u041E\u043D \u0445\u0440\u0430\u043D\u0438\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0432\u044B\u0443\u0447\u0435\u043D\u043D\u044B\u0435 \u0441\u043B\u043E\u0432\u0430, \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435.",
-    "words.removeAria": "\u0423\u0434\u0430\u043B\u0438\u0442\u044C {word} \u0438\u0437 \xAB\u0421\u043B\u043E\u0432\xBB",
-    "words.today": "\u0441\u0435\u0433\u043E\u0434\u043D\u044F",
     "words.noSuch": "\u0422\u0430\u043A\u043E\u0433\u043E \u0441\u043B\u043E\u0432\u0430 \u043D\u0435\u0442.",
     "words.empty": "\u0421\u043B\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u0429\u0451\u043B\u043A\u043D\u0438\u0442\u0435 \u0441\u043B\u043E\u0432\u043E \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u0438 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u0435\u0433\u043E \u0437\u0432\u0451\u0437\u0434\u043E\u0447\u043A\u0443.",
     "words.search": "\u041F\u043E\u0438\u0441\u043A \u0441\u043B\u043E\u0432 \u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0439",
+    "words.hint": "\u0417\u0432\u0451\u0437\u0434\u043E\u0447\u043A\u0430 \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u0441\u043B\u043E\u0432\u0430 \u0434\u043E\u0431\u0430\u0432\u043B\u044F\u0435\u0442 \u0435\u0433\u043E \u0441\u044E\u0434\u0430",
     "words.export": "\u042D\u043A\u0441\u043F\u043E\u0440\u0442 \u0434\u043B\u044F Anki\u2026",
     "settings.natural": "\u0415\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u0433\u043E\u043B\u043E\u0441",
     "settings.naturalNote": "{size} \u041C\u0411 \u0441\u043A\u0430\u0447\u0430\u0442\u044C, \u0434\u0430\u043B\u044C\u0448\u0435 \u0447\u0438\u0442\u0430\u0435\u0442 \u043E\u0444\u043B\u0430\u0439\u043D (Kokoro)",
@@ -2850,7 +2642,7 @@
     "storage.cudaNote": "\u0441\u0431\u043E\u0440\u043A\u0430 \u0434\u043B\u044F NVIDIA, \u0434\u043B\u044F \u043C\u043E\u0434\u0435\u043B\u0438, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u043D\u0435 \u043F\u043E\u043C\u0435\u0449\u0430\u0435\u0442\u0441\u044F \u0432 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0443 (llama.cpp CUDA)",
     "storage.lossTranslate": "\u041F\u0435\u0440\u0435\u0432\u043E\u0434 \u0432\u0435\u0440\u043D\u0451\u0442\u0441\u044F \u043A \xAB\u0411\u044B\u0441\u0442\u0440\u043E\u043C\u0443\xBB, \u0430 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E \u0441\u043A\u0430\u0447\u0430\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\u044C \u0441\u043D\u043E\u0432\u0430 \u043F\u0440\u0438 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0439 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0435",
     "storage.lossCheck": "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E \u0441\u043A\u0430\u0447\u0430\u0435\u0442 \u043C\u043E\u0434\u0435\u043B\u044C \u0441\u043D\u043E\u0432\u0430 \u043F\u0440\u0438 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0439 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0435",
-    "storage.lossSpeech": "\u0414\u0438\u043A\u0442\u043E\u0432\u043A\u0430 \u0438 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u044F\u0442\u0441\u044F, \u043F\u043E\u043A\u0430 \u0435\u0433\u043E \u043D\u0435 \u0441\u043A\u0430\u0447\u0430\u044E\u0442 \u0441\u043D\u043E\u0432\u0430; \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0438 \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u043E\u0441\u0442\u0430\u043D\u0443\u0442\u0441\u044F",
+    "storage.lossSpeech": "\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434 \u0438 \u0437\u0430\u043F\u0438\u0441\u0438 \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u044F\u0442\u0441\u044F, \u043F\u043E\u043A\u0430 \u0435\u0433\u043E \u043D\u0435 \u0441\u043A\u0430\u0447\u0430\u044E\u0442 \u0441\u043D\u043E\u0432\u0430; \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0438 \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u043E\u0441\u0442\u0430\u043D\u0443\u0442\u0441\u044F",
     "storage.lossGpu": "\u0440\u0435\u0447\u044C \u0432\u0435\u0440\u043D\u0451\u0442\u0441\u044F \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440, \u0432 \u043D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0440\u0430\u0437 \u043C\u0435\u0434\u043B\u0435\u043D\u043D\u0435\u0435",
     "storage.lossSpeakers": "\u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043D\u0443\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0430\u0442\u044C \u0433\u043E\u043B\u043E\u0441\u0430, \u043F\u043E\u043A\u0430 \u0435\u0433\u043E \u043D\u0435 \u0434\u043E\u0431\u0430\u0432\u044F\u0442 \u0441\u043D\u043E\u0432\u0430",
     "storage.lossDefault": "\u0441\u043A\u0430\u0447\u0430\u0435\u0442\u0441\u044F \u0441\u043D\u043E\u0432\u0430 \u043F\u0440\u0438 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u043C \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D\u0438\u0438",
@@ -2860,10 +2652,10 @@
     "storage.usedBy": "\u043D\u0443\u0436\u043D\u043E \u0434\u043B\u044F: {users}",
     "storage.reserve": "\u0437\u0430\u043F\u0430\u0441 \u0434\u043B\u044F: {reserve}, \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440\u0435, \u0435\u0441\u043B\u0438 \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u043E\u0434\u0432\u0435\u0434\u0451\u0442",
     "storage.userTranslate": "\u041F\u0435\u0440\u0435\u0432\u043E\u0434",
-    "storage.userListen": "\u0421\u043B\u0443\u0448\u0430\u0442\u044C",
-    "storage.userCheck": "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u0433\u043E",
-    "storage.userDictate": "\u0414\u0438\u043A\u0442\u043E\u0432\u043A\u0430",
-    "storage.userTranscribe": "\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430",
+    "storage.userListen": "\u041F\u0435\u0440\u0435\u0432\u043E\u0434",
+    "storage.userCheck": "\u0410\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u0439",
+    "storage.userDictate": "\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434",
+    "storage.userTranscribe": "\u0417\u0430\u043F\u0438\u0441\u0438 \u0438 \u0432\u0441\u0442\u0440\u0435\u0447\u0438",
     "storage.frees": "\u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435 \u043E\u0441\u0432\u043E\u0431\u043E\u0434\u0438\u0442 {free}: {shared} \u0435\u0433\u043E \u0444\u0430\u0439\u043B\u043E\u0432 \u043E\u0431\u0449\u0438\u0435 \u0441 \u0434\u0440\u0443\u0433\u0438\u043C\u0438 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430\u043C\u0438 Python \u0437\u0434\u0435\u0441\u044C",
     "storage.removeAskTitle": "\u0423\u0434\u0430\u043B\u0438\u0442\u044C\u2026",
     "storage.removeTitle": "\u0423\u0434\u0430\u043B\u0438\u0442\u044C; \u0441\u043A\u0430\u0447\u0430\u0435\u0442\u0441\u044F \u0441\u043D\u043E\u0432\u0430, \u0435\u0441\u043B\u0438 \u043F\u043E\u0437\u0436\u0435 \u0432\u044B\u0431\u0435\u0440\u0435\u0442\u0435",
@@ -2893,7 +2685,6 @@
     "settings.englishNote": "\u0432\u0441\u0435\u0433\u0434\u0430: \u044F\u0437\u044B\u043A, \u043A\u043E\u0442\u043E\u0440\u043E\u043C\u0443 \u0443\u0447\u0438\u0442 \u041A\u0440\u044F\u043A\u043B",
     "settings.speed": "\u0421\u043A\u043E\u0440\u043E\u0441\u0442\u044C",
     "settings.speedNote": "\u043A\u0430\u043A \u0431\u044B\u0441\u0442\u0440\u043E \u0447\u0438\u0442\u0430\u0435\u0442",
-    "settings.language": "\u042F\u0437\u044B\u043A",
     "settings.yourLanguage": "\u0412\u0430\u0448 \u044F\u0437\u044B\u043A",
     "settings.yourLanguageNote": "\u041A\u0440\u044F\u043A\u043B \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0438\u0442 \u043D\u0430 \u044D\u0442\u043E\u0442 \u044F\u0437\u044B\u043A \u0438 \u043D\u0430 \u043D\u0451\u043C \u0436\u0435 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F \u0441\u043B\u043E\u0432",
     "settings.theme": "\u0422\u0435\u043C\u0430",
@@ -2903,16 +2694,17 @@
     "settings.startWithWindows": "\u0417\u0430\u043F\u0443\u0441\u043A\u0430\u0442\u044C \u0432\u043C\u0435\u0441\u0442\u0435 \u0441 Windows",
     "settings.pause": "\u041F\u0440\u0438\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u041A\u0440\u044F\u043A\u043B",
     "settings.pauseNote": "\u0432\u0441\u0435 \u0441\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u044F \u043A\u043B\u0430\u0432\u0438\u0448 \u0438 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043E\u0441\u0442\u0430\u043D\u0430\u0432\u043B\u0438\u0432\u0430\u044E\u0442\u0441\u044F, \u043F\u043E\u043A\u0430 \u0432\u044B \u0441\u043D\u043E\u0432\u0430 \u043D\u0435 \u0432\u043A\u043B\u044E\u0447\u0438\u0442\u0435; \u0442\u0430\u043A\u0436\u0435 \u0432 \u043C\u0435\u043D\u044E \u0442\u0440\u0435\u044F",
-    "settings.pauseKey": "\u041F\u0430\u0443\u0437\u0430 \u0438\u043B\u0438 \u0432\u043E\u0437\u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0435\u0439",
-    "settings.pauseKeyNote": "\u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0438 \u0432\u043E \u0432\u0440\u0435\u043C\u044F \u043F\u0430\u0443\u0437\u044B",
-    "settings.windowKey": "\u041E\u0442\u043A\u0440\u044B\u0432\u0430\u0442\u044C \u044D\u0442\u043E \u043E\u043A\u043D\u043E \u043A\u043B\u0430\u0432\u0438\u0448\u0435\u0439",
+    "settings.pauseKey": "\u041F\u0430\u0443\u0437\u0430",
+    "settings.pauseKeyNote": "\u041A\u0440\u044F\u043A\u043B \u043C\u043E\u043B\u0447\u0438\u0442, \u043F\u043E\u043A\u0430 \u043D\u0435 \u043D\u0430\u0436\u043C\u0451\u0442\u0435 \u0441\u043D\u043E\u0432\u0430",
+    "settings.windowKey": "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043E\u043A\u043D\u043E \u041A\u0440\u044F\u043A\u043B\u0430",
     "settings.windowKeyNote": "\u0438\u0437 \u043B\u044E\u0431\u043E\u0439 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u044B",
     "settings.resetKeys": "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0432\u0441\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0438",
-    "settings.resetKeysNote": "\u043A\u0430\u0436\u0434\u043E\u0435 \u0441\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u0435 \u043A\u043B\u0430\u0432\u0438\u0448 \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442\u0441\u044F \u043A \u0438\u0441\u0445\u043E\u0434\u043D\u043E\u043C\u0443; \u21BA \u0443 \u043A\u043B\u0430\u0432\u0438\u0448\u0438 \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0435\u0451",
+    "settings.resetKeysNote": "\u0432\u0441\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0438 \u0432\u0435\u0440\u043D\u0443\u0442\u0441\u044F \u043A \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u043C",
     "settings.version": "\u0412\u0435\u0440\u0441\u0438\u044F {version}",
     "settings.versionDev": "\u0412\u0435\u0440\u0441\u0438\u044F {version} dev",
     "settings.built": "\u0441\u043E\u0431\u0440\u0430\u043D\u043E {build}",
     "settings.versionNote": "\u043D\u043E\u0432\u044B\u0435 \u0432\u0435\u0440\u0441\u0438\u0438: \u0441\u043A\u0430\u0447\u0430\u0439\u0442\u0435 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u0449\u0438\u043A \u0441 GitHub \u0438 \u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u0435 \u0435\u0433\u043E; \u0432\u0430\u0448\u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0438 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438 \u043E\u0441\u0442\u0430\u043D\u0443\u0442\u0441\u044F",
+    "settings.betaNote": "\u0431\u0435\u0442\u0430: \u0447\u0442\u043E-\u0442\u043E \u0435\u0449\u0451 \u043C\u043E\u0436\u0435\u0442 \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C \u043D\u0435 \u0442\u0430\u043A; \xAB\u0421\u043E\u043E\u0431\u0449\u0438\u0442\u044C \u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0435\xBB \u043F\u043E\u043C\u043E\u0433\u0430\u0435\u0442 \u044D\u0442\u043E \u0438\u0441\u043F\u0440\u0430\u0432\u0438\u0442\u044C",
     "settings.newVersions": "\u041D\u043E\u0432\u044B\u0435 \u0432\u0435\u0440\u0441\u0438\u0438",
     "settings.backup": "\u0420\u0435\u0437\u0435\u0440\u0432\u043D\u0430\u044F \u043A\u043E\u043F\u0438\u044F",
     "settings.backupTitle": "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u043E\u043F\u0438\u044E \u0438\u043B\u0438 \u043F\u0435\u0440\u0435\u043D\u0435\u0441\u0442\u0438 \u043D\u0430 \u0434\u0440\u0443\u0433\u043E\u0439 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440",
@@ -2921,22 +2713,27 @@
     "settings.importNote": "\u0418\u043C\u043F\u043E\u0440\u0442 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0432\u0430\u0448\u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u043C\u0438 \u0438\u0437 \u043A\u043E\u043F\u0438\u0438 \u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u044F\u0435\u0442 \u0435\u0451 \u0441\u043B\u043E\u0432\u0430 \u0438 \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u043A \u0432\u0430\u0448\u0438\u043C; \u043D\u0438\u0447\u0435\u0433\u043E \u0432\u0430\u0448\u0435\u0433\u043E \u043D\u0435 \u0443\u0434\u0430\u043B\u044F\u0435\u0442\u0441\u044F.",
     "settings.resetAll": "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0432\u0441\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438",
     "settings.resetAllNote": "\u043A\u043B\u0430\u0432\u0438\u0448\u0438, \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u0438 \u0438 \u0441\u043F\u0438\u0441\u043A\u0438 \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0430\u044E\u0442\u0441\u044F \u043A \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u043C; \u0432\u0430\u0448\u0438 \u0441\u043B\u043E\u0432\u0430 \u0438 \u0438\u0441\u0442\u043E\u0440\u0438\u044F \u043E\u0441\u0442\u0430\u044E\u0442\u0441\u044F",
-    "about.version": "\u0412\u0435\u0440\u0441\u0438\u044F {version} \xB7 \u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u0430\u044F, \u0441 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u043C \u043A\u043E\u0434\u043E\u043C, MIT",
-    "about.versionDev": "\u0412\u0435\u0440\u0441\u0438\u044F {version} dev, \u0441\u043E\u0431\u0440\u0430\u043D\u043E {build} \xB7 \u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u0430\u044F, \u0441 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u043C \u043A\u043E\u0434\u043E\u043C, MIT",
-    "about.madeBy": "\u0430\u0432\u0442\u043E\u0440",
-    "about.author": "Yevhen Peshynskyi \xB7 \u0438\u043D\u0436\u0435\u043D\u0435\u0440 \u043F\u043E \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0437\u0430\u0446\u0438\u0438 \u0434\u0438\u0437\u0430\u0439\u043D\u0430",
-    "about.runsOffline": "\u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043E\u0444\u043B\u0430\u0439\u043D",
-    "about.credits": "Firefox Translations \u043E\u0442 Mozilla \xB7 Gemma 4 \u043E\u0442 Google (Apache 2.0), \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0435\u0442 llama.cpp \xB7 Kokoro-82M \u043E\u0442 hexgrad, eSpeak NG \xB7 Windows OCR \xB7 WikDict, \u0438\u0437 Wiktionary \xB7 FrequencyWords \u043E\u0442 Hermit Dave ",
-    "about.neverSent": "\u2014 \u0432\u0430\u0448 \u0442\u0435\u043A\u0441\u0442 \u043D\u0438\u043A\u0443\u0434\u0430 \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F",
-    "about.madeWith": "\u0441\u0434\u0435\u043B\u0430\u043D\u043E \u0441",
-    "about.madeWithList": "Inter \u0438 JetBrains Mono (SIL OFL) \xB7 Electron \xB7 \u0437\u043D\u0430\u0447\u043A\u0438 VS Code",
     "about.online": "\u0432\u044B\u0445\u043E\u0434\u0438\u0442 \u0432 \u0438\u043D\u0442\u0435\u0440\u043D\u0435\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0434\u043B\u044F",
     "about.onlineList": "\u043E\u0434\u043D\u043E\u043A\u0440\u0430\u0442\u043D\u043E\u0433\u043E \u0441\u043A\u0430\u0447\u0438\u0432\u0430\u043D\u0438\u044F \u043A\u0430\u0436\u0434\u043E\u0439 \u0447\u0430\u0441\u0442\u0438: \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0447\u0438\u043A\u0430 \u0434\u043B\u044F \u0432\u0430\u0448\u0435\u0433\u043E \u044F\u0437\u044B\u043A\u0430, \u0435\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0433\u043E \u0433\u043E\u043B\u043E\u0441\u0430 ({size} \u041C\u0411), \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0439 \u0441\u043B\u043E\u0432",
-    "about.links": "\u0441\u0441\u044B\u043B\u043A\u0438",
-    "about.newVersions": "\u041D\u043E\u0432\u044B\u0435 \u0432\u0435\u0440\u0441\u0438\u0438 \u0438 \u0447\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u043E\u0441\u044C",
+    "about.newVersions": "\u041D\u043E\u0432\u044B\u0435 \u0432\u0435\u0440\u0441\u0438\u0438",
     "about.source": "\u041A\u043E\u0434 \u043D\u0430 GitHub",
     "about.licenses": "\u041B\u0438\u0446\u0435\u043D\u0437\u0438\u0438",
-    "report.title": "\u0421\u043E\u043E\u0431\u0449\u0438\u0442\u044C \u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0435",
+    "about.story": "\u041A\u0430\u043A \u043F\u043E\u044F\u0432\u0438\u043B\u0441\u044F \u041A\u0440\u044F\u043A\u043B",
+    "about.storyText": "\u042F \u0445\u043E\u0442\u0435\u043B \u0441\u0434\u0435\u043B\u0430\u0442\u044C \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0434\u043B\u044F \u0441\u0435\u0431\u044F: \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C \u0431\u044B\u0441\u0442\u0440\u0435\u0435 \u0438 \u0443\u0447\u0438\u0442\u044C \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u0439. \u041F\u0435\u0440\u0432\u044B\u0435 \u0432\u0435\u0440\u0441\u0438\u0438 \u0431\u044B\u043B\u0438 \u043F\u0440\u043E\u0441\u0442\u044B\u043C\u0438 \u0438 \u043E\u0431\u0440\u0430\u0441\u0442\u0430\u043B\u0438 \u043C\u043E\u0438\u043C\u0438 \u0445\u043E\u0442\u0435\u043B\u043A\u0430\u043C\u0438. \u041F\u043E\u0442\u043E\u043C \u043F\u043E\u043A\u0430\u0437\u0430\u043B \u0434\u0440\u0443\u0437\u044C\u044F\u043C \u2014 \u0438 \u043F\u043E\u043D\u0435\u0441\u043B\u043E\u0441\u044C.",
+    "about.authorGroup": "\u0410\u0432\u0442\u043E\u0440",
+    "about.role": "\u0438\u043D\u0436\u0435\u043D\u0435\u0440 \u043F\u043E \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0437\u0430\u0446\u0438\u0438 \u0434\u0438\u0437\u0430\u0439\u043D\u0430 \xB7 \u041E\u0434\u0435\u0441\u0441\u0430",
+    "about.bio": "\u041F\u0440\u0435\u0432\u0440\u0430\u0449\u0430\u044E \u0440\u0430\u0431\u043E\u0442\u0443 \u0434\u0438\u0437\u0430\u0439\u043D\u0435\u0440\u0430 \u0432 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B \u0438 AI-\u043F\u0440\u043E\u0446\u0435\u0441\u0441\u044B. \u0412 \u0434\u0438\u0437\u0430\u0439\u043D\u0435 \u0441 1997 \u0433\u043E\u0434\u0430.",
+    "about.mail": "\u041F\u043E\u0447\u0442\u0430",
+    "about.write": "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C",
+    "about.versionTitle": "\u0412\u0435\u0440\u0441\u0438\u044F",
+    "about.license": "\u041B\u0438\u0446\u0435\u043D\u0437\u0438\u044F",
+    "about.licenseValue": "\u0431\u0435\u0441\u043F\u043B\u0430\u0442\u043D\u043E, \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u043A\u043E\u0434 (MIT)",
+    "about.offline": "\u0420\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043E\u0444\u043B\u0430\u0439\u043D",
+    "about.offlineNote": "\u0432\u0430\u0448 \u0442\u0435\u043A\u0441\u0442 \u043D\u0435 \u043F\u043E\u043A\u0438\u0434\u0430\u0435\u0442 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440",
+    "about.bug": "\u041D\u0430\u0448\u043B\u0438 \u043E\u0448\u0438\u0431\u043A\u0443?",
+    "about.bugNote": "\u044D\u0442\u043E \u0431\u0435\u0442\u0430, \u0447\u0442\u043E-\u0442\u043E \u043C\u043E\u0436\u0435\u0442 \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C \u043D\u0435 \u0442\u0430\u043A",
+    "about.report": "\u0421\u043E\u043E\u0431\u0449\u0438\u0442\u044C",
+    "about.thanks": "\u0421\u043F\u0430\u0441\u0438\u0431\u043E",
     "report.placeholder": "\u0427\u0442\u043E \u0432\u044B \u0434\u0435\u043B\u0430\u043B\u0438, \u0447\u0442\u043E \u043F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u043E \u0438 \u0447\u0435\u0433\u043E \u0432\u044B \u043E\u0436\u0438\u0434\u0430\u043B\u0438? \u0411\u043E\u043B\u044C\u0448\u0435 \u0432\u0441\u0435\u0433\u043E \u043F\u043E\u043C\u043E\u0433\u0430\u044E\u0442 \u0448\u0430\u0433\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0432\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u044F\u0442 \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0443.",
     "report.what": "\u0427\u0442\u043E \u043F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u043E",
     "report.anyLanguage": "\u041D\u0430 \u043B\u044E\u0431\u043E\u043C \u044F\u0437\u044B\u043A\u0435; \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u0442\u0430\u043A, \u043A\u0430\u043A \u0432\u044B \u043D\u0430\u043F\u0438\u0441\u0430\u043B\u0438.",
@@ -2958,19 +2755,50 @@
     "report.computer": "\u042D\u0442\u043E\u0442 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440 \u0438 \u041A\u0440\u044F\u043A\u043B",
     "report.computerNote": "\u041F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0440, \u043F\u0430\u043C\u044F\u0442\u044C, \u0432\u0438\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430, \u0432\u0435\u0440\u0441\u0438\u0438 Windows \u0438 \u041A\u0440\u044F\u043A\u043B\u0430",
     "report.settings": "\u0412\u0430\u0448\u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438",
-    "report.settingsNote": "\u0412\u0430\u0448\u0438 \u0441\u043F\u0438\u0441\u043A\u0438 \u0442\u043E\u043B\u044C\u043A\u043E \u043F\u043E\u0441\u0447\u0438\u0442\u0430\u043D\u044B: \u0441\u043B\u043E\u0432\u0430 \xAB\u041D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C\xBB, \u0441\u043B\u043E\u0432\u0430\u0440\u044C \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0438, \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u044B",
+    "report.settingsNote": "\u0412\u0430\u0448\u0438 \u0441\u043F\u0438\u0441\u043A\u0438 \u0442\u043E\u043B\u044C\u043A\u043E \u043F\u043E\u0441\u0447\u0438\u0442\u0430\u043D\u044B: \u0441\u043B\u043E\u0432\u0430 \xAB\u041D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C\xBB, \u0438\u043C\u0435\u043D\u0430 \u0438 \u0442\u0435\u0440\u043C\u0438\u043D\u044B, \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u044B",
     "report.never": "\u041D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u043F\u043E\u043F\u0430\u0434\u0430\u044E\u0442: \u0432\u0430\u0448\u0438 \u0442\u0435\u043A\u0441\u0442\u044B, \u0441\u043B\u043E\u0432\u0430, \u043E\u0448\u0438\u0431\u043A\u0438, \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u044B, \u0444\u0440\u0430\u0437\u044B, \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0438\u043B\u0438 \u043A\u043B\u044E\u0447 Hugging Face. \u0412\u0430\u0448\u0435 \u0438\u043C\u044F \u0432 Windows \u0438 \u0438\u043C\u044F \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0430 \u0437\u0430\u043C\u0435\u043D\u0435\u043D\u044B. \u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F, \u043F\u043E\u043A\u0430 \u0432\u044B \u0441\u0430\u043C\u0438 \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u0435.",
     "report.folder": "\u041F\u0430\u043F\u043A\u0430 \u041A\u0440\u044F\u043A\u043B\u0430",
     "report.folderNote": "\u0413\u0434\u0435 \u043B\u0435\u0436\u0430\u0442 \u0436\u0443\u0440\u043D\u0430\u043B\u044B, \u0447\u0442\u043E\u0431\u044B \u043F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0438\u0445 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u043E",
     "report.stopped": "\u0415\u0441\u043B\u0438 \u0447\u0442\u043E-\u0442\u043E \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043B\u043E \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C",
     "report.restart": "\u041F\u0435\u0440\u0435\u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C \u0434\u0432\u0438\u0436\u043E\u043A \u0440\u0435\u0447\u0438",
-    "report.restartNote": "\u0412 \u043D\u0451\u043C \u0440\u0430\u0431\u043E\u0442\u0430\u044E\u0442 \u0434\u0438\u043A\u0442\u043E\u0432\u043A\u0430 \u0438 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \xB7 {state}",
+    "report.restartNote": "\u0412 \u043D\u0451\u043C \u0440\u0430\u0431\u043E\u0442\u0430\u044E\u0442 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0432\u0432\u043E\u0434 \u0438 \u0437\u0430\u043F\u0438\u0441\u0438 \xB7 {state}",
     "report.stateOff": "\u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D",
     "report.stateStarting": "\u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0435\u0442\u0441\u044F\u2026",
     "report.stateRunning": "\u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442",
     "report.stateBusy": "\u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \xB7 \u0441\u0435\u0439\u0447\u0430\u0441 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u044B\u0432\u0430\u0435\u0442",
     "report.stateDown": "\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D",
-    "report.restartBtn": "\u041F\u0435\u0440\u0435\u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C"
+    "report.restartBtn": "\u041F\u0435\u0440\u0435\u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C",
+    // The action pages
+    "act.translate": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438",
+    "act.translateNote": "Enter \u0432\u0441\u0442\u0430\u0432\u0438\u0442 \u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u0432\u043C\u0435\u0441\u0442\u043E \u0442\u0435\u043A\u0441\u0442\u0430",
+    "act.listen": "\u041F\u0435\u0440\u0435\u0432\u0435\u0441\u0442\u0438 \u0438 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0432\u0441\u043B\u0443\u0445",
+    "act.listenNote": "\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438\u0439 \u0437\u0432\u0443\u0447\u0438\u0442, \u043F\u0435\u0440\u0435\u0432\u043E\u0434 \u043F\u043E\u0434 \u043D\u0438\u043C",
+    "act.inPlace": "\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u043E\u043C",
+    "act.inPlaceNote": "\u0431\u0435\u0437 \u043E\u043A\u043D\u0430, \u043F\u0440\u044F\u043C\u043E \u0432 \u0442\u0435\u043A\u0441\u0442\u0435",
+    "act.selected": "\u0412\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442",
+    "act.screen": "\u0422\u0435\u043A\u0441\u0442 \u0441 \u044D\u043A\u0440\u0430\u043D\u0430",
+    "act.screenNote": "\u043E\u0431\u0432\u0435\u0434\u0438\u0442\u0435 \u0442\u0435\u043A\u0441\u0442 \u0440\u0430\u043C\u043A\u043E\u0439",
+    "act.own": "\u0421\u0432\u043E\u0439 \u0442\u0435\u043A\u0441\u0442",
+    "act.ownKey": "\u0412\u0432\u0435\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430",
+    "act.quality": "\u041A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430",
+    "act.cardNote": "\u0447\u0442\u0435\u043D\u0438\u0435, \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F \u0441\u043B\u043E\u0432, \u043A\u043B\u0430\u0432\u0438\u0448\u0438",
+    "act.screenHowNote": "\u0442\u0435\u043A\u0441\u0442 \u0447\u0438\u0442\u0430\u0435\u0442\u0441\u044F \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435 \u043D\u0430 \u044F\u0437\u044B\u043A\u0430\u0445, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0435\u0441\u0442\u044C \u0432 Windows",
+    "act.try": "\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C",
+    "act.talkGroup": "\u0420\u0430\u0437\u0433\u043E\u0432\u043E\u0440 \u0441 \u041A\u0440\u044F\u043A\u043B\u043E\u043C",
+    "act.talk": "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440",
+    "act.talkNote": "\u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0435 \u043F\u043E-\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438, \u043E\u043D \u043E\u0442\u0432\u0435\u0447\u0430\u0435\u0442 \u0432\u0441\u043B\u0443\u0445",
+    "act.empty": "\u043D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E",
+    "act.talkWindow": "\u041E\u043A\u043D\u043E \u0440\u0430\u0437\u0433\u043E\u0432\u043E\u0440\u0430",
+    "act.talkWindowNote": "\u0447\u0442\u0435\u043D\u0438\u0435 \u0432\u0441\u043B\u0443\u0445, \u043F\u043E\u0432\u0435\u0440\u0445 \u043E\u043A\u043E\u043D, \u043A\u043B\u0430\u0432\u0438\u0448\u0438 \u0438 \u0438\u0441\u0442\u043E\u0440\u0438\u044F",
+    "act.checkNote": "\u043E\u0448\u0438\u0431\u043A\u0438 \u0437\u0430\u0447\u0451\u0440\u043A\u043D\u0443\u0442\u044B, \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0440\u044F\u0434\u043E\u043C; Enter \u0432\u0441\u0442\u0430\u0432\u0438\u0442 \u0435\u0433\u043E",
+    "act.say": "\u0421\u043A\u0430\u0437\u0430\u0442\u044C \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C",
+    "act.sayNote": "\u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0435 \u043F\u043E-\u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u0438, \u043E\u0448\u0438\u0431\u043A\u0438 \u043E\u0442\u043C\u0435\u0442\u044F\u0442\u0441\u044F",
+    "act.fixGroup": "\u0418\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435",
+    "act.switchGroup": "\u041F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435",
+    "act.general": "\u041E\u0431\u0449\u0435\u0435",
+    "act.notChosen": "\u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u0430",
+    "act.newWords": "\u041D\u043E\u0432\u044B\u0435 \u0441\u043B\u043E\u0432\u0430",
+    "ui.forget": "\u0417\u0430\u0431\u044B\u0442\u044C"
   };
 
   // src/i18n/uk.ts
@@ -2983,6 +2811,7 @@
     "common.copy": "\u041A\u043E\u043F\u0456\u044E\u0432\u0430\u0442\u0438",
     "common.copied": "\u0421\u043A\u043E\u043F\u0456\u0439\u043E\u0432\u0430\u043D\u043E",
     "common.notNow": "\u041D\u0435 \u0437\u0430\u0440\u0430\u0437",
+    "common.beta": "\u0431\u0435\u0442\u0430",
     "common.retry": "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0438",
     "common.tryAgain": "\u0421\u043F\u0440\u043E\u0431\u0443\u0432\u0430\u0442\u0438 \u0449\u0435 \u0440\u0430\u0437",
     "common.openSettings": "\u0412\u0456\u0434\u043A\u0440\u0438\u0442\u0438 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
@@ -3007,7 +2836,7 @@
     "main.resetDetail": "\u041A\u043B\u0430\u0432\u0456\u0448\u0456, \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u0447\u0456 \u0442\u0430 \u0441\u043F\u0438\u0441\u043A\u0438 \u043F\u043E\u0432\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u0434\u043E \u043F\u043E\u0447\u0430\u0442\u043A\u043E\u0432\u0438\u0445. \u0412\u0430\u0448\u0430 \u043C\u043E\u0432\u0430, \u0441\u043B\u043E\u0432\u0430, \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0456 \u0442\u0435, \u0447\u043E\u0433\u043E \u041A\u0440\u044F\u043A\u043B \u043D\u0430\u0432\u0447\u0438\u0432\u0441\u044F \u0437 \u0432\u0430\u0448\u043E\u0433\u043E \u043D\u0430\u0431\u043E\u0440\u0443, \u0437\u0430\u043B\u0438\u0448\u0430\u0442\u044C\u0441\u044F.",
     "main.reset": "\u0421\u043A\u0438\u043D\u0443\u0442\u0438",
     "main.resetKeysAsk": "\u0421\u043A\u0438\u043D\u0443\u0442\u0438 \u0432\u0441\u0456 \u043A\u043B\u0430\u0432\u0456\u0448\u0456?",
-    "main.resetKeysDetail": "\u041A\u043E\u0436\u043D\u0435 \u0441\u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044F \u043A\u043B\u0430\u0432\u0456\u0448 \u043F\u043E\u0432\u0435\u0440\u043D\u0435\u0442\u044C\u0441\u044F \u0434\u043E \u043F\u043E\u0447\u0430\u0442\u043A\u043E\u0432\u043E\u0433\u043E: Ctrl+Alt+S, Ctrl+Alt+T, Ctrl+Alt+D, Ctrl+Alt+N \u0456 Ctrl+C \u0434\u0432\u0456\u0447\u0456; \u0440\u0435\u0448\u0442\u0443 \u0431\u0443\u0434\u0435 \u043E\u0447\u0438\u0449\u0435\u043D\u043E. \u0411\u0456\u043B\u044C\u0448\u0435 \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u0437\u043C\u0456\u043D\u0438\u0442\u044C\u0441\u044F.",
+    "main.resetKeysDetail": "\u041A\u043E\u0436\u043D\u0435 \u0441\u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044F \u043A\u043B\u0430\u0432\u0456\u0448 \u043F\u043E\u0432\u0435\u0440\u043D\u0435\u0442\u044C\u0441\u044F \u0434\u043E \u043F\u043E\u0447\u0430\u0442\u043A\u043E\u0432\u043E\u0433\u043E: Ctrl+Alt+S, Ctrl+Alt+T, Ctrl+Alt+D \u0456 Ctrl+Alt+N; \u0440\u0435\u0448\u0442\u0443 \u0431\u0443\u0434\u0435 \u043E\u0447\u0438\u0449\u0435\u043D\u043E, Ctrl+C \u0434\u0432\u0456\u0447\u0456 \u0442\u0435\u0436. \u0411\u0456\u043B\u044C\u0448\u0435 \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u0437\u043C\u0456\u043D\u0438\u0442\u044C\u0441\u044F.",
     "main.resetKeys": "\u0421\u043A\u0438\u043D\u0443\u0442\u0438 \u043A\u043B\u0430\u0432\u0456\u0448\u0456",
     "main.saveTranscript": "\u0417\u0431\u0435\u0440\u0435\u0433\u0442\u0438 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0443",
     "main.notTranslated": "\u041D\u0435 \u0432\u0434\u0430\u043B\u043E\u0441\u044F \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438: {why}",
@@ -3036,30 +2865,29 @@
     "tray.openKryakl": "\u0412\u0456\u0434\u043A\u0440\u0438\u0442\u0438 \u041A\u0440\u044F\u043A\u043B",
     "tray.built": "\u0417\u0456\u0431\u0440\u0430\u043D\u043E {build}",
     "tray.actions": "\u0414\u0456\u0457",
-    "tray.listenCopied": "\u041F\u0440\u043E\u0441\u043B\u0443\u0445\u0430\u0442\u0438 \u0441\u043A\u043E\u043F\u0456\u0439\u043E\u0432\u0430\u043D\u0438\u0439 \u0442\u0435\u043A\u0441\u0442",
-    "tray.translateCopied": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0441\u043A\u043E\u043F\u0456\u0439\u043E\u0432\u0430\u043D\u0438\u0439 \u0442\u0435\u043A\u0441\u0442",
+    "tray.listenCopied": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0439 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u0438 \u0432\u0433\u043E\u043B\u043E\u0441",
+    "tray.translateCopied": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438",
     "tray.typeToTranslate": "\u0412\u0432\u0435\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0443\u2026",
-    "tray.checkEnglish": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u0438\u0442\u0438 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0443\u2026",
-    "tray.listenScreen": "\u041F\u0440\u043E\u0441\u043B\u0443\u0445\u0430\u0442\u0438 \u0444\u0440\u0430\u0433\u043C\u0435\u043D\u0442 \u0435\u043A\u0440\u0430\u043D\u0430",
-    "tray.translateScreen": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0444\u0440\u0430\u0433\u043C\u0435\u043D\u0442 \u0435\u043A\u0440\u0430\u043D\u0430",
+    "tray.checkEnglish": "\u0412\u0432\u0435\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0438\u2026",
+    "tray.listenScreen": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0439 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u0438 \u0435\u043A\u0440\u0430\u043D",
+    "tray.translateScreen": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0437 \u0435\u043A\u0440\u0430\u043D\u0430",
     "tray.saveNote": "\u0417\u0431\u0435\u0440\u0435\u0433\u0442\u0438 \u043D\u043E\u0442\u0430\u0442\u043A\u0443",
-    "tray.newNote": "\u041D\u043E\u0432\u0430 \u043D\u043E\u0442\u0430\u0442\u043A\u0430",
-    "tray.transcripts": "\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438",
+    "tray.newNote": "\u041D\u043E\u0442\u0430\u0442\u043A\u0430 \u0433\u043E\u043B\u043E\u0441\u043E\u043C",
+    "tray.transcripts": "\u0423\u0441\u0456 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438",
     "tray.quick": "\u0428\u0432\u0438\u0434\u043A\u0456 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
     "tray.autoFix": "\u0412\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0443 \u043F\u0456\u0434 \u0447\u0430\u0441 \u043D\u0430\u0431\u043E\u0440\u0443",
     "tray.switchWith": "\u041F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u0442\u0438 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0443: {key}",
     "tray.layoutBadge": "\u041F\u043E\u043A\u0430\u0437\u0443\u0432\u0430\u0442\u0438 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0443 \u0431\u0456\u043B\u044F \u043A\u0443\u0440\u0441\u043E\u0440\u0430",
     "tray.trayLayout": "\u041F\u043E\u043A\u0430\u0437\u0443\u0432\u0430\u0442\u0438 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0443 \u0432 \u0442\u0440\u0435\u0457",
-    "tray.doubleCopy": "Ctrl+C \u0434\u0432\u0456\u0447\u0456 \u2014 \u043F\u0440\u043E\u0441\u043B\u0443\u0445\u0430\u0442\u0438",
     "tray.yourWords": "\u0412\u0430\u0448\u0456 \u0441\u043B\u043E\u0432\u0430",
     "tray.keepWord": "\u041D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438 \u0441\u043B\u043E\u0432\u043E\u2026",
     "tray.keepWordTitle": "\u041D\u0456\u043A\u043E\u043B\u0438 \u043D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438 \u0446\u0435 \u0441\u043B\u043E\u0432\u043E \u0441\u0430\u043C\u043E\u0441\u0442\u0456\u0439\u043D\u043E (\u041D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438)",
     "tray.keepPlaceholder": "\u0441\u043B\u043E\u0432\u043E, \u044F\u043A \u0432\u0438 \u0439\u043E\u0433\u043E \u043D\u0430\u0431\u0438\u0440\u0430\u0454\u0442\u0435",
     "tray.keepAria": "\u041D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438 \u0441\u043B\u043E\u0432\u043E",
     "tray.kept": "\u0414\u043E\u0434\u0430\u043D\u043E: {word}",
-    "tray.vocabulary": "\u0414\u043E\u0434\u0430\u0442\u0438 \u0441\u043B\u043E\u0432\u043E \u0434\u043B\u044F \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F\u2026",
-    "tray.keptList": "\u0421\u043B\u043E\u0432\u0430, \u044F\u043A\u0456 \u043D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438",
-    "tray.pausedTitle": "\u041A\u043B\u0430\u0432\u0456\u0448\u0456 \u0439 Ctrl+C \u0434\u0432\u0456\u0447\u0456 \u0432\u0438\u043C\u043A\u043D\u0435\u043D\u043E",
+    "tray.vocabulary": "\u0414\u043E\u0434\u0430\u0442\u0438 \u0456\u043C\u2019\u044F \u0430\u0431\u043E \u0442\u0435\u0440\u043C\u0456\u043D\u2026",
+    "tray.keptList": "\u041D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438",
+    "tray.pausedTitle": "\u041A\u043B\u0430\u0432\u0456\u0448\u0456 \u0432\u0438\u043C\u043A\u043D\u0435\u043D\u043E",
     "tray.pauseTitle": "\u0423\u0441\u0456 \u043A\u043B\u0430\u0432\u0456\u0448\u0456 \u0439 \u0440\u0435\u0430\u043A\u0446\u0456\u0457 \u0432\u0438\u043C\u043A\u043D\u0435\u043D\u043E, \u0434\u043E\u043A\u0438 \u043D\u0435 \u043F\u0440\u043E\u0434\u043E\u0432\u0436\u0438\u0442\u0435",
     "tray.resume": "\u041F\u0440\u043E\u0434\u043E\u0432\u0436\u0438\u0442\u0438",
     "tray.pause": "\u041F\u0430\u0443\u0437\u0430",
@@ -3074,11 +2902,10 @@
     "tray.firstUse": "\u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u0447 \u2014 \u043F\u0456\u0434 \u0447\u0430\u0441 \u043F\u0435\u0440\u0448\u043E\u0433\u043E \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u0430\u043D\u043D\u044F",
     "tray.tipRecording": "\u0417\u0430\u043F\u0438\u0441",
     "tray.tipPaused": "\u041A\u0440\u044F\u043A\u043B \xB7 \u043F\u0430\u0443\u0437\u0430",
-    "tray.tipListen": "{keys} \u2014 \u043F\u0440\u043E\u0441\u043B\u0443\u0445\u0430\u0442\u0438",
+    "tray.tipListen": "{keys} \u2014 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0439 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u0438",
     "tray.tipTranslate": "{key} \u2014 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438",
-    "tray.tipTwice": "Ctrl+C \u0434\u0432\u0456\u0447\u0456",
     // ------------------------------------------------------------ the card
-    "kind.listen": "\u0421\u043B\u0443\u0445\u0430\u0442\u0438",
+    "kind.listen": "\u041F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u0438 \u0432\u0433\u043E\u043B\u043E\u0441",
     "kind.translate": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438",
     "kind.check": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u0438\u0442\u0438",
     "kind.screen": "\u0435\u043A\u0440\u0430\u043D",
@@ -3169,7 +2996,7 @@
     "talk.toEnd": "\u0414\u043E \u043E\u0441\u0442\u0430\u043D\u043D\u044C\u043E\u0457 \u0440\u0435\u043F\u043B\u0456\u043A\u0438",
     "talk.typePlaceholder": "\u0410\u0431\u043E \u043D\u0430\u043F\u0438\u0448\u0456\u0442\u044C \u0440\u0435\u043F\u043B\u0456\u043A\u0443",
     "talk.typeOnly": "\u041D\u0430\u043F\u0438\u0448\u0456\u0442\u044C \u0456 \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C Enter",
-    "talk.typeAria": "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u0438 \u0440\u0435\u043F\u043B\u0456\u043A\u0443 \u043A\u0430\u0447\u0446\u0456",
+    "talk.typeAria": "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u0438 \u0440\u0435\u043F\u043B\u0456\u043A\u0443 \u041A\u0440\u044F\u043A\u043B\u0443",
     "talk.newTitle": "\u041F\u0440\u0438\u0431\u0440\u0430\u0442\u0438 \u0446\u044E \u0440\u043E\u0437\u043C\u043E\u0432\u0443 \u0434\u043E \u0456\u0441\u0442\u043E\u0440\u0456\u0457 \u0439 \u043F\u043E\u0447\u0430\u0442\u0438 \u043D\u043E\u0432\u0443",
     "talk.new": "\u041D\u043E\u0432\u0430 \u0440\u043E\u0437\u043C\u043E\u0432\u0430",
     "talk.closeList": "\u0417\u0430\u043A\u0440\u0438\u0442\u0438 \u0441\u043F\u0438\u0441\u043E\u043A",
@@ -3181,7 +3008,7 @@
     "talk.goingOnMeta": "\u0442\u0440\u0438\u0432\u0430\u0454",
     "talk.goingOnTitle": "\u041F\u043E\u0442\u043E\u0447\u043D\u0430 \u0440\u043E\u0437\u043C\u043E\u0432\u0430",
     "talk.goOn": "\u041F\u0440\u043E\u0434\u043E\u0432\u0436\u0438\u0442\u0438 \u0446\u044E \u0440\u043E\u0437\u043C\u043E\u0432\u0443",
-    "talk.firstLine": "\u041F\u0435\u0440\u0448\u0430 \u0440\u0435\u043F\u043B\u0456\u043A\u0430 \u043A\u0430\u0447\u043A\u0438",
+    "talk.firstLine": "\u041F\u0435\u0440\u0448\u0430 \u0440\u0435\u043F\u043B\u0456\u043A\u0430 \u041A\u0440\u044F\u043A\u043B\u0430",
     "talk.delete": "\u0412\u0438\u0434\u0430\u043B\u0438\u0442\u0438 \u0446\u044E \u0440\u043E\u0437\u043C\u043E\u0432\u0443",
     "talk.goingOn": "\u0422\u0440\u0438\u0432\u0430\u0454",
     "talk.historyEmpty": "\xAB\u041D\u043E\u0432\u0430 \u0440\u043E\u0437\u043C\u043E\u0432\u0430\xBB \u043F\u0435\u0440\u0435\u043D\u043E\u0441\u0438\u0442\u044C \u0440\u043E\u0437\u043C\u043E\u0432\u0443 \u0441\u044E\u0434\u0438, \u0449\u043E\u0431 \u043F\u0440\u043E\u0434\u043E\u0432\u0436\u0438\u0442\u0438 \u0457\u0457 \u043F\u0456\u0437\u043D\u0456\u0448\u0435. \u0417\u0431\u0435\u0440\u0456\u0433\u0430\u0454\u0442\u044C\u0441\u044F 30 \u0434\u043D\u0456\u0432 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456, \u043D\u0435 \u0431\u0456\u043B\u044C\u0448\u0435 50.",
@@ -3189,36 +3016,36 @@
     "talk.sureAll": "\u0422\u043E\u0447\u043D\u043E? \u0412\u0438\u0434\u0430\u043B\u0438\u0442\u0438 \u0432\u0441\u0456 ({n})",
     "talk.clearAll": "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0438 \u0432\u0441\u0435",
     "talk.needsCard": "\u0414\u043B\u044F \u0440\u043E\u0437\u043C\u043E\u0432\u0438 \u043F\u043E\u0442\u0440\u0456\u0431\u043D\u0430 \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u0437 4 \u0413\u0411 \u0432\u043B\u0430\u0441\u043D\u043E\u0457 \u043F\u0430\u043C\u2019\u044F\u0442\u0456 \u0430\u0431\u043E \u0431\u0456\u043B\u044C\u0448\u0435",
-    "talk.needsCardNote": "\u041D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456 \u043A\u0430\u0447\u043A\u0430 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u043B\u0430 \u0431 15 \u0441\u0435\u043A\u0443\u043D\u0434 \u0456 \u0434\u043E\u0432\u0448\u0435 \u2014 \u043D\u0430\u0434\u0442\u043E \u043F\u043E\u0432\u0456\u043B\u044C\u043D\u043E \u0434\u043B\u044F \u0440\u043E\u0437\u043C\u043E\u0432\u0438. \xAB\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457\xBB \u043F\u0440\u0430\u0446\u044E\u0454 \u044F\u043A \u0456 \u0440\u0430\u043D\u0456\u0448\u0435.",
+    "talk.needsCardNote": "\u041D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456 \u041A\u0440\u044F\u043A\u043B \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0432 \u0431\u0438 15 \u0441\u0435\u043A\u0443\u043D\u0434 \u0456 \u0434\u043E\u0432\u0448\u0435 \u2014 \u043D\u0430\u0434\u0442\u043E \u043F\u043E\u0432\u0456\u043B\u044C\u043D\u043E \u0434\u043B\u044F \u0440\u043E\u0437\u043C\u043E\u0432\u0438. \xAB\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457\xBB \u043F\u0440\u0430\u0446\u044E\u0454 \u044F\u043A \u0456 \u0440\u0430\u043D\u0456\u0448\u0435.",
     "talk.downloading": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F, {pct}%; \u0440\u043E\u0437\u043C\u043E\u0432\u0430 \u043F\u043E\u0447\u043D\u0435\u0442\u044C\u0441\u044F, \u0449\u043E\u0439\u043D\u043E \u043C\u043E\u0434\u0435\u043B\u044C \u0431\u0443\u0434\u0435 \u0442\u0443\u0442",
     "talk.downloadFailed": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F \u043D\u0435 \u0432\u0434\u0430\u043B\u043E\u0441\u044F",
     "talk.downloadIt": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0442\u0435 \u0457\u0457 \u0432 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F\u0445; \u0457\u0457 \u0442\u0430\u043A\u043E\u0436 \u043C\u043E\u0436\u0443\u0442\u044C \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0432\u0430\u0442\u0438 \xAB\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457\xBB \u0439 \xAB\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\xBB",
-    "talk.needsModel": "\u041A\u0430\u0447\u0446\u0456 \u043F\u043E\u0442\u0440\u0456\u0431\u043D\u0430 \u0457\u0457 \u043C\u043E\u0434\u0435\u043B\u044C: {name}, {size}",
-    "talk.noEngine": "\u041F\u0438\u0448\u0456\u0442\u044C \u043A\u0430\u0447\u0446\u0456 \u0430\u0431\u043E \u0434\u043E\u0434\u0430\u0439\u0442\u0435 \u0440\u043E\u0437\u043F\u0456\u0437\u043D\u0430\u0432\u0430\u043D\u043D\u044F \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F, \u0449\u043E\u0431 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0438",
-    "talk.noEngineNote": "\u0420\u043E\u0437\u043C\u043E\u0432\u0430 \u0447\u0443\u0454 \u0432\u0430\u0441 \u0447\u0435\u0440\u0435\u0437 \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F, \u044F\u043A\u0438\u0439 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454 \xAB\u0414\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F\xBB; \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0442\u0435 \u0439\u043E\u0433\u043E \u0432 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F\u0445.",
+    "talk.needsModel": "\u041A\u0440\u044F\u043A\u043B\u0443 \u043F\u043E\u0442\u0440\u0456\u0431\u043D\u0430 \u0439\u043E\u0433\u043E \u043C\u043E\u0434\u0435\u043B\u044C: {name}, {size}",
+    "talk.noEngine": "\u041F\u0438\u0448\u0456\u0442\u044C \u041A\u0440\u044F\u043A\u043B\u0443 \u0430\u0431\u043E \u0434\u043E\u0434\u0430\u0439\u0442\u0435 \u0440\u043E\u0437\u043F\u0456\u0437\u043D\u0430\u0432\u0430\u043D\u043D\u044F \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F, \u0449\u043E\u0431 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0438",
+    "talk.noEngineNote": "\u0420\u043E\u0437\u043C\u043E\u0432\u0430 \u0447\u0443\u0454 \u0432\u0430\u0441 \u0447\u0435\u0440\u0435\u0437 \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F, \u044F\u043A\u0438\u0439 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F; \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0442\u0435 \u0439\u043E\u0433\u043E \u0432 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F\u0445.",
     "talk.engineStarting": "\u0420\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0454\u0442\u044C\u0441\u044F\u2026",
-    "talk.slow": "\xAB{name}\xBB \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456 \u043F\u0440\u0430\u0446\u044E\u0454 \u043F\u043E\u0432\u0456\u043B\u044C\u043D\u043E: \u043A\u0430\u0447\u043A\u0430 \u043C\u043E\u0436\u0435 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0442\u0438 \u0434\u043E\u0432\u0433\u043E. \xAB{accurate}\xBB \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0454 \u043F\u0440\u0438\u0431\u043B\u0438\u0437\u043D\u043E \u0437\u0430 3 \u0441\u0435\u043A\u0443\u043D\u0434\u0438.",
-    "talk.busyCard": "\u0412\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0443 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454 \u0456\u043D\u0448\u0430 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0430: \u043A\u0430\u0447\u043A\u0430 \u043C\u043E\u0436\u0435 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0442\u0438 \u043F\u043E\u0432\u0456\u043B\u044C\u043D\u043E.",
-    "talk.busyProcessor": "\u041F\u0440\u043E\u0446\u0435\u0441\u043E\u0440 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454 \u0456\u043D\u0448\u0430 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0430: \u043A\u0430\u0447\u043A\u0430 \u043C\u043E\u0436\u0435 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0442\u0438 \u043F\u043E\u0432\u0456\u043B\u044C\u043D\u043E.",
-    "talk.intro": "\u0413\u043E\u0432\u043E\u0440\u0456\u0442\u044C \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u044E. \u041A\u0430\u0447\u043A\u0430 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0454 \u0432\u0433\u043E\u043B\u043E\u0441, \u0430 \u0432\u0430\u0448\u0456 \u043F\u043E\u043C\u0438\u043B\u043A\u0438 \u043F\u043E\u0437\u043D\u0430\u0447\u0430\u044E\u0442\u044C\u0441\u044F \u0443 \u0432\u0430\u0448\u0438\u0445 \u0440\u0435\u043F\u043B\u0456\u043A\u0430\u0445.",
+    "talk.slow": "\xAB{name}\xBB \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456 \u043F\u0440\u0430\u0446\u044E\u0454 \u043F\u043E\u0432\u0456\u043B\u044C\u043D\u043E: \u041A\u0440\u044F\u043A\u043B \u043C\u043E\u0436\u0435 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0442\u0438 \u0434\u043E\u0432\u0433\u043E. \xAB{accurate}\xBB \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0454 \u043F\u0440\u0438\u0431\u043B\u0438\u0437\u043D\u043E \u0437\u0430 3 \u0441\u0435\u043A\u0443\u043D\u0434\u0438.",
+    "talk.busyCard": "\u0412\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0443 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454 \u0456\u043D\u0448\u0430 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0430: \u041A\u0440\u044F\u043A\u043B \u043C\u043E\u0436\u0435 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0442\u0438 \u043F\u043E\u0432\u0456\u043B\u044C\u043D\u043E.",
+    "talk.busyProcessor": "\u041F\u0440\u043E\u0446\u0435\u0441\u043E\u0440 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454 \u0456\u043D\u0448\u0430 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0430: \u041A\u0440\u044F\u043A\u043B \u043C\u043E\u0436\u0435 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0442\u0438 \u043F\u043E\u0432\u0456\u043B\u044C\u043D\u043E.",
+    "talk.intro": "\u0413\u043E\u0432\u043E\u0440\u0456\u0442\u044C \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u044E. \u041A\u0440\u044F\u043A\u043B \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0454 \u0432\u0433\u043E\u043B\u043E\u0441, \u0430 \u0432\u0430\u0448\u0456 \u043F\u043E\u043C\u0438\u043B\u043A\u0438 \u043F\u043E\u0437\u043D\u0430\u0447\u0430\u044E\u0442\u044C\u0441\u044F \u0443 \u0432\u0430\u0448\u0438\u0445 \u0440\u0435\u043F\u043B\u0456\u043A\u0430\u0445.",
     "talk.orTypeHello": "\u0410\u0431\u043E \u043D\u0430\u043F\u0438\u0448\u0456\u0442\u044C hello \u043D\u0438\u0436\u0447\u0435.",
     "talk.orSayHello": "\u0410\u0431\u043E \u043F\u0440\u043E\u0441\u0442\u043E \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u043A\u043D\u043E\u043F\u043A\u0443 \u0439 \u0441\u043A\u0430\u0436\u0456\u0442\u044C hello.",
     "talk.unpin": "\u041D\u0435 \u0442\u0440\u0438\u043C\u0430\u0442\u0438 \u043F\u043E\u0432\u0435\u0440\u0445 \u0456\u043D\u0448\u0438\u0445 \u0432\u0456\u043A\u043E\u043D",
     "talk.pin": "\u0422\u0440\u0438\u043C\u0430\u0442\u0438 \u043F\u043E\u0432\u0435\u0440\u0445 \u0456\u043D\u0448\u0438\u0445 \u0432\u0456\u043A\u043E\u043D",
-    "talk.modelTitle": "\u041A\u0430\u0447\u043A\u0430 \u043F\u0440\u0430\u0446\u044E\u0454 \u043D\u0430 {model} \u2014 \u0442\u0456\u0439 \u0441\u0430\u043C\u0456\u0439 \u043C\u043E\u0434\u0435\u043B\u0456, \u0449\u043E \u0439 \xAB\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457\xBB, \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456. \u041A\u043B\u0430\u0446\u043D\u0456\u0442\u044C, \u0449\u043E\u0431 \u0437\u043C\u0456\u043D\u0438\u0442\u0438.",
-    "talk.failed": "\u041A\u0430\u0447\u043A\u0430 \u043D\u0435 \u0437\u043C\u043E\u0433\u043B\u0430 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0441\u0442\u0438: {message}. \u0421\u043A\u0430\u0436\u0456\u0442\u044C \u0449\u0435 \u0440\u0430\u0437 \u0430\u0431\u043E \u043D\u0430\u043F\u0438\u0448\u0456\u0442\u044C.",
+    "talk.modelTitle": "\u041A\u0440\u044F\u043A\u043B \u043F\u0440\u0430\u0446\u044E\u0454 \u043D\u0430 {model} \u2014 \u0442\u0456\u0439 \u0441\u0430\u043C\u0456\u0439 \u043C\u043E\u0434\u0435\u043B\u0456, \u0449\u043E \u0439 \xAB\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457\xBB, \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456. \u041A\u043B\u0430\u0446\u043D\u0456\u0442\u044C, \u0449\u043E\u0431 \u0437\u043C\u0456\u043D\u0438\u0442\u0438.",
+    "talk.failed": "\u041A\u0440\u044F\u043A\u043B \u043D\u0435 \u0437\u043C\u0456\u0433 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0441\u0442\u0438: {message}. \u0421\u043A\u0430\u0436\u0456\u0442\u044C \u0449\u0435 \u0440\u0430\u0437 \u0430\u0431\u043E \u043D\u0430\u043F\u0438\u0448\u0456\u0442\u044C.",
     "talk.noAnswer": "\u043D\u0435\u043C\u0430\u0454 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0456",
     "talk.startingMic": "\u0412\u043C\u0438\u043A\u0430\u044E \u043C\u0456\u043A\u0440\u043E\u0444\u043E\u043D\u2026",
     "talk.send": "\u041D\u0430\u0434\u0456\u0441\u043B\u0430\u0442\u0438",
     "talk.talk": "\u0413\u043E\u0432\u043E\u0440\u0438\u0442\u0438",
     "talk.notPossible": "\u0420\u043E\u0437\u043C\u043E\u0432\u0430 \u043F\u043E\u043A\u0438 \u043D\u0435\u043C\u043E\u0436\u043B\u0438\u0432\u0430: \u0434\u0438\u0432. \u0432\u0438\u0449\u0435.",
-    "talk.speaking": "\u041A\u0430\u0447\u043A\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C",
-    "talk.thinking": "\u041A\u0430\u0447\u043A\u0430 \u0434\u0443\u043C\u0430\u0454\u2026",
+    "talk.speaking": "\u041A\u0440\u044F\u043A\u043B \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C",
+    "talk.thinking": "\u041A\u0440\u044F\u043A\u043B \u0434\u0443\u043C\u0430\u0454\u2026",
     "talk.typingOnly": "\u041B\u0438\u0448\u0435 \u0442\u0435\u043A\u0441\u0442\u043E\u043C, \u0434\u043E\u043A\u0438 \u043D\u0435\u043C\u0430\u0454 \u0440\u043E\u0437\u043F\u0456\u0437\u043D\u0430\u0432\u0430\u043D\u043D\u044F \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
     "talk.pressAgain": "\u041D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u0449\u0435 \u0440\u0430\u0437, \u0449\u043E\u0431 \u0441\u043F\u0440\u043E\u0431\u0443\u0432\u0430\u0442\u0438.",
     "talk.listeningPress": "\u0421\u043B\u0443\u0445\u0430\u044E \xB7 {keys} \u2014 \u043D\u0430\u0434\u0456\u0441\u043B\u0430\u0442\u0438",
-    "talk.speakingPress": "\u041A\u0430\u0447\u043A\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \xB7 {keys} \u2014 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0441\u0442\u0438",
-    "talk.thinkingPress": "\u041A\u0430\u0447\u043A\u0430 \u0434\u0443\u043C\u0430\u0454 \xB7 {keys} \u2014 \u043F\u0435\u0440\u0435\u0431\u0438\u0442\u0438",
+    "talk.speakingPress": "\u041A\u0440\u044F\u043A\u043B \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \xB7 {keys} \u2014 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0441\u0442\u0438",
+    "talk.thinkingPress": "\u041A\u0440\u044F\u043A\u043B \u0434\u0443\u043C\u0430\u0454 \xB7 {keys} \u2014 \u043F\u0435\u0440\u0435\u0431\u0438\u0442\u0438",
     "talk.press": "{keys} \u2014 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0438",
     "talk.finishing": "\u0417\u0430\u0432\u0435\u0440\u0448\u0443\u044E \u0440\u0435\u043F\u043B\u0456\u043A\u0443\u2026",
     "talk.nothingHeard": "\u041D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u043F\u043E\u0447\u0443\u0442\u043E.",
@@ -3237,10 +3064,10 @@
     "mic.denied": "\u041D\u0435\u043C\u0430\u0454 \u0434\u043E\u0441\u0442\u0443\u043F\u0443 \u0434\u043E \u043C\u0456\u043A\u0440\u043E\u0444\u043E\u043D\u0430: \u0434\u043E\u0437\u0432\u043E\u043B\u044C\u0442\u0435 \u0439\u043E\u0433\u043E \u0432 \u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u0430\u0445 Windows \u2192 \u041A\u043E\u043D\u0444\u0456\u0434\u0435\u043D\u0446\u0456\u0439\u043D\u0456\u0441\u0442\u044C \u2192 \u041C\u0456\u043A\u0440\u043E\u0444\u043E\u043D",
     "mic.none": "\u041C\u0456\u043A\u0440\u043E\u0444\u043E\u043D \u043D\u0435 \u0437\u043D\u0430\u0439\u0434\u0435\u043D\u043E",
     "mic.busy": "\u041C\u0456\u043A\u0440\u043E\u0444\u043E\u043D \u0437\u0430\u0439\u043D\u044F\u0442\u0438\u0439 \u0456\u043D\u0448\u043E\u044E \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043E\u044E",
-    "dict.type": "\u0414\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
-    "dict.english": "\u0414\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u044E",
-    "dict.note": "\u041D\u043E\u0442\u0430\u0442\u043A\u0430",
-    "dict.check": "\u041F\u0440\u0430\u043A\u0442\u0438\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457",
+    "dict.type": "\u0414\u0440\u0443\u043A\u0443\u0432\u0430\u0442\u0438 \u0433\u043E\u043B\u043E\u0441\u043E\u043C",
+    "dict.english": "\u0414\u0440\u0443\u043A\u0443\u0432\u0430\u0442\u0438 \u0433\u043E\u043B\u043E\u0441\u043E\u043C \u0437 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u043E\u043C",
+    "dict.note": "\u041D\u043E\u0442\u0430\u0442\u043A\u0430 \u0433\u043E\u043B\u043E\u0441\u043E\u043C",
+    "dict.check": "\u0421\u043A\u0430\u0437\u0430\u0442\u0438 \u0439 \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u0438\u0442\u0438",
     "dict.gettingModel": "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F \u043C\u043E\u0434\u0435\u043B\u0456 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F {pct}%",
     "dict.savingNote": "\u0417\u0431\u0435\u0440\u0456\u0433\u0430\u044E \u043D\u043E\u0442\u0430\u0442\u043A\u0443\u2026",
     "dict.catchingUp": "\u041D\u0430\u0437\u0434\u043E\u0433\u0430\u043D\u044F\u044E\u2026",
@@ -3316,13 +3143,13 @@
     "setup.freeUnknown": "\u0432\u0456\u043B\u044C\u043D\u0435 \u043C\u0456\u0441\u0446\u0435 \u043D\u0435\u0432\u0456\u0434\u043E\u043C\u0435",
     "setup.noRoom": "\u041D\u0435 \u0432\u0438\u0441\u0442\u0430\u0447\u0430\u0454 \u043C\u0456\u0441\u0446\u044F: \u0432\u0438\u043C\u043A\u043D\u0456\u0442\u044C \u0449\u043E\u0441\u044C \u0430\u0431\u043E \u0437\u0432\u0456\u043B\u044C\u043D\u0456\u0442\u044C \u043C\u0456\u0441\u0446\u0435.",
     "setup.alwaysGroup": "\u0417\u0430\u0432\u0436\u0434\u0438",
-    "setup.listenTranslate": "\u0421\u043B\u0443\u0445\u0430\u0442\u0438 \u0439 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438",
+    "setup.listenTranslate": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0439 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u0438 \u0432\u0433\u043E\u043B\u043E\u0441",
     "setup.alwaysOn": "\u0437\u0430\u0432\u0436\u0434\u0438 \u0432\u0432\u0456\u043C\u043A\u043D\u0435\u043D\u043E",
     "setup.voice": "\u0413\u043E\u043B\u043E\u0441",
     "setup.naturalHere": "\u041F\u0440\u0438\u0440\u043E\u0434\u043D\u0438\u0439 \xB7 \u0443\u0436\u0435 \u0442\u0443\u0442",
     "setup.naturalSize": "\u041F\u0440\u0438\u0440\u043E\u0434\u043D\u0438\u0439 \xB7 {size}",
     "setup.windowsVoice": "\u0413\u043E\u043B\u043E\u0441 Windows",
-    "setup.keyboard": "\u041A\u043B\u0430\u0432\u0456\u0430\u0442\u0443\u0440\u0430",
+    "setup.keyboard": "\u0420\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0430",
     "setup.badgeNote": "\u043D\u0435\u0432\u0435\u043B\u0438\u043A\u0438\u0439 \u0437\u043D\u0430\u0447\u043E\u043A \u0449\u043E\u0440\u0430\u0437\u0443, \u044F\u043A \u0437\u043C\u0456\u043D\u044E\u0454\u0442\u044C\u0441\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0430",
     "setup.speech": "\u041C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
     "setup.dictateNote": "{why} \xB7 \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F {engine} + \u043C\u043E\u0434\u0435\u043B\u044C {model}: {size}",
@@ -3379,14 +3206,15 @@
     "setup.item.core": "\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0432 \u0442\u0435\u043A\u0441\u0442",
     "setup.item.gpu": "\u0447\u0430\u0441\u0442\u0438\u043D\u0430 \u0434\u043B\u044F \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0438",
     "setup.item.speakers": "\u0447\u0430\u0441\u0442\u0438\u043D\u0430 \xAB\u0425\u0442\u043E \u043A\u043E\u043B\u0438 \u0433\u043E\u0432\u043E\u0440\u0438\u0432\xBB",
-    "rec.check": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457",
-    "rec.voice": "\u0413\u043E\u043B\u043E\u0441 \u0434\u043B\u044F \xAB\u0421\u043B\u0443\u0445\u0430\u0442\u0438\xBB",
-    "rec.transcribe": "\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u0443\u0432\u0430\u0442\u0438",
+    "rec.check": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0439 \u0440\u043E\u0437\u043C\u043E\u0432\u0430",
+    "rec.dictate": "\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F",
+    "rec.voice": "\u0413\u043E\u043B\u043E\u0441",
+    "rec.transcribe": "\u0417\u0430\u043F\u0438\u0441\u0438 \u0439 \u0437\u0443\u0441\u0442\u0440\u0456\u0447\u0456",
     "rec.automatic": "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u043D\u043E",
     "rec.speechModels": "\u0410\u0432\u0442\u043E\u0432\u0438\u0431\u0456\u0440 \u043C\u043E\u0434\u0435\u043B\u0435\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
     "rec.speed": "\u0421\u043F\u0435\u0440\u0448\u0443 \u0448\u0432\u0438\u0434\u043A\u0456\u0441\u0442\u044C",
     "rec.accuracy": "\u0421\u043F\u0435\u0440\u0448\u0443 \u0442\u043E\u0447\u043D\u0456\u0441\u0442\u044C",
-    "rec.dictateTranscribe": "\u0414\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u0439 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u0443\u0432\u0430\u043D\u043D\u044F",
+    "rec.dictateTranscribe": "\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F \u0439 \u0437\u0430\u043F\u0438\u0441\u0438",
     "rec.naturalVoice": "\u041F\u0440\u0438\u0440\u043E\u0434\u043D\u0438\u0439 \u0433\u043E\u043B\u043E\u0441",
     "speech.sec": "{n} \u0441",
     "speech.min": "{n} \u0445\u0432",
@@ -3418,8 +3246,8 @@
     "speech.dlSpeakers": "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F \u0447\u0430\u0441\u0442\u0438\u043D\u0438 \u0434\u043B\u044F \u0441\u043F\u0456\u043A\u0435\u0440\u0456\u0432",
     "speech.dlEngine": "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F \u0440\u0443\u0448\u0456\u044F \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
     "speech.download": "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438",
-    "speech.needsDictate": "\u0414\u043B\u044F \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-    "speech.needsTranscribe": "\u0414\u043B\u044F \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+    "speech.needsDictate": "\u0414\u043B\u044F \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0433\u043E \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F \u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+    "speech.needsTranscribe": "\u0414\u043B\u044F \u0437\u0430\u043F\u0438\u0441\u0456\u0432 \u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
     "speech.needsMeet": "\u0414\u043B\u044F Google Meet \u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
     "speech.needs": "\xAB{feature}\xBB: \u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
     "speech.dlStopped": "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F \u0437\u0443\u043F\u0438\u043D\u0438\u043B\u043E\u0441\u044F: {why}",
@@ -3436,11 +3264,11 @@
     "speech.restart": "\u041F\u0435\u0440\u0435\u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u0438",
     "speech.onCard": "\u043D\u0430 \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0456",
     "speech.onProcessor": "\u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440\u0456",
-    "speech.sharedDictate": "\u0414\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u0442\u0435\u0436 \u0457\u0457 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454: \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u0439 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
-    "speech.sharedTranscribe": "\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \u0442\u0435\u0436 \u0457\u0457 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454: \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u0439 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
-    "speech.keptDictate": "\u0437\u0430\u043F\u0430\u0441\u043D\u0430 \u0434\u043B\u044F \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440\u0456, \u044F\u043A\u0449\u043E \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u0456\u0434\u0432\u0435\u0434\u0435",
-    "speech.keptTranscribe": "\u0437\u0430\u043F\u0430\u0441\u043D\u0430 \u0434\u043B\u044F \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440\u0456, \u044F\u043A\u0449\u043E \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u0456\u0434\u0432\u0435\u0434\u0435",
-    "speech.keptBoth": "\u0437\u0430\u043F\u0430\u0441\u043D\u0430 \u0434\u043B\u044F \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u0439 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440\u0456, \u044F\u043A\u0449\u043E \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u0456\u0434\u0432\u0435\u0434\u0435",
+    "speech.sharedDictate": "\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F \u0442\u0435\u0436 \u0457\u0457 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454: \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u0439 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
+    "speech.sharedTranscribe": "\u0417\u0430\u043F\u0438\u0441\u0438 \u0442\u0435\u0436 \u0457\u0457 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u044E\u0442\u044C: \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u0439 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
+    "speech.keptDictate": "\u0437\u0430\u043F\u0430\u0441\u043D\u0430 \u0434\u043B\u044F \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0433\u043E \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440\u0456, \u044F\u043A\u0449\u043E \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u0456\u0434\u0432\u0435\u0434\u0435",
+    "speech.keptTranscribe": "\u0437\u0430\u043F\u0430\u0441\u043D\u0430 \u0434\u043B\u044F \u0437\u0430\u043F\u0438\u0441\u0456\u0432 \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440\u0456, \u044F\u043A\u0449\u043E \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u0456\u0434\u0432\u0435\u0434\u0435",
+    "speech.keptBoth": "\u0437\u0430\u043F\u0430\u0441\u043D\u0430 \u0434\u043B\u044F \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0433\u043E \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F \u0439 \u0437\u0430\u043F\u0438\u0441\u0456\u0432 \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440\u0456, \u044F\u043A\u0449\u043E \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u0456\u0434\u0432\u0435\u0434\u0435",
     "speech.budgetPhrase": "\u0444\u0440\u0430\u0437\u0430 \u0437\u0430 \u2248{time}",
     "speech.budgetHour": "\u0433\u043E\u0434\u0438\u043D\u0430 \u0437\u0430\u043F\u0438\u0441\u0443 \u0437\u0430 \u2248{time}",
     "speech.automatic": "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u043D\u043E",
@@ -3461,7 +3289,7 @@
     "speech.speed": "\u0428\u0432\u0438\u0434\u043A\u0456\u0441\u0442\u044C",
     "speech.gpuTitle": "\u041C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u043D\u0430 \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0456",
     "speech.installed": "\u0412\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E",
-    "speech.gpuOffer": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438 {size}; \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u0439 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \u0441\u0442\u0430\u043D\u0443\u0442\u044C \u0443 \u043A\u0456\u043B\u044C\u043A\u0430 \u0440\u0430\u0437\u0456\u0432 \u0448\u0432\u0438\u0434\u0448\u0438\u043C\u0438",
+    "speech.gpuOffer": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438 {size}; \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F \u0439 \u0437\u0430\u043F\u0438\u0441\u0438 \u0441\u0442\u0430\u043D\u0443\u0442\u044C \u0443 \u043A\u0456\u043B\u044C\u043A\u0430 \u0440\u0430\u0437\u0456\u0432 \u0448\u0432\u0438\u0434\u0448\u0438\u043C\u0438",
     "speech.add": "\u0414\u043E\u0434\u0430\u0442\u0438",
     "speech.testWaits": "\u0447\u0435\u043A\u0430\u0454, \u043F\u043E\u043A\u0438 \u0440\u0443\u0448\u0456\u0439 \u0437\u0432\u0456\u043B\u044C\u043D\u0438\u0442\u044C\u0441\u044F",
     "speech.testStep": "{model} \xB7 \u043A\u0440\u043E\u043A {n} \u0437 {total}",
@@ -3570,12 +3398,9 @@
     "tr.stopTranscribe": "\u0417\u0443\u043F\u0438\u043D\u0438\u0442\u0438 \u0439 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u0443\u0432\u0430\u0442\u0438",
     "tr.lostPiece": "\u0427\u0430\u0441\u0442\u0438\u043D\u0430 \u0437\u0430\u043F\u0438\u0441\u0443 \u043D\u0435 \u0434\u0456\u0439\u0448\u043B\u0430 \u0434\u043E \u0440\u0443\u0448\u0456\u044F",
     "tr.dropHere": "\u0412\u0456\u0434\u043F\u0443\u0441\u0442\u0456\u0442\u044C, \u0449\u043E\u0431 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u0443\u0432\u0430\u0442\u0438",
-    "tr.searched": "\u043F\u043E\u0448\u0443\u043A \u0437\u0430 \u0441\u043B\u043E\u0432\u0430\u043C\u0438",
-    "tr.countSearched": "{n} \xB7 \u043F\u043E\u0448\u0443\u043A \u0437\u0430 \u0441\u043B\u043E\u0432\u0430\u043C\u0438",
-    "tr.noneYet": "\u043F\u043E\u043A\u0438 \u043D\u0435\u043C\u0430\u0454",
     "tr.needEngine": "\u0414\u043B\u044F \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043E\u043A \u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-    "tr.needEngineNote": "\u0432\u0456\u043D \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437, \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456 \xAB\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u0443\u0432\u0430\u0442\u0438\xBB",
-    "tr.transcribeLink": "\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u0443\u0432\u0430\u0442\u0438\u2026",
+    "tr.needEngineNote": "\u0432\u0456\u043D \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437, \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456 \xAB\u0417\u0430\u043F\u0438\u0441\u0438 \u0439 \u0437\u0443\u0441\u0442\u0440\u0456\u0447\u0456\xBB",
+    "tr.transcribeLink": "\u0417\u0430\u043F\u0438\u0441\u0438 \u0439 \u0437\u0443\u0441\u0442\u0440\u0456\u0447\u0456\u2026",
     "tr.startingNote": "\u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0437\u2019\u044F\u0432\u043B\u044F\u0442\u044C\u0441\u044F, \u0449\u043E\u0439\u043D\u043E \u0432\u0456\u043D \u0437\u0430\u043F\u0440\u0430\u0446\u044E\u0454",
     "tr.search": "\u041F\u043E\u0448\u0443\u043A \u0443 \u0432\u0441\u0456\u0445 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430\u0445",
     "tr.new": "\u041D\u043E\u0432\u0430",
@@ -3586,7 +3411,7 @@
     "tr.nothing": "\u041D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u0437\u043D\u0430\u0439\u0434\u0435\u043D\u043E.",
     "tr.emptyTitle": "\u0422\u0443\u0442 \u0431\u0443\u0434\u0443\u0442\u044C \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438",
     "tr.tipDrop": "\u041F\u0435\u0440\u0435\u0442\u044F\u0433\u043D\u0456\u0442\u044C \u0432\u0456\u0434\u0435\u043E- \u0430\u0431\u043E \u0430\u0443\u0434\u0456\u043E\u0444\u0430\u0439\u043B \u0443 \u0446\u0435 \u0432\u0456\u043A\u043D\u043E",
-    "tr.tipMic": "\u0417\u0430\u043F\u0438\u0448\u0456\u0442\u044C \u0437 \u043C\u0456\u043A\u0440\u043E\u0444\u043E\u043D\u0430 \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456 \xAB\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u0443\u0432\u0430\u0442\u0438\xBB",
+    "tr.tipMic": "\u0417\u0430\u043F\u0438\u0448\u0456\u0442\u044C \u0437 \u043C\u0456\u043A\u0440\u043E\u0444\u043E\u043D\u0430 \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456 \xAB\u0417\u0430\u043F\u0438\u0441\u0438 \u0439 \u0437\u0443\u0441\u0442\u0440\u0456\u0447\u0456\xBB",
     "tr.tipNote": "\u041D\u0430\u0434\u0438\u043A\u0442\u0443\u0439\u0442\u0435 \u043D\u043E\u0442\u0430\u0442\u043A\u0443: {keys} \u0443 \u0431\u0443\u0434\u044C-\u044F\u043A\u0456\u0439 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0456",
     "tr.tipMeet": "\u0417\u0430\u043F\u0438\u0448\u0456\u0442\u044C \u0434\u0437\u0432\u0456\u043D\u043E\u043A Google Meet \u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u043D\u044F\u043C \u0434\u043B\u044F Chrome",
     "tr.failed": "\u043F\u043E\u043C\u0438\u043B\u043A\u0430",
@@ -3635,129 +3460,78 @@
     "tr.playSpace": "\u0412\u0456\u0434\u0442\u0432\u043E\u0440\u0438\u0442\u0438 \u0430\u0431\u043E \u043F\u0430\u0443\u0437\u0430 \xB7 Space",
     "tr.play": "\u0412\u0456\u0434\u0442\u0432\u043E\u0440\u0438\u0442\u0438 \u0430\u0431\u043E \u043F\u0430\u0443\u0437\u0430",
     "nav.home": "\u0413\u043E\u043B\u043E\u0432\u043D\u0430",
-    "nav.actions": "\u0414\u0456\u0457",
-    "nav.library": "\u0411\u0456\u0431\u043B\u0456\u043E\u0442\u0435\u043A\u0430",
-    "nav.lists": "\u0412\u0430\u0448\u0456 \u0441\u043F\u0438\u0441\u043A\u0438",
-    "nav.talk": "\u0420\u043E\u0437\u043C\u043E\u0432\u0430",
-    "nav.listen": "\u0421\u043B\u0443\u0445\u0430\u0442\u0438",
-    "nav.translate": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438",
-    "nav.check": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430",
-    "nav.screen": "\u0415\u043A\u0440\u0430\u043D",
-    "nav.dictate": "\u0414\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
-    "nav.transcribe": "\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u0443\u0432\u0430\u0442\u0438",
-    "nav.keyboard": "\u041A\u043B\u0430\u0432\u0456\u0430\u0442\u0443\u0440\u0430",
-    "nav.words": "\u0421\u043B\u043E\u0432\u0430",
-    "nav.mistakes": "\u041F\u043E\u043C\u0438\u043B\u043A\u0438",
-    "nav.transcripts": "\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438",
-    "nav.translations": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0438",
-    "nav.phrases": "\u0424\u0440\u0430\u0437\u0438",
-    "nav.vocabulary": "\u0421\u043B\u043E\u0432\u043D\u0438\u043A \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
+    "nav.english": "\u0410\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0430",
+    "nav.voice": "\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F",
+    "nav.recordings": "\u0417\u0430\u043F\u0438\u0441\u0438 \u0439 \u0437\u0443\u0441\u0442\u0440\u0456\u0447\u0456",
+    "nav.layout": "\u0420\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0430",
+    "nav.translate": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0434",
+    "nav.words": "\u041C\u043E\u0457 \u0441\u043B\u043E\u0432\u0430",
+    "nav.mistakes": "\u041C\u043E\u0457 \u043F\u043E\u043C\u0438\u043B\u043A\u0438",
+    "nav.transcripts": "\u0423\u0441\u0456 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438",
+    "nav.translations": "\u0406\u0441\u0442\u043E\u0440\u0456\u044F \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0456\u0432",
+    "nav.phrases": "\u041D\u0430\u0434\u0438\u043A\u0442\u043E\u0432\u0430\u043D\u0456 \u0444\u0440\u0430\u0437\u0438",
+    "nav.vocabulary": "\u0406\u043C\u0435\u043D\u0430 \u0439 \u0442\u0435\u0440\u043C\u0456\u043D\u0438",
     "nav.kept": "\u041D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438",
     "nav.learned": "\u0412\u0438\u0432\u0447\u0435\u043D\u0456 \u0441\u043B\u043E\u0432\u0430",
     "nav.programs": "\u041F\u0440\u043E\u0433\u0440\u0430\u043C\u0438",
-    "nav.layouts": "\u0420\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438",
+    "nav.layouts": "\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043E\u043A",
     "nav.settings": "\u041D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
     "nav.models": "\u041C\u043E\u0434\u0435\u043B\u0456",
-    "nav.storage": "\u0421\u0445\u043E\u0432\u0438\u0449\u0435",
+    "nav.storage": "\u041C\u0456\u0441\u0446\u0435 \u043D\u0430 \u0434\u0438\u0441\u043A\u0443",
     "nav.about": "\u041F\u0440\u043E \u041A\u0440\u044F\u043A\u043B",
-    "nav.report": "\u041F\u043E\u0432\u0456\u0434\u043E\u043C\u0438\u0442\u0438 \u043F\u0440\u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0443",
+    "nav.report": "\u041F\u043E\u0432\u0456\u0434\u043E\u043C\u0438\u0442\u0438 \u043F\u0440\u043E \u0437\u0431\u0456\u0439",
     "nav.search": "\u041F\u043E\u0448\u0443\u043A",
     "nav.minimize": "\u0417\u0433\u043E\u0440\u043D\u0443\u0442\u0438",
-    "nav.back": "\u041D\u0430\u0437\u0430\u0434",
-    "nav.backEsc": "\u041D\u0430\u0437\u0430\u0434 (Esc)",
     "nav.making": "\u0421\u0442\u0432\u043E\u0440\u044E\u0454\u0442\u044C\u0441\u044F \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430",
     "search.placeholder": "\u041F\u043E\u0448\u0443\u043A",
     "search.title": "\u041F\u043E\u0448\u0443\u043A \u0443 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F\u0445 (Ctrl+F)",
-    "search.places": { one: "{n} \u043C\u0456\u0441\u0446\u0435 \u0437\u0430 \u0437\u0430\u043F\u0438\u0442\u043E\u043C \xAB{q}\xBB", few: "{n} \u043C\u0456\u0441\u0446\u044F \u0437\u0430 \u0437\u0430\u043F\u0438\u0442\u043E\u043C \xAB{q}\xBB", many: "{n} \u043C\u0456\u0441\u0446\u044C \u0437\u0430 \u0437\u0430\u043F\u0438\u0442\u043E\u043C \xAB{q}\xBB", other: "{n} \u043C\u0456\u0441\u0446\u044F \u0437\u0430 \u0437\u0430\u043F\u0438\u0442\u043E\u043C \xAB{q}\xBB" },
-    "search.none": "\u043D\u0456\u0447\u043E\u0433\u043E \u0437\u0430 \u0437\u0430\u043F\u0438\u0442\u043E\u043C \xAB{q}\xBB",
     "search.nothing": "\u041D\u0456\u0434\u0435 \u043D\u0435\u043C\u0430\u0454 \xAB{q}\xBB. \u0423 \u0441\u043B\u043E\u0432\u0430\u0445, \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430\u0445 \u0456 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u0445 \u0441\u0432\u0456\u0439 \u043F\u043E\u0448\u0443\u043A.",
     "search.hint": "\u0412\u0432\u0435\u0434\u0456\u0442\u044C \u0443\u0433\u043E\u0440\u0456: \u0431\u0443\u0434\u044C-\u044F\u043A\u0438\u0439 \u0440\u044F\u0434\u043E\u043A \u0431\u0443\u0434\u044C-\u044F\u043A\u043E\u0457 \u0441\u0442\u043E\u0440\u0456\u043D\u043A\u0438 \u0437\u043D\u0430\u0445\u043E\u0434\u0438\u0442\u044C\u0441\u044F \u0437\u0430 \u043D\u0430\u0437\u0432\u043E\u044E \u0447\u0438 \u043F\u0440\u0438\u043C\u0456\u0442\u043A\u043E\u044E, \u0443\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u043E\u044E \u0430\u0431\u043E \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u044E.",
-    "page.meetCap": "\u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u043D\u044F \u041A\u0440\u044F\u043A\u043B\u0430 \u0434\u043B\u044F Chrome",
     "page.speakers": "\u0425\u0442\u043E \u043A\u043E\u043B\u0438 \u0433\u043E\u0432\u043E\u0440\u0438\u0432",
-    "page.speakersCap": "\u0440\u043E\u0437\u0440\u0456\u0437\u043D\u044F\u0454 \u0433\u043E\u043B\u043E\u0441\u0438",
     "page.fixing": "\u0412\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u043F\u0456\u0434 \u0447\u0430\u0441 \u043D\u0430\u0431\u043E\u0440\u0443",
-    "page.fixingCap": "\u0449\u043E \u0449\u0435 \u041A\u0440\u044F\u043A\u043B \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454, \u043F\u043E\u043A\u0438 \u0432\u0438 \u0434\u0440\u0443\u043A\u0443\u0454\u0442\u0435",
     "page.languages": "\u0412\u0430\u0448\u0456 \u043C\u043E\u0432\u0438",
-    "page.forTranslateCap": "\u043C\u043E\u0434\u0435\u043B\u044C, \u044F\u043A\u0430 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u0454",
     "page.checkEnglish": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457",
     "page.forCheckCap": "\u043C\u043E\u0434\u0435\u043B\u044C, \u044F\u043A\u0430 \u0437\u043D\u0430\u0445\u043E\u0434\u0438\u0442\u044C \u0432\u0430\u0448\u0456 \u043F\u043E\u043C\u0438\u043B\u043A\u0438",
-    "page.forDictateCap": "\u043C\u043E\u0434\u0435\u043B\u044C, \u044F\u043A\u0430 \u0437\u0430\u043F\u0438\u0441\u0443\u0454 \u0441\u043A\u0430\u0437\u0430\u043D\u0435",
-    "page.forTranscribeCap": "\u043C\u043E\u0434\u0435\u043B\u044C, \u044F\u043A\u0430 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u0443\u0454 \u0437\u0430\u043F\u0438\u0441\u0438",
-    "page.voice": "\u0413\u043E\u043B\u043E\u0441 \u0447\u0438\u0442\u0430\u043D\u043D\u044F",
+    "page.voice": "\u0413\u043E\u043B\u043E\u0441",
     "page.forVoiceCap": "\u0433\u043E\u043B\u043E\u0441, \u044F\u043A\u0438\u0439 \u0447\u0438\u0442\u0430\u0454 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0443 \u0432\u0433\u043E\u043B\u043E\u0441",
-    "page.wordsCap": { one: "{n} \u0441\u043B\u043E\u0432\u043E \xB7 \u0437 \u0432\u0430\u0448\u0438\u0445 \u043A\u0430\u0440\u0442\u043E\u043A", few: "{n} \u0441\u043B\u043E\u0432\u0430 \xB7 \u0437 \u0432\u0430\u0448\u0438\u0445 \u043A\u0430\u0440\u0442\u043E\u043A", many: "{n} \u0441\u043B\u0456\u0432 \xB7 \u0437 \u0432\u0430\u0448\u0438\u0445 \u043A\u0430\u0440\u0442\u043E\u043A", other: "{n} \u0441\u043B\u043E\u0432\u0430 \xB7 \u0437 \u0432\u0430\u0448\u0438\u0445 \u043A\u0430\u0440\u0442\u043E\u043A" },
-    "page.wordsNone": "\u043F\u043E\u043A\u0438 \u043D\u0435\u043C\u0430\u0454 \xB7 \u0437 \u0432\u0430\u0448\u0438\u0445 \u043A\u0430\u0440\u0442\u043E\u043A",
-    "page.mistakesCap": "\u0437 \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0438 \xB7 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456",
-    "page.translationsCap": "\u0437\u0431\u0435\u0440\u0456\u0433\u0430\u044E\u0442\u044C\u0441\u044F 30 \u0434\u043D\u0456\u0432 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456",
-    "page.phrasesCap": "\u043D\u0430\u0434\u0438\u043A\u0442\u043E\u0432\u0430\u043D\u0456 \u043D\u0435\u0449\u043E\u0434\u0430\u0432\u043D\u043E \xB7 \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u044E\u0442\u044C\u0441\u044F 30 \u0434\u043D\u0456\u0432 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456",
-    "page.vocabularyCap": "\u0434\u043B\u044F \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u0456 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438",
-    "page.keptCap": "\u043D\u0456\u043A\u043E\u043B\u0438 \u043D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u044C\u0441\u044F \u0441\u0430\u043C\u0456",
-    "page.learnedCap": "\u043B\u0438\u0448\u0435 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456",
-    "page.programsCap": "\u0431\u0435\u0437 \u043E\u043A\u0440\u0435\u043C\u0438\u0445 \u0444\u0443\u043D\u043A\u0446\u0456\u0439 \u0430\u0431\u043E \u0437\u0456 \u0441\u0432\u043E\u0454\u044E \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u043E\u044E",
-    "page.layoutsCap": "\u0443 \u043F\u043E\u0440\u044F\u0434\u043A\u0443, \u0432 \u044F\u043A\u043E\u043C\u0443 \u0457\u0445 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u044E\u0442\u044C \u043A\u043B\u0430\u0432\u0456\u0448\u0456",
-    "page.modelsCap": "\u0449\u043E \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454 \u043A\u043E\u0436\u043D\u0430 \u0434\u0456\u044F \u0456 \u0449\u043E \u043D\u0430\u0439\u043A\u0440\u0430\u0449\u0435 \u043F\u0440\u0430\u0446\u044E\u0454 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456",
-    "page.measuring": "\u0432\u0438\u043C\u0456\u0440\u044E\u0432\u0430\u043D\u043D\u044F\u2026",
-    "page.freeOn": "\u0432\u0456\u043B\u044C\u043D\u043E {size} \u043D\u0430 {drive}",
-    "page.storageCap": "\u0449\u043E \u041A\u0440\u044F\u043A\u043B \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u0454 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456",
-    "page.reportCap": "\u0437 \u0436\u0443\u0440\u043D\u0430\u043B\u0430\u043C\u0438 \u041A\u0440\u044F\u043A\u043B\u0430, \u043D\u0430\u0434\u0441\u0438\u043B\u0430\u0454\u0442\u0435 \u0432\u0438",
-    "home.translatorReady": "\u0433\u043E\u0442\u043E\u0432\u043E",
-    "home.translatorAbsent": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u044C\u0441\u044F \u043F\u0440\u0438 \u043F\u0435\u0440\u0448\u043E\u043C\u0443 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u0430\u043D\u043D\u0456",
-    "home.translatorDownloading": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F",
-    "home.translatorFailed": "\u043D\u0435 \u0432\u0434\u0430\u043B\u043E\u0441\u044F \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438; \u0441\u043F\u0440\u043E\u0431\u0443\u0454 \u0437\u043D\u043E\u0432\u0443 \u043F\u0440\u0438 \u043D\u0430\u0441\u0442\u0443\u043F\u043D\u043E\u043C\u0443 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0456",
-    "home.translatorUnsupported": "\u043E\u0444\u043B\u0430\u0439\u043D-\u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u0447\u0430 \u0449\u0435 \u043D\u0435\u043C\u0430\u0454",
-    "home.natural": "\u043F\u0440\u0438\u0440\u043E\u0434\u043D\u0438\u0439 \u0433\u043E\u043B\u043E\u0441",
-    "home.windowsVoice": "\u0433\u043E\u043B\u043E\u0441 Windows",
-    "home.voiceReady": "\u0433\u043E\u0442\u043E\u0432\u0438\u0439",
-    "home.voiceFailed": "\u0433\u043E\u0442\u043E\u0432\u0438\u0439 (\u043F\u0440\u0438\u0440\u043E\u0434\u043D\u0438\u0439 \u0433\u043E\u043B\u043E\u0441 \u043D\u0435 \u0432\u0434\u0430\u043B\u043E\u0441\u044F \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438)",
-    "home.speech": "\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-    "home.speechReady": "\u0433\u043E\u0442\u043E\u0432\u0435",
-    "home.speechStopped": "\u0437\u0443\u043F\u0438\u043D\u0435\u043D\u0435",
-    "home.speechStarting": "\u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0454\u0442\u044C\u0441\u044F",
-    "home.everything": "\u0423\u0441\u0435 \u043F\u0440\u0430\u0446\u044E\u0454 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456.",
     "home.paused": "\u041A\u0440\u044F\u043A\u043B \u043D\u0430 \u043F\u0430\u0443\u0437\u0456",
-    "home.pausedNote": "\u0441\u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044F \u043A\u043B\u0430\u0432\u0456\u0448 \u0456 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438 \u0432\u0438\u043C\u043A\u043D\u0435\u043D\u0456, \u0434\u043E\u043A\u0438 \u0432\u0438 \u043D\u0435 \u0432\u0456\u0434\u043D\u043E\u0432\u0438\u0442\u0435 \u0440\u043E\u0431\u043E\u0442\u0443",
+    "home.pausedNote": "\u043A\u043B\u0430\u0432\u0456\u0448\u0456 \u0439 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u043D\u0435 \u043F\u0440\u0430\u0446\u044E\u044E\u0442\u044C",
     "home.replayTitle": "\u041F\u0440\u043E\u0433\u0440\u0430\u0442\u0438 \u0440\u044F\u0434\u043E\u043A \u0449\u0435 \u0440\u0430\u0437",
     "home.replay": "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0438",
-    "home.foot": "\u041D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u043D\u0430 \u0434\u0456\u044E, \u0449\u043E\u0431 \u0437\u043C\u0456\u043D\u0438\u0442\u0438 \u0457\u0457 \u043A\u043B\u0430\u0432\u0456\u0448\u0456.",
+    "home.ready": "\u041A\u0440\u044F\u043A\u043B \u0433\u043E\u0442\u043E\u0432\u0438\u0439",
+    "home.readyNote": "\u0443\u0441\u0435 \u043F\u0440\u0430\u0446\u044E\u0454 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456",
+    "home.downloading": "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F: {name}",
+    "home.yourKeys": "\u0412\u0430\u0448\u0456 \u043A\u043B\u0430\u0432\u0456\u0448\u0456",
+    "home.unset": "\u0411\u0435\u0437 \u043A\u043B\u0430\u0432\u0456\u0448\u0456: {n}. \u0417\u0430\u0434\u0430\u044E\u0442\u044C\u0441\u044F \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u043A\u0430\u0445 \u0434\u0456\u0439.",
+    "home.troubleTranslator": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u0447 \u043D\u0435 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0432\u0441\u044F; \u043D\u0430\u0441\u0442\u0443\u043F\u043D\u0438\u0439 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u0441\u043F\u0440\u043E\u0431\u0443\u0454 \u0437\u043D\u043E\u0432\u0443.",
+    "home.troubleVoice": "\u041F\u0440\u0438\u0440\u043E\u0434\u043D\u0438\u0439 \u0433\u043E\u043B\u043E\u0441 \u043D\u0435 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0432\u0441\u044F; \u043F\u043E\u043A\u0438 \u0447\u0438\u0442\u0430\u0454 \u0433\u043E\u043B\u043E\u0441 Windows.",
+    "home.troubleSpeech": "\u0420\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0437\u0443\u043F\u0438\u043D\u0438\u0432\u0441\u044F: \u043F\u0435\u0440\u0435\u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u0438 \u0439\u043E\u0433\u043E \u043C\u043E\u0436\u043D\u0430 \u0432 \xAB\u041F\u043E\u0432\u0456\u0434\u043E\u043C\u0438\u0442\u0438 \u043F\u0440\u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0443\xBB.",
     "home.eyebrow": "\u041E\u0434\u0438\u043D \u0440\u044F\u0434\u043E\u043A, \u0442\u0440\u0438 \u043A\u043B\u0430\u0432\u0456\u0448\u0456",
     "home.stepFix": "\u0432\u0438\u043F\u0440\u0430\u0432\u0438\u0442\u0438",
     "home.stepTranslate": "\u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438",
     "home.stepListen": "\u0441\u043B\u0443\u0445\u0430\u0442\u0438",
-    "home.talkDesc": "\u0413\u043E\u0432\u043E\u0440\u0456\u0442\u044C \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u044E \u0437 \u043A\u0430\u0447\u043A\u043E\u044E: \u0432\u043E\u043D\u0430 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0454 \u0432\u0433\u043E\u043B\u043E\u0441, \u0430 \u0432\u0430\u0448\u0456 \u043F\u043E\u043C\u0438\u043B\u043A\u0438 \u043F\u043E\u0437\u043D\u0430\u0447\u0430\u044E\u0442\u044C\u0441\u044F.",
-    "home.listenDesc": "\u0427\u0438\u0442\u0430\u0454 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0438\u0439 \u0442\u0435\u043A\u0441\u0442 \u0443\u0433\u043E\u043B\u043E\u0441 \u0456 \u043F\u043E\u043A\u0430\u0437\u0443\u0454 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434.",
-    "home.translateDesc": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u0454 \u0432\u0438\u0434\u0456\u043B\u0435\u043D\u0438\u0439 \u0442\u0435\u043A\u0441\u0442; Enter \u0432\u0441\u0442\u0430\u0432\u043B\u044F\u0454 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u043D\u0430 \u0439\u043E\u0433\u043E \u043C\u0456\u0441\u0446\u0435.",
-    "home.checkDesc": "\u041F\u043E\u0437\u043D\u0430\u0447\u0430\u0454 \u043F\u043E\u043C\u0438\u043B\u043A\u0438 \u0443 \u0432\u0430\u0448\u0456\u0439 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0456\u0439 \u0456 \u043F\u043E\u043A\u0430\u0437\u0443\u0454 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F.",
-    "home.screenCap": "\u0442\u0435\u043A\u0441\u0442 \u0437 \u0435\u043A\u0440\u0430\u043D\u0430",
-    "home.screenDesc": "\u041E\u0431\u0432\u0435\u0434\u0456\u0442\u044C \u0440\u0430\u043C\u043A\u043E\u044E \u0442\u0435\u043A\u0441\u0442, \u044F\u043A\u0438\u0439 \u043D\u0435 \u0432\u0438\u0434\u0456\u043B\u044F\u0454\u0442\u044C\u0441\u044F, \u0456 \u043F\u0440\u043E\u0441\u043B\u0443\u0445\u0430\u0439\u0442\u0435 \u0430\u0431\u043E \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0456\u0442\u044C \u0439\u043E\u0433\u043E.",
-    "home.dictateDesc": "\u0413\u043E\u0432\u043E\u0440\u0456\u0442\u044C, \u0456 \u041A\u0440\u044F\u043A\u043B \u0434\u0440\u0443\u043A\u0443\u0454 \u0442\u0430\u043C, \u0434\u0435 \u043A\u0443\u0440\u0441\u043E\u0440. \u0421\u043A\u0430\u0437\u0430\u043D\u0435 ({lang}) \u043C\u043E\u0436\u0435 \u0441\u0442\u0430\u0442\u0438 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0438\u043C \u0442\u0435\u043A\u0441\u0442\u043E\u043C.",
-    "home.transcribeCap": "\u0444\u0430\u0439\u043B\u0438 \xB7 \u043C\u0456\u043A\u0440\u043E\u0444\u043E\u043D \xB7 Meet",
-    "home.transcribeDesc": "\u0420\u043E\u0437\u043C\u043E\u0432\u0438 \u0439 \u0437\u0443\u0441\u0442\u0440\u0456\u0447\u0456 \u0432 \u0442\u0435\u043A\u0441\u0442, \u0437 \u0440\u043E\u0437\u043F\u043E\u0434\u0456\u043B\u043E\u043C \u0437\u0430 \u043C\u043E\u0432\u0446\u044F\u043C\u0438.",
-    "home.keyboardAuto": "\u0412\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454 \u0441\u043B\u043E\u0432\u0430, \u043D\u0430\u0431\u0440\u0430\u043D\u0456 \u043D\u0435 \u0432 \u0442\u0456\u0439 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u0446\u0456, \u043F\u0456\u0434 \u0447\u0430\u0441 \u043D\u0430\u0431\u043E\u0440\u0443.",
-    "home.keyboardDesc": "\u041F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u0454 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0443 \u0456 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454 \u0442\u0435\u043A\u0441\u0442, \u043D\u0430\u0431\u0440\u0430\u043D\u0438\u0439 \u043D\u0435 \u0432 \u0442\u0456\u0439.",
-    "home.downloadingPct": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F {pct}%",
     "home.downloadsOnce": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
-    "home.speechToText": "\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0432 \u0442\u0435\u043A\u0441\u0442",
-    "home.speechOnCard": "\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0432 \u0442\u0435\u043A\u0441\u0442 \xB7 \u043D\u0430 \u0432\u0430\u0448\u0456\u0439 \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0456",
-    "home.speechOnProcessor": "\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0432 \u0442\u0435\u043A\u0441\u0442 \xB7 \u043D\u0430 \u0432\u0430\u0448\u043E\u043C\u0443 \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440\u0456",
+    "menu.translate": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438",
+    "menu.listen": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0439 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u0438 \u0432\u0433\u043E\u043B\u043E\u0441",
+    "menu.inPlace": "\u0417\u0430\u043C\u0456\u043D\u0438\u0442\u0438 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u043E\u043C",
+    "menu.screen": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0437 \u0435\u043A\u0440\u0430\u043D\u0430",
+    "menu.check": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u0438\u0442\u0438 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0443",
+    "menu.talk": "\u0420\u043E\u0437\u043C\u043E\u0432\u0430 \u0437 \u041A\u0440\u044F\u043A\u043B\u043E\u043C",
+    "menu.dictate": "\u0414\u0440\u0443\u043A\u0443\u0432\u0430\u0442\u0438 \u0433\u043E\u043B\u043E\u0441\u043E\u043C",
+    "menu.english": "\u0414\u0440\u0443\u043A\u0443\u0432\u0430\u0442\u0438 \u0433\u043E\u043B\u043E\u0441\u043E\u043C \u0437 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u043E\u043C",
+    "menu.fix": "\u0412\u0438\u043F\u0440\u0430\u0432\u0438\u0442\u0438 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0443",
+    "menu.foot": "\u041B\u0456\u0442\u0435\u0440\u0430 \u2014 \u0432\u0438\u0431\u0440\u0430\u0442\u0438 \xB7 Esc \u2014 \u0437\u0430\u043A\u0440\u0438\u0442\u0438",
+    "menu.nothingToRead": "\u041D\u0456\u0447\u043E\u0433\u043E \u0447\u0438\u0442\u0430\u0442\u0438: \u0432\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0442\u0435\u043A\u0441\u0442",
+    "menu.nothingToReplace": "\u041D\u0456\u0447\u043E\u0433\u043E \u0437\u0430\u043C\u0456\u043D\u0438\u0442\u0438: \u0432\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0442\u0435\u043A\u0441\u0442",
+    "menu.keyTitle": "\u041C\u0435\u043D\u044E \u041A\u0440\u044F\u043A\u043B\u0430",
+    "menu.keyNote": "\u043E\u0434\u043D\u0430 \u043A\u043B\u0430\u0432\u0456\u0448\u0430 \u2014 \u0443\u0441\u0456 \u0434\u0456\u0457",
     "keys.group": "\u041A\u043B\u0430\u0432\u0456\u0448\u0456",
-    "keys.talk": "\u0440\u043E\u0437\u043C\u043E\u0432\u0430",
-    "keys.selection": "\u0432\u0438\u0434\u0456\u043B\u0435\u043D\u0435",
-    "keys.type": "\u0432\u0432\u0435\u0441\u0442\u0438",
-    "keys.pasteBack": "\u0432\u0441\u0442\u0430\u0432\u0438\u0442\u0438",
-    "keys.byVoice": "\u0433\u043E\u043B\u043E\u0441\u043E\u043C",
-    "keys.listen": "\u0441\u043B\u0443\u0445\u0430\u0442\u0438",
-    "keys.translate": "\u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438",
-    "keys.dictate": "\u0434\u0438\u043A\u0442\u0443\u0432\u0430\u0442\u0438",
-    "keys.note": "\u043D\u043E\u0442\u0430\u0442\u043A\u0430",
-    "keys.inMeet": "\u0443 Meet",
-    "keys.switch": "\u043F\u0435\u0440\u0435\u043C\u043A\u043D\u0443\u0442\u0438",
-    "keys.fix": "\u0432\u0438\u043F\u0440\u0430\u0432\u0438\u0442\u0438",
     "keys.copyTwice": "Ctrl + C \u0434\u0432\u0456\u0447\u0456",
     "keys.twice": "{key} \u0434\u0432\u0456\u0447\u0456",
     "keys.tap": "\u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C {key}",
     "keys.press": "\u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C {key}",
-    "keys.useSelect": "\u043F\u0440\u043E\u0441\u043B\u0443\u0445\u043E\u0432\u0443\u0432\u0430\u043D\u043D\u044F \u0432\u0438\u0434\u0456\u043B\u0435\u043D\u043E\u0433\u043E",
-    "keys.useSnip": "\u043F\u0440\u043E\u0441\u043B\u0443\u0445\u043E\u0432\u0443\u0432\u0430\u043D\u043D\u044F \u0442\u0435\u043A\u0441\u0442\u0443 \u0437 \u0435\u043A\u0440\u0430\u043D\u0430",
+    "keys.useSelect": "\u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u0456 \u0447\u0438\u0442\u0430\u043D\u043D\u044F \u0432\u0438\u0434\u0456\u043B\u0435\u043D\u043E\u0433\u043E \u0432\u0433\u043E\u043B\u043E\u0441",
+    "keys.useSnip": "\u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u0456 \u0447\u0438\u0442\u0430\u043D\u043D\u044F \u0442\u0435\u043A\u0441\u0442\u0443 \u0437 \u0435\u043A\u0440\u0430\u043D\u0430",
     "keys.useTranslate": "\u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u0432\u0438\u0434\u0456\u043B\u0435\u043D\u043E\u0433\u043E",
     "keys.useText": "\u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u0442\u0435\u043A\u0441\u0442\u0443 \u0437 \u0435\u043A\u0440\u0430\u043D\u0430",
     "keys.useInPlace": "\u0437\u0430\u043C\u0456\u043D\u0430 \u0432\u0438\u0434\u0456\u043B\u0435\u043D\u043E\u0433\u043E \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u043E\u043C",
@@ -3771,14 +3545,17 @@
     "keys.useNote": "\u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u043D\u043E\u0442\u0430\u0442\u043A\u0438",
     "keys.useAgain": "\u043F\u043E\u0432\u0442\u043E\u0440\u043D\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F \u043E\u0441\u0442\u0430\u043D\u043D\u044C\u043E\u0457 \u0444\u0440\u0430\u0437\u0438",
     "keys.usePractice": "\u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0441\u043A\u0430\u0437\u0430\u043D\u043E\u0433\u043E",
-    "keys.useTalk": "\u0440\u043E\u0437\u043C\u043E\u0432\u0430 \u0437 \u043A\u0430\u0447\u043A\u043E\u044E",
+    "keys.useTalk": "\u0440\u043E\u0437\u043C\u043E\u0432\u0430 \u0437 \u041A\u0440\u044F\u043A\u043B\u043E\u043C",
     "keys.usePause": "\u043F\u0430\u0443\u0437\u0430 \u041A\u0440\u044F\u043A\u043B\u0430",
     "keys.useWindow": "\u0432\u0456\u0434\u043A\u0440\u0438\u0442\u0442\u044F \u041A\u0440\u044F\u043A\u043B\u0430",
+    "keys.useMenu": "\u0432\u0456\u0434\u043A\u0440\u0438\u0442\u0442\u044F \u043C\u0435\u043D\u044E \u041A\u0440\u044F\u043A\u043B\u0430",
     "keys.toLayout": "\u043F\u0435\u0440\u0435\u0445\u0456\u0434 \u043D\u0430 {layout}",
     "keys.aLayout": "\u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0443",
     "keys.taken": "{key} \u0443\u0436\u0435 \u0437\u0430\u0439\u043D\u044F\u0442\u043E: {use}.",
+    "keys.copyTwiceOnly": "Ctrl + C \u0434\u0432\u0456\u0447\u0456 \u043C\u043E\u0436\u0435 \u0431\u0443\u0442\u0438 \u043A\u043B\u0430\u0432\u0456\u0448\u0435\u044E \u043B\u0438\u0448\u0435 \u0434\u0456\u0457 \u0437 \u0432\u0438\u0434\u0456\u043B\u0435\u043D\u0438\u043C \u0442\u0435\u043A\u0441\u0442\u043E\u043C.",
     "keys.menuAlt": "Alt \u043E\u043A\u0440\u0435\u043C\u043E \u0431\u0456\u043B\u044C\u0448\u0435 \u043D\u0435 \u0432\u0456\u0434\u043A\u0440\u0438\u0432\u0430\u0454 \u043C\u0435\u043D\u044E, \u0446\u0435 \u0440\u043E\u0431\u0438\u0442\u044C F10",
     "keys.menuWin": "Win \u043E\u043A\u0440\u0435\u043C\u043E \u0431\u0456\u043B\u044C\u0448\u0435 \u043D\u0435 \u0432\u0456\u0434\u043A\u0440\u0438\u0432\u0430\u0454 \xAB\u041F\u0443\u0441\u043A\xBB, \u0446\u0435 \u0440\u043E\u0431\u0438\u0442\u044C Ctrl+Esc",
+    "keys.menuCtrlEsc": "Ctrl+Esc \u0431\u0456\u043B\u044C\u0448\u0435 \u043D\u0435 \u0432\u0456\u0434\u043A\u0440\u0438\u0432\u0430\u0454 \xAB\u041F\u0443\u0441\u043A\xBB, \u0446\u0435 \u0440\u043E\u0431\u0438\u0442\u044C Win",
     "keys.recordTitle": "\u041A\u043B\u0430\u0446\u043D\u0456\u0442\u044C, \u043F\u043E\u0442\u0456\u043C \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u043A\u043B\u0430\u0432\u0456\u0448\u0456: Ctrl+Alt+T, Left Ctrl \u0434\u0432\u0456\u0447\u0456, Pause, \u0431\u0456\u0447\u043D\u0443 \u043A\u043D\u043E\u043F\u043A\u0443 \u043C\u0438\u0448\u0456\u2026",
     "keys.aria": "{label}: {key}. \u041A\u043B\u0430\u0446\u043D\u0456\u0442\u044C, \u0449\u043E\u0431 \u0437\u043C\u0456\u043D\u0438\u0442\u0438.",
     "keys.notSet": "\u043D\u0435 \u0437\u0430\u0434\u0430\u043D\u043E",
@@ -3788,19 +3565,10 @@
     "keys.backTo": "\u041F\u043E\u0432\u0435\u0440\u043D\u0443\u0442\u0438 {key}",
     "keys.backToAria": "{label}: \u043F\u043E\u0432\u0435\u0440\u043D\u0443\u0442\u0438 {key}",
     "keys.takenProgram": "\u0417\u0430\u0439\u043D\u044F\u0442\u043E \u0456\u043D\u0448\u043E\u044E \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043E\u044E; \u0432\u0438\u0431\u0435\u0440\u0456\u0442\u044C \u0456\u043D\u0448\u0435.",
-    "keys.change": "\u0417\u043C\u0456\u043D\u0438\u0442\u0438",
     "keys.set": "\u0417\u0430\u0434\u0430\u0442\u0438",
     "listen.tryKey": "\u0412\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0446\u0435\u0439 \u0442\u0435\u043A\u0441\u0442 \u0456 {how}.",
     "listen.tryTwice": "\u0412\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0446\u0435\u0439 \u0442\u0435\u043A\u0441\u0442 \u0456 \u0434\u0432\u0456\u0447\u0456 \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C Ctrl + C.",
-    "listen.tryNone": "\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u043A\u043B\u0430\u0432\u0456\u0448\u0443 \u0432\u0433\u043E\u0440\u0456 \u0430\u0431\u043E \u0432\u0432\u0456\u043C\u043A\u043D\u0456\u0442\u044C Ctrl + C \u0434\u0432\u0456\u0447\u0456, \u043F\u043E\u0442\u0456\u043C \u0432\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0446\u0435\u0439 \u0442\u0435\u043A\u0441\u0442.",
-    "listen.select": "\u041F\u0440\u043E\u0441\u043B\u0443\u0445\u0430\u0442\u0438 \u0432\u0438\u0434\u0456\u043B\u0435\u043D\u0438\u0439 \u0442\u0435\u043A\u0441\u0442",
-    "listen.selectNote": "\u0432\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0442\u0435\u043A\u0441\u0442 \u0431\u0443\u0434\u044C-\u0434\u0435 \u0456 \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u043A\u043B\u0430\u0432\u0456\u0448\u0443",
-    "listen.alsoTwice": "\u0422\u0430\u043A\u043E\u0436 \u043D\u0430 Ctrl + C \u0434\u0432\u0456\u0447\u0456",
-    "listen.alsoTwiceNote": "\u0432\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0442\u0435\u043A\u0441\u0442 \u0456 \u0448\u0432\u0438\u0434\u043A\u043E \u0434\u0432\u0456\u0447\u0456 \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C Ctrl + C; \u043F\u0440\u0430\u0446\u044E\u0454 \u0439 \u0431\u0435\u0437 \u0437\u0430\u0434\u0430\u043D\u043E\u0457 \u043A\u043B\u0430\u0432\u0456\u0448\u0456",
-    "listen.snip": "\u041F\u0440\u043E\u0441\u043B\u0443\u0445\u0430\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0437 \u0435\u043A\u0440\u0430\u043D\u0430",
-    "listen.boxNote": "\u0434\u043B\u044F \u0442\u0435\u043A\u0441\u0442\u0443, \u044F\u043A\u0438\u0439 \u043D\u0435 \u0432\u0438\u0434\u0456\u043B\u044F\u0454\u0442\u044C\u0441\u044F: \u043E\u0431\u0432\u0435\u0434\u0456\u0442\u044C \u0439\u043E\u0433\u043E \u0440\u0430\u043C\u043A\u043E\u044E",
-    "listen.voiceGroup": "\u0413\u043E\u043B\u043E\u0441",
-    "listen.voiceNote": "\u0433\u043E\u043B\u043E\u0441, \u044F\u043A\u0438\u0439 \u0447\u0438\u0442\u0430\u0454",
+    "listen.tryNone": "\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u043A\u043B\u0430\u0432\u0456\u0448\u0443 \u0432\u0433\u043E\u0440\u0456 (\u043C\u043E\u0436\u043D\u0430 Ctrl + C \u0434\u0432\u0456\u0447\u0456), \u043F\u043E\u0442\u0456\u043C \u0432\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0446\u0435\u0439 \u0442\u0435\u043A\u0441\u0442.",
     "listen.cardGroup": "\u041A\u0430\u0440\u0442\u043A\u0430",
     "listen.autoRead": "\u0427\u0438\u0442\u0430\u0442\u0438 \u0432\u0433\u043E\u043B\u043E\u0441, \u043A\u043E\u043B\u0438 \u0432\u0456\u0434\u043A\u0440\u0438\u0432\u0430\u0454\u0442\u044C\u0441\u044F \u043A\u0430\u0440\u0442\u043A\u0430",
     "listen.rareWords": "\u041F\u0443\u043D\u043A\u0442\u0438\u0440 \u043F\u0456\u0434 \u0440\u0456\u0434\u0448\u0438\u043C\u0438 \u0441\u043B\u043E\u0432\u0430\u043C\u0438",
@@ -3828,23 +3596,11 @@
     "translate.unsupportedNote": "\u0434\u043B\u044F \u0446\u0456\u0454\u0457 \u043C\u043E\u0432\u0438 \u0449\u0435 \u043D\u0435\u043C\u0430\u0454 \u043E\u0444\u043B\u0430\u0439\u043D-\u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u0447\u0430",
     "translate.tryKey": "\u0412\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0439\u043E\u0433\u043E \u0456 {how}.",
     "translate.tryNone": "\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u043A\u043B\u0430\u0432\u0456\u0448\u0443 \u0432\u0433\u043E\u0440\u0456, \u043F\u043E\u0442\u0456\u043C \u0432\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0442\u0435\u043A\u0441\u0442 \u0456 \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u0457\u0457.",
-    "translate.select": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0432\u0438\u0434\u0456\u043B\u0435\u043D\u0438\u0439 \u0442\u0435\u043A\u0441\u0442",
-    "translate.selectNote": "\u0432\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0439\u043E\u0433\u043E \u0431\u0443\u0434\u044C-\u0434\u0435 \u0456 {how}",
-    "translate.selectNoKey": "\u0432\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0439\u043E\u0433\u043E \u0431\u0443\u0434\u044C-\u0434\u0435 \u0456 \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u043E\u0434\u043D\u0443 \u043A\u043B\u0430\u0432\u0456\u0448\u0443, \u043D\u0430\u043F\u0440\u0438\u043A\u043B\u0430\u0434 Left Ctrl \u0434\u0432\u0456\u0447\u0456",
-    "translate.type": "\u0412\u0432\u0435\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0443",
     "translate.typeNote": "\u043F\u043E\u0440\u043E\u0436\u043D\u044F \u043A\u0430\u0440\u0442\u043A\u0430 \u0431\u0456\u043B\u044F \u0432\u043A\u0430\u0437\u0456\u0432\u043D\u0438\u043A\u0430, \u0437 \u0431\u0443\u0434\u044C-\u044F\u043A\u043E\u0457 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0438; \u0442\u0430\u043A\u043E\u0436 \u0443 \u043C\u0435\u043D\u044E \u0432 \u0442\u0440\u0435\u0457",
-    "translate.inPlace": "\u0417\u0430\u043C\u0456\u043D\u0438\u0442\u0438 \u0432\u0438\u0434\u0456\u043B\u0435\u043D\u0435 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u043E\u043C",
-    "translate.inPlaceNote": "\u0431\u0435\u0437 \u043A\u0430\u0440\u0442\u043A\u0438",
-    "translate.text": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0437 \u0435\u043A\u0440\u0430\u043D\u0430",
     "translate.pasteBack": "\u0423 \u043A\u0430\u0440\u0442\u0446\u0456: \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u0438 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u043D\u0430 \u043C\u0456\u0441\u0446\u0435",
-    "translate.group": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0434",
-    "translate.model": "\u041C\u043E\u0434\u0435\u043B\u044C \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0443",
-    "translate.modelNote": "\u043D\u0430\u0441\u043A\u0456\u043B\u044C\u043A\u0438 \u0434\u043E\u0431\u0440\u0435 \u0439 \u0448\u0432\u0438\u0434\u043A\u043E \u0432\u043E\u043D\u0430 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u0454; \u0442\u0430 \u0441\u0430\u043C\u0430 \u043C\u043E\u0434\u0435\u043B\u044C \u043C\u043E\u0436\u0435 \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u044F\u0442\u0438 \u0432\u0430\u0448\u0443 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0443",
-    "translate.languages": "\u041C\u043E\u0432\u0438",
-    "translate.history": "\u0406\u0441\u0442\u043E\u0440\u0456\u044F",
-    "translate.recent": "\u041D\u0435\u0449\u043E\u0434\u0430\u0432\u043D\u0456 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0438",
-    "translate.recentNote": "\u0437\u0431\u0435\u0440\u0456\u0433\u0430\u044E\u0442\u044C\u0441\u044F 30 \u0434\u043D\u0456\u0432, \u043B\u0438\u0448\u0435 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456",
-    "translate.none": "\u043D\u0435\u043C\u0430\u0454",
+    "translate.shareAsk": "\u041C\u043E\u0434\u0435\u043B\u044C \xAB{model}\xBB \u0443\u0436\u0435 \u0454 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456",
+    "translate.shareNote": "\u0407\u0457 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u044E\u0442\u044C \xAB\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457\xBB \u0439 \u0440\u043E\u0437\u043C\u043E\u0432\u0430 \u0437 \u041A\u0440\u044F\u043A\u043B\u043E\u043C. \u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u0442\u0435\u0436 \u043C\u043E\u0436\u0435 \u0457\u0457 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0432\u0430\u0442\u0438, \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u044E\u0447\u0438: \xAB{fast}\xBB \u043E\u0434\u0440\u0430\u0437\u0443 \u043F\u043E\u043A\u0430\u0437\u0443\u0454 \u0447\u0435\u0440\u043D\u0435\u0442\u043A\u0443, \u0430 \xAB{model}\xBB \u0457\u0457 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454.",
+    "translate.shareUse": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u0442\u0438 \u043C\u043E\u0434\u0435\u043B\u043B\u044E \xAB{model}\xBB",
     "translate.empty": "\u041F\u043E\u043A\u0438 \u043D\u0456\u0447\u043E\u0433\u043E. \u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0438 \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u044E\u0442\u044C\u0441\u044F \u0442\u0443\u0442 30 \u0434\u043D\u0456\u0432, \u043D\u0435 \u0431\u0456\u043B\u044C\u0448\u0435 200.",
     "models.aboutFast": "\u041C\u0438\u0442\u0442\u0454\u0432\u043E; \u043A\u043E\u0440\u043E\u0442\u043A\u0456 \u0444\u0440\u0430\u0437\u0438 \u043C\u043E\u0436\u0443\u0442\u044C \u0432\u0438\u0439\u0442\u0438 \u0434\u043E\u0441\u043B\u0456\u0432\u043D\u0438\u043C\u0438",
     "models.aboutAccurateLevel": "\u0420\u043E\u0437\u0443\u043C\u0456\u0454 \u0440\u0435\u0447\u0435\u043D\u043D\u044F \u0446\u0456\u043B\u043A\u043E\u043C",
@@ -3918,9 +3674,10 @@
     "models.computer": "\u0426\u0435\u0439 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440",
     "models.eachAction": "\u0429\u043E \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0454 \u043A\u043E\u0436\u043D\u0430 \u0434\u0456\u044F",
     "models.translateNote": "\u043D\u0430\u0441\u043A\u0456\u043B\u044C\u043A\u0438 \u0434\u043E\u0431\u0440\u0435 \u0439 \u0448\u0432\u0438\u0434\u043A\u043E \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u044E\u0442\u044C\u0441\u044F \u0442\u0435\u043A\u0441\u0442\u0438",
+    "models.checkTalk": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0439 \u0440\u043E\u0437\u043C\u043E\u0432\u0430",
     "models.dictateNote": "\u0437\u0430\u043F\u0438\u0441\u0443\u0454 \u0441\u043A\u0430\u0437\u0430\u043D\u0435",
     "models.transcribeNote": "\u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u0443\u0454 \u0437\u0430\u043F\u0438\u0441\u0438 \u0439 \u0437\u0443\u0441\u0442\u0440\u0456\u0447\u0456",
-    "models.shared": "\u041C\u043E\u0434\u0435\u043B\u044C, \u044F\u043A\u0443 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u044E\u0442\u044C \u0434\u0432\u0456 \u0434\u0456\u0457, \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u0439 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437: \xAB\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438\xBB \u0439 \xAB\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430\xBB \u0434\u0456\u043B\u044F\u0442\u044C \u043C\u043E\u0432\u043D\u0443 \u043C\u043E\u0434\u0435\u043B\u044C, \xAB\u0414\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F\xBB \u0439 \xAB\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u0443\u0432\u0430\u0442\u0438\xBB \u2014 \u043C\u043E\u0434\u0435\u043B\u044C \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F, \u0434\u0435 \u0446\u0435 \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u043A\u043E\u0448\u0442\u0443\u0454.",
+    "models.shared": "\u041C\u043E\u0434\u0435\u043B\u044C, \u044F\u043A\u0443 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u044E\u0442\u044C \u0434\u0432\u0456 \u0434\u0456\u0457, \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u0439 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437: \xAB\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438\xBB \u0439 \xAB\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430\xBB \u0434\u0456\u043B\u044F\u0442\u044C \u043C\u043E\u0432\u043D\u0443 \u043C\u043E\u0434\u0435\u043B\u044C, \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F \u0439 \u0437\u0430\u043F\u0438\u0441\u0438 \u2014 \u043C\u043E\u0434\u0435\u043B\u044C \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F, \u0434\u0435 \u0446\u0435 \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u043A\u043E\u0448\u0442\u0443\u0454.",
     "models.stateDownloading": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F {pct}%",
     "models.stateFailed": "\u043F\u043E\u043C\u0438\u043B\u043A\u0430 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F",
     "engine.notRunning": "\u0420\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u043D\u0435 \u0437\u0430\u043F\u0443\u0449\u0435\u043D\u043E",
@@ -3966,62 +3723,41 @@
     "engine.hfError": "Hugging Face \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0432 \u043F\u043E\u043C\u0438\u043B\u043A\u043E\u044E",
     "engine.hfOffline": "\u041D\u0435\u043C\u0430\u0454 \u0437\u0432\u2019\u044F\u0437\u043A\u0443 \u0437 Hugging Face",
     "engine.downloadFailed": "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F \u043D\u0435 \u0432\u0434\u0430\u043B\u043E\u0441\u044F: {why}",
-    "talkPage.needsCard": "\u043F\u043E\u0442\u0440\u0456\u0431\u043D\u0430 \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430",
     "check.downloadingPct": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F {pct}%",
-    "check.downloadsOnce": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
-    "check.capNotes": "\u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0430 \xB7 \u043F\u043E\u044F\u0441\u043D\u0435\u043D\u043D\u044F: {lang}",
     "talkPage.downloading": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F; \u0440\u043E\u0437\u043C\u043E\u0432\u0430 \u043F\u043E\u0447\u043D\u0435\u0442\u044C\u0441\u044F, \u0449\u043E\u0439\u043D\u043E \u0432\u043E\u043D\u0430 \u0431\u0443\u0434\u0435 \u0442\u0443\u0442",
     "talkPage.downloadOnce": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437; \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457 \u0442\u0430 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u0442\u0435\u0436 \u043C\u043E\u0436\u0443\u0442\u044C \u0457\u0457 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0432\u0430\u0442\u0438",
     "settings.download": "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438",
     "talkPage.engineTitle": "\u0420\u043E\u0437\u043C\u043E\u0432\u0430 \u0447\u0443\u0454 \u0432\u0430\u0441 \u0447\u0435\u0440\u0435\u0437 \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-    "talkPage.engineNote": "\u041F\u043E\u043A\u0438 \u0439\u043E\u0433\u043E \u043D\u0435\u043C\u0430\u0454, \u043F\u0438\u0448\u0456\u0442\u044C \u043A\u0430\u0447\u0446\u0456. \u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0442\u0435 \u0439\u043E\u0433\u043E \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456 \xAB\u0414\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F\xBB; \u0446\u0435 \u0442\u043E\u0439 \u0441\u0430\u043C\u0438\u0439 \u0440\u0443\u0448\u0456\u0439, \u0449\u043E \u0439 \u0434\u043B\u044F \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F.",
-    "talkPage.openDictate": "\u0412\u0456\u0434\u043A\u0440\u0438\u0442\u0438 \xAB\u0414\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F\xBB",
-    "talkPage.aboutPlaceholder": '\u041A\u0456\u043B\u044C\u043A\u0430 \u0441\u043B\u0456\u0432, \u043F\u0440\u043E \u044F\u043A\u0456 \u043A\u0430\u0447\u043A\u0430 \u043C\u043E\u0436\u0435 \u043F\u043E\u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0438: \u0432\u0430\u0448\u0435 \u0456\u043C\u2019\u044F, \u0440\u043E\u0431\u043E\u0442\u0430, \u0449\u043E \u0432\u0430\u043C \u043F\u043E\u0434\u043E\u0431\u0430\u0454\u0442\u044C\u0441\u044F. "I am Alex, a designer. I love hiking and progressive metal."',
+    "talkPage.engineNote": "\u041F\u043E\u043A\u0438 \u0439\u043E\u0433\u043E \u043D\u0435\u043C\u0430\u0454, \u043F\u0438\u0448\u0456\u0442\u044C \u041A\u0440\u044F\u043A\u043B\u0443. \u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0442\u0435 \u0439\u043E\u0433\u043E \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456 \xAB\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F\xBB; \u0446\u0435 \u0442\u043E\u0439 \u0441\u0430\u043C\u0438\u0439 \u0440\u0443\u0448\u0456\u0439.",
+    "talkPage.openDictate": "\u0412\u0456\u0434\u043A\u0440\u0438\u0442\u0438 \xAB\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F\xBB",
+    "talkPage.aboutPlaceholder": '\u041A\u0456\u043B\u044C\u043A\u0430 \u0441\u043B\u0456\u0432, \u043F\u0440\u043E \u044F\u043A\u0456 \u041A\u0440\u044F\u043A\u043B \u043C\u043E\u0436\u0435 \u043F\u043E\u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0438: \u0432\u0430\u0448\u0435 \u0456\u043C\u2019\u044F, \u0440\u043E\u0431\u043E\u0442\u0430, \u0449\u043E \u0432\u0430\u043C \u043F\u043E\u0434\u043E\u0431\u0430\u0454\u0442\u044C\u0441\u044F. "I am Alex, a designer. I love hiking and progressive metal."',
     "talkPage.aboutYou": "\u041F\u0440\u043E \u0432\u0430\u0441",
-    "talkPage.needsEngine": "\u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F (\u0434\u0438\u0432. \xAB\u0414\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F\xBB)",
-    "talkPage.keyNote": "\u0437 \u0431\u0443\u0434\u044C-\u044F\u043A\u043E\u0457 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0438: {keys} \u2014 \u0432\u0456\u0434\u043A\u0440\u0438\u0432\u0430\u0454 \u0440\u043E\u0437\u043C\u043E\u0432\u0443 \u0456 \u0441\u043B\u0443\u0445\u0430\u0454, \u0449\u0435 \u0440\u0430\u0437 \u2014 \u043D\u0430\u0434\u0441\u0438\u043B\u0430\u0454",
-    "talkPage.keyNoteNone": "\u043E\u0434\u043D\u0430 \u043A\u043B\u0430\u0432\u0456\u0448\u0430 \u0437 \u0431\u0443\u0434\u044C-\u044F\u043A\u043E\u0457 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0438: \u0432\u0456\u0434\u043A\u0440\u0438\u0432\u0430\u0454 \u0440\u043E\u0437\u043C\u043E\u0432\u0443 \u0456 \u0441\u043B\u0443\u0445\u0430\u0454, \u0449\u0435 \u0440\u0430\u0437 \u2014 \u043D\u0430\u0434\u0441\u0438\u043B\u0430\u0454",
+    "talkPage.needsEngine": "\u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F (\u0434\u0438\u0432. \xAB\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F\xBB)",
     "talkPage.openGoing": "\u0432 \u043E\u043A\u0440\u0435\u043C\u043E\u043C\u0443 \u0432\u0456\u043A\u043D\u0456 \xB7 \u0442\u0440\u0438\u0432\u0430\u0454: {topic}, {lines}",
-    "talkPage.openIdle": "\u0432 \u043E\u043A\u0440\u0435\u043C\u043E\u043C\u0443 \u0432\u0456\u043A\u043D\u0456: \u0433\u043E\u0432\u043E\u0440\u0456\u0442\u044C \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u044E, \u043A\u0430\u0447\u043A\u0430 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0454 \u0432\u0433\u043E\u043B\u043E\u0441, \u0432\u0430\u0448\u0456 \u043F\u043E\u043C\u0438\u043B\u043A\u0438 \u043F\u043E\u0437\u043D\u0430\u0447\u0435\u043D\u043E",
-    "talkPage.open": "\u0412\u0456\u0434\u043A\u0440\u0438\u0442\u0438 \u0440\u043E\u0437\u043C\u043E\u0432\u0443",
-    "talkPage.you": "\u0412\u0438",
-    "talkPage.aboutNote": "\u041A\u0430\u0447\u043A\u0430 \u0447\u0438\u0442\u0430\u0454 \u0446\u0435 \u0432 \u043A\u043E\u0436\u043D\u0456\u0439 \u0440\u043E\u0437\u043C\u043E\u0432\u0456, \u0449\u043E\u0431 \u043F\u0438\u0442\u0430\u0442\u0438 \u043F\u0440\u043E \u0432\u0430\u0448\u0435 \u0436\u0438\u0442\u0442\u044F \u0456 \u0440\u043E\u0431\u043E\u0442\u0443. \u0417\u0431\u0435\u0440\u0456\u0433\u0430\u0454\u0442\u044C\u0441\u044F \u043B\u0438\u0448\u0435 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456.",
+    "talkPage.aboutNote": "\u041A\u0440\u044F\u043A\u043B \u0447\u0438\u0442\u0430\u0454 \u0446\u0435 \u0432 \u043A\u043E\u0436\u043D\u0456\u0439 \u0440\u043E\u0437\u043C\u043E\u0432\u0456, \u0449\u043E\u0431 \u043F\u0438\u0442\u0430\u0442\u0438 \u043F\u0440\u043E \u0432\u0430\u0448\u0435 \u0436\u0438\u0442\u0442\u044F \u0456 \u0440\u043E\u0431\u043E\u0442\u0443. \u0417\u0431\u0435\u0440\u0456\u0433\u0430\u0454\u0442\u044C\u0441\u044F \u043B\u0438\u0448\u0435 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456.",
     "talkPage.level": "\u0412\u0430\u0448 \u0440\u0456\u0432\u0435\u043D\u044C \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457",
-    "talkPage.levelA2": "\u0415\u043B\u0435\u043C\u0435\u043D\u0442\u0430\u0440\u043D\u0438\u0439: \u043A\u0430\u0447\u043A\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \u043A\u043E\u0440\u043E\u0442\u043A\u0438\u043C\u0438 \u0440\u0435\u0447\u0435\u043D\u043D\u044F\u043C\u0438 \u0437 \u043F\u043E\u0432\u0441\u044F\u043A\u0434\u0435\u043D\u043D\u0438\u0445 \u0441\u043B\u0456\u0432, \u043F\u0440\u043E\u0441\u0442\u0438\u043C\u0438 \u0447\u0430\u0441\u0430\u043C\u0438, \u0431\u0435\u0437 \u0456\u0434\u0456\u043E\u043C",
-    "talkPage.levelB1": "\u0421\u0435\u0440\u0435\u0434\u043D\u0456\u0439: \u043A\u0430\u0447\u043A\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \u043F\u043E\u0432\u0441\u044F\u043A\u0434\u0435\u043D\u043D\u0438\u043C\u0438 \u0441\u043B\u043E\u0432\u0430\u043C\u0438 \u0439 \u043F\u043E\u0448\u0438\u0440\u0435\u043D\u0438\u043C\u0438 \u0444\u0440\u0430\u0437\u043E\u0432\u0438\u043C\u0438 \u0434\u0456\u0454\u0441\u043B\u043E\u0432\u0430\u043C\u0438; \u0440\u0456\u0434\u0448\u0435 \u0441\u043B\u043E\u0432\u043E \u043F\u043E\u044F\u0441\u043D\u044E\u0454",
-    "talkPage.levelB2": "\u0412\u0438\u0449\u0435 \u0441\u0435\u0440\u0435\u0434\u043D\u044C\u043E\u0433\u043E: \u043A\u0430\u0447\u043A\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \u043F\u0440\u0438\u0440\u043E\u0434\u043D\u043E: \u0434\u043E\u0432\u0448\u0456 \u0440\u0435\u0447\u0435\u043D\u043D\u044F, \u0444\u0440\u0430\u0437\u043E\u0432\u0456 \u0434\u0456\u0454\u0441\u043B\u043E\u0432\u0430, \u0447\u0430\u0441 \u0432\u0456\u0434 \u0447\u0430\u0441\u0443 \u0456\u0434\u0456\u043E\u043C\u0430",
+    "talkPage.levelA2": "\u0415\u043B\u0435\u043C\u0435\u043D\u0442\u0430\u0440\u043D\u0438\u0439: \u041A\u0440\u044F\u043A\u043B \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \u043A\u043E\u0440\u043E\u0442\u043A\u0438\u043C\u0438 \u0440\u0435\u0447\u0435\u043D\u043D\u044F\u043C\u0438 \u0437 \u043F\u043E\u0432\u0441\u044F\u043A\u0434\u0435\u043D\u043D\u0438\u0445 \u0441\u043B\u0456\u0432, \u043F\u0440\u043E\u0441\u0442\u0438\u043C\u0438 \u0447\u0430\u0441\u0430\u043C\u0438, \u0431\u0435\u0437 \u0456\u0434\u0456\u043E\u043C",
+    "talkPage.levelB1": "\u0421\u0435\u0440\u0435\u0434\u043D\u0456\u0439: \u041A\u0440\u044F\u043A\u043B \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \u043F\u043E\u0432\u0441\u044F\u043A\u0434\u0435\u043D\u043D\u0438\u043C\u0438 \u0441\u043B\u043E\u0432\u0430\u043C\u0438 \u0439 \u043F\u043E\u0448\u0438\u0440\u0435\u043D\u0438\u043C\u0438 \u0444\u0440\u0430\u0437\u043E\u0432\u0438\u043C\u0438 \u0434\u0456\u0454\u0441\u043B\u043E\u0432\u0430\u043C\u0438; \u0440\u0456\u0434\u0448\u0435 \u0441\u043B\u043E\u0432\u043E \u043F\u043E\u044F\u0441\u043D\u044E\u0454",
+    "talkPage.levelB2": "\u0412\u0438\u0449\u0435 \u0441\u0435\u0440\u0435\u0434\u043D\u044C\u043E\u0433\u043E: \u041A\u0440\u044F\u043A\u043B \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \u043F\u0440\u0438\u0440\u043E\u0434\u043D\u043E: \u0434\u043E\u0432\u0448\u0456 \u0440\u0435\u0447\u0435\u043D\u043D\u044F, \u0444\u0440\u0430\u0437\u043E\u0432\u0456 \u0434\u0456\u0454\u0441\u043B\u043E\u0432\u0430, \u0447\u0430\u0441 \u0432\u0456\u0434 \u0447\u0430\u0441\u0443 \u0456\u0434\u0456\u043E\u043C\u0430",
     "talkPage.keys": "\u041A\u043B\u0430\u0432\u0456\u0448\u0456",
     "talkPage.spaceKey": "\u0423 \u0432\u0456\u043A\u043D\u0456 \u0440\u043E\u0437\u043C\u043E\u0432\u0438: \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0438, \u043F\u043E\u0442\u0456\u043C \u043D\u0430\u0434\u0456\u0441\u043B\u0430\u0442\u0438",
-    "talkPage.escKey": "\u0421\u043A\u0430\u0441\u0443\u0432\u0430\u0442\u0438 \u0440\u0435\u043F\u043B\u0456\u043A\u0443 \u0430\u0431\u043E \u0437\u0443\u043F\u0438\u043D\u0438\u0442\u0438 \u043A\u0430\u0447\u043A\u0443",
-    "talkPage.duck": "\u041A\u0430\u0447\u043A\u0430",
-    "talkPage.aloud": "\u0427\u0438\u0442\u0430\u0442\u0438 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0456 \u043A\u0430\u0447\u043A\u0438 \u0432\u0433\u043E\u043B\u043E\u0441",
+    "talkPage.escKey": "\u0421\u043A\u0430\u0441\u0443\u0432\u0430\u0442\u0438 \u0440\u0435\u043F\u043B\u0456\u043A\u0443 \u0430\u0431\u043E \u0437\u0443\u043F\u0438\u043D\u0438\u0442\u0438 \u041A\u0440\u044F\u043A\u043B",
+    "talkPage.aloud": "\u0427\u0438\u0442\u0430\u0442\u0438 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0456 \u041A\u0440\u044F\u043A\u043B\u0430 \u0432\u0433\u043E\u043B\u043E\u0441",
     "talkPage.aloudNote": "\u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0456 \u0447\u0438\u0442\u0430\u044E\u0442\u044C\u0441\u044F, \u0449\u043E\u0439\u043D\u043E \u043D\u0430\u0434\u0445\u043E\u0434\u044F\u0442\u044C; \u043D\u0430\u0442\u0438\u0441\u043A\u0430\u043D\u043D\u044F \u043D\u0430 \u0440\u0435\u043F\u043B\u0456\u043A\u0443 \u0447\u0438\u0442\u0430\u0454 \u0457\u0457 \u0437\u043D\u043E\u0432\u0443",
     "talkPage.onTop": "\u0420\u043E\u0437\u043C\u043E\u0432\u0430 \u043F\u043E\u0432\u0435\u0440\u0445 \u0456\u043D\u0448\u0438\u0445 \u0432\u0456\u043A\u043E\u043D",
     "talkPage.onTopNote": "\u044F\u043A \u0437\u0456 \u0448\u043F\u0438\u043B\u044C\u043A\u043E\u044E \u043D\u0430 \u043F\u0430\u043D\u0435\u043B\u0456 \u0432\u0456\u043A\u043D\u0430 \u0440\u043E\u0437\u043C\u043E\u0432\u0438",
     "talkPage.model": "\u041C\u043E\u0434\u0435\u043B\u044C",
-    "talkPage.modelNote": "\u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0454 \u0456 \u0437\u043D\u0430\u0445\u043E\u0434\u0438\u0442\u044C \u0432\u0430\u0448\u0456 \u043F\u043E\u043C\u0438\u043B\u043A\u0438; \u0442\u0430 \u0441\u0430\u043C\u0430, \u0449\u043E \u0439 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0438 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457",
     "talkPage.voice": "\u0413\u043E\u043B\u043E\u0441",
-    "talkPage.voiceNote": "\u043A\u0430\u0447\u043A\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \u0433\u043E\u043B\u043E\u0441\u043E\u043C \u0444\u0443\u043D\u043A\u0446\u0456\u0457 \xAB\u0421\u043B\u0443\u0445\u0430\u0442\u0438\xBB",
     "talkPage.kept": "\u0417\u0431\u0435\u0440\u0435\u0436\u0435\u043D\u0435",
     "talkPage.history": "\u0412\u0430\u0448\u0456 \u0440\u043E\u0437\u043C\u043E\u0432\u0438 \u2014 \u0443 \u0432\u0456\u043A\u043D\u0456 \u0440\u043E\u0437\u043C\u043E\u0432\u0438: \u043A\u043D\u043E\u043F\u043A\u0430 \u0456\u0441\u0442\u043E\u0440\u0456\u0457 \u043F\u043E\u043A\u0430\u0437\u0443\u0454 \u0457\u0445, \u0449\u043E\u0431 \u043F\u0440\u043E\u0434\u043E\u0432\u0436\u0438\u0442\u0438 \u0440\u043E\u0437\u043C\u043E\u0432\u0443 \u0430\u0431\u043E \u0432\u0438\u0434\u0430\u043B\u0438\u0442\u0438. \u0417\u0431\u0435\u0440\u0456\u0433\u0430\u044E\u0442\u044C\u0441\u044F 30 \u0434\u043D\u0456\u0432 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456, \u043D\u0435 \u0431\u0456\u043B\u044C\u0448\u0435 50.",
-    "talkPage.mistakesNote": "\u0442\u0430\u043C \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u0454\u0442\u044C\u0441\u044F \u043A\u043E\u0436\u043D\u0430 \u0432\u0430\u0448\u0430 \u0440\u0435\u043F\u043B\u0456\u043A\u0430 \u0437 \u043F\u043E\u043C\u0438\u043B\u043A\u043E\u044E",
-    "kb.none": "\u043D\u0435\u043C\u0430\u0454",
     "check.typedKey": "{keys} \u0456 \u0432\u0432\u0435\u0434\u0456\u0442\u044C \u0439\u043E\u0433\u043E",
     "check.typedTray": "\u0441\u043A\u043E\u0440\u0438\u0441\u0442\u0430\u0439\u0442\u0435\u0441\u044F \xAB\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u0438\u0442\u0438 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0443\u2026\xBB \u0432 \u043C\u0435\u043D\u044E \u0442\u0440\u0435\u044E",
     "check.tryKey": "\u0423 \u0446\u044C\u043E\u043C\u0443 \u0442\u0435\u043A\u0441\u0442\u0456 \u043D\u0430\u0432\u043C\u0438\u0441\u043D\u0456 \u043F\u043E\u043C\u0438\u043B\u043A\u0438. \u0412\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0439\u043E\u0433\u043E, {keys}, \u0430\u0431\u043E {typed}.",
     "check.tryNoKey": "\u0423 \u0446\u044C\u043E\u043C\u0443 \u0442\u0435\u043A\u0441\u0442\u0456 \u043D\u0430\u0432\u043C\u0438\u0441\u043D\u0456 \u043F\u043E\u043C\u0438\u043B\u043A\u0438. \u0412\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0439\u043E\u0433\u043E \u0439 \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u0441\u0432\u043E\u044E \u043A\u043B\u0430\u0432\u0456\u0448\u0443, \u0430\u0431\u043E {typed}.",
     "check.keySelected": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u0438\u0442\u0438 \u0432\u0438\u0434\u0456\u043B\u0435\u043D\u0438\u0439 \u0442\u0435\u043A\u0441\u0442",
-    "check.keySelectedNote": "\u0432\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0439\u043E\u0433\u043E \u0431\u0443\u0434\u044C-\u0434\u0435, {keys}",
-    "check.keySelectedNone": "\u0432\u0438\u0434\u0456\u043B\u0456\u0442\u044C \u0439\u043E\u0433\u043E \u0431\u0443\u0434\u044C-\u0434\u0435, \u043F\u043E\u0442\u0456\u043C \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u043E\u0434\u043D\u0443 \u043A\u043B\u0430\u0432\u0456\u0448\u0443, \u043D\u0430\u043F\u0440\u0438\u043A\u043B\u0430\u0434 Right Ctrl \u0434\u0432\u0456\u0447\u0456",
     "check.typeKey": "\u0412\u0432\u0435\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0438",
     "check.typeKeyNote": "\u043F\u043E\u0440\u043E\u0436\u043D\u044F \u043A\u0430\u0440\u0442\u043A\u0430 \u0431\u0456\u043B\u044F \u0432\u043A\u0430\u0437\u0456\u0432\u043D\u0438\u043A\u0430, \u0437 \u0431\u0443\u0434\u044C-\u044F\u043A\u043E\u0457 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0438; \u0442\u0430\u043A\u043E\u0436 \u0443 \u043C\u0435\u043D\u044E \u0442\u0440\u0435\u044E",
-    "check.practiceKey": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u0438\u0442\u0438 \u0441\u043A\u0430\u0437\u0430\u043D\u0435",
-    "check.practiceNote": "\u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C, \u0441\u043A\u0430\u0436\u0456\u0442\u044C \u0444\u0440\u0430\u0437\u0443 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u044E, \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u0449\u0435 \u0440\u0430\u0437",
-    "check.enterKey": "\u0423 \u043A\u0430\u0440\u0442\u0446\u0456: \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u0438 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0439 \u0442\u0435\u043A\u0441\u0442 \u043D\u0430\u0437\u0430\u0434",
     "check.speechNote": "\u0420\u043E\u0437\u043F\u0456\u0437\u043D\u0430\u0432\u0430\u043D\u043D\u044F \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0441\u0430\u043C\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454 \u0434\u0435\u044F\u043A\u0456 \u043F\u043E\u043C\u0438\u043B\u043A\u0438, \u0442\u043E\u0436 \u0443 \u043D\u0430\u0431\u0440\u0430\u043D\u043E\u043C\u0443 \u0442\u0435\u043A\u0441\u0442\u0456 \u0457\u0445 \u0432\u0438\u0434\u043D\u043E \u0431\u0456\u043B\u044C\u0448\u0435.",
-    "check.modelNote": "\u043C\u043E\u0432\u043D\u0430 \u043C\u043E\u0434\u0435\u043B\u044C, \u0449\u043E \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u044F\u0454; \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u043C\u043E\u0436\u0435 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0432\u0430\u0442\u0438 \u0442\u0443 \u0441\u0430\u043C\u0443",
-    "check.history": "\u0406\u0441\u0442\u043E\u0440\u0456\u044F",
-    "check.mistakesNote": "\u0449\u043E \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0437\u043D\u0430\u0439\u0448\u043B\u0430 \u0443 \u0432\u0430\u0448\u0438\u0445 \u0442\u0435\u043A\u0441\u0442\u0430\u0445, \u0441\u043F\u0435\u0440\u0448\u0443 \u043F\u043E\u0432\u0442\u043E\u0440\u044E\u0432\u0430\u043D\u0456",
     "mistakes.title": "\u041F\u043E\u043C\u0438\u043B\u043A\u0438",
     "mistakes.forget": "\u0417\u0430\u0431\u0443\u0442\u0438",
     "mistakes.noSuch": "\u0422\u0430\u043A\u043E\u0457 \u043F\u043E\u043C\u0438\u043B\u043A\u0438 \u043D\u0435\u043C\u0430\u0454.",
@@ -4030,9 +3766,6 @@
     "mistakes.times": { one: "{n} \u0440\u0430\u0437", few: "{n} \u0440\u0430\u0437\u0438", many: "{n} \u0440\u0430\u0437\u0456\u0432", other: "{n} \u0440\u0430\u0437\u0443" },
     "mistakes.clear": "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0438",
     "mistakes.search": "\u041F\u043E\u0448\u0443\u043A \u0443 \u043F\u043E\u043C\u0438\u043B\u043A\u0430\u0445",
-    "screen.snipKey": "\u041F\u0440\u043E\u0441\u043B\u0443\u0445\u0430\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u043D\u0430 \u0435\u043A\u0440\u0430\u043D\u0456",
-    "screen.textKey": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u043D\u0430 \u0435\u043A\u0440\u0430\u043D\u0456",
-    "screen.keyNote": "\u0434\u043B\u044F \u0442\u0435\u043A\u0441\u0442\u0443, \u044F\u043A\u0438\u0439 \u043D\u0435 \u0432\u0438\u0434\u0456\u043B\u0438\u0442\u0438: \u043E\u0431\u0432\u0435\u0434\u0456\u0442\u044C \u0439\u043E\u0433\u043E \u0440\u0430\u043C\u043A\u043E\u044E",
     "screen.how": "\u042F\u043A \u0446\u0435 \u043F\u0440\u0430\u0446\u044E\u0454",
     "screen.draw": "\u041E\u0431\u0432\u0435\u0434\u0456\u0442\u044C \u0442\u0435\u043A\u0441\u0442 \u0440\u0430\u043C\u043A\u043E\u044E",
     "screen.drawNote": "Windows \u0437\u0430\u0442\u0435\u043C\u043D\u044E\u0454 \u0435\u043A\u0440\u0430\u043D, \u043F\u043E\u043A\u0438 \u0432\u0438 \u043E\u0431\u0432\u043E\u0434\u0438\u0442\u0435",
@@ -4040,7 +3773,7 @@
     "screen.readsNote": "\u0432\u043E\u043D\u0430 \u0447\u0438\u0442\u0430\u0454 \u043C\u043E\u0432\u0438, \u0432\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u0456 \u0443 Windows; \u0456\u043D\u0448\u0456 \u0434\u043E\u0434\u0430\u0439\u0442\u0435 \u0442\u0430\u043C (Windows OCR)",
     "screen.languages": "\u041C\u043E\u0432\u0438\u2026",
     "screen.fix": "\u0412\u0438\u043F\u0440\u0430\u0432\u0442\u0435 \u043D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u043D\u0456 \u0441\u043B\u043E\u0432\u0430 \u0432 \u043A\u0430\u0440\u0442\u0446\u0456",
-    "screen.fixNote": "\u043F\u043E\u0442\u0456\u043C \u0441\u043B\u0443\u0445\u0430\u0439\u0442\u0435 \u0430\u0431\u043E \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u0439\u0442\u0435",
+    "screen.fixNote": "\u043F\u043E\u0442\u0456\u043C \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0456\u0442\u044C \u0430\u0431\u043E \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u0432\u0433\u043E\u043B\u043E\u0441",
     "dictate.notesFolder": "\u041F\u0430\u043F\u043A\u0430 \u043D\u043E\u0442\u0430\u0442\u043E\u043A",
     "dictate.folderShown": "\u0437\u2019\u044F\u0432\u0438\u0442\u044C\u0441\u044F, \u043A\u043E\u043B\u0438 \u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C\u0441\u044F \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
     "dictate.folderChosen": "\u0432\u0438\u0431\u0438\u0440\u0430\u0454\u0442\u044C\u0441\u044F \u043F\u0456\u0441\u043B\u044F \u0432\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0440\u0443\u0448\u0456\u044F \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
@@ -4051,36 +3784,23 @@
     "dictate.choose": "\u0412\u0438\u0431\u0440\u0430\u0442\u0438\u2026",
     "dictate.subfolder": "\u041F\u0456\u0434\u043F\u0430\u043F\u043A\u0430 \u0434\u043B\u044F \u043D\u043E\u0442\u0430\u0442\u043E\u043A",
     "dictate.subfolderNote": "\u043F\u0430\u043F\u043A\u0430 \u0432\u0441\u0435\u0440\u0435\u0434\u0438\u043D\u0456 \u043D\u0435\u0457; \u0437\u0430\u043B\u0438\u0448\u0442\u0435 \u043F\u043E\u0440\u043E\u0436\u043D\u0456\u043C, \u0449\u043E\u0431 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u0432\u0430\u0442\u0438 \u0441\u0430\u043C\u0443 \u043F\u0430\u043F\u043A\u0443",
-    "vocab.title": "\u0421\u043B\u043E\u0432\u043D\u0438\u043A \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
-    "vocab.note": "\u0456\u043C\u0435\u043D\u0430 \u0439 \u0442\u0435\u0440\u043C\u0456\u043D\u0438, \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u0456 \u0442\u0430\u043A, \u044F\u043A \u0432\u0430\u043C \u043F\u043E\u0442\u0440\u0456\u0431\u043D\u043E",
-    "vocab.noneYet": "\u043F\u043E\u043A\u0438 \u043D\u0435\u043C\u0430\u0454",
     "dictate.needsEngine": "\u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
     "dictate.automatic": "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u043D\u043E \xB7 {model}",
     "settings.automatic": "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u043D\u043E",
-    "dictate.modelNote": "\u0431\u043B\u0438\u0437\u044C\u043A\u043E {time} \u043D\u0430 \u0444\u0440\u0430\u0437\u0443 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456",
-    "transcribe.modelNote": "\u0431\u043B\u0438\u0437\u044C\u043A\u043E {time} \u043D\u0430 \u0433\u043E\u0434\u0438\u043D\u0443 \u0437\u0430\u043F\u0438\u0441\u0443 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456",
-    "dictate.speechModel": "\u041C\u043E\u0434\u0435\u043B\u044C \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
+    "dictate.speechModel": "\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u043E\u0437\u043F\u0456\u0437\u043D\u0430\u0432\u0430\u043D\u043D\u044F",
     "dictate.engine": "\u0420\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-    "dictate.typeKey": "\u0414\u0440\u0443\u043A\u0443\u0432\u0430\u0442\u0438 \u0441\u043A\u0430\u0437\u0430\u043D\u0435",
-    "dictate.typeNote": "\u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C, \u0433\u043E\u0432\u043E\u0440\u0456\u0442\u044C, \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u0449\u0435 \u0440\u0430\u0437; \u0441\u043B\u043E\u0432\u0430 \u0437\u2019\u044F\u0432\u043B\u044F\u0442\u044C\u0441\u044F \u0442\u0430\u043C, \u0434\u0435 \u043A\u0443\u0440\u0441\u043E\u0440",
-    "dictate.englishKey": "\u0414\u0440\u0443\u043A\u0443\u0432\u0430\u0442\u0438 \u0441\u043A\u0430\u0437\u0430\u043D\u0435 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u044E",
+    "dictate.typeNote": "\u0442\u0435\u043A\u0441\u0442 \u0437\u2019\u044F\u0432\u0438\u0442\u044C\u0441\u044F \u0442\u0430\u043C, \u0434\u0435 \u043A\u0443\u0440\u0441\u043E\u0440",
     "dictate.englishNote": "\u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C, \u0433\u043E\u0432\u043E\u0440\u0456\u0442\u044C ({lang}), \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u0449\u0435 \u0440\u0430\u0437; \u0434\u0440\u0443\u043A\u0443\u0454\u0442\u044C\u0441\u044F \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u044E",
-    "dictate.noteKey": "\u041D\u0430\u0434\u0438\u043A\u0442\u0443\u0432\u0430\u0442\u0438 \u043D\u043E\u0442\u0430\u0442\u043A\u0443",
-    "dictate.noteNote": "\u0437\u0431\u0435\u0440\u0456\u0433\u0430\u0454\u0442\u044C\u0441\u044F \u044F\u043A \u0444\u0430\u0439\u043B Markdown \u0443 \u0432\u0430\u0448\u0456\u0439 \u043F\u0430\u043F\u0446\u0456 \u043D\u043E\u0442\u0430\u0442\u043E\u043A",
-    "dictate.againKey": "\u041D\u0430\u0434\u0440\u0443\u043A\u0443\u0432\u0430\u0442\u0438 \u043E\u0441\u0442\u0430\u043D\u043D\u044E \u0444\u0440\u0430\u0437\u0443 \u0449\u0435 \u0440\u0430\u0437",
+    "dictate.noteNote": "\u0443 \u0442\u0435\u043A\u0443 \u043D\u043E\u0442\u0430\u0442\u043E\u043A",
+    "dictate.againKey": "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0438 \u043E\u0441\u0442\u0430\u043D\u043D\u044E \u0444\u0440\u0430\u0437\u0443",
     "dictate.againNote": "\u043F\u043E\u0432\u0442\u043E\u0440\u044E\u0454 \u0457\u0457 \u0442\u0430\u043C, \u0434\u0435 \u043A\u0443\u0440\u0441\u043E\u0440",
     "dictate.escNote": "\u0421\u043B\u043E\u0432\u0430 \u0437\u2019\u044F\u0432\u043B\u044F\u044E\u0442\u044C\u0441\u044F, \u043F\u043E\u043A\u0438 \u0432\u0438 \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u0435. Esc \u0441\u043A\u0430\u0441\u043E\u0432\u0443\u0454 \u0444\u0440\u0430\u0437\u0443, \u0434\u043E\u043A\u0438 \u0457\u0457 \u043D\u0435 \u043D\u0430\u0434\u0440\u0443\u043A\u043E\u0432\u0430\u043D\u043E.",
-    "dictate.notes": "\u041D\u043E\u0442\u0430\u0442\u043A\u0438",
-    "dictate.wordsPhrases": "\u0421\u043B\u043E\u0432\u0430 \u0456 \u0444\u0440\u0430\u0437\u0438",
-    "dictate.recent": "\u041E\u0441\u0442\u0430\u043D\u043D\u0456 \u0444\u0440\u0430\u0437\u0438",
-    "dictate.recentNote": "\u0444\u0440\u0430\u0437\u0438, \u044F\u043A\u0456 \u0432\u0438 \u043D\u0435\u0449\u043E\u0434\u0430\u0432\u043D\u043E \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043B\u0438, \u0449\u043E\u0431 \u0441\u043A\u043E\u043F\u0456\u044E\u0432\u0430\u0442\u0438 \u0437\u043D\u043E\u0432\u0443",
     "dictate.privacy": "\u041C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0440\u043E\u0437\u043F\u0456\u0437\u043D\u0430\u0454\u0442\u044C\u0441\u044F \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456; \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0456\u043A\u0443\u0434\u0438 \u043D\u0435 \u043D\u0430\u0434\u0441\u0438\u043B\u0430\u0454\u0442\u044C\u0441\u044F.",
-    "vocab.wordPlaceholder": "\u0421\u043B\u043E\u0432\u043E, \u044F\u043A \u0439\u043E\u0433\u043E \u0442\u0440\u0435\u0431\u0430 \u043F\u0438\u0441\u0430\u0442\u0438",
-    "vocab.wordAria": "\u0421\u043B\u043E\u0432\u043E \u0434\u043B\u044F \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
-    "vocab.heardPlaceholder": "\u0427\u0443\u0442\u0438 \u044F\u043A (\u043D\u0435\u043E\u0431\u043E\u0432\u2019\u044F\u0437\u043A\u043E\u0432\u043E): \u043A\u0440\u044F\u043A\u043B, \u043A\u0440\u0430\u043A\u043B",
+    "vocab.wordPlaceholder": "\u0421\u043B\u043E\u0432\u043E",
+    "vocab.wordAria": "\u0406\u043C\u2019\u044F \u0430\u0431\u043E \u0442\u0435\u0440\u043C\u0456\u043D",
+    "vocab.heardPlaceholder": "\u042F\u043A \u0447\u0443\u0442\u0438, \u0447\u0435\u0440\u0435\u0437 \u043A\u043E\u043C\u0443",
     "vocab.heardAria": "\u042F\u043A \u0432\u043E\u043D\u043E \u0447\u0443\u0454\u0442\u044C\u0441\u044F",
     "vocab.change": "\u0417\u043C\u0456\u043D\u0438\u0442\u0438",
-    "vocab.heardAs": "\u0447\u0443\u0442\u0438 \u044F\u043A {forms}",
     "vocab.remove": "\u0412\u0438\u0434\u0430\u043B\u0438\u0442\u0438 {word}",
     "vocab.addGroup": "\u0414\u043E\u0434\u0430\u0442\u0438 \u0441\u043B\u043E\u0432\u043E",
     "vocab.add": "\u0414\u043E\u0434\u0430\u0442\u0438",
@@ -4088,7 +3808,7 @@
     "vocab.words": "\u0421\u043B\u043E\u0432\u0430",
     "vocab.clearAll": "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0438 \u0432\u0441\u0435",
     "vocab.empty": "\u041F\u043E\u043A\u0438 \u043D\u0456\u0447\u043E\u0433\u043E. \u0414\u043E\u0434\u0430\u0439\u0442\u0435 \u0456\u043C\u2019\u044F \u0430\u0431\u043E \u0441\u043B\u043E\u0432\u043E \u0432\u0438\u0449\u0435.",
-    "vocab.shared": "\u0421\u043F\u0456\u043B\u044C\u043D\u0456 \u0434\u043B\u044F \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u0456 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438.",
+    "vocab.shared": "\u0407\u0445 \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u043E\u0432\u0443\u044E\u0442\u044C \u0456 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F, \u0456 \u0437\u0430\u043F\u0438\u0441\u0438.",
     "dictate.phrases": "\u0424\u0440\u0430\u0437\u0438",
     "dictate.said": "\u0421\u043A\u0430\u0437\u0430\u043D\u043E: {heard}",
     "dictate.recentEmpty": "\u041F\u043E\u043A\u0438 \u043D\u0456\u0447\u043E\u0433\u043E. \u041D\u0430\u0434\u0438\u043A\u0442\u043E\u0432\u0430\u043D\u0456 \u0444\u0440\u0430\u0437\u0438 (\u043D\u0435 \u043D\u043E\u0442\u0430\u0442\u043A\u0438) \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u044E\u0442\u044C\u0441\u044F \u0442\u0443\u0442 30 \u0434\u043D\u0456\u0432, \u043D\u0435 \u0431\u0456\u043B\u044C\u0448\u0435 200.",
@@ -4106,30 +3826,32 @@
     "meet.installed": "\u0412\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E \xB7 v{version}",
     "meet.note": "\u0437\u0430\u043F\u0438\u0441\u0430\u0442\u0438 \u0434\u0437\u0432\u0456\u043D\u043E\u043A \u0443 Chrome \u0437 \u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u043D\u044F\u043C \u041A\u0440\u044F\u043A\u043B\u0430",
     "meet.notSetUp": "\u0429\u0435 \u043D\u0435 \u043D\u0430\u043B\u0430\u0448\u0442\u043E\u0432\u0430\u043D\u043E",
-    "meet.threeSteps": "\u0442\u0440\u0438 \u043A\u0440\u043E\u043A\u0438 \u0432 Chrome, \u043E\u0434\u0438\u043D \u0440\u0430\u0437; \u0446\u0435\u0439 \u0440\u044F\u0434\u043E\u043A \u043F\u043E\u043A\u0430\u0436\u0435, \u043A\u043E\u043B\u0438 \u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u043D\u044F \u0432\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E",
+    "meet.threeSteps": "\u0447\u043E\u0442\u0438\u0440\u0438 \u043A\u0440\u043E\u043A\u0438 \u0432 Chrome, \u043E\u0434\u0438\u043D \u0440\u0430\u0437; \u0446\u0435\u0439 \u0440\u044F\u0434\u043E\u043A \u043F\u043E\u043A\u0430\u0436\u0435, \u043A\u043E\u043B\u0438 \u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u043D\u044F \u0432\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E",
     "meet.needsEngine": "\u0449\u043E\u0431 \u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u043D\u044F \u043F\u0440\u0430\u0446\u044E\u0432\u0430\u043B\u043E, \u043C\u0430\u0454 \u0431\u0443\u0442\u0438 \u0437\u0430\u043F\u0443\u0449\u0435\u043D\u0438\u0439 \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
     "meet.oldId": "\u0423 Chrome \u043F\u0440\u0430\u0446\u044E\u0454 v{version}, \u0432\u0456\u0434 \u044F\u043A\u043E\u0457 \u041A\u0440\u044F\u043A\u043B \u0431\u0456\u043B\u044C\u0448\u0435 \u043D\u0435 \u043F\u0440\u0438\u0439\u043C\u0430\u0454 \u0437\u0430\u043F\u0438\u0441\u0438",
     "meet.oldIdNote": "\u0432\u0438\u0434\u0430\u043B\u0456\u0442\u044C \u0439\u043E\u0433\u043E \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456 \u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u044C Chrome (\xAB\u0412\u0438\u043B\u0443\u0447\u0438\u0442\u0438\xBB \u043D\u0430 \u0439\u043E\u0433\u043E \u043A\u0430\u0440\u0442\u0446\u0456), \u043F\u043E\u0442\u0456\u043C \u0437\u043D\u043E\u0432\u0443 \xAB\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438 \u0440\u043E\u0437\u043F\u0430\u043A\u043E\u0432\u0430\u043D\u0435\xBB: \u043A\u0440\u043E\u043A\u0438 1 \u0456 2 \u043D\u0438\u0436\u0447\u0435; Chrome \u0449\u0435 \u0440\u0430\u0437 \u043F\u043E\u043F\u0440\u043E\u0441\u0438\u0442\u044C \u0434\u043E\u0441\u0442\u0443\u043F \u0434\u043E \u043C\u0456\u043A\u0440\u043E\u0444\u043E\u043D\u0430",
     "meet.stale": "\u0423 Chrome \u043F\u0440\u0430\u0446\u044E\u0454 v{from}; \u0443 \u041A\u0440\u044F\u043A\u043B\u0430 \u2014 v{to}",
-    "meet.staleNote": "\u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \xAB\u041F\u0435\u0440\u0435\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438\xBB \u043D\u0430 \u043A\u0430\u0440\u0442\u0446\u0456 \u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u043D\u044F \u0432 Chrome: \xAB\u0412\u0456\u0434\u043A\u0440\u0438\u0442\u0438 \u0432 Chrome\xBB \u0432\u0435\u0434\u0435 \u043F\u0440\u044F\u043C\u043E \u0442\u0443\u0434\u0438",
+    "meet.staleNote": "\u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u043A\u0440\u0443\u0433\u043B\u0443 \u0441\u0442\u0440\u0456\u043B\u043A\u0443 \u21BB \u043D\u0430 \u043A\u0430\u0440\u0442\u0446\u0456 \u041A\u0440\u044F\u043A\u043B\u0430 \u0432 Chrome: \xAB\u0412\u0456\u0434\u043A\u0440\u0438\u0442\u0438 \u0432 Chrome\xBB \u0432\u0435\u0434\u0435 \u043F\u0440\u044F\u043C\u043E \u0442\u0443\u0434\u0438",
     "meet.openInChrome": "\u0412\u0456\u0434\u043A\u0440\u0438\u0442\u0438 \u0432 Chrome",
     "meet.installedIn": "\u0412\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E \u0432 Chrome \xB7 v{version}",
     "meet.seen": "\u0432\u043E\u0441\u0442\u0430\u043D\u043D\u0454 \u043D\u0430 \u0437\u0432\u2019\u044F\u0437\u043A\u0443: {ago} \xB7 \u0437\u0432\u0443\u043A \u0434\u0437\u0432\u0456\u043D\u043A\u0430 \u0456 \u0432\u0430\u0448 \u043C\u0456\u043A\u0440\u043E\u0444\u043E\u043D \u0456\u0434\u0443\u0442\u044C \u0434\u043E \u0440\u0443\u0448\u0456\u044F \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456",
     "meet.extension": "\u0420\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u043D\u044F Chrome",
     "meet.setItUp": "\u041D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
     "meet.step1": "1 \xB7 \u0412\u0456\u0434\u043A\u0440\u0438\u0439\u0442\u0435 \u0441\u0442\u043E\u0440\u0456\u043D\u043A\u0443 \u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u044C Chrome \u0456 \u0432\u0432\u0456\u043C\u043A\u043D\u0456\u0442\u044C \xAB\u0420\u0435\u0436\u0438\u043C \u0440\u043E\u0437\u0440\u043E\u0431\u043D\u0438\u043A\u0430\xBB",
-    "meet.step1Note": "chrome://extensions \xB7 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u0447 \u0443\u0433\u043E\u0440\u0456 \u043F\u0440\u0430\u0432\u043E\u0440\u0443\u0447",
-    "meet.step2": "2 \xB7 \xAB\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438 \u0440\u043E\u0437\u043F\u0430\u043A\u043E\u0432\u0430\u043D\u0435\xBB, \u0432\u0441\u0442\u0430\u0432\u0442\u0435 \u0448\u043B\u044F\u0445 \u0434\u043E \u043F\u0430\u043F\u043A\u0438",
-    "meet.step2Note": "Ctrl+V \u0432 \u0430\u0434\u0440\u0435\u0441\u043D\u0438\u0439 \u0440\u044F\u0434\u043E\u043A \u0432\u0456\u043A\u043D\u0430 \u0432\u0438\u0431\u043E\u0440\u0443 \u043F\u0430\u043F\u043A\u0438, \u043F\u043E\u0442\u0456\u043C \xAB\u0412\u0438\u0431\u0456\u0440 \u043F\u0430\u043F\u043A\u0438\xBB",
+    "meet.step1Note": "\u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u0447 \xAB\u0420\u0435\u0436\u0438\u043C \u0440\u043E\u0437\u0440\u043E\u0431\u043D\u0438\u043A\u0430\xBB (Developer mode) \u0443\u0433\u043E\u0440\u0456 \u043F\u0440\u0430\u0432\u043E\u0440\u0443\u0447 \u043D\u0430 \u0442\u0456\u0439 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456",
+    "meet.step2": "2 \xB7 \xAB\u041A\u043E\u043F\u0456\u044E\u0432\u0430\u0442\u0438 \u0448\u043B\u044F\u0445\xBB, \u043F\u043E\u0442\u0456\u043C \xAB\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438 \u0440\u043E\u0437\u043F\u0430\u043A\u043E\u0432\u0430\u043D\u0435\xBB",
+    "meet.step2Note": "\xAB\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438 \u0440\u043E\u0437\u043F\u0430\u043A\u043E\u0432\u0430\u043D\u0435\xBB (Load unpacked) \u0437\u2019\u044F\u0432\u0438\u0442\u044C\u0441\u044F \u0432\u0433\u043E\u0440\u0456 \u043B\u0456\u0432\u043E\u0440\u0443\u0447, \u0449\u043E\u0439\u043D\u043E \u0432\u0432\u0456\u043C\u043A\u043D\u0435\u043D\u043E \u0440\u0435\u0436\u0438\u043C \u0440\u043E\u0437\u0440\u043E\u0431\u043D\u0438\u043A\u0430 \xB7 \u0443 \u0432\u0456\u043A\u043D\u0456, \u0449\u043E \u0432\u0456\u0434\u043A\u0440\u0438\u0454\u0442\u044C\u0441\u044F, \u043A\u043B\u0430\u0446\u043D\u0456\u0442\u044C \u0430\u0434\u0440\u0435\u0441\u043D\u0438\u0439 \u0440\u044F\u0434\u043E\u043A \u0443\u0433\u043E\u0440\u0456, Ctrl+V, Enter, \u043F\u043E\u0442\u0456\u043C \xAB\u0412\u0438\u0431\u0456\u0440 \u043F\u0430\u043F\u043A\u0438\xBB",
+    "meet.stepMic": "3 \xB7 \u0414\u043E\u0437\u0432\u043E\u043B\u044C\u0442\u0435 \u043C\u0456\u043A\u0440\u043E\u0444\u043E\u043D, \u043E\u0434\u0438\u043D \u0440\u0430\u0437",
+    "meet.stepMicNote": "\u043F\u0456\u0441\u043B\u044F \u043A\u0440\u043E\u043A\u0443 2: \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456, \u0449\u043E \u0432\u0456\u0434\u043A\u0440\u0438\u0454\u0442\u044C\u0441\u044F, \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \xAB\u0414\u043E\u0437\u0432\u043E\u043B\u0438\u0442\u0438 \u043C\u0456\u043A\u0440\u043E\u0444\u043E\u043D\xBB (Allow the microphone), \u043F\u043E\u0442\u0456\u043C \xAB\u0414\u043E\u0437\u0432\u043E\u043B\u0438\u0442\u0438\xBB (Allow), \u043A\u043E\u043B\u0438 \u0441\u043F\u0438\u0442\u0430\u0454 Chrome \xB7 \u0431\u0435\u0437 \u0446\u044C\u043E\u0433\u043E \u0432 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u0446\u0456 \u0431\u0443\u0434\u0443\u0442\u044C \u043B\u0438\u0448\u0435 \u0456\u043D\u0448\u0456",
     "meet.showFolder": "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u0438 \u043F\u0430\u043F\u043A\u0443",
     "meet.copyPath": "\u041A\u043E\u043F\u0456\u044E\u0432\u0430\u0442\u0438 \u0448\u043B\u044F\u0445",
-    "meet.step3": "3 \xB7 \u041D\u0430 \u0437\u0443\u0441\u0442\u0440\u0456\u0447\u0456: \u0437\u043D\u0430\u0447\u043E\u043A \u041A\u0440\u044F\u043A\u043B\u0430 \u2192 Record \u0430\u0431\u043E \u043A\u043B\u0430\u0432\u0456\u0448\u0430",
-    "meet.step3Note": "\u0437\u0432\u0443\u043A \u0434\u0437\u0432\u0456\u043D\u043A\u0430 \u0456 \u0432\u0430\u0448 \u043C\u0456\u043A\u0440\u043E\u0444\u043E\u043D \xB7 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \u0437\u2019\u044F\u0432\u0438\u0442\u044C\u0441\u044F \u0432 \xAB\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430\u0445\xBB",
+    "meet.step3": "4 \xB7 \u041D\u0430 \u0437\u0443\u0441\u0442\u0440\u0456\u0447\u0456: \u0437\u043D\u0430\u0447\u043E\u043A \u041A\u0440\u044F\u043A\u043B\u0430 \u043D\u0430 \u043F\u0430\u043D\u0435\u043B\u0456 Chrome \u2192 Record \u0430\u0431\u043E \u043A\u043B\u0430\u0432\u0456\u0448\u0430",
+    "meet.step3Note": "\u043D\u0435\u043C\u0430\u0454 \u0437\u043D\u0430\u0447\u043A\u0430? \u0412\u0456\u043D \u043F\u0456\u0434 \u043F\u0430\u0437\u043B\u043E\u043C \u0443\u0433\u043E\u0440\u0456 \u043F\u0440\u0430\u0432\u043E\u0440\u0443\u0447: \u0437\u0430\u043A\u0440\u0456\u043F\u0456\u0442\u044C \u0439\u043E\u0433\u043E \u0442\u0430\u043C \xB7 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \u0437\u2019\u044F\u0432\u0438\u0442\u044C\u0441\u044F \u0432 \xAB\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430\u0445\xBB",
     "meet.off": "\u042F\u043A\u0449\u043E \u0449\u043E\u0441\u044C \u043D\u0435 \u0442\u0430\u043A",
     "meet.keyNothing": "\u041A\u043B\u0430\u0432\u0456\u0448\u0430 \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u0440\u043E\u0431\u0438\u0442\u044C",
-    "meet.keyNothingNote": "\u0437\u0430\u0434\u0430\u0439\u0442\u0435 \u0457\u0457 \u043D\u0430 chrome://extensions/shortcuts",
-    "meet.afterUpdate": "\u041F\u0456\u0441\u043B\u044F \u043E\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u041A\u0440\u044F\u043A\u043B\u0430 \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \xAB\u041F\u0435\u0440\u0435\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438\xBB \u043D\u0430 \u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u043D\u0456",
-    "meet.afterUpdateNote": "\u0414\u043E \u0442\u043E\u0433\u043E Chrome \u0442\u0440\u0438\u043C\u0430\u0454 \u0441\u0442\u0430\u0440\u0443 \u043A\u043E\u043F\u0456\u044E",
+    "meet.keyNothingNote": "\xAB\u041A\u043E\u043C\u0431\u0456\u043D\u0430\u0446\u0456\u0457 \u043A\u043B\u0430\u0432\u0456\u0448\xBB (Keyboard shortcuts) \u043B\u0456\u0432\u043E\u0440\u0443\u0447 \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456 \u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u044C: \u0437\u0430\u0434\u0430\u0439\u0442\u0435 \u0457\u0457 \u0434\u043B\u044F \xAB\u041A\u0440\u044F\u043A\u043B: \u0437\u0430\u043F\u0438\u0441 \u0437\u0443\u0441\u0442\u0440\u0456\u0447\u0435\u0439\xBB",
+    "meet.afterUpdate": "\u041F\u0456\u0441\u043B\u044F \u043E\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u041A\u0440\u044F\u043A\u043B\u0430 \u043F\u0435\u0440\u0435\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0442\u0435 \u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u043D\u044F",
+    "meet.afterUpdateNote": "\u043A\u0440\u0443\u0433\u043B\u0430 \u0441\u0442\u0440\u0456\u043B\u043A\u0430 \u21BB \u043D\u0430 \u043A\u0430\u0440\u0442\u0446\u0456 \u041A\u0440\u044F\u043A\u043B\u0430, \u0431\u0456\u043B\u044F \u0457\u0457 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u0447\u0430 \xB7 \u0434\u043E \u0442\u043E\u0433\u043E Chrome \u0442\u0440\u0438\u043C\u0430\u0454 \u0441\u0442\u0430\u0440\u0443 \u043A\u043E\u043F\u0456\u044E",
     "transcribe.speakers": "\u0425\u0442\u043E \u043A\u043E\u043B\u0438 \u0433\u043E\u0432\u043E\u0440\u0438\u0432",
     "transcribe.speakersNote": "\u0441\u043B\u043E\u0432\u0430 \u0432\u0436\u0435 \u0440\u043E\u0437\u043F\u0456\u0437\u043D\u0430\u043D\u043E; \u0446\u0435 \u0440\u043E\u0437\u0440\u0456\u0437\u043D\u044F\u0454 \u0433\u043E\u043B\u043E\u0441\u0438",
     "transcribe.downloading": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F\u2026",
@@ -4146,8 +3868,6 @@
     "transcribe.new": "\u041D\u043E\u0432\u0430 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430",
     "transcribe.setup": "\u041D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
     "transcribe.keptIn": "\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u044E\u0442\u044C\u0441\u044F \u0432",
-    "transcribe.library": "\u0411\u0456\u0431\u043B\u0456\u043E\u0442\u0435\u043A\u0430",
-    "transcribe.allNote": "\u0443\u0441\u0456 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438, \u0437 \u043F\u043E\u0448\u0443\u043A\u043E\u043C \u0437\u0430 \u0441\u043B\u043E\u0432\u0430\u043C\u0438",
     "kb.inOrder": "\u0423 \u0442\u0430\u043A\u043E\u043C\u0443 \u043F\u043E\u0440\u044F\u0434\u043A\u0443",
     "kb.earlier": "\u0420\u0430\u043D\u0456\u0448\u0435",
     "kb.later": "\u041F\u0456\u0437\u043D\u0456\u0448\u0435",
@@ -4168,10 +3888,10 @@
     "kb.keepCapsNote": "\u0430\u0431\u0440\u0435\u0432\u0456\u0430\u0442\u0443\u0440\u0438 \u0432\u0435\u043B\u0438\u043A\u0438\u043C\u0438 \u043B\u0456\u0442\u0435\u0440\u0430\u043C\u0438 \u043D\u0456\u043A\u043E\u043B\u0438 \u043D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u044C\u0441\u044F",
     "kb.when": "\u041A\u043E\u043B\u0438",
     "kb.onPause": "\u0412\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438 \u0442\u0430\u043A\u043E\u0436 \u043F\u0456\u0441\u043B\u044F \u043F\u0430\u0443\u0437\u0438",
-    "kb.onPauseNote": "\u044F\u0432\u043D\u043E \u0445\u0438\u0431\u043D\u0435 \u0441\u043B\u043E\u0432\u043E \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454\u0442\u044C\u0441\u044F \u043F\u0440\u0438\u0431\u043B\u0438\u0437\u043D\u043E \u0447\u0435\u0440\u0435\u0437 \u0441\u0435\u043A\u0443\u043D\u0434\u0443 \u043F\u0456\u0441\u043B\u044F \u0442\u043E\u0433\u043E, \u044F\u043A \u0432\u0438 \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043B\u0438 \u0434\u0440\u0443\u043A\u0443\u0432\u0430\u0442\u0438",
+    "kb.onPauseNote": "\u0445\u0438\u0431\u043D\u0435 \u0441\u043B\u043E\u0432\u043E \u0432\u0438\u043F\u0440\u0430\u0432\u0438\u0442\u044C\u0441\u044F \u0437\u0430 \u0441\u0435\u043A\u0443\u043D\u0434\u0443, \u044F\u043A \u0432\u0438 \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043B\u0438 \u0434\u0440\u0443\u043A\u0443\u0432\u0430\u0442\u0438",
     "kb.sound": "\u0422\u0438\u0445\u043E \u043A\u043B\u0430\u0446\u0430\u0442\u0438, \u043A\u043E\u043B\u0438 \u0441\u043B\u043E\u0432\u043E \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E",
     "kb.chime": "\u0417\u0432\u0443\u043A, \u043A\u043E\u043B\u0438 \u0437\u043C\u0456\u043D\u044E\u0454\u0442\u044C\u0441\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0430",
-    "kb.chimeNote": "\u043A\u043E\u043B\u0438 \u0432\u0438 \u0457\u0457 \u0437\u043C\u0456\u043D\u044E\u0454\u0442\u0435, \u043A\u043B\u0430\u0432\u0456\u0448\u0430\u043C\u0438 \u041A\u0440\u044F\u043A\u043B\u0430 \u0430\u0431\u043E Windows; \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0430 \u0437\u0432\u0443\u0447\u0438\u0442\u044C \u0432\u0438\u0449\u0435 \u0437\u0430 \u0456\u043D\u0448\u0456",
+    "kb.chimeNote": "\u043A\u043E\u043B\u0438 \u0432\u0438 \u0457\u0457 \u0437\u043C\u0456\u043D\u044E\u0454\u0442\u0435; \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0430 \u0437\u0432\u0443\u0447\u0438\u0442\u044C \u0432\u0438\u0449\u0435",
     "kb.chimeName": "\u0417\u0432\u0443\u043A",
     "kb.chimePick": "\u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C, \u0449\u043E\u0431 \u043F\u043E\u0441\u043B\u0443\u0445\u0430\u0442\u0438: \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0430, \u043F\u043E\u0442\u0456\u043C \u0456\u043D\u0448\u0430 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0430",
     "kb.chime.glass": "\u0421\u043A\u043B\u043E",
@@ -4215,13 +3935,9 @@
     "kb.learnNote": "\u043D\u0456\u043A\u043E\u043B\u0438 \u0432 \u043F\u043E\u043B\u0456 \u043F\u0430\u0440\u043E\u043B\u044F, \u0443 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0456 \u0431\u0435\u0437 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u0447\u0438 \u043D\u0430 \u043F\u043E\u0432\u043D\u043E\u043C\u0443 \u0435\u043A\u0440\u0430\u043D\u0456",
     "kb.fixedAlways": "\u0417\u0430\u0432\u0436\u0434\u0438 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u044C\u0441\u044F",
     "kb.into": "\u2192 {lang}",
-    "kb.forget": "\u0417\u0430\u0431\u0443\u0442\u0438 {word}",
     "kb.fixedAlwaysEmpty": "\u0421\u043B\u043E\u0432\u043E, \u044F\u043A\u0435 \u0432\u0438 \u0434\u0432\u0456\u0447\u0456 \u0432\u0438\u043F\u0440\u0430\u0432\u0438\u043B\u0438 \u0432\u0440\u0443\u0447\u043D\u0443 (\u043A\u043B\u0430\u0432\u0456\u0448\u0435\u044E \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u0430\u0431\u043E \u0441\u0442\u0435\u0440\u0448\u0438 \u0439 \u043D\u0430\u0431\u0440\u0430\u0432\u0448\u0438 \u0432 \u0456\u043D\u0448\u0456\u0439 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u0446\u0456), \u0434\u0430\u043B\u0456 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454\u0442\u044C\u0441\u044F \u0441\u0430\u043C\u0435.",
     "kb.myWordNote": "{lang} \xB7 \u044F\u043A \u043D\u0430\u0431\u0440\u0430\u043D\u0435 \u043D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454\u0442\u044C\u0441\u044F, \u0430 \u0437 \u0447\u0443\u0436\u043E\u0457 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454\u0442\u044C\u0441\u044F \u043D\u0430 \u043D\u044C\u043E\u0433\u043E",
     "kb.myWordsEmpty": "\u0421\u043B\u043E\u0432\u043E, \u044F\u043A\u043E\u0433\u043E \u043D\u0435\u043C\u0430\u0454 \u0432 \u0436\u043E\u0434\u043D\u043E\u043C\u0443 \u0441\u043B\u043E\u0432\u043D\u0438\u043A\u0443 \u0456 \u044F\u043A\u0435 \u0432\u0438 \u0442\u0440\u0438\u0447\u0456 \u043D\u0430\u0431\u0440\u0430\u043B\u0438 \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E, \u0441\u0442\u0430\u0454 \u0432\u0430\u0448\u0438\u043C: \u041A\u0440\u044F\u043A\u043B \u043B\u0438\u0448\u0430\u0454 \u0439\u043E\u0433\u043E \u044F\u043A \u043D\u0430\u0431\u0440\u0430\u043D\u0435 \u0456 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454 \u043D\u0430 \u043D\u044C\u043E\u0433\u043E, \u043A\u043E\u043B\u0438 \u0439\u043E\u0433\u043E \u043D\u0430\u0431\u0440\u0430\u043D\u043E \u0432 \u0447\u0443\u0436\u0456\u0439 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u0446\u0456. \u0414\u043E \u0442\u043E\u0433\u043E \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u0454\u0442\u044C\u0441\u044F \u043B\u0438\u0448\u0435 \u043D\u0435\u0447\u0438\u0442\u0430\u0431\u0435\u043B\u044C\u043D\u0438\u0439 \u0432\u0456\u0434\u0431\u0438\u0442\u043E\u043A \u0441\u043B\u043E\u0432\u0430.",
-    "kb.neverFixed": "\u041D\u0456\u043A\u043E\u043B\u0438 \u043D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u044C\u0441\u044F",
-    "kb.kept": "\u041D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438",
-    "kb.keptNote": "\u0441\u043B\u043E\u0432\u0430, \u044F\u043A\u0456 \u043D\u0456\u043A\u043E\u043B\u0438 \u043D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u044C\u0441\u044F \u0441\u0430\u043C\u0456",
     "kb.forgetAll": "\u0417\u0430\u0431\u0443\u0442\u0438 \u0432\u0441\u0435",
     "kb.forgetAllNote": "\u0432\u0438\u0432\u0447\u0435\u043D\u0435 \u041A\u0440\u044F\u043A\u043B\u043E\u043C \u0437\u043D\u0438\u043A\u043D\u0435; \xAB\u041D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438\xBB \u043B\u0438\u0448\u0438\u0442\u044C\u0441\u044F",
     "kb.forgetBtn": "\u0417\u0430\u0431\u0443\u0442\u0438",
@@ -4236,36 +3952,26 @@
     "kb.switchNote": "\u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u0454 \u043D\u0430 \u043D\u0430\u0441\u0442\u0443\u043F\u043D\u0443 \u0437 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043E\u043A, \u043F\u0435\u0440\u0435\u043B\u0456\u0447\u0435\u043D\u0438\u0445 \u043D\u0438\u0436\u0447\u0435",
     "kb.switchingByKeys": "\u041F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F \u043A\u043B\u0430\u0432\u0456\u0448\u0430\u043C\u0438",
     "kb.fixKey": "\u0412\u0438\u043F\u0440\u0430\u0432\u0438\u0442\u0438 \u043E\u0441\u0442\u0430\u043D\u043D\u0456 \u0441\u043B\u043E\u0432\u0430",
-    "kb.fixKeyNote": "\u043F\u0435\u0440\u0435\u0434\u0440\u0443\u043A\u043E\u0432\u0443\u0454 \u0441\u043B\u043E\u0432\u0430 \u0430\u0431\u043E \u0437\u043D\u0430\u043A\u0438 (&& \u2192 ??), \u043D\u0430\u0431\u0440\u0430\u043D\u0456 \u043D\u0435 \u0432 \u0442\u0456\u0439 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u0446\u0456; \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u0449\u0435 \u0440\u0430\u0437 \u0434\u043B\u044F \u043D\u0430\u0441\u0442\u0443\u043F\u043D\u043E\u0457",
+    "kb.fixKeyNote": "\u043F\u0435\u0440\u0435\u0434\u0440\u0443\u043A\u043E\u0432\u0443\u0454 \u043D\u0430\u0431\u0440\u0430\u043D\u0435 \u043D\u0435 \u0432 \u0442\u0456\u0439 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u0446\u0456; \u0449\u0435 \u043E\u0434\u043D\u0435 \u043D\u0430\u0442\u0438\u0441\u043A\u0430\u043D\u043D\u044F \u2014 \u043D\u0430\u0441\u0442\u0443\u043F\u043D\u0430 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0430",
     "kb.theFixKey": "\u041A\u043B\u0430\u0432\u0456\u0448\u0430 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F",
-    "kb.asYouType": "\u041F\u0456\u0434 \u0447\u0430\u0441 \u043D\u0430\u0431\u043E\u0440\u0443",
     "kb.autoFix": "\u0412\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438 \u0441\u043B\u043E\u0432\u0430 \u043F\u0456\u0434 \u0447\u0430\u0441 \u043D\u0430\u0431\u043E\u0440\u0443",
-    "kb.autoFixNote": "{typed} \u2192 {fixed}, \u043A\u043E\u043B\u0438 \u0432\u0438 \u043D\u0430\u0442\u0438\u0441\u043A\u0430\u0454\u0442\u0435 \u043F\u0440\u043E\u0431\u0456\u043B; \u043A\u043B\u0430\u0432\u0456\u0448\u0430 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u043E\u0434\u0440\u0430\u0437\u0443 \u043F\u0456\u0441\u043B\u044F \u0446\u044C\u043E\u0433\u043E \u0441\u043A\u0430\u0441\u043E\u0432\u0443\u0454",
+    "kb.autoFixNote": "{typed} \u2192 {fixed} \u043D\u0430 \u043F\u0440\u043E\u0431\u0456\u043B\u0456; \u043A\u043B\u0430\u0432\u0456\u0448\u0430 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u043E\u0434\u0440\u0430\u0437\u0443 \u043F\u0456\u0441\u043B\u044F \u0441\u043A\u0430\u0441\u043E\u0432\u0443\u0454",
     "kb.fixing": "\u0412\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u043F\u0456\u0434 \u0447\u0430\u0441 \u043D\u0430\u0431\u043E\u0440\u0443",
     "kb.fixingNote": "\u0432\u0435\u043B\u0438\u043A\u0456 \u043B\u0456\u0442\u0435\u0440\u0438, \u043A\u043E\u0440\u043E\u0442\u043A\u0456 \u0441\u043B\u043E\u0432\u0430, \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u043F\u0456\u0441\u043B\u044F \u043F\u0430\u0443\u0437\u0438",
     "kb.badgeNote": "\u043D\u0435\u0432\u0435\u043B\u0438\u043A\u0438\u0439 \u0437\u043D\u0430\u0447\u043E\u043A \u0437\u2019\u044F\u0432\u043B\u044F\u0454\u0442\u044C\u0441\u044F, \u043A\u043E\u043B\u0438 \u0437\u043C\u0456\u043D\u044E\u0454\u0442\u044C\u0441\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0430 \u0430\u0431\u043E Caps Lock",
     "kb.trayNote": "\u0437\u043D\u0430\u0447\u043E\u043A \u0443 \u0442\u0440\u0435\u0457 \u043F\u043E\u043A\u0430\u0437\u0443\u0454 \u043F\u043E\u0442\u043E\u0447\u043D\u0443 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0443, \u043D\u0430\u043F\u0440\u0438\u043A\u043B\u0430\u0434 en \u0430\u0431\u043E uk",
     "kb.fullScreen": "\u0412\u0438\u043C\u0438\u043A\u0430\u0442\u0438\u0441\u044F \u043D\u0430 \u043F\u043E\u0432\u043D\u043E\u043C\u0443 \u0435\u043A\u0440\u0430\u043D\u0456",
     "kb.fullScreenNote": "\u0456\u0433\u0440\u0438, \u043F\u0440\u0435\u0437\u0435\u043D\u0442\u0430\u0446\u0456\u0457, \u0432\u0456\u0434\u0435\u043E",
-    "kb.lists": "\u0421\u043F\u0438\u0441\u043A\u0438",
-    "kb.layouts": "\u0420\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438",
     "kb.layoutsOwn": "\u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438, \u044F\u043A\u0438\u043C\u0438 \u043F\u0440\u043E\u0445\u043E\u0434\u0438\u0442\u044C \u043A\u043B\u0430\u0432\u0456\u0448\u0430 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F; \u0437 \u0432\u043B\u0430\u0441\u043D\u043E\u044E \u043A\u043B\u0430\u0432\u0456\u0448\u0435\u044E: {n}",
     "kb.layoutsNote": "\u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438, \u044F\u043A\u0438\u043C\u0438 \u043F\u043E \u0447\u0435\u0440\u0437\u0456 \u043F\u0440\u043E\u0445\u043E\u0434\u0438\u0442\u044C \u043A\u043B\u0430\u0432\u0456\u0448\u0430 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F",
-    "kb.programsNote": "\u0432\u0438\u043C\u043A\u043D\u0443\u0442\u0438 \u0447\u0430\u0441\u0442\u0438\u043D\u0438 \u041A\u0440\u044F\u043A\u043B\u0430 \u0432 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0456 \u0430\u0431\u043E \u0434\u0430\u0442\u0438 \u0457\u0439 \u0432\u043B\u0430\u0441\u043D\u0443 \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0443",
-    "kb.programCount": { one: "{n} \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0430", few: "{n} \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0438", many: "{n} \u043F\u0440\u043E\u0433\u0440\u0430\u043C", other: "{n} \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0438" },
-    "kb.learned": "\u0412\u0438\u0432\u0447\u0435\u043D\u0456 \u0441\u043B\u043E\u0432\u0430",
-    "kb.learnedNote": "\u0441\u043B\u043E\u0432\u0430, \u044F\u043A\u0438\u0445 \u041A\u0440\u044F\u043A\u043B \u043D\u0430\u0432\u0447\u0438\u0432\u0441\u044F \u0437 \u0432\u0430\u0448\u043E\u0433\u043E \u043D\u0430\u0431\u043E\u0440\u0443",
-    "kb.learnedOff": "\u043D\u0430\u0432\u0447\u0430\u043D\u043D\u044F \u0437 \u0432\u0430\u0448\u043E\u0433\u043E \u043D\u0430\u0431\u043E\u0440\u0443 \u0432\u0438\u043C\u043A\u043D\u0435\u043D\u043E",
-    "kb.keptNever": "\u0441\u043B\u043E\u0432\u0430, \u044F\u043A\u0456 \u041A\u0440\u044F\u043A\u043B \u043D\u0456\u043A\u043E\u043B\u0438 \u043D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454 \u0441\u0430\u043C",
     "kb.rivals": { one: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u043E {names}: \u0432\u0438\u043C\u043A\u043D\u0456\u0442\u044C \u0443 \u043D\u0456\u0439 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438, \u0456\u043D\u0430\u043A\u0448\u0435 \u0441\u043B\u043E\u0432\u0430 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438\u043C\u0443\u0442\u044C\u0441\u044F \u0434\u0432\u0456\u0447\u0456.", few: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u043E {names}: \u0432\u0438\u043C\u043A\u043D\u0456\u0442\u044C \u0443 \u043D\u0438\u0445 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438, \u0456\u043D\u0430\u043A\u0448\u0435 \u0441\u043B\u043E\u0432\u0430 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438\u043C\u0443\u0442\u044C\u0441\u044F \u0434\u0432\u0456\u0447\u0456.", many: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u043E {names}: \u0432\u0438\u043C\u043A\u043D\u0456\u0442\u044C \u0443 \u043D\u0438\u0445 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438, \u0456\u043D\u0430\u043A\u0448\u0435 \u0441\u043B\u043E\u0432\u0430 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438\u043C\u0443\u0442\u044C\u0441\u044F \u0434\u0432\u0456\u0447\u0456.", other: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u043E {names}: \u0432\u0438\u043C\u043A\u043D\u0456\u0442\u044C \u0443 \u043D\u0438\u0445 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438, \u0456\u043D\u0430\u043A\u0448\u0435 \u0441\u043B\u043E\u0432\u0430 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438\u043C\u0443\u0442\u044C\u0441\u044F \u0434\u0432\u0456\u0447\u0456." },
     "kb.elevated": "{app} \u043F\u0440\u0430\u0446\u044E\u0454 \u0432\u0456\u0434 \u0456\u043C\u0435\u043D\u0456 \u0430\u0434\u043C\u0456\u043D\u0456\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430: Windows \u043D\u0435 \u0434\u0430\u0454 \u041A\u0440\u044F\u043A\u043B\u0443 \u0457\u0457 \u043A\u043B\u0430\u0432\u0456\u0448, \u0442\u043E\u0436 \u0442\u0430\u043C \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454\u0442\u044C\u0441\u044F \u0439 \u043D\u0435 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u0454\u0442\u044C\u0441\u044F.",
     "kb.trouble": "\u041F\u043E\u043C\u0456\u0447\u043D\u0438\u043A \u043A\u043B\u0430\u0432\u0456\u0430\u0442\u0443\u0440\u0438: {trouble}",
     "kb.privacy": "\u041A\u0440\u044F\u043A\u043B \u0447\u0438\u0442\u0430\u0454 \u043D\u0430\u0442\u0438\u0441\u043A\u0430\u043D\u043D\u044F \u043A\u043B\u0430\u0432\u0456\u0448 \u043B\u0438\u0448\u0435 \u0434\u043B\u044F \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438 \u0456 \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0456\u043A\u0443\u0434\u0438 \u043D\u0435 \u043D\u0430\u0434\u0441\u0438\u043B\u0430\u0454. \u0412\u0456\u043D \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u0454 \u0442\u0456\u043B\u044C\u043A\u0438 \u0432\u0438\u0432\u0447\u0435\u043D\u0456 \u0441\u043B\u043E\u0432\u0430, \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456.",
-    "words.removeAria": "\u0412\u0438\u0434\u0430\u043B\u0438\u0442\u0438 {word} \u0437\u0456 \xAB\u0421\u043B\u0456\u0432\xBB",
-    "words.today": "\u0441\u044C\u043E\u0433\u043E\u0434\u043D\u0456",
     "words.noSuch": "\u0422\u0430\u043A\u043E\u0433\u043E \u0441\u043B\u043E\u0432\u0430 \u043D\u0435\u043C\u0430\u0454.",
     "words.empty": "\u0421\u043B\u0456\u0432 \u043F\u043E\u043A\u0438 \u043D\u0435\u043C\u0430\u0454. \u041A\u043B\u0430\u0446\u043D\u0456\u0442\u044C \u0441\u043B\u043E\u0432\u043E \u0432 \u043A\u0430\u0440\u0442\u0446\u0456 \u0439 \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u0439\u043E\u0433\u043E \u0437\u0456\u0440\u043E\u0447\u043A\u0443.",
     "words.search": "\u041F\u043E\u0448\u0443\u043A \u0441\u043B\u0456\u0432 \u0456 \u0440\u0435\u0447\u0435\u043D\u044C",
+    "words.hint": "\u0417\u0456\u0440\u043E\u0447\u043A\u0430 \u0432 \u043A\u0430\u0440\u0442\u0446\u0456 \u0441\u043B\u043E\u0432\u0430 \u0434\u043E\u0434\u0430\u0454 \u0439\u043E\u0433\u043E \u0441\u044E\u0434\u0438",
     "words.export": "\u0415\u043A\u0441\u043F\u043E\u0440\u0442 \u0434\u043B\u044F Anki\u2026",
     "settings.natural": "\u041F\u0440\u0438\u0440\u043E\u0434\u043D\u0438\u0439 \u0433\u043E\u043B\u043E\u0441",
     "settings.naturalNote": "{size} \u041C\u0411 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u0438, \u0434\u0430\u043B\u0456 \u0447\u0438\u0442\u0430\u0454 \u043E\u0444\u043B\u0430\u0439\u043D (Kokoro)",
@@ -4296,7 +4002,7 @@
     "storage.cudaNote": "\u0437\u0431\u0456\u0440\u043A\u0430 \u0434\u043B\u044F NVIDIA, \u0434\u043B\u044F \u043C\u043E\u0434\u0435\u043B\u0456, \u0449\u043E \u043D\u0435 \u0432\u043C\u0456\u0449\u0430\u0454\u0442\u044C\u0441\u044F \u0443 \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0443 (llama.cpp CUDA)",
     "storage.lossTranslate": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u043F\u043E\u0432\u0435\u0440\u043D\u0435\u0442\u044C\u0441\u044F \u0434\u043E \xAB\u0428\u0432\u0438\u0434\u043A\u043E\u0433\u043E\xBB, \u0430 \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u044C \u043C\u043E\u0434\u0435\u043B\u044C \u0437\u043D\u043E\u0432\u0443 \u043F\u0456\u0434 \u0447\u0430\u0441 \u043D\u0430\u0441\u0442\u0443\u043F\u043D\u043E\u0457 \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0438",
     "storage.lossCheck": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u044C \u043C\u043E\u0434\u0435\u043B\u044C \u0437\u043D\u043E\u0432\u0443 \u043F\u0456\u0434 \u0447\u0430\u0441 \u043D\u0430\u0441\u0442\u0443\u043F\u043D\u043E\u0457 \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0438",
-    "storage.lossSpeech": "\u0414\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u0456 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \u0437\u0443\u043F\u0438\u043D\u044F\u0442\u044C\u0441\u044F, \u0434\u043E\u043A\u0438 \u0439\u043E\u0433\u043E \u043D\u0435 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043E \u0437\u043D\u043E\u0432\u0443; \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0439 \u043D\u043E\u0442\u0430\u0442\u043A\u0438 \u043B\u0438\u0448\u0430\u0442\u044C\u0441\u044F",
+    "storage.lossSpeech": "\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F \u0439 \u0437\u0430\u043F\u0438\u0441\u0438 \u0437\u0443\u043F\u0438\u043D\u044F\u0442\u044C\u0441\u044F, \u0434\u043E\u043A\u0438 \u0439\u043E\u0433\u043E \u043D\u0435 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043E \u0437\u043D\u043E\u0432\u0443; \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0439 \u043D\u043E\u0442\u0430\u0442\u043A\u0438 \u043B\u0438\u0448\u0430\u0442\u044C\u0441\u044F",
     "storage.lossGpu": "\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u043F\u043E\u0432\u0435\u0440\u043D\u0435\u0442\u044C\u0441\u044F \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440, \u0443 \u043A\u0456\u043B\u044C\u043A\u0430 \u0440\u0430\u0437\u0456\u0432 \u043F\u043E\u0432\u0456\u043B\u044C\u043D\u0456\u0448\u0435",
     "storage.lossSpeakers": "\u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043D\u0443\u0442\u044C \u0440\u043E\u0437\u0440\u0456\u0437\u043D\u044F\u0442\u0438 \u0433\u043E\u043B\u043E\u0441\u0438, \u0434\u043E\u043A\u0438 \u0439\u043E\u0433\u043E \u043D\u0435 \u0434\u043E\u0434\u0430\u043D\u043E \u0437\u043D\u043E\u0432\u0443",
     "storage.lossDefault": "\u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u044C\u0441\u044F \u0437\u043D\u043E\u0432\u0443 \u043F\u0456\u0434 \u0447\u0430\u0441 \u043D\u0430\u0441\u0442\u0443\u043F\u043D\u043E\u0433\u043E \u0432\u0438\u043A\u043E\u0440\u0438\u0441\u0442\u0430\u043D\u043D\u044F",
@@ -4306,10 +4012,10 @@
     "storage.usedBy": "\u043F\u043E\u0442\u0440\u0456\u0431\u043D\u0435 \u0434\u043B\u044F: {users}",
     "storage.reserve": "\u0437\u0430\u043F\u0430\u0441 \u0434\u043B\u044F: {reserve}, \u043D\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u043E\u0440\u0456, \u044F\u043A\u0449\u043E \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430 \u043F\u0456\u0434\u0432\u0435\u0434\u0435",
     "storage.userTranslate": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0434",
-    "storage.userListen": "\u0421\u043B\u0443\u0445\u0430\u0442\u0438",
-    "storage.userCheck": "\u041F\u0435\u0440\u0435\u0432\u0456\u0440\u043A\u0430 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u0457",
-    "storage.userDictate": "\u0414\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
-    "storage.userTranscribe": "\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430",
+    "storage.userListen": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0434",
+    "storage.userCheck": "\u0410\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0430",
+    "storage.userDictate": "\u0413\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F",
+    "storage.userTranscribe": "\u0417\u0430\u043F\u0438\u0441\u0438 \u0439 \u0437\u0443\u0441\u0442\u0440\u0456\u0447\u0456",
     "storage.frees": "\u0432\u0438\u0434\u0430\u043B\u0435\u043D\u043D\u044F \u0437\u0432\u0456\u043B\u044C\u043D\u0438\u0442\u044C {free}: {shared} \u0439\u043E\u0433\u043E \u0444\u0430\u0439\u043B\u0456\u0432 \u0441\u043F\u0456\u043B\u044C\u043D\u0456 \u0437 \u0456\u043D\u0448\u0438\u043C\u0438 \u0456\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0430\u043C\u0438 Python \u0442\u0443\u0442",
     "storage.removeAskTitle": "\u0412\u0438\u0434\u0430\u043B\u0438\u0442\u0438\u2026",
     "storage.removeTitle": "\u0412\u0438\u0434\u0430\u043B\u0438\u0442\u0438; \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0438\u0442\u044C\u0441\u044F \u0437\u043D\u043E\u0432\u0443, \u044F\u043A\u0449\u043E \u043F\u0456\u0437\u043D\u0456\u0448\u0435 \u0432\u0438\u0431\u0435\u0440\u0435\u0442\u0435",
@@ -4339,7 +4045,6 @@
     "settings.englishNote": "\u0437\u0430\u0432\u0436\u0434\u0438: \u043C\u043E\u0432\u0430, \u044F\u043A\u043E\u0457 \u043D\u0430\u0432\u0447\u0430\u0454 \u041A\u0440\u044F\u043A\u043B",
     "settings.speed": "\u0428\u0432\u0438\u0434\u043A\u0456\u0441\u0442\u044C",
     "settings.speedNote": "\u044F\u043A \u0448\u0432\u0438\u0434\u043A\u043E \u0447\u0438\u0442\u0430\u0454",
-    "settings.language": "\u041C\u043E\u0432\u0430",
     "settings.yourLanguage": "\u0412\u0430\u0448\u0430 \u043C\u043E\u0432\u0430",
     "settings.yourLanguageNote": "\u041A\u0440\u044F\u043A\u043B \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u0454 \u0446\u0456\u0454\u044E \u043C\u043E\u0432\u043E\u044E \u0456 \u043D\u0435\u044E \u0436 \u043F\u043E\u043A\u0430\u0437\u0443\u0454 \u0437\u043D\u0430\u0447\u0435\u043D\u043D\u044F \u0441\u043B\u0456\u0432",
     "settings.theme": "\u0422\u0435\u043C\u0430",
@@ -4349,16 +4054,17 @@
     "settings.startWithWindows": "\u0417\u0430\u043F\u0443\u0441\u043A\u0430\u0442\u0438 \u0440\u0430\u0437\u043E\u043C \u0437 Windows",
     "settings.pause": "\u041F\u0440\u0438\u0437\u0443\u043F\u0438\u043D\u0438\u0442\u0438 \u041A\u0440\u044F\u043A\u043B",
     "settings.pauseNote": "\u0443\u0441\u0456 \u0441\u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044F \u043A\u043B\u0430\u0432\u0456\u0448 \u0456 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u0437\u0443\u043F\u0438\u043D\u044F\u044E\u0442\u044C\u0441\u044F, \u0434\u043E\u043A\u0438 \u0432\u0438 \u0437\u043D\u043E\u0432\u0443 \u043D\u0435 \u0432\u0432\u0456\u043C\u043A\u043D\u0435\u0442\u0435; \u0442\u0430\u043A\u043E\u0436 \u0443 \u043C\u0435\u043D\u044E \u0442\u0440\u0435\u044E",
-    "settings.pauseKey": "\u041F\u0430\u0443\u0437\u0430 \u0430\u0431\u043E \u0432\u0456\u0434\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u043A\u043B\u0430\u0432\u0456\u0448\u0435\u044E",
-    "settings.pauseKeyNote": "\u043F\u0440\u0430\u0446\u044E\u0454 \u0456 \u043F\u0456\u0434 \u0447\u0430\u0441 \u043F\u0430\u0443\u0437\u0438",
-    "settings.windowKey": "\u0412\u0456\u0434\u043A\u0440\u0438\u0432\u0430\u0442\u0438 \u0446\u0435 \u0432\u0456\u043A\u043D\u043E \u043A\u043B\u0430\u0432\u0456\u0448\u0435\u044E",
+    "settings.pauseKey": "\u041F\u0430\u0443\u0437\u0430",
+    "settings.pauseKeyNote": "\u041A\u0440\u044F\u043A\u043B \u043C\u043E\u0432\u0447\u0438\u0442\u044C, \u0434\u043E\u043A\u0438 \u043D\u0435 \u043D\u0430\u0442\u0438\u0441\u043D\u0435\u0442\u0435 \u0437\u043D\u043E\u0432\u0443",
+    "settings.windowKey": "\u0412\u0456\u0434\u043A\u0440\u0438\u0442\u0438 \u0432\u0456\u043A\u043D\u043E \u041A\u0440\u044F\u043A\u043B\u0430",
     "settings.windowKeyNote": "\u0437 \u0431\u0443\u0434\u044C-\u044F\u043A\u043E\u0457 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0438",
     "settings.resetKeys": "\u0421\u043A\u0438\u043D\u0443\u0442\u0438 \u0432\u0441\u0456 \u043A\u043B\u0430\u0432\u0456\u0448\u0456",
-    "settings.resetKeysNote": "\u043A\u043E\u0436\u043D\u0435 \u0441\u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044F \u043A\u043B\u0430\u0432\u0456\u0448 \u043F\u043E\u0432\u0435\u0440\u0442\u0430\u0454\u0442\u044C\u0441\u044F \u0434\u043E \u043F\u043E\u0447\u0430\u0442\u043A\u043E\u0432\u043E\u0433\u043E; \u21BA \u0431\u0456\u043B\u044F \u043A\u043B\u0430\u0432\u0456\u0448\u0456 \u043F\u043E\u0432\u0435\u0440\u0442\u0430\u0454 \u043B\u0438\u0448\u0435 \u0457\u0457",
+    "settings.resetKeysNote": "\u0443\u0441\u0456 \u043A\u043B\u0430\u0432\u0456\u0448\u0456 \u043F\u043E\u0432\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u0434\u043E \u043F\u043E\u0447\u0430\u0442\u043A\u043E\u0432\u0438\u0445",
     "settings.version": "\u0412\u0435\u0440\u0441\u0456\u044F {version}",
     "settings.versionDev": "\u0412\u0435\u0440\u0441\u0456\u044F {version} dev",
     "settings.built": "\u0437\u0456\u0431\u0440\u0430\u043D\u043E {build}",
     "settings.versionNote": "\u043D\u043E\u0432\u0456 \u0432\u0435\u0440\u0441\u0456\u0457: \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0442\u0435 \u0456\u043D\u0441\u0442\u0430\u043B\u044F\u0442\u043E\u0440 \u0456\u0437 GitHub \u0456 \u0437\u0430\u043F\u0443\u0441\u0442\u0456\u0442\u044C \u0439\u043E\u0433\u043E; \u0432\u0430\u0448\u0456 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u0439 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F \u043B\u0438\u0448\u0430\u0442\u044C\u0441\u044F",
+    "settings.betaNote": "\u0431\u0435\u0442\u0430: \u0449\u043E\u0441\u044C \u0456\u0449\u0435 \u043C\u043E\u0436\u0435 \u043F\u0440\u0430\u0446\u044E\u0432\u0430\u0442\u0438 \u043D\u0435 \u0442\u0430\u043A; \xAB\u041F\u043E\u0432\u0456\u0434\u043E\u043C\u0438\u0442\u0438 \u043F\u0440\u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0443\xBB \u0434\u043E\u043F\u043E\u043C\u0430\u0433\u0430\u0454 \u0446\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u0438\u0442\u0438",
     "settings.newVersions": "\u041D\u043E\u0432\u0456 \u0432\u0435\u0440\u0441\u0456\u0457",
     "settings.backup": "\u0420\u0435\u0437\u0435\u0440\u0432\u043D\u0430 \u043A\u043E\u043F\u0456\u044F",
     "settings.backupTitle": "\u0417\u0431\u0435\u0440\u0435\u0433\u0442\u0438 \u043A\u043E\u043F\u0456\u044E \u0430\u0431\u043E \u043F\u0435\u0440\u0435\u043D\u0435\u0441\u0442\u0438 \u043D\u0430 \u0456\u043D\u0448\u0438\u0439 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440",
@@ -4367,22 +4073,27 @@
     "settings.importNote": "\u0406\u043C\u043F\u043E\u0440\u0442 \u0437\u0430\u043C\u0456\u043D\u044E\u0454 \u0432\u0430\u0448\u0456 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F\u043C\u0438 \u0437 \u043A\u043E\u043F\u0456\u0457 \u0439 \u0434\u043E\u0434\u0430\u0454 \u0457\u0457 \u0441\u043B\u043E\u0432\u0430 \u0442\u0430 \u0456\u0441\u0442\u043E\u0440\u0456\u044E \u0434\u043E \u0432\u0430\u0448\u0438\u0445; \u043D\u0456\u0447\u043E\u0433\u043E \u0432\u0430\u0448\u043E\u0433\u043E \u043D\u0435 \u0432\u0438\u0434\u0430\u043B\u044F\u0454\u0442\u044C\u0441\u044F.",
     "settings.resetAll": "\u0421\u043A\u0438\u043D\u0443\u0442\u0438 \u0432\u0441\u0456 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
     "settings.resetAllNote": "\u043A\u043B\u0430\u0432\u0456\u0448\u0456, \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u0447\u0456 \u0442\u0430 \u0441\u043F\u0438\u0441\u043A\u0438 \u043F\u043E\u0432\u0435\u0440\u0442\u0430\u044E\u0442\u044C\u0441\u044F \u0434\u043E \u043F\u043E\u0447\u0430\u0442\u043A\u043E\u0432\u0438\u0445; \u0432\u0430\u0448\u0456 \u0441\u043B\u043E\u0432\u0430 \u0439 \u0456\u0441\u0442\u043E\u0440\u0456\u044F \u043B\u0438\u0448\u0430\u044E\u0442\u044C\u0441\u044F",
-    "about.version": "\u0412\u0435\u0440\u0441\u0456\u044F {version} \xB7 \u0431\u0435\u0437\u043A\u043E\u0448\u0442\u043E\u0432\u043D\u0430, \u0437 \u0432\u0456\u0434\u043A\u0440\u0438\u0442\u0438\u043C \u043A\u043E\u0434\u043E\u043C, MIT",
-    "about.versionDev": "\u0412\u0435\u0440\u0441\u0456\u044F {version} dev, \u0437\u0456\u0431\u0440\u0430\u043D\u043E {build} \xB7 \u0431\u0435\u0437\u043A\u043E\u0448\u0442\u043E\u0432\u043D\u0430, \u0437 \u0432\u0456\u0434\u043A\u0440\u0438\u0442\u0438\u043C \u043A\u043E\u0434\u043E\u043C, MIT",
-    "about.madeBy": "\u0430\u0432\u0442\u043E\u0440",
-    "about.author": "Yevhen Peshynskyi \xB7 \u0456\u043D\u0436\u0435\u043D\u0435\u0440 \u0437 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0437\u0430\u0446\u0456\u0457 \u0434\u0438\u0437\u0430\u0439\u043D\u0443",
-    "about.runsOffline": "\u043F\u0440\u0430\u0446\u044E\u0454 \u043E\u0444\u043B\u0430\u0439\u043D",
-    "about.credits": "Firefox Translations \u0432\u0456\u0434 Mozilla \xB7 Gemma 4 \u0432\u0456\u0434 Google (Apache 2.0), \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0454 llama.cpp \xB7 Kokoro-82M \u0432\u0456\u0434 hexgrad, eSpeak NG \xB7 Windows OCR \xB7 WikDict, \u0437 Wiktionary \xB7 FrequencyWords \u0432\u0456\u0434 Hermit Dave ",
-    "about.neverSent": "\u2014 \u0432\u0430\u0448 \u0442\u0435\u043A\u0441\u0442 \u043D\u0456\u043A\u0443\u0434\u0438 \u043D\u0435 \u043D\u0430\u0434\u0441\u0438\u043B\u0430\u0454\u0442\u044C\u0441\u044F",
-    "about.madeWith": "\u0437\u0440\u043E\u0431\u043B\u0435\u043D\u043E \u0437",
-    "about.madeWithList": "Inter \u0456 JetBrains Mono (SIL OFL) \xB7 Electron \xB7 \u0437\u043D\u0430\u0447\u043A\u0438 VS Code",
     "about.online": "\u0432\u0438\u0445\u043E\u0434\u0438\u0442\u044C \u0432 \u0456\u043D\u0442\u0435\u0440\u043D\u0435\u0442 \u043B\u0438\u0448\u0435 \u0434\u043B\u044F",
     "about.onlineList": "\u043E\u0434\u043D\u043E\u0440\u0430\u0437\u043E\u0432\u043E\u0433\u043E \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F \u043A\u043E\u0436\u043D\u043E\u0457 \u0447\u0430\u0441\u0442\u0438\u043D\u0438: \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0430\u0447\u0430 \u0434\u043B\u044F \u0432\u0430\u0448\u043E\u0457 \u043C\u043E\u0432\u0438, \u043F\u0440\u0438\u0440\u043E\u0434\u043D\u043E\u0433\u043E \u0433\u043E\u043B\u043E\u0441\u0443 ({size} \u041C\u0411), \u0437\u043D\u0430\u0447\u0435\u043D\u044C \u0441\u043B\u0456\u0432",
-    "about.links": "\u043F\u043E\u0441\u0438\u043B\u0430\u043D\u043D\u044F",
-    "about.newVersions": "\u041D\u043E\u0432\u0456 \u0432\u0435\u0440\u0441\u0456\u0457 \u0442\u0430 \u0449\u043E \u0437\u043C\u0456\u043D\u0438\u043B\u043E\u0441\u044F",
+    "about.newVersions": "\u041D\u043E\u0432\u0456 \u0432\u0435\u0440\u0441\u0456\u0457",
     "about.source": "\u041A\u043E\u0434 \u043D\u0430 GitHub",
     "about.licenses": "\u041B\u0456\u0446\u0435\u043D\u0437\u0456\u0457",
-    "report.title": "\u041F\u043E\u0432\u0456\u0434\u043E\u043C\u0438\u0442\u0438 \u043F\u0440\u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0443",
+    "about.story": "\u042F\u043A \u0437\u2019\u044F\u0432\u0438\u0432\u0441\u044F \u041A\u0440\u044F\u043A\u043B",
+    "about.storyText": "\u042F \u0445\u043E\u0442\u0456\u0432 \u0437\u0440\u043E\u0431\u0438\u0442\u0438 \u0456\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 \u0434\u043B\u044F \u0441\u0435\u0431\u0435: \u043F\u0440\u0430\u0446\u044E\u0432\u0430\u0442\u0438 \u0448\u0432\u0438\u0434\u0448\u0435 \u0439 \u0432\u0447\u0438\u0442\u0438 \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0443. \u041F\u0435\u0440\u0448\u0456 \u0432\u0435\u0440\u0441\u0456\u0457 \u0431\u0443\u043B\u0438 \u043F\u0440\u043E\u0441\u0442\u0438\u043C\u0438 \u0439 \u043E\u0431\u0440\u043E\u0441\u0442\u0430\u043B\u0438 \u043C\u043E\u0457\u043C\u0438 \u0437\u0430\u0431\u0430\u0433\u0430\u043D\u043A\u0430\u043C\u0438. \u041F\u043E\u0442\u0456\u043C \u043F\u043E\u043A\u0430\u0437\u0430\u0432 \u0434\u0440\u0443\u0437\u044F\u043C \u2014 \u0456 \u043F\u043E\u043D\u0435\u0441\u043B\u043E\u0441\u044F.",
+    "about.authorGroup": "\u0410\u0432\u0442\u043E\u0440",
+    "about.role": "\u0456\u043D\u0436\u0435\u043D\u0435\u0440 \u0437 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0437\u0430\u0446\u0456\u0457 \u0434\u0438\u0437\u0430\u0439\u043D\u0443 \xB7 \u041E\u0434\u0435\u0441\u0430",
+    "about.bio": "\u041F\u0435\u0440\u0435\u0442\u0432\u043E\u0440\u044E\u044E \u0440\u043E\u0431\u043E\u0442\u0443 \u0434\u0438\u0437\u0430\u0439\u043D\u0435\u0440\u0430 \u043D\u0430 \u0456\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u0438 \u0439 AI-\u043F\u0440\u043E\u0446\u0435\u0441\u0438. \u0423 \u0434\u0438\u0437\u0430\u0439\u043D\u0456 \u0437 1997 \u0440\u043E\u043A\u0443.",
+    "about.mail": "\u041F\u043E\u0448\u0442\u0430",
+    "about.write": "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u0438",
+    "about.versionTitle": "\u0412\u0435\u0440\u0441\u0456\u044F",
+    "about.license": "\u041B\u0456\u0446\u0435\u043D\u0437\u0456\u044F",
+    "about.licenseValue": "\u0431\u0435\u0437\u043A\u043E\u0448\u0442\u043E\u0432\u043D\u043E, \u0432\u0456\u0434\u043A\u0440\u0438\u0442\u0438\u0439 \u043A\u043E\u0434 (MIT)",
+    "about.offline": "\u041F\u0440\u0430\u0446\u044E\u0454 \u043E\u0444\u043B\u0430\u0439\u043D",
+    "about.offlineNote": "\u0432\u0430\u0448 \u0442\u0435\u043A\u0441\u0442 \u043D\u0435 \u0437\u0430\u043B\u0438\u0448\u0430\u0454 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440",
+    "about.bug": "\u0417\u043D\u0430\u0439\u0448\u043B\u0438 \u043F\u043E\u043C\u0438\u043B\u043A\u0443?",
+    "about.bugNote": "\u0446\u0435 \u0431\u0435\u0442\u0430, \u0449\u043E\u0441\u044C \u043C\u043E\u0436\u0435 \u043F\u0440\u0430\u0446\u044E\u0432\u0430\u0442\u0438 \u043D\u0435 \u0442\u0430\u043A",
+    "about.report": "\u041F\u043E\u0432\u0456\u0434\u043E\u043C\u0438\u0442\u0438",
+    "about.thanks": "\u0414\u044F\u043A\u0443\u0454\u043C\u043E",
     "report.placeholder": "\u0429\u043E \u0432\u0438 \u0440\u043E\u0431\u0438\u043B\u0438, \u0449\u043E \u0441\u0442\u0430\u043B\u043E\u0441\u044F \u0456 \u0447\u043E\u0433\u043E \u0432\u0438 \u043E\u0447\u0456\u043A\u0443\u0432\u0430\u043B\u0438? \u041D\u0430\u0439\u0431\u0456\u043B\u044C\u0448\u0435 \u0434\u043E\u043F\u043E\u043C\u0430\u0433\u0430\u044E\u0442\u044C \u043A\u0440\u043E\u043A\u0438, \u044F\u043A\u0456 \u0432\u0456\u0434\u0442\u0432\u043E\u0440\u044E\u044E\u0442\u044C \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0443.",
     "report.what": "\u0429\u043E \u0441\u0442\u0430\u043B\u043E\u0441\u044F",
     "report.anyLanguage": "\u0411\u0443\u0434\u044C-\u044F\u043A\u043E\u044E \u043C\u043E\u0432\u043E\u044E; \u043D\u0430\u0434\u0441\u0438\u043B\u0430\u0454\u0442\u044C\u0441\u044F \u0442\u0430\u043A, \u044F\u043A \u0432\u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u043B\u0438.",
@@ -4404,19 +4115,50 @@
     "report.computer": "\u0426\u0435\u0439 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440 \u0456 \u041A\u0440\u044F\u043A\u043B",
     "report.computerNote": "\u041F\u0440\u043E\u0446\u0435\u0441\u043E\u0440, \u043F\u0430\u043C\u2019\u044F\u0442\u044C, \u0432\u0456\u0434\u0435\u043E\u043A\u0430\u0440\u0442\u0430, \u0432\u0435\u0440\u0441\u0456\u0457 Windows \u0456 \u041A\u0440\u044F\u043A\u043B\u0430",
     "report.settings": "\u0412\u0430\u0448\u0456 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
-    "report.settingsNote": "\u0412\u0430\u0448\u0456 \u0441\u043F\u0438\u0441\u043A\u0438 \u043B\u0438\u0448\u0435 \u043F\u043E\u0440\u0430\u0445\u043E\u0432\u0430\u043D\u043E: \u0441\u043B\u043E\u0432\u0430 \xAB\u041D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438\xBB, \u0441\u043B\u043E\u0432\u043D\u0438\u043A \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F, \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0438",
+    "report.settingsNote": "\u0412\u0430\u0448\u0456 \u0441\u043F\u0438\u0441\u043A\u0438 \u043B\u0438\u0448\u0435 \u043F\u043E\u0440\u0430\u0445\u043E\u0432\u0430\u043D\u043E: \u0441\u043B\u043E\u0432\u0430 \xAB\u041D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438\xBB, \u0456\u043C\u0435\u043D\u0430 \u0439 \u0442\u0435\u0440\u043C\u0456\u043D\u0438, \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0438",
     "report.never": "\u041D\u0456\u043A\u043E\u043B\u0438 \u043D\u0435 \u043F\u043E\u0442\u0440\u0430\u043F\u043B\u044F\u044E\u0442\u044C: \u0432\u0430\u0448\u0456 \u0442\u0435\u043A\u0441\u0442\u0438, \u0441\u043B\u043E\u0432\u0430, \u043F\u043E\u043C\u0438\u043B\u043A\u0438, \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0438, \u0444\u0440\u0430\u0437\u0438, \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0447\u0438 \u043A\u043B\u044E\u0447 Hugging Face. \u0412\u0430\u0448\u0435 \u0456\u043C\u2019\u044F \u0443 Windows \u0442\u0430 \u0456\u043C\u2019\u044F \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0430 \u0437\u0430\u043C\u0456\u043D\u0435\u043D\u043E. \u041D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u043D\u0430\u0434\u0441\u0438\u043B\u0430\u0454\u0442\u044C\u0441\u044F, \u0434\u043E\u043A\u0438 \u0432\u0438 \u0441\u0430\u043C\u0456 \u043D\u0435 \u043D\u0430\u0434\u0456\u0448\u043B\u0435\u0442\u0435.",
     "report.folder": "\u041F\u0430\u043F\u043A\u0430 \u041A\u0440\u044F\u043A\u043B\u0430",
     "report.folderNote": "\u0414\u0435 \u043B\u0435\u0436\u0430\u0442\u044C \u0436\u0443\u0440\u043D\u0430\u043B\u0438, \u0449\u043E\u0431 \u043F\u0435\u0440\u0435\u0433\u043B\u044F\u043D\u0443\u0442\u0438 \u0457\u0445 \u0441\u0430\u043C\u043E\u0441\u0442\u0456\u0439\u043D\u043E",
     "report.stopped": "\u042F\u043A\u0449\u043E \u0449\u043E\u0441\u044C \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043B\u043E \u043F\u0440\u0430\u0446\u044E\u0432\u0430\u0442\u0438",
     "report.restart": "\u041F\u0435\u0440\u0435\u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u0438 \u0440\u0443\u0448\u0456\u0439 \u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F",
-    "report.restartNote": "\u0423 \u043D\u044C\u043E\u043C\u0443 \u043F\u0440\u0430\u0446\u044E\u044E\u0442\u044C \u0434\u0438\u043A\u0442\u0443\u0432\u0430\u043D\u043D\u044F \u0456 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \xB7 {state}",
+    "report.restartNote": "\u0423 \u043D\u044C\u043E\u043C\u0443 \u043F\u0440\u0430\u0446\u044E\u044E\u0442\u044C \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u0435 \u0432\u0432\u0435\u0434\u0435\u043D\u043D\u044F \u0439 \u0437\u0430\u043F\u0438\u0441\u0438 \xB7 {state}",
     "report.stateOff": "\u0432\u0438\u043C\u043A\u043D\u0435\u043D\u0438\u0439",
     "report.stateStarting": "\u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0454\u0442\u044C\u0441\u044F\u2026",
     "report.stateRunning": "\u043F\u0440\u0430\u0446\u044E\u0454",
     "report.stateBusy": "\u043F\u0440\u0430\u0446\u044E\u0454 \xB7 \u0437\u0430\u0440\u0430\u0437 \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u0443\u0454",
     "report.stateDown": "\u0437\u0443\u043F\u0438\u043D\u0435\u043D\u0438\u0439",
-    "report.restartBtn": "\u041F\u0435\u0440\u0435\u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u0438"
+    "report.restartBtn": "\u041F\u0435\u0440\u0435\u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u0438",
+    // The action pages
+    "act.translate": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438",
+    "act.translateNote": "Enter \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u0437\u0430\u043C\u0456\u0441\u0442\u044C \u0442\u0435\u043A\u0441\u0442\u0443",
+    "act.listen": "\u041F\u0435\u0440\u0435\u043A\u043B\u0430\u0441\u0442\u0438 \u0439 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u0438 \u0432\u0433\u043E\u043B\u043E\u0441",
+    "act.listenNote": "\u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u0430 \u0437\u0432\u0443\u0447\u0438\u0442\u044C, \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434 \u043F\u0456\u0434 \u043D\u0435\u044E",
+    "act.inPlace": "\u0417\u0430\u043C\u0456\u043D\u0438\u0442\u0438 \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u043E\u043C",
+    "act.inPlaceNote": "\u0431\u0435\u0437 \u0432\u0456\u043A\u043D\u0430, \u043F\u0440\u043E\u0441\u0442\u043E \u0432 \u0442\u0435\u043A\u0441\u0442\u0456",
+    "act.selected": "\u0412\u0438\u0434\u0456\u043B\u0435\u043D\u0438\u0439 \u0442\u0435\u043A\u0441\u0442",
+    "act.screen": "\u0422\u0435\u043A\u0441\u0442 \u0437 \u0435\u043A\u0440\u0430\u043D\u0430",
+    "act.screenNote": "\u043E\u0431\u0432\u0435\u0434\u0456\u0442\u044C \u0442\u0435\u043A\u0441\u0442 \u0440\u0430\u043C\u043A\u043E\u044E",
+    "act.own": "\u0421\u0432\u0456\u0439 \u0442\u0435\u043A\u0441\u0442",
+    "act.ownKey": "\u0412\u0432\u0435\u0441\u0442\u0438 \u0442\u0435\u043A\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0443",
+    "act.quality": "\u042F\u043A\u0456\u0441\u0442\u044C \u043F\u0435\u0440\u0435\u043A\u043B\u0430\u0434\u0443",
+    "act.cardNote": "\u0447\u0438\u0442\u0430\u043D\u043D\u044F, \u0437\u043D\u0430\u0447\u0435\u043D\u043D\u044F \u0441\u043B\u0456\u0432, \u043A\u043B\u0430\u0432\u0456\u0448\u0456",
+    "act.screenHowNote": "\u0442\u0435\u043A\u0441\u0442 \u0447\u0438\u0442\u0430\u0454\u0442\u044C\u0441\u044F \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456 \u043C\u043E\u0432\u0430\u043C\u0438, \u044F\u043A\u0456 \u0454 \u0443 Windows",
+    "act.try": "\u0421\u043F\u0440\u043E\u0431\u0443\u0432\u0430\u0442\u0438",
+    "act.talkGroup": "\u0420\u043E\u0437\u043C\u043E\u0432\u0430 \u0437 \u041A\u0440\u044F\u043A\u043B\u043E\u043C",
+    "act.talk": "\u0412\u0456\u0434\u043A\u0440\u0438\u0442\u0438 \u0440\u043E\u0437\u043C\u043E\u0432\u0443",
+    "act.talkNote": "\u0433\u043E\u0432\u043E\u0440\u0456\u0442\u044C \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u044E, \u0432\u0456\u043D \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0454 \u0432\u0433\u043E\u043B\u043E\u0441",
+    "act.empty": "\u043D\u0435 \u0437\u0430\u043F\u043E\u0432\u043D\u0435\u043D\u043E",
+    "act.talkWindow": "\u0412\u0456\u043A\u043D\u043E \u0440\u043E\u0437\u043C\u043E\u0432\u0438",
+    "act.talkWindowNote": "\u0447\u0438\u0442\u0430\u043D\u043D\u044F \u0432\u0433\u043E\u043B\u043E\u0441, \u043F\u043E\u0432\u0435\u0440\u0445 \u0432\u0456\u043A\u043E\u043D, \u043A\u043B\u0430\u0432\u0456\u0448\u0456 \u0439 \u0456\u0441\u0442\u043E\u0440\u0456\u044F",
+    "act.checkNote": "\u043F\u043E\u043C\u0438\u043B\u043A\u0438 \u0437\u0430\u043A\u0440\u0435\u0441\u043B\u0435\u043D\u0456, \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u043F\u043E\u0440\u0443\u0447; Enter \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u0439\u043E\u0433\u043E",
+    "act.say": "\u0421\u043A\u0430\u0437\u0430\u0442\u0438 \u0439 \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u0438\u0442\u0438",
+    "act.sayNote": "\u0433\u043E\u0432\u043E\u0440\u0456\u0442\u044C \u0430\u043D\u0433\u043B\u0456\u0439\u0441\u044C\u043A\u043E\u044E, \u043F\u043E\u043C\u0438\u043B\u043A\u0438 \u043F\u043E\u0437\u043D\u0430\u0447\u0430\u0442\u044C\u0441\u044F",
+    "act.fixGroup": "\u0412\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F",
+    "act.switchGroup": "\u041F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F",
+    "act.general": "\u0417\u0430\u0433\u0430\u043B\u044C\u043D\u0435",
+    "act.notChosen": "\u043D\u0435 \u0432\u0438\u0431\u0440\u0430\u043D\u043E",
+    "act.newWords": "\u041D\u043E\u0432\u0456 \u0441\u043B\u043E\u0432\u0430",
+    "ui.forget": "\u0417\u0430\u0431\u0443\u0442\u0438"
   };
 
   // src/i18n/index.ts
@@ -4488,6 +4230,7 @@
   }
 
   // src/hotkey.ts
+  var COPY_TWICE = "Control+C*2";
   var DOUBLE_MS = 400;
   var MODS = ["Control", "Alt", "Shift", "Super"];
   var TAPS = [
@@ -4516,6 +4259,8 @@
     Down: 40,
     Left: 37,
     Right: 39,
+    // Esc alone cancels everywhere; with a modifier (Ctrl+Esc, which opens Start) it is a key of the keyboard thread's.
+    Escape: 27,
     "`": 192,
     "-": 189,
     "=": 187,
@@ -4538,6 +4283,7 @@
     return void 0;
   }
   function parseHotkey(hotkey) {
+    if (hotkey === COPY_TWICE) return { kind: "copyTwice" };
     const parts = hotkey.split("+").map((p) => p.trim()).filter(Boolean);
     if (parts.length === 0) return void 0;
     if (parts.length === 1) {
@@ -4561,6 +4307,7 @@
     return MODS.filter((m) => mods.includes(m));
   }
   function hotkeyLabel(hotkey) {
+    if (hotkey.endsWith("*2") && hotkey.includes("+")) return t("keys.twice", { key: hotkeyLabel(hotkey.slice(0, -2)) });
     const name = (mod) => mod === "Control" ? "Ctrl" : mod === "Super" ? "Win" : mod;
     return hotkey.split("+").map((part) => {
       const [key, times] = part.split("*");
@@ -4570,6 +4317,7 @@
         return times === "2" ? t("keys.twice", { key: label }) : label;
       }
       if (part === "CapsLock") return "Caps Lock";
+      if (part === "Escape") return "Esc";
       if (part === "ScrollLock") return "Scroll Lock";
       if (part === "MouseBack") return "Mouse Back";
       if (part === "MouseForward") return "Mouse Forward";
@@ -4585,6 +4333,15 @@
     if (code in LONE || code in NAMED || /^F([1-9]|1\d|2[0-4])$/.test(code)) return code;
     return void 0;
   }
+  var CODES = Object.fromEntries([
+    ...Object.entries(LONE).map(([code, vk]) => [vk, code]),
+    ...Object.entries(NAMED).filter(([name]) => /^[A-Z]/.test(name)).map(([name, vk]) => [vk, /^(Up|Down|Left|Right)$/.test(name) ? `Arrow${name}` : name]),
+    ...Object.entries(SIGNS).map(([code, sign]) => [NAMED[sign], code]),
+    ...TAPS.map((t2) => [t2.vk, t2.code]),
+    [16, "ShiftLeft"],
+    [17, "ControlLeft"],
+    [18, "AltLeft"]
+  ]);
   var HotkeyRecorder = class {
     held = /* @__PURE__ */ new Set();
     peak = [];
@@ -4592,6 +4349,8 @@
     /** When the modifier held alone went down, and the last tap: when it was let go. */
     downAt = 0;
     lastTap;
+    /** When Ctrl+C was pressed, waiting for a second. */
+    lastCopy;
     /** A key went down at `now` (ms); returns the hotkey a non-modifier key makes, if any. */
     keydown(code, now = 0) {
       if (TAPS.some((t2) => t2.code === code)) {
@@ -4603,7 +4362,18 @@
       this.other = true;
       this.lastTap = void 0;
       const name = nameOfCode(code);
-      return name ? this.withMods(name) : void 0;
+      const recorded = name ? this.withMods(name) : void 0;
+      if (recorded?.hotkey !== "Control+C") {
+        this.lastCopy = void 0;
+        return recorded;
+      }
+      const twice = this.lastCopy !== void 0 && now - this.lastCopy <= DOUBLE_MS;
+      this.lastCopy = twice ? void 0 : now;
+      return twice ? { hotkey: COPY_TWICE } : { hotkey: recorded.hotkey, more: true, partial: true };
+    }
+    /** Whether a modifier is held now (Esc alone gives up; with one, it is a key). */
+    holding() {
+      return this.held.size > 0;
     }
     /** A key went up at `now`; returns the tap, double or chord once the last modifier is let go. */
     keyup(code, now = 0) {
@@ -4631,6 +4401,7 @@
     /** A mouse button went down: the back or forward button (3, 4 in DOM numbering) is a hotkey. */
     mouse(button) {
       this.lastTap = void 0;
+      this.lastCopy = void 0;
       this.other = this.held.size > 0;
       const name = button === 3 ? "MouseBack" : button === 4 ? "MouseForward" : void 0;
       return name ? this.withMods(name) : void 0;
@@ -4640,6 +4411,7 @@
       this.peak = [];
       this.other = false;
       this.lastTap = void 0;
+      this.lastCopy = void 0;
     }
     withMods(name) {
       const mods = sortMods([...this.held].map((c) => TAPS.find((t2) => t2.code === c)?.mod).filter((m) => !!m));
@@ -4698,7 +4470,7 @@
     uiLanguage: "en",
     cardWidth: 440,
     cardHeight: 0,
-    doubleCopy: true,
+    menuKey: "",
     selectKey: "",
     snipKey: "Control+Alt+S",
     translateKey: "",
@@ -4753,10 +4525,13 @@
     speechTestDeclinedAt: 0,
     startWithWindows: true,
     naturalDismissed: false,
+    shareOfferSeen: [],
     introSeen: false,
     paused: false,
+    keysVersion: 2,
     setupDone: true
   };
+  var COPY_TWICE_KEYS = ["selectKey", "translateKey", "inPlaceKey", "checkKey"];
   var keptForm = (text) => text.trim().toLowerCase();
   function myLanguages(s) {
     return [...new Set([findLanguage(s.native)?.code ?? "", "en", ...s.languages].filter(Boolean))];
@@ -4953,7 +4728,7 @@
   }
 
   // src/webview/keycaps.ts
-  var COPY_TWICE = "Control+C*2";
+  var COPY_TWICE2 = "Control+C*2";
   function caps(hotkey, chain) {
     const attrs = chain ? { class: "kg", "data-chain": chain } : { class: "kg" };
     if (!hotkey) return el("span", attrs, el("span", { class: "key none" }, t("keys.notSet")));
@@ -5027,6 +4802,10 @@
     "loader": '<path d="M12 2v4" /> <path d="m16.2 7.8 2.9-2.9" /> <path d="M18 12h4" /> <path d="m16.2 16.2 2.9 2.9" /> <path d="M12 18v4" /> <path d="m4.9 19.1 2.9-2.9" /> <path d="M2 12h4" /> <path d="m4.9 4.9 2.9 2.9" />',
     "mail": '<path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /> <rect x="2" y="4" width="20" height="16" rx="2" />',
     "shield-check": '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /> <path d="m9 12 2 2 4-4" />',
+    "whole-word": '<circle cx="7" cy="12" r="3" /> <path d="M10 9v6" /> <circle cx="17" cy="12" r="3" /> <path d="M14 7v8" /> <path d="M22 17v1c0 .5-.5 1-1 1H3c-.5 0-1-.5-1-1v-1" />',
+    "brain": '<path d="M12 18V5" /> <path d="M15 13a4.17 4.17 0 01-3-4 4.17 4.17 0 01-3 4" /> <path d="M17.707 6.294A3 3 0 1012 5a3 3 0 10-5.707 1.294" /> <path d="M17.996 5.125a4 4 0 012.526 5.77" /> <path d="M18 18a4 4 0 002-7.465" /> <path d="M19.967 17.482a4 4 0 11-7.967.517 4 4 0 11-7.967-.517" /> <path d="M6 18a4 4 0 01-2-7.465" /> <path d="M6.004 5.125a4 4 0 00-2.526 5.77" />',
+    "app-window": '<rect x="2" y="4" width="20" height="16" rx="2" /> <path d="M10 4v4" /> <path d="M2 8h20" /> <path d="M6 4v4" />',
+    "arrow-up-right": '<path d="M7 7h10v10" /> <path d="M7 17 17 7" />',
     "pencil-line": '<path d="M13 21h8" /> <path d="m15 5 4 4" /> <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />',
     "monitor-speaker": '<path d="M5.5 20H8" /> <path d="M17 9h.01" /> <rect width="10" height="16" x="12" y="4" rx="2" /> <path d="M8 6H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h4" /> <circle cx="17" cy="15" r="1" />',
     "scan-text": '<path d="M3 7V5a2 2 0 0 1 2-2h2" /> <path d="M17 3h2a2 2 0 0 1 2 2v2" /> <path d="M21 17v2a2 2 0 0 1-2 2h-2" /> <path d="M7 21H5a2 2 0 0 1-2-2v-2" /> <path d="M7 8h8" /> <path d="M7 12h10" /> <path d="M7 16h6" />',
@@ -5168,16 +4947,220 @@
     }
     return node;
   }
+  var sels = /* @__PURE__ */ new WeakMap();
   function select(value, options, onchange) {
-    const node = el("select", {
-      onchange: (event) => {
-        const raw = event.target.value;
-        const picked = options.find(([v]) => String(v) === raw)?.[0];
-        if (picked !== void 0) onchange(picked);
-      }
+    const shown2 = options.find(([v]) => v === value) ?? options[0];
+    const node = el(
+      "button",
+      { type: "button", class: "sel", "aria-haspopup": "listbox", "aria-expanded": "false" },
+      el("span", { class: "sv" }, shown2?.[1] ?? ""),
+      lucide("chevron-down", "s")
+    );
+    sels.set(node, {
+      options,
+      value: shown2?.[0] ?? value,
+      pick: (v) => onchange(v),
+      key: options.map(([v]) => String(v)).join("")
     });
-    for (const [v, label] of options) node.append(el("option", v === value ? { value: String(v), selected: true } : { value: String(v) }, label));
-    return el("span", { class: "sel" }, node, lucide("chevron-down", "s"));
+    node.addEventListener("click", () => dropdown?.anchor === node ? closeSel(true) : openSel(node));
+    node.addEventListener("keydown", (event) => {
+      if (dropdown || !["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key) || event.altKey || event.ctrlKey) return;
+      event.preventDefault();
+      openSel(node);
+    });
+    return node;
+  }
+  var SEL_ROW = 32;
+  var SEL_ROWS = 10;
+  var SEL_FILTER_FROM = 13;
+  var SEL_GAP = 4;
+  var SEL_EDGE = 8;
+  var dropdown;
+  var selIds = 0;
+  function openSel(anchor) {
+    closeSel(false);
+    const state = sels.get(anchor);
+    if (!state) return;
+    const id = `sel-${++selIds}`;
+    const list2 = el("div", { class: "sel-list", role: "listbox", id, tabindex: "-1" });
+    const items = state.options.map(([v, label], i) => {
+      const on = v === state.value;
+      return el("div", { class: on ? "sel-opt on" : "sel-opt", role: "option", id: `${id}-${i}`, "aria-selected": String(on) }, lucide("check", "s"), el("span", {}, label));
+    });
+    list2.append(...items);
+    const empty = el("div", { class: "sel-empty", hidden: true }, t("tr.nothing"));
+    let filter;
+    const pop2 = el("div", { class: "sel-pop" });
+    if (state.options.length >= SEL_FILTER_FROM) {
+      filter = el("input", {
+        type: "search",
+        role: "combobox",
+        "aria-controls": id,
+        "aria-expanded": "true",
+        "aria-autocomplete": "list",
+        placeholder: t("nav.search"),
+        "aria-label": t("nav.search"),
+        spellcheck: "false"
+      });
+      pop2.append(el("label", { class: "sel-filter" }, lucide("search", "s"), filter));
+    }
+    pop2.append(list2, empty);
+    document.body.append(pop2);
+    const d = { anchor, pop: pop2, list: list2, filter, items, active: -1, typed: "", typedAt: 0, done: () => {
+    } };
+    dropdown = d;
+    anchor.setAttribute("aria-expanded", "true");
+    const visible = () => items.filter((item) => !item.hidden);
+    const setActive = (index, scroll = true) => {
+      items[d.active]?.classList.remove("active");
+      d.active = index;
+      const item = items[index];
+      const owner = filter ?? list2;
+      if (!item) return owner.removeAttribute("aria-activedescendant");
+      item.classList.add("active");
+      owner.setAttribute("aria-activedescendant", item.id);
+      if (!scroll) return;
+      if (item.offsetTop < list2.scrollTop) list2.scrollTop = item.offsetTop;
+      else if (item.offsetTop + item.offsetHeight > list2.scrollTop + list2.clientHeight) list2.scrollTop = item.offsetTop + item.offsetHeight - list2.clientHeight;
+    };
+    const move2 = (step2, to) => {
+      const shown2 = visible();
+      if (!shown2.length) return;
+      const at = d.active >= 0 ? shown2.indexOf(items[d.active]) : -1;
+      const next = to === "first" ? 0 : to === "last" ? shown2.length - 1 : at < 0 ? 0 : Math.max(0, Math.min(shown2.length - 1, at + step2));
+      setActive(items.indexOf(shown2[next]));
+    };
+    const pick = (index) => {
+      const s = sels.get(d.anchor);
+      const choice2 = s?.options[index];
+      closeSel(true);
+      if (!s || !choice2 || choice2[0] === s.value) return;
+      s.value = choice2[0];
+      const v = d.anchor.querySelector(".sv");
+      if (v) v.textContent = choice2[1];
+      s.pick(choice2[0]);
+    };
+    const place = () => {
+      const r = d.anchor.getBoundingClientRect();
+      const natural = Math.min(pop2.offsetWidth, 340);
+      const width = Math.min(Math.max(r.width, 220, natural), window.innerWidth - 2 * SEL_EDGE);
+      pop2.style.width = `${width}px`;
+      pop2.style.left = `${Math.max(SEL_EDGE, Math.min(r.right - width, window.innerWidth - SEL_EDGE - width))}px`;
+      const chrome = pop2.offsetHeight - list2.offsetHeight;
+      const want = chrome + Math.min(SEL_ROWS, Math.max(1, items.length)) * SEL_ROW;
+      const below = window.innerHeight - r.bottom - SEL_GAP - SEL_EDGE;
+      const above = r.top - SEL_GAP - SEL_EDGE;
+      const down = below >= Math.min(want, chrome + 3 * SEL_ROW) || below >= above;
+      pop2.style.maxHeight = `${Math.max(chrome + SEL_ROW, Math.min(want, down ? below : above))}px`;
+      pop2.style.top = down ? `${r.bottom + SEL_GAP}px` : `${r.top - SEL_GAP - pop2.offsetHeight}px`;
+      pop2.classList.toggle("up", !down);
+    };
+    pop2.style.visibility = "hidden";
+    pop2.style.top = "0px";
+    pop2.style.left = "0px";
+    place();
+    pop2.style.visibility = "";
+    const current2 = items.findIndex((item) => item.classList.contains("on"));
+    if (current2 >= 0) {
+      setActive(current2, false);
+      list2.scrollTop = Math.max(0, items[current2].offsetTop - (list2.clientHeight - SEL_ROW) / 2);
+    } else move2(0, "first");
+    (filter ?? list2).focus({ preventScroll: true });
+    filter?.addEventListener("input", () => {
+      const q = filter.value.trim().toLowerCase();
+      for (const item of items) item.hidden = !!q && !(item.textContent ?? "").toLowerCase().includes(q);
+      empty.hidden = visible().length > 0;
+      const keep = items[d.active];
+      if (keep && !keep.hidden) setActive(d.active);
+      else move2(0, "first");
+    });
+    pop2.addEventListener("mousedown", (event) => event.target !== filter && event.preventDefault());
+    list2.addEventListener("pointermove", (event) => {
+      const item = event.target.closest(".sel-opt");
+      if (item && items.indexOf(item) !== d.active) setActive(items.indexOf(item), false);
+    });
+    list2.addEventListener("click", (event) => {
+      const item = event.target.closest(".sel-opt");
+      if (item) pick(items.indexOf(item));
+    });
+    const onKey = (event) => {
+      if (event.isComposing) return;
+      const handled = () => (event.preventDefault(), event.stopPropagation());
+      switch (event.key) {
+        case "Escape":
+          handled();
+          return closeSel(true);
+        case "Tab":
+          return closeSel(true);
+        case "ArrowDown":
+          return handled(), move2(1);
+        case "ArrowUp":
+          return handled(), move2(-1);
+        case "PageDown":
+          return handled(), move2(SEL_ROWS - 1);
+        case "PageUp":
+          return handled(), move2(1 - SEL_ROWS);
+        case "Home":
+        case "End":
+          if (filter) return;
+          return handled(), move2(0, event.key === "Home" ? "first" : "last");
+        case "Enter":
+          handled();
+          return items[d.active] && !items[d.active].hidden ? pick(d.active) : void 0;
+      }
+      if (filter || event.key.length !== 1 || event.ctrlKey || event.altKey || event.metaKey) return;
+      if (event.key === " " && !d.typed) return handled(), d.active >= 0 ? pick(d.active) : void 0;
+      handled();
+      const now = event.timeStamp;
+      d.typed = now - d.typedAt < 700 ? d.typed + event.key.toLowerCase() : event.key.toLowerCase();
+      d.typedAt = now;
+      const same = [...d.typed].every((c) => c === d.typed[0]);
+      const probe = same ? d.typed.charAt(0) : d.typed;
+      const from = same ? d.active + 1 : Math.max(0, d.active);
+      for (let k = 0; k < items.length; k++) {
+        const i = (from + k) % items.length;
+        if ((items[i].textContent ?? "").trim().toLowerCase().startsWith(probe)) return setActive(i);
+      }
+    };
+    const onDown = (event) => {
+      const target = event.target;
+      if (!pop2.contains(target) && !d.anchor.contains(target)) closeSel(false);
+    };
+    const onScroll = (event) => {
+      if (!(event.target instanceof Node) || !pop2.contains(event.target)) closeSel(false);
+    };
+    const onBlur = () => closeSel(false);
+    const watch = new MutationObserver(() => {
+      if (d.anchor.isConnected) return;
+      const key = sels.get(d.anchor)?.key;
+      const twin = [...document.querySelectorAll("button.sel")].find((b) => sels.get(b)?.key === key);
+      if (!twin) return closeSel(false);
+      d.anchor = twin;
+      twin.setAttribute("aria-expanded", "true");
+    });
+    window.addEventListener("keydown", onKey, true);
+    window.addEventListener("pointerdown", onDown, true);
+    window.addEventListener("scroll", onScroll, true);
+    window.addEventListener("blur", onBlur);
+    window.addEventListener("resize", onBlur);
+    watch.observe(document.body, { childList: true, subtree: true });
+    d.done = () => {
+      window.removeEventListener("keydown", onKey, true);
+      window.removeEventListener("pointerdown", onDown, true);
+      window.removeEventListener("scroll", onScroll, true);
+      window.removeEventListener("blur", onBlur);
+      window.removeEventListener("resize", onBlur);
+      watch.disconnect();
+    };
+  }
+  function closeSel(focus) {
+    const d = dropdown;
+    if (!d) return;
+    dropdown = void 0;
+    d.done();
+    d.pop.remove();
+    d.anchor.setAttribute("aria-expanded", "false");
+    if (focus && d.anchor.isConnected) d.anchor.focus({ preventScroll: true });
   }
   function uiLanguageCard(current2, save2) {
     return card(
@@ -5192,6 +5175,7 @@
     );
   }
   var linkBtn = (text, onclick, disabled = false) => el("button", { class: "link", disabled, onclick }, text);
+  var twoNames = (first, second) => first.toLowerCase() === second.toLowerCase() ? first : `${first} \xB7 ${second}`;
   var chip = (text, cls = "") => el("span", { class: `chip${cls ? " " + cls : ""}` }, text);
   function btn(label, onclick, cls = "", title) {
     return el("button", { class: `btn${cls ? " " + cls : ""}`, onclick, title, "aria-label": title }, ...typeof label === "string" ? [label] : label);
@@ -5224,6 +5208,59 @@
     });
     return field;
   }
+  function tiles(list2) {
+    return el(
+      "div",
+      { class: "tiles" },
+      ...list2.map(
+        (x) => el(
+          "button",
+          { class: "tcell", "data-sub": x.id || void 0, onclick: x.open },
+          el("span", { class: "tt" }, lucide(x.icon), x.count !== void 0 && x.count !== "" ? el("span", { class: "tc" }, String(x.count)) : null),
+          el("span", { class: "tn" }, x.title),
+          x.sub ? el("span", { class: "ts", title: x.sub }, x.sub) : null
+        )
+      )
+    );
+  }
+  function enginePlate(lines) {
+    return el(
+      "div",
+      { class: "engine" },
+      el("div", { class: "eh" }, lucide("cpu", "s"), t("nav.models")),
+      ...lines.map((l) => el("button", { class: "eline", "data-sub": l.id || void 0, onclick: l.open }, el("span", { class: "el" }, l.title), el("span", { class: "ev" }, l.value), lucide("chevron-right", "chev")))
+    );
+  }
+  function wordChips(items, sep = "") {
+    return el(
+      "div",
+      { class: "wchips" },
+      ...items.map(
+        (c) => el(
+          "span",
+          { class: "wchip", title: c.title },
+          c.open ? el("button", { class: "ww", onclick: c.open }, c.text) : el("span", { class: "ww" }, c.text),
+          c.more ? el("span", { class: "wx" }, sep ? `${sep} ${c.more}` : c.more) : null,
+          el("button", { class: "wdel", title: t("ui.remove", { item: c.text }), "aria-label": t("ui.remove", { item: c.text }), onclick: c.remove }, lucide("x"))
+        )
+      )
+    );
+  }
+  function lineList(items, cls = "") {
+    return el(
+      "div",
+      { class: cls ? `lines ${cls}` : "lines" },
+      ...items.map(
+        (x) => el(
+          "div",
+          { class: "ln", title: x.title },
+          x.open ? el("button", { class: "la", onclick: x.open }, x.text) : el("span", { class: "la" }, x.text),
+          x.more ? el("span", { class: "lb" }, x.more) : null,
+          x.remove ? el("button", { class: "wdel", title: x.removeLabel ?? t("ui.forget"), "aria-label": x.removeLabel ?? t("ui.forget"), onclick: x.remove }, lucide("x")) : null
+        )
+      )
+    );
+  }
   function listPage(o) {
     const norm = o.normalize ?? ((text) => text.trim());
     const add = (field2) => {
@@ -5241,16 +5278,13 @@
       el("div", { class: "fields" }, field, btn([lucide("plus", "s"), t("ui.add")], () => add(field), "primary")),
       o.note ? el("small", {}, o.note) : null
     );
-    const items = o.items.map((item) => {
-      const note = o.itemNote?.(item);
-      return el("div", { class: "row" }, el("div", { class: "l" }, item, note ? el("small", {}, note) : null), ib("x", t("ui.remove", { item }), () => o.remove(item)));
-    });
+    const items = o.items.map((item) => ({ text: item, title: o.itemNote?.(item) ?? void 0, remove: () => o.remove(item) }));
     return [
       grp(o.label),
       addCard,
       o.extra ?? null,
       grp(o.count, o.items.length || void 0),
-      ...items.length ? items : [aside("info", o.empty)]
+      items.length ? wordChips(items) : aside("info", o.empty)
     ].filter((n) => n !== null);
   }
 
@@ -5625,7 +5659,7 @@
     }
     if (sp.pack.parts.includes("core")) {
       const features = [
-        ["dictationModel", t("dict.type"), sp.plan.dictation],
+        ["dictationModel", t("rec.dictate"), sp.plan.dictation],
         ["transcriptsModel", t("rec.transcribe"), sp.plan.transcripts]
       ];
       for (const [key, what, plan] of features) if (s[key]) patch2[key] = "", change(what, plan.chosen.label, t("rec.automatic"));
@@ -6183,7 +6217,6 @@
   function languageStep(v, h) {
     const s = v.settings;
     const nameOf = (code) => LANGUAGES.find((l) => l.code === code)?.name ?? code;
-    const both = (first, second) => first.toLowerCase() === second.toLowerCase() ? first : `${first} \xB7 ${second}`;
     const used = [s.native, "English", ...s.languages.map(nameOf)];
     const rest = LANGUAGES.filter((l) => !used.includes(l.name));
     const own = card(
@@ -6192,7 +6225,7 @@
       [t("setup.languageNote")],
       select(
         s.native,
-        v.languages.map((l) => [l.name, both(l.native, languageName(l.name))]),
+        v.languages.map((l) => [l.name, twoNames(l.native, languageName(l.name))]),
         (native) => {
           choice = void 0;
           h.save({ native });
@@ -6210,7 +6243,7 @@
         "plus",
         t("setup.addLanguage"),
         [t("setup.addLanguageNote")],
-        select("", [["", t("setup.pickLanguage")], ...rest.map((l) => [l.code, both(languageName(l.name), l.native)])], (code) => code && h.save({ languages: [...s.languages, code] }))
+        select("", [["", t("setup.pickLanguage")], ...rest.map((l) => [l.code, twoNames(languageName(l.name), l.native)])], (code) => code && h.save({ languages: [...s.languages, code] }))
       ),
       card("globe", languageName("English"), [t("setup.always")], null),
       ...s.languages.map((code) => card("globe", languageName(nameOf(code)), [], ib("x", t("ui.remove", { item: languageName(nameOf(code)) }), () => h.save({ languages: s.languages.filter((x) => x !== code) }))))
@@ -6506,6 +6539,14 @@
     }
   ];
 
+  // src/version.ts
+  function isBeta(version) {
+    return version.startsWith("0.");
+  }
+  function versionText(version) {
+    return isBeta(version) ? `${version} ${t("common.beta")}` : version;
+  }
+
   // src/webview/marks.ts
   function withMarks(parts) {
     return parts.flatMap(
@@ -6659,7 +6700,7 @@
     ["vtt", `${t("tr.fmtSubs")} \xB7 .vtt`],
     ["json", `${t("tr.fmtData")} \xB7 .json`]
   ];
-  var CODES = {
+  var CODES2 = {
     Russian: "ru",
     Ukrainian: "uk",
     German: "de",
@@ -6719,7 +6760,7 @@
     return parts.join(" \xB7 ");
   }
   var languages = (v) => {
-    const own = CODES[v.settings.native];
+    const own = CODES2[v.settings.native];
     return [["auto", t("tr.auto")], ["en", languageName("English")], ...own ? [[own, languageName(v.settings.native)]] : []];
   };
   async function transcribeFiles(files) {
@@ -6852,11 +6893,7 @@
     } catch {
     }
   }
-  function transcriptsCap() {
-    const n = tx.rows?.length;
-    if (n === void 0 || tx.query) return t("tr.searched");
-    return n ? t("tr.countSearched", { n }) : t("tr.noneYet");
-  }
+  var transcriptOpen = () => !!tx.openId;
   function transcriptsBody(v) {
     if (!installed(v)) return [row(t("tr.needEngine"), [t("tr.needEngineNote")], linkBtn(t("tr.transcribeLink"), () => hooks.setup()))];
     if (!running(v)) return [row(t("speech.starting"), [t("tr.startingNote")], null)];
@@ -7299,7 +7336,7 @@
     window.setTimeout(() => document.addEventListener("click", () => menu.remove(), { once: true }));
   }
   function utterances(tr) {
-    const many2 = Object.keys(tr.speakers).length > 1;
+    const many = Object.keys(tr.speakers).length > 1;
     const list2 = el("div", { class: "utts" });
     tr.utterances.forEach((u, i) => {
       const first = i === 0 || tr.utterances[i - 1]?.speaker !== u.speaker;
@@ -7323,7 +7360,7 @@
         }
       });
       text.textContent = u.text;
-      const who = many2 && first ? el("button", { class: "who", "data-speaker": u.speaker, title: t("tr.anotherSpeaker") }, tr.speakers[u.speaker]?.name ?? u.speaker) : null;
+      const who = many && first ? el("button", { class: "who", "data-speaker": u.speaker, title: t("tr.anotherSpeaker") }, tr.speakers[u.speaker]?.name ?? u.speaker) : null;
       who?.addEventListener("click", (event) => (event.stopPropagation(), speakerMenu(tr, i, who)));
       list2.append(
         el(
@@ -7440,18 +7477,26 @@
     for (const k of Object.keys(keys)) Object.defineProperty(out, k, { get: () => t(keys[k]), enumerable: true });
     return out;
   }
-  var ACTIONS = ["talk", "listen", "translate", "check", "screen", "dictate", "transcribe", "keyboard"];
-  var isAction = (name) => ACTIONS.includes(name);
-  var ICONS = { talk: "bird", listen: "volume-2", translate: "languages", check: "graduation-cap", screen: "scan", dictate: "mic", transcribe: "audio-lines", keyboard: "keyboard" };
+  var ACTIONS = ["translate", "english", "voice", "recordings", "layout"];
+  var ICONS = { translate: "languages", english: "graduation-cap", voice: "mic", recordings: "audio-lines", layout: "keyboard" };
+  var PARENT = {
+    translations: "translate",
+    words: "english",
+    mistakes: "english",
+    phrases: "voice",
+    vocabulary: "voice",
+    transcripts: "recordings",
+    kept: "layout",
+    learned: "layout",
+    programs: "layout",
+    layouts: "layout"
+  };
   var TITLES = phrases({
-    talk: "nav.talk",
-    listen: "nav.listen",
     translate: "nav.translate",
-    check: "nav.check",
-    screen: "nav.screen",
-    dictate: "nav.dictate",
-    transcribe: "nav.transcribe",
-    keyboard: "nav.keyboard",
+    english: "nav.english",
+    voice: "nav.voice",
+    recordings: "nav.recordings",
+    layout: "nav.layout",
     words: "nav.words",
     mistakes: "nav.mistakes",
     transcripts: "nav.transcripts",
@@ -7475,6 +7520,7 @@
   var search = "";
   var finding = "";
   var keyTrouble;
+  var keyTarget;
   var programOpen = "";
   var runningApps = [];
   var reduced = matchMedia("(prefers-reduced-motion: reduce)");
@@ -7501,50 +7547,10 @@
     Ukrainian: { typed: "ghbdsn cdsn", fixed: "\u043F\u0440\u0438\u0432\u0456\u0442 \u0441\u0432\u0456\u0442", from: "EN", to: "UK" }
   };
   var sampleOf = (native) => SAMPLES[native] ?? SAMPLES.Russian;
-  var said = (hotkey) => hotkey === COPY_TWICE ? t("keys.copyTwice") : hotkey.endsWith("*2") ? t("keys.twice", { key: hotkeyLabel(hotkey.slice(0, -2)) }) : hotkeyLabel(hotkey);
+  var said = (hotkey) => hotkey === COPY_TWICE2 ? t("keys.copyTwice") : hotkey.endsWith("*2") ? t("keys.twice", { key: hotkeyLabel(hotkey.slice(0, -2)) }) : hotkeyLabel(hotkey);
   var isTap = (hotkey) => /^(Left|Right)(Control|Shift|Alt|Super)(\*2)?$/.test(hotkey);
   var usage = (hotkey) => t(isTap(hotkey) ? "keys.tap" : "keys.press", { key: said(hotkey) });
   var MEET_KEY = "Alt+Shift+M";
-  function keyLines(action, s) {
-    switch (action) {
-      case "talk":
-        return [{ label: t("keys.talk"), hotkey: s.talkKey }];
-      case "listen":
-        return [{ label: t("keys.selection"), hotkey: s.selectKey || (s.doubleCopy ? COPY_TWICE : ""), chain: "listen" }];
-      case "translate":
-        return [
-          { label: t("keys.selection"), hotkey: s.translateKey, chain: "translate" },
-          ...s.typeKey ? [{ label: t("keys.type"), hotkey: s.typeKey }] : [],
-          { label: t("keys.pasteBack"), hotkey: "Enter" }
-        ];
-      case "check":
-        return [
-          { label: t("keys.selection"), hotkey: s.checkKey },
-          ...s.typeCheckKey ? [{ label: t("keys.type"), hotkey: s.typeCheckKey }] : [],
-          { label: t("keys.byVoice"), hotkey: s.practiceKey }
-        ];
-      case "screen":
-        return [
-          { label: t("keys.listen"), hotkey: s.snipKey },
-          { label: t("keys.translate"), hotkey: s.textKey }
-        ];
-      case "dictate":
-        return [
-          { label: t("keys.dictate"), hotkey: s.dictateKey },
-          { label: t("keys.note"), hotkey: s.noteKey }
-        ];
-      case "transcribe":
-        return [{ label: t("keys.inMeet"), hotkey: MEET_KEY }];
-      case "keyboard":
-        return [
-          { label: t("keys.switch"), hotkey: s.switchKey },
-          { label: t("keys.fix"), hotkey: s.fixKey, chain: "fix" }
-        ];
-    }
-  }
-  function keysOf(action, s, chained = false, setOnly = false) {
-    return keyLines(action, s).filter((k) => !setOnly || k.hotkey).flatMap((k) => [el("span", { class: "kl" }, k.label), caps(k.hotkey, chained ? k.chain : void 0)]);
-  }
   function cycleOf(v) {
     const chosen = v.settings.layouts.map((id) => v.layouts.find((l) => l.id === id)).filter((l) => !!l);
     if (chosen.length > 0) return chosen;
@@ -7554,73 +7560,18 @@
   }
   var naturalOn = (v) => v.natural.status === "ready" && (v.settings.voice === "" || v.settings.voice.startsWith(NATURAL_PREFIX));
   var pairOf = (v) => t("lang.pairEnglish", { lang: languageName(v.settings.native) });
-  function engineCap(v) {
-    const p = v.speech.pack;
-    if (p.status === "installing" && !installed(v)) return t("home.downloadingPct", { pct: Math.round((p.progress ?? 0) * 100) });
-    if (!installed(v)) return t("home.downloadsOnce");
-    if (!running(v)) return t("home.speechToText");
-    const c = v.speech.plan.dictation.chosen;
-    return t(c.device === "cuda" ? "home.speechOnCard" : "home.speechOnProcessor");
-  }
-  function actionText(action, v) {
-    const title = TITLES[action];
-    switch (action) {
-      case "talk":
-        return { title, cap: talkCap(v), desc: t("home.talkDesc") };
-      case "listen":
-        return { title, cap: t(naturalOn(v) ? "home.natural" : "home.windowsVoice"), desc: t("home.listenDesc") };
-      case "translate":
-        return { title, cap: pairOf(v), desc: t("home.translateDesc") };
-      case "check":
-        return { title, cap: checkCap(v), desc: t("home.checkDesc") };
-      case "screen":
-        return { title, cap: t("home.screenCap"), desc: t("home.screenDesc") };
-      case "dictate":
-        return { title, cap: engineCap(v), desc: t("home.dictateDesc", { lang: languageName(v.settings.native) }) };
-      case "transcribe":
-        return { title, cap: t("home.transcribeCap"), desc: t("home.transcribeDesc") };
-      case "keyboard":
-        return {
-          title,
-          cap: cycleOf(v).map((l) => l.short).join(" \xB7 "),
-          desc: t(v.settings.autoFix ? "home.keyboardAuto" : "home.keyboardDesc")
-        };
-    }
-  }
-  var many = (n) => n ? String(n) : "";
   var NAV = [
-    { label: "", items: [{ page: "home", icon: "house", title: t("nav.home") }] },
-    { label: t("nav.actions"), items: ACTIONS.map((a) => ({ page: a, icon: ICONS[a], title: TITLES[a] })) },
-    {
-      label: t("nav.library"),
-      items: [
-        { page: "words", icon: "book-open", title: TITLES.words, value: (v) => many(v.words.length) },
-        { page: "mistakes", icon: "list-checks", title: TITLES.mistakes, value: (v) => many(v.mistakes.length) },
-        { page: "transcripts", icon: "file-text", title: TITLES.transcripts },
-        { page: "translations", icon: "clock", title: TITLES.translations, value: (v) => many(v.translations.length) },
-        { page: "phrases", icon: "message-square-text", title: TITLES.phrases, value: (v) => many(v.dictation.recent.length) }
-      ]
-    },
-    {
-      label: t("nav.lists"),
-      items: [
-        { page: "vocabulary", icon: "spell-check", title: TITLES.vocabulary, value: (v) => many(v.settings.vocabulary.length) },
-        { page: "kept", icon: "lock", title: TITLES.kept, value: (v) => many(v.settings.keepWords.length) },
-        { page: "learned", icon: "sparkles", title: TITLES.learned, value: (v) => many(v.learned.alwaysFix.length + v.learned.myWords.length) },
-        { page: "programs", icon: "monitor", title: TITLES.programs, value: (v) => many(v.settings.apps.length) },
-        { page: "layouts", icon: "list-ordered", title: TITLES.layouts, value: (v) => cycleOf(v).map((l) => l.short).join("\xB7") }
-      ]
-    },
-    {
-      label: t("app.name"),
-      items: [
-        { page: "settings", icon: "settings", title: TITLES.settings },
-        { page: "models", icon: "boxes", title: TITLES.models },
-        { page: "storage", icon: "database", title: TITLES.storage, value: (v) => v.storage?.parts.length ? size(downloadsMb(v.storage)) : "" },
-        { page: "about", icon: "info", title: TITLES.about },
-        { page: "report", icon: "bug", title: TITLES.report }
-      ]
-    }
+    [{ page: "home", icon: "house", title: t("nav.home") }],
+    ACTIONS.map((a) => ({ page: a, icon: ICONS[a], title: TITLES[a] })),
+    [
+      { page: "settings", icon: "settings", title: TITLES.settings },
+      { page: "models", icon: "boxes", title: TITLES.models },
+      { page: "storage", icon: "hard-drive", title: TITLES.storage, value: (v) => v.storage?.parts.length ? size(downloadsMb(v.storage)) : "" }
+    ],
+    [
+      { page: "about", icon: "info", title: TITLES.about },
+      { page: "report", icon: "bug", title: TITLES.report }
+    ]
   ];
   var findField = el("input", {
     type: "text",
@@ -7644,15 +7595,15 @@
   });
   var tree = el("nav", { class: "tree" });
   var navValues = /* @__PURE__ */ new Map();
-  for (const g of NAV) {
-    if (g.label) tree.append(el("div", { class: "gl" }, g.label));
-    for (const i of g.items) {
+  NAV.forEach((items, at) => {
+    if (at) tree.append(el("div", { class: "dv" }));
+    for (const i of items) {
       const value = el("span", { class: "v" });
       navValues.set(i.page, value);
       const page = i.page;
       tree.append(el("button", { class: "it", "data-nav": page, title: i.title, onclick: () => page === "home" ? goHome() : go(page) }, lucide(i.icon), el("span", { class: "lb" }, i.title), value));
     }
-  }
+  });
   var side = el(
     "aside",
     { class: "side" },
@@ -7676,25 +7627,22 @@
     maxButton.setAttribute("aria-label", label);
     root.classList.toggle("maxed", maximized);
   }
-  var pBack = el("button", { class: "icon-btn back", title: t("nav.backEsc"), "aria-label": t("nav.back"), onclick: () => back() }, lucide("arrow-left", "s"));
   var pTitle = el("div", { class: "ptitle" });
-  var pCap = el("span", { class: "pcap" });
-  var pKeys = el("div", { class: "pkeys" });
   var barMark = el("div", { class: "brand bb" }, logo());
-  var top = el("header", { class: "top" }, barMark, pBack, pTitle, pCap, el("span", { class: "gap" }), pKeys, winButtons);
+  var top = el("header", { class: "top" }, barMark, pTitle, el("span", { class: "gap" }), winButtons);
   var home = el("main", { class: "home" });
   var pBody = el("div", { class: "pbody" });
   mainCol.append(top, home, pBody);
   root.append(side, mainCol);
   var making;
   function updateNav() {
-    const lit = open?.name ?? "home";
+    const lit = open ? PARENT[open.name] ?? open.name : "home";
     for (const b of tree.querySelectorAll(".it")) b.classList.toggle("on", b.dataset.nav === lit);
     const v = view;
     if (!v) return;
-    for (const g of NAV) for (const i of g.items) if (i.value) navValues.get(i.page)?.replaceChildren(i.value(v));
+    for (const g of NAV) for (const i of g) if (i.value) navValues.get(i.page)?.replaceChildren(i.value(v));
     const busy3 = running(v) ? v.speech.health?.busy : null;
-    const live = navValues.get("transcripts");
+    const live = navValues.get("recordings");
     if (!live) return;
     live.classList.toggle("live", !!busy3);
     live.title = busy3 ? t("nav.making") : "";
@@ -7715,30 +7663,67 @@
     updateNav();
   }
   window.setInterval(() => void followMaking(), 3e3);
-  function readiness(v) {
-    const translator = t(
-      {
-        ready: "home.translatorReady",
-        absent: "home.translatorAbsent",
-        downloading: "home.translatorDownloading",
-        failed: "home.translatorFailed",
-        unsupported: "home.translatorUnsupported"
-      }[v.translator]
-    );
-    const n = v.natural;
-    const voice = n.status === "downloading" ? [el("b", {}, t("home.natural")), ` ${Math.round(n.progress * 100)}%`] : n.status === "failed" ? [el("b", {}, t("home.windowsVoice")), ` ${t("home.voiceFailed")}`] : [el("b", {}, t(naturalOn(v) ? "home.natural" : "home.windowsVoice")), ` ${t("home.voiceReady")}`];
-    const sp = v.speech;
-    const speech = !installed(v) ? sp.pack.status === "installing" ? [", ", el("b", {}, t("home.speech")), ` ${Math.round((sp.pack.progress ?? 0) * 100)}%`] : [] : [", ", el("b", {}, t("home.speech")), ` ${t(running(v) ? "home.speechReady" : sp.service === "down" ? "home.speechStopped" : "home.speechStarting")}`];
-    return [el("b", {}, pairOf(v)), ` ${translator}, `, ...voice, ...speech, `. ${t("home.everything")}`];
-  }
-  function homeRow(action, v) {
-    const a = actionText(action, v);
-    const open2 = () => go(action);
+  var HOME_KEYS = [
+    { key: "menuKey", title: "menu.keyTitle", page: "settings", section: "keys.group" },
+    { key: "translateKey", title: "act.translate", page: "translate", section: "act.selected", chain: "translate" },
+    { key: "selectKey", title: "act.listen", page: "translate", section: "act.selected", chain: "listen" },
+    { key: "inPlaceKey", title: "act.inPlace", page: "translate", section: "act.selected" },
+    { key: "textKey", title: "act.translate", page: "translate", section: "act.screen" },
+    { key: "snipKey", title: "act.listen", page: "translate", section: "act.screen" },
+    { key: "typeKey", title: "act.ownKey", page: "translate", section: "act.own" },
+    { key: "talkKey", title: "act.talk", page: "english", section: "act.talkGroup", speech: true },
+    { key: "checkKey", title: "check.keySelected", page: "english", section: "page.checkEnglish" },
+    { key: "typeCheckKey", title: "check.typeKey", page: "english", section: "page.checkEnglish" },
+    { key: "practiceKey", title: "act.say", page: "english", section: "page.checkEnglish", speech: true },
+    { key: "dictateKey", title: "dict.type", page: "voice", speech: true },
+    { key: "englishKey", title: "dict.english", page: "voice", speech: true },
+    { key: "againKey", title: "dictate.againKey", page: "voice", speech: true },
+    { key: "noteKey", title: "dict.note", page: "voice", speech: true },
+    { key: "fixKey", title: "kb.fixKey", page: "layout", section: "act.fixGroup", chain: "fix" },
+    { key: "switchKey", title: "kb.switchKey", page: "layout", section: "act.switchGroup" },
+    { key: "pauseKey", title: "settings.pauseKey", page: "settings", section: "keys.group" },
+    { key: "windowKey", title: "settings.windowKey", page: "settings", section: "keys.group" }
+  ];
+  function statusCard(v) {
+    const paused = v.settings.paused;
     return el(
-      "li",
+      "div",
+      { class: paused ? "status paused" : "status" },
+      el("span", { class: "sdot" }),
+      el("div", { class: "st" }, t(paused ? "home.paused" : "home.ready"), el("small", {}, t(paused ? "home.pausedNote" : "home.readyNote"))),
+      btn(t(paused ? "tray.resume" : "tray.pause"), () => save({ paused: !paused }), paused ? "primary" : "")
+    );
+  }
+  function homeTrouble(v) {
+    const lines = [
+      v.translator === "failed" ? warn(t("home.troubleTranslator")) : null,
+      v.natural.status === "failed" ? warn(t("home.troubleVoice")) : null,
+      installed(v) && v.speech.service === "down" ? warn(t("home.troubleSpeech")) : null
+    ];
+    return lines.filter((n) => n !== null);
+  }
+  function downloadsNow(v) {
+    const out = [];
+    const add = (name, state) => {
+      if (state.status === "downloading") out.push({ name, progress: state.progress });
+    };
+    add(levelName("fast"), v.translation.fast);
+    add(levelName("accurate"), v.models.accurate);
+    add(levelName("most"), v.models.most);
+    add(t("settings.natural"), v.natural);
+    if (v.speech.pack.status === "installing") out.push({ name: t("storage.speech"), progress: v.speech.pack.progress ?? 0 });
+    const models = v.speech.health?.models;
+    const fetching = [models?.dictation, models?.transcripts].filter((m) => m?.state === "downloading");
+    for (const m of new Map(fetching.map((m2) => [m2?.name, m2])).values()) if (m) out.push({ name: speechChoice(v, m.name)?.label ?? m.name, progress: m.progress ?? 0 });
+    if (v.dictionary.status === "downloading") out.push({ name: t("storage.dict") });
+    return out;
+  }
+  function keyLine(k, s) {
+    const open2 = () => go(k.page, void 0, k.key);
+    return el(
+      "div",
       {
-        class: "act",
-        "data-page": action,
+        class: "hkey",
         role: "button",
         tabindex: 0,
         onclick: open2,
@@ -7747,44 +7732,51 @@
           if (key === "Enter" || key === " ") event.preventDefault(), open2();
         }
       },
-      lucide(ICONS[action]),
-      el("div", {}, el("div", { class: "an" }, el("b", {}, a.title), el("i", {}, a.cap)), el("div", { class: "ad" }, a.desc)),
-      el("div", { class: "keys" }, ...keysOf(action, v.settings, true)),
-      lucide("chevron-right", "chev")
-    );
-  }
-  function pausedNotice(v) {
-    if (!v.settings.paused) return null;
-    return el(
-      "div",
-      { class: "row notice paused" },
-      lucide("pause"),
-      el("div", { class: "l" }, t("home.paused"), el("small", {}, t("home.pausedNote"))),
-      btn(t("tray.resume"), () => save({ paused: false }), "primary")
+      el("span", { class: "kn" }, t(k.title)),
+      el("span", { class: "kw" }, k.section ? `${TITLES[k.page]} \u203A ${t(k.section)}` : TITLES[k.page]),
+      el("span", { class: "kc" }, caps(s[k.key], k.chain))
     );
   }
   function homeNodes(v) {
-    const sample = sampleOf(v.settings.native);
+    const s = v.settings;
+    const sample = sampleOf(s.native);
+    const keys = HOME_KEYS.filter((k) => !k.speech || installed(v));
+    const set = keys.filter((k) => s[k.key]);
+    const unset = keys.length - set.length;
     return [
       el(
         "div",
-        { class: "head" },
+        { class: "hsum" },
+        statusCard(v),
+        ...homeTrouble(v),
+        ...downloadsNow(v).map(
+          (d) => el(
+            "div",
+            { class: "dl" },
+            el("span", {}, t("home.downloading", { name: d.name })),
+            d.progress !== void 0 ? bar(d.progress) : null,
+            d.progress !== void 0 ? pct(d.progress) : null
+          )
+        ),
+        grp(t("home.yourKeys"), set.length || void 0),
+        ...set.map((k) => keyLine(k, s)),
+        unset ? el("p", { class: "unset" }, t("home.unset", { n: unset })) : null,
         el(
           "div",
-          { class: "hline" },
-          el("span", { class: "hs h1" }, sample.typed),
-          el("span", { class: "arr a1" }, "\u2192"),
-          el("span", { class: "hs h2" }, sample.fixed),
-          el("span", { class: "arr a2" }, "\u2192"),
-          el("span", { class: "hs h3" }, "hello world"),
-          el("button", { class: "replay", title: t("home.replayTitle"), onclick: () => playMoment(false) }, icon("play"), el("span", {}, t("home.replay")))
-        ),
-        el("p", { class: "hcap" }, ...readiness(v))
-      ),
-      pausedNotice(v),
-      el("ul", { class: "acts" }, ...ACTIONS.map((a) => homeRow(a, v))),
-      el("p", { class: "foot" }, t("home.foot"))
-    ].filter((n) => n !== null);
+          { class: "head" },
+          el(
+            "div",
+            { class: "hline" },
+            el("span", { class: "hs h1" }, sample.typed),
+            el("span", { class: "arr a1" }, "\u2192"),
+            el("span", { class: "hs h2" }, sample.fixed),
+            el("span", { class: "arr a2" }, "\u2192"),
+            el("span", { class: "hs h3" }, "hello world"),
+            el("button", { class: "replay", title: t("home.replayTitle"), onclick: () => playMoment(false) }, icon("play"), el("span", {}, t("home.replay")))
+          )
+        )
+      )
+    ];
   }
   function renderHome(force = false) {
     if (!view || moment) return;
@@ -7810,9 +7802,9 @@
   var moment;
   function buildMoment(v, markSeen) {
     const q = (s2) => home.querySelector(s2);
-    const head = q(".head"), h1 = q(".h1"), h2 = q(".h2"), h3 = q(".h3"), replay = q(".replay"), hcap = q(".hcap"), foot = q(".foot");
+    const head = q(".head"), h1 = q(".h1"), h2 = q(".h2"), h3 = q(".h3"), replay = q(".replay");
     const kf = q("[data-chain=fix]"), kt = q("[data-chain=translate]"), kl = q("[data-chain=listen]");
-    if (!head || !h1 || !h2 || !h3 || !replay || !hcap || !foot || !kf || !kt || !kl) return void 0;
+    if (!head || !h1 || !h2 || !h3 || !replay) return void 0;
     const s = v.settings;
     const sample = sampleOf(s.native);
     const cells = [...sample.typed].map((ch, i) => {
@@ -7831,13 +7823,12 @@
     const t1 = el("div", { class: "trail t1" }, sample.typed);
     const t2 = el("div", { class: "trail t2" }, sample.fixed);
     const eyebrow = el("div", { class: "eyebrow" }, t("home.eyebrow"));
-    const listenKey = keyLines("listen", s)[0]?.hotkey ?? "";
     const step2 = (n, hotkey, what) => {
       const keys = caps(hotkey);
       const small = el("small", {}, el("em", {}, String(n)), what);
       return { keys, small, node: el("div", { class: "step" }, keys, small) };
     };
-    const sf = step2(1, s.fixKey, t("home.stepFix")), st = step2(2, s.translateKey, t("home.stepTranslate")), sl = step2(3, listenKey, t("home.stepListen"));
+    const sf = step2(1, s.fixKey, t("home.stepFix")), st = step2(2, s.translateKey, t("home.stepTranslate")), sl = step2(3, s.selectKey, t("home.stepListen"));
     const rail = el("div", { class: "rail" }, sf.node, st.node, sl.node);
     const stage = el("div", { class: "stage" }, eyebrow, t1, t2, line, line2, play, rail);
     stage.style.top = `${Math.round(Math.max(-40, Math.min(80, (mainCol.clientHeight - 620) / 2)))}px`;
@@ -7849,6 +7840,7 @@
     const l2 = rel(line2);
     play.style.left = `${l2.x + l2.w + 18}px`;
     play.style.top = `${l2.y - (parseFloat(stage.style.top) || 0) + (l2.h - 40) / 2}px`;
+    const flight = (keys, target, d) => ({ keys, from: rel(keys), target, to: target ? rel(target) : void 0, d });
     const m = {
       raf: 0,
       markSeen,
@@ -7868,7 +7860,8 @@
       eyebrow,
       smalls: [sf.small, st.small, sl.small],
       rail: { fix: sf.keys, translate: st.keys, listen: sl.keys },
-      h: { head, h1, h2, h3, arrows: [...home.querySelectorAll(".arr")], replay, replayLabel: replay.querySelector("span") ?? replay, hcap, foot, rows: [...home.querySelectorAll(".act")], kf, kt, kl },
+      h: { head, h1, h2, h3, arrows: [...home.querySelectorAll(".arr")], replay, replayLabel: replay.querySelector("span") ?? replay, rows: [...home.querySelectorAll(".status, .warn, .dl, .hsum > .grp, .hkey, .unset")] },
+      flights: [flight(sl.keys, kl, 0), flight(st.keys, kt, 0.06), flight(sf.keys, kf, 0.12)],
       g: {
         t1: rel(t1),
         t2: rel(t2),
@@ -7878,13 +7871,7 @@
         h1: rel(h1),
         h2: rel(h2),
         h3: rel(h3),
-        replay: rel(replay),
-        rf: rel(sf.keys),
-        rt: rel(st.keys),
-        rl: rel(sl.keys),
-        kf: rel(kf),
-        kt: rel(kt),
-        kl: rel(kl)
+        replay: rel(replay)
       },
       f: { trail: fontOf(t1), big: fontOf(line), head: fontOf(h3) }
     };
@@ -7956,34 +7943,30 @@
       m.play.style.opacity = "1";
       move(m.play, g.play, { x: g.replay.x, y: g.replay.y, w: 28, h: 28 }, T(0.02), 28 / 40);
     }
-    const flights = [
-      [m.rail.listen, g.rl, g.kl, 0],
-      [m.rail.translate, g.rt, g.kt, 0.06],
-      [m.rail.fix, g.rf, g.kf, 0.12]
-    ];
-    for (const [node, from, to, d] of flights) {
-      const p = T(0.1 + d);
-      node.style.transform = t2 >= TRAVEL ? `translate(${(to.x - from.x) * p}px, ${(to.y - from.y) * p}px)` : "";
+    for (const fl of m.flights) {
+      const p = T(0.1 + fl.d);
+      if (fl.to) fl.keys.style.transform = t2 >= TRAVEL ? `translate(${(fl.to.x - fl.from.x) * p}px, ${(fl.to.y - fl.from.y) * p}px)` : "";
+      else if (t2 >= TRAVEL) fl.keys.style.opacity = String(1 - prog(t2, TRAVEL, TRAVEL + 0.25));
     }
     const fade2 = 1 - prog(t2, TRAVEL, TRAVEL + 0.25);
     m.eyebrow.style.opacity = String(fade2);
     for (const s of m.smalls) s.style.opacity = String(fade2);
     h.rows.forEach((row2, i) => {
-      const p = spring(prog(t2, TRAVEL + 0.22 + i * 0.06, TRAVEL + 0.92 + i * 0.06));
+      const p = spring(prog(t2, TRAVEL + 0.22 + i * 0.03, TRAVEL + 0.92 + i * 0.03));
       setStyle(row2, clamp(p * 1.3), `translateY(${(1 - p) * 14}px)`);
     });
     const hp = spring(prog(t2, TRAVEL + 0.45, TRAVEL + 1));
     for (const a of h.arrows) setStyle(a, hp, `translateX(${(1 - hp) * -8}px)`);
-    setStyle(h.hcap, hp, `translateY(${(1 - hp) * 6}px)`);
-    h.head.style.borderBottomColor = `color-mix(in srgb, var(--border-soft) ${hp * 100}%, transparent)`;
-    h.foot.style.opacity = String(spring(prog(t2, TRAVEL + 0.8, TRAVEL + 1.2)));
+    h.head.style.borderColor = `color-mix(in srgb, var(--border) ${hp * 100}%, transparent)`;
     const landed = (d) => t2 >= TRAVEL + d + 0.8;
     shown(h.h3, landed(0)), shown(m.line2, !landed(0));
     shown(h.h2, landed(0.06)), shown(m.t2, !landed(0.06));
     shown(h.h1, landed(0.12)), shown(m.t1, !landed(0.12));
-    shown(h.kl, landed(0.1)), shown(m.rail.listen, !landed(0.1));
-    shown(h.kt, landed(0.16)), shown(m.rail.translate, !landed(0.16));
-    shown(h.kf, landed(0.22)), shown(m.rail.fix, !landed(0.22));
+    for (const fl of m.flights) {
+      const there = landed(0.1 + fl.d);
+      if (fl.target) shown(fl.target, there);
+      shown(fl.keys, !there);
+    }
     shown(m.play, !landed(0.02));
     const rp = spring(prog(t2, TRAVEL + 0.82, TRAVEL + 1.3));
     shown(h.replay, landed(0.02));
@@ -8089,44 +8072,33 @@
     node.animate([{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 160, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" });
   }
   function flashRow(title) {
-    const rows = [...pBody.querySelectorAll(".row")];
-    const row2 = rows.find((r) => lineTitle(r) === title) ?? rows.find((r) => lineTitle(r).startsWith(title));
-    if (!row2) return;
-    row2.scrollIntoView({ block: "center" });
-    row2.classList.add("flash");
-    window.setTimeout(() => row2.classList.remove("flash"), 1600);
+    const lines = [...pBody.querySelectorAll(".row, .tcell")];
+    const line = lines.find((r) => r.dataset.key === title) ?? lines.find((r) => lineTitle(r) === title) ?? lines.find((r) => lineTitle(r).startsWith(title));
+    if (!line) return;
+    line.scrollIntoView({ block: "center" });
+    line.classList.add("flash");
+    window.setTimeout(() => line.classList.remove("flash"), 1600);
   }
   var SUBS = {
-    meet: { title: "Google Meet", cap: () => t("page.meetCap"), body: meetPage },
-    speakers: { title: () => t("page.speakers"), cap: () => t("page.speakersCap"), body: speakerRows, valid: installed },
-    fixing: { title: () => t("page.fixing"), cap: () => t("page.fixingCap"), body: fixingPage },
+    card: { title: () => t("listen.cardGroup"), body: cardPage },
+    screen: { title: () => t("screen.how"), body: screenHowPage },
+    aboutYou: { title: () => t("talkPage.aboutYou"), body: aboutYouPage },
+    talkWindow: { title: () => t("act.talkWindow"), body: talkWindowPage },
+    notes: { title: () => t("dictate.notesFolder"), body: kbRows },
+    meet: { title: "Google Meet", body: meetPage },
+    speakers: { title: () => t("page.speakers"), body: speakerRows, valid: installed },
+    fixing: { title: () => t("page.fixing"), body: fixingPage },
     program: { title: () => programOpen, body: programPage, valid: () => !!programOpen },
     languages: { title: () => t("page.languages"), body: languagesPage },
-    forTranslate: { title: () => TITLES.translate, cap: () => t("page.forTranslateCap"), body: translateChoicePage },
-    forCheck: { title: () => t("page.checkEnglish"), cap: () => t("page.forCheckCap"), body: checkChoicePage },
-    forDictate: { title: () => TITLES.dictate, cap: () => t("page.forDictateCap"), body: (v) => speechChoicePage(v, "dictation") },
-    forTranscribe: { title: () => TITLES.transcribe, cap: () => t("page.forTranscribeCap"), body: (v) => speechChoicePage(v, "transcripts") },
-    forVoice: { title: () => t("page.voice"), cap: () => t("page.forVoiceCap"), body: voiceChoicePage }
+    forTranslate: { title: () => TITLES.translate, body: translateChoicePage },
+    forCheck: { title: () => t("models.checkTalk"), body: checkChoicePage },
+    forDictate: { title: () => TITLES.voice, body: (v) => speechChoicePage(v, "dictation") },
+    forTranscribe: { title: () => TITLES.recordings, body: (v) => speechChoicePage(v, "transcripts") },
+    forVoice: { title: () => t("page.voice"), body: voiceChoicePage }
   };
   var subTitle = (id) => {
     const title = SUBS[id].title;
     return typeof title === "string" ? title : title();
-  };
-  var CAPS2 = {
-    words: (v) => v.words.length ? t("page.wordsCap", { n: v.words.length }) : t("page.wordsNone"),
-    mistakes: () => t("page.mistakesCap"),
-    transcripts: () => transcriptsCap(),
-    translations: () => t("page.translationsCap"),
-    phrases: () => t("page.phrasesCap"),
-    vocabulary: () => t("page.vocabularyCap"),
-    kept: () => t("page.keptCap"),
-    learned: () => t("page.learnedCap"),
-    programs: () => t("page.programsCap"),
-    layouts: () => t("page.layoutsCap"),
-    models: () => t("page.modelsCap"),
-    storage: (v) => v.storage?.measuring ? t("page.measuring") : v.storage ? t("page.freeOn", { size: size(v.storage.freeMb), drive: v.storage.drive }) : t("page.storageCap"),
-    about: (v) => `${t("app.name")} ${v.version}`,
-    report: () => t("page.reportCap")
   };
   var sliding = [];
   function slideBody(dir) {
@@ -8153,27 +8125,18 @@
   }
   function fillHeader() {
     if (!view) return;
-    const v = view;
-    pBack.hidden = !open && visited.length === 0;
-    if (!open) {
-      pTitle.replaceChildren(t("nav.home"));
-      pCap.textContent = "";
-      pKeys.replaceChildren();
-      return;
-    }
-    const name = open.name;
-    if (open.sub) {
-      const sub = SUBS[open.sub];
-      pTitle.replaceChildren(el("button", { class: "pcrumb", onclick: () => go(name) }, TITLES[name]), el("span", { class: "psep" }, "\u203A"), subTitle(open.sub));
-      pCap.textContent = sub.cap?.(v) ?? "";
-      pKeys.replaceChildren();
-      return;
-    }
-    pTitle.replaceChildren(TITLES[name]);
-    pCap.textContent = isAction(name) ? actionText(name, v).cap : name === "search" ? searchCap(v) : CAPS2[name]?.(v) ?? "";
-    const keys = isAction(name) ? keysOf(name, v.settings, false, true) : [];
-    const next = el("div", {}, ...keys);
-    if (next.innerHTML !== pKeys.innerHTML) pKeys.replaceChildren(...next.childNodes);
+    if (!open) return pTitle.replaceChildren(t("nav.home"));
+    const { name, sub } = open;
+    const parent = PARENT[name];
+    const way = (title, to) => el("button", { class: "pcrumb", onclick: to }, title);
+    const sep = () => el("span", { class: "psep" }, "\u203A");
+    pTitle.replaceChildren(
+      ...parent ? [way(TITLES[parent], () => go(parent)), sep()] : [],
+      ...sub ? [way(TITLES[name], () => go(name)), sep(), subTitle(sub)] : (
+        // A transcript open: its page's name is the way back to the library.
+        [name === "transcripts" && transcriptOpen() ? way(TITLES[name], () => backToList()) : TITLES[name]]
+      )
+    );
   }
   var bodyPending = false;
   var pointerDown = false;
@@ -8225,22 +8188,16 @@
     if (!open) return [];
     if (open.sub) return SUBS[open.sub].body(v);
     switch (open.name) {
-      case "talk":
-        return talkPage(v);
-      case "listen":
-        return listenPage(v);
       case "translate":
         return translatePage(v);
-      case "check":
-        return checkPage(v);
-      case "screen":
-        return screenPage(v);
-      case "dictate":
-        return dictatePage(v);
-      case "transcribe":
-        return transcribePage(v);
-      case "keyboard":
-        return keyboardPage(v);
+      case "english":
+        return englishPage(v);
+      case "voice":
+        return voicePage(v);
+      case "recordings":
+        return recordingsPage(v);
+      case "layout":
+        return layoutPage(v);
       case "words":
         return wordsPage(v);
       case "mistakes":
@@ -8277,9 +8234,14 @@
   }
   var SEARCHED = [
     ...ACTIONS.map((name) => ({ name })),
-    { name: "keyboard", sub: "fixing" },
-    { name: "transcribe", sub: "speakers" },
-    { name: "transcribe", sub: "meet" },
+    { name: "translate", sub: "card" },
+    { name: "translate", sub: "screen" },
+    { name: "english", sub: "aboutYou" },
+    { name: "english", sub: "talkWindow" },
+    { name: "voice", sub: "notes" },
+    { name: "layout", sub: "fixing" },
+    { name: "recordings", sub: "speakers" },
+    { name: "recordings", sub: "meet" },
     { name: "vocabulary" },
     { name: "kept" },
     { name: "learned" },
@@ -8296,7 +8258,7 @@
     { name: "storage" },
     { name: "report" }
   ];
-  var lineTitle = (row2) => (row2.querySelector(":scope > .l")?.firstChild?.textContent ?? "").trim();
+  var lineTitle = (row2) => ((row2.matches(".tcell") ? row2.querySelector(".tn") : row2.querySelector(":scope > .l")?.firstChild)?.textContent ?? "").trim();
   function bodyFor(v, place) {
     const was = open;
     open = place;
@@ -8317,9 +8279,9 @@
         section = (node.firstChild?.textContent ?? "").trim();
         continue;
       }
-      for (const row2 of node.matches(".row") ? [node] : [...node.querySelectorAll(".row")]) {
+      for (const row2 of node.matches(".row") ? [node] : [...node.querySelectorAll(".row, .tcell")]) {
         const title = lineTitle(row2);
-        const note = [...row2.querySelectorAll(":scope > .l > small")].map((s) => s.textContent ?? "").join(" \xB7 ");
+        const note = [...row2.querySelectorAll(":scope > .l > small, :scope > .ts")].map((s) => s.textContent ?? "").join(" \xB7 ");
         if (title) lines.push({ section, title, note });
       }
     }
@@ -8355,13 +8317,9 @@
     const q = finding.trim().toLowerCase();
     return q ? linesOf(v).filter((l) => `${l.title} ${l.note}`.toLowerCase().includes(q) || l.en.toLowerCase().includes(q)) : [];
   };
-  function searchCap(v) {
-    const n = found(v).length;
-    const q = finding.trim();
-    return q ? n ? t("search.places", { n, q }) : t("search.none", { q }) : "";
-  }
   function whereOf(place) {
-    return place.sub ? `${TITLES[place.name]} \u203A ${subTitle(place.sub)}` : TITLES[place.name];
+    const parent = PARENT[place.name];
+    return [parent ? TITLES[parent] : "", TITLES[place.name], place.sub ? subTitle(place.sub) : ""].filter(Boolean).join(" \u203A ");
   }
   function marked(text, q) {
     const i = text.toLowerCase().indexOf(q);
@@ -8405,6 +8363,7 @@
     return el("div", { class: "try" }, el("p", {}, text), el("small", {}, how));
   }
   var KEY_USE = phrases({
+    menuKey: "keys.useMenu",
     selectKey: "keys.useSelect",
     snipKey: "keys.useSnip",
     translateKey: "keys.useTranslate",
@@ -8433,6 +8392,10 @@
     return layout ? t("keys.toLayout", { layout: view?.layouts.find((l) => l.id === layout)?.name ?? t("keys.aLayout") }) : void 0;
   }
   function saveKey(name, key) {
+    if (key === COPY_TWICE2 && !COPY_TWICE_KEYS.includes(name)) {
+      keyTrouble = { name, text: t("keys.copyTwiceOnly") };
+      return renderBody();
+    }
     const other = keyTakenBy(key, name);
     if (other) {
       keyTrouble = { name, text: t("keys.taken", { key: said(key), use: other }) };
@@ -8444,11 +8407,14 @@
   function keyRow(name, label, note, taken = false, iconName, extra) {
     const key = view?.settings[name] ?? "";
     const menu = menuNote(key);
-    return keyRecorder(name, key, (key2) => saveKey(name, key2), label, menu ? `${note}; ${menu}` : note, taken, iconName, extra, DEFAULTS[name]);
+    const node = keyRecorder(name, key, (key2) => saveKey(name, key2), label, menu ? `${note}; ${menu}` : note, taken, iconName, extra, DEFAULTS[name]);
+    node.dataset.key = name;
+    return node;
   }
   function menuNote(key) {
     if (/^(Left|Right)Alt(\*2)?$/.test(key)) return t("keys.menuAlt");
     if (/^(Left|Right)Super(\*2)?$/.test(key)) return t("keys.menuWin");
+    if (key === "Control+Escape") return t("keys.menuCtrlEsc");
     return "";
   }
   function layoutKeyRow(l, label, note) {
@@ -8460,6 +8426,10 @@
       save({ layoutKeys: next });
     };
     const saveIt = (key) => {
+      if (key === COPY_TWICE2) {
+        keyTrouble = { name: l.id, text: t("keys.copyTwiceOnly") };
+        return renderBody();
+      }
       const other = key ? keyTakenBy(key, l.id) : void 0;
       if (other) {
         keyTrouble = { name: l.id, text: t("keys.taken", { key: said(key), use: other }) };
@@ -8479,45 +8449,64 @@
       title: t("keys.recordTitle"),
       "aria-label": t("keys.aria", { label, key: current2 ? said(current2) : t("keys.notSet") })
     });
-    field.append(caps(current2));
+    const resting = () => current2 ? caps(current2) : el("span", { class: "link" }, t("keys.set"));
+    field.append(resting());
     const showing = (...nodes) => field.replaceChildren(...nodes);
     const done2 = (key) => {
       window.clearTimeout(waiting2);
       field.blur();
       saveKeyAs(key);
     };
+    const pressKeys = () => showing(el("span", { class: "key rec" }, t("keys.pressKeys")));
     const recorded = (r) => {
-      window.clearTimeout(waiting2);
       if (!r) return;
+      window.clearTimeout(waiting2);
       if (!r.more) return done2(r.hotkey);
       showing(caps(r.hotkey), el("span", { class: "x2" }, "\u2026"));
-      waiting2 = window.setTimeout(() => done2(r.hotkey), DOUBLE_MS);
+      waiting2 = window.setTimeout(() => r.partial ? pressKeys() : done2(r.hotkey), DOUBLE_MS);
+    };
+    const press2 = (code, at) => {
+      if (code === "Escape" && !recorder.holding()) return field.blur();
+      window.clearTimeout(waiting2);
+      recorded(recorder.keydown(code, at));
+    };
+    const lift = (code, at) => recorded(recorder.keyup(code, at));
+    const fromHook = (code, down, at) => {
+      if (!field.isConnected || !field.classList.contains("recording")) return stopHook();
+      if (down) press2(code, at);
+      else lift(code, at);
+    };
+    const stopHook = () => {
+      if (keyTarget !== fromHook) return;
+      keyTarget = void 0;
+      post({ type: "recordKeys", on: false });
     };
     const listen = () => {
       if (field.classList.contains("recording")) return;
       recorder.reset();
       field.classList.add("recording");
-      showing(el("span", { class: "key rec" }, t("keys.pressKeys")));
+      pressKeys();
+      keyTarget = fromHook;
+      post({ type: "recordKeys", on: true });
     };
     field.addEventListener("focus", listen);
     field.addEventListener("click", () => (field.focus(), listen()));
     field.addEventListener("blur", () => {
       window.clearTimeout(waiting2);
       field.classList.remove("recording");
-      showing(caps(current2));
+      showing(resting());
+      stopHook();
     });
     field.addEventListener("keydown", (event) => {
       if (!field.classList.contains("recording")) return;
       event.preventDefault();
-      if (event.key === "Escape") return field.blur();
       if (event.repeat) return;
-      window.clearTimeout(waiting2);
-      recorded(recorder.keydown(event.code, event.timeStamp));
+      press2(event.code, performance.timeOrigin + event.timeStamp);
     });
     field.addEventListener("keyup", (event) => {
       if (!field.classList.contains("recording")) return;
       event.preventDefault();
-      recorded(recorder.keyup(event.code, event.timeStamp));
+      lift(event.code, performance.timeOrigin + event.timeStamp);
     });
     field.addEventListener("mousedown", (event) => {
       if (document.activeElement !== field || event.button !== 3 && event.button !== 4) return;
@@ -8558,29 +8547,16 @@
     const node = row(
       label,
       [...notes, taken && current2 ? bad(t("keys.takenProgram")) : null, trouble ? bad(trouble) : null],
-      el("span", { class: "kchg" }, field, clear, restore, linkBtn(t(current2 ? "keys.change" : "keys.set"), () => field.click()), extra ?? null)
+      el("span", { class: "kchg" }, field, clear, restore, extra ?? null)
     );
     if (iconName) node.prepend(lucide(iconName));
     return node;
   }
   var fixedKey = (label, hotkey, note) => row(label, [note], caps(hotkey));
-  function listenPage(v) {
+  var TRY_LISTEN = "The morning was quiet. A small boat drifted along the river, and two children watched the ducks from the bridge.";
+  function cardPage(v) {
     const s = v.settings;
-    const how = s.selectKey ? t("listen.tryKey", { how: usage(s.selectKey) }) : t(s.doubleCopy ? "listen.tryTwice" : "listen.tryNone");
     return [
-      grp(t("keys.group")),
-      keyRow("selectKey", t("listen.select"), t("listen.selectNote"), !v.keysOk.select, "volume-2"),
-      card(
-        "copy",
-        t("listen.alsoTwice"),
-        [t("listen.alsoTwiceNote")],
-        el("span", { class: "kchg" }, caps(COPY_TWICE), el("span", { class: "tgwrap" }, toggleKnob(s.doubleCopy, (doubleCopy) => save({ doubleCopy }), t("keys.copyTwice"))))
-      ),
-      keyRow("snipKey", t("listen.snip"), t("listen.boxNote"), !v.keysOk.snip, "scan"),
-      grp(t("listen.voiceGroup")),
-      navCard("volume-2", t("listen.voiceGroup"), t("listen.voiceNote"), voiceValue(v), () => go("models", "forVoice"), "models"),
-      speedCard(v),
-      grp(t("listen.cardGroup")),
       toggleCard("volume-2", t("listen.autoRead"), s.autoRead, (autoRead) => save({ autoRead })),
       toggleCard("spell-check", t("listen.rareWords"), s.rareWords, (rareWords) => save({ rareWords })),
       toggleCard("list", t("listen.oneAtATime"), s.oneAtATime, (oneAtATime) => save({ oneAtATime })),
@@ -8599,12 +8575,19 @@
         )
       ),
       grp(t("listen.inCard")),
+      fixedKey(t("translate.pasteBack"), "Enter"),
       card("play", t("listen.playKeys"), [], el("span", { class: "kg2" }, caps("Space"), caps("\u2190"), caps("\u2192"))),
       card("book-open", t("listen.clickWord"), [t("listen.clickWordNote")], null),
       card("languages", t("listen.clickSentence"), [t("listen.clickSentenceNote")], null),
-      card("x", t("listen.closeCard"), [], caps("Esc")),
-      tryIt("The morning was quiet. A small boat drifted along the river, and two children watched the ducks from the bridge.", how)
-    ].filter((n) => n !== null);
+      card("x", t("listen.closeCard"), [], caps("Esc"))
+    ];
+  }
+  function screenHowPage() {
+    return [
+      card("scan", t("screen.draw"), [t("screen.drawNote")], null),
+      card("type", t("screen.reads"), [t("screen.readsNote")], linkBtn(t("screen.languages"), () => post({ type: "openLanguageSettings" }))),
+      card("spell-check", t("screen.fix"), [t("screen.fixNote")], null)
+    ];
   }
   var TRY_TRANSLATE = {
     Russian: "\u041A\u043E\u043D\u0435\u0447\u043D\u043E, \u043F\u0440\u0438\u0448\u043B\u044E \u043E\u0431\u043D\u043E\u0432\u043B\u0451\u043D\u043D\u044B\u0435 \u043C\u0430\u043A\u0435\u0442\u044B \u0434\u043E \u0441\u043E\u0437\u0432\u043E\u043D\u0430.",
@@ -8703,6 +8686,31 @@
     const remove2 = m.status === "ready" && !used ? ib("x", t("models.remove", { level: levelName(model), size: size(m.size) }), () => post({ type: "removeStored", id: model })) : null;
     return radioRow(label, notes, on, pick, control, remove2);
   }
+  function shareOffer(v) {
+    const s = v.settings;
+    const model = s.model;
+    if (s.translationLevel !== "fast" || v.models[model].status !== "ready" || s.shareOfferSeen.includes(model)) return null;
+    if (translationAdvice(v.speech.device)[model].slow) return null;
+    const seen = () => save({ shareOfferSeen: [...s.shareOfferSeen, model] });
+    const name = levelName(model);
+    return el(
+      "div",
+      { class: "offer" },
+      lucide("boxes"),
+      el(
+        "div",
+        { class: "ot" },
+        el("b", {}, t("translate.shareAsk", { model: name })),
+        el("small", {}, t("translate.shareNote", { model: name, fast: levelName("fast") })),
+        el(
+          "span",
+          { class: "acts" },
+          btn(t("translate.shareUse", { model: name }), () => (post({ type: "translationLevel", level: model }), seen()), "primary"),
+          linkBtn(t("common.notNow"), seen)
+        )
+      )
+    );
+  }
   function translateChoicePage(v) {
     const s = v.settings;
     const advice = translationAdvice(v.speech.device);
@@ -8722,10 +8730,11 @@
     );
     const share = (model) => t(s.model !== model ? "models.checkMoves" : s.translationLevel === model ? "models.checkShares" : "models.checkAlready");
     return [
+      shareOffer(v),
       grp(t("models.translateWith")),
       fastRow,
       ...["accurate", "most"].map((model) => llmChoice(v, model, s.translationLevel === model, () => post({ type: "translationLevel", level: model }), share(model)))
-    ];
+    ].filter((n) => n !== null);
   }
   function checkChoicePage(v) {
     const s = v.settings;
@@ -8737,7 +8746,7 @@
     ];
   }
   function speechChoicePage(v, feature) {
-    const name = feature === "dictation" ? TITLES.dictate : TITLES.transcribe;
+    const name = feature === "dictation" ? TITLES.voice : TITLES.recordings;
     const offer = engineRows(v, feature === "dictation" ? "Dictate" : "Transcribe");
     if (offer.length) return [grp(t("models.engine")), ...offer];
     return [
@@ -8747,7 +8756,7 @@
       grp(t("models.options")),
       preferRow(v),
       gpuRow(v),
-      feature === "transcripts" ? speakersCard(v, () => go("transcribe", "speakers"), true) : null
+      feature === "transcripts" ? speakersCard(v, () => go("recordings", "speakers"), true) : null
     ].filter((n) => n !== null);
   }
   function voiceChoicePage(v) {
@@ -8828,10 +8837,10 @@
       unusedNotice(v),
       grp(t("models.eachAction")),
       navCard("languages", TITLES.translate, t("models.translateNote"), levelValue(v), () => go("models", "forTranslate"), "forTranslate"),
-      navCard("graduation-cap", t("page.checkEnglish"), t("page.forCheckCap"), checkValue(v), () => go("models", "forCheck"), "forCheck"),
-      navCard("mic", TITLES.dictate, t("models.dictateNote"), speechValue(v, "dictation"), () => go("models", "forDictate"), "forDictate"),
-      navCard("audio-lines", TITLES.transcribe, t("models.transcribeNote"), speechValue(v, "transcripts"), () => go("models", "forTranscribe"), "forTranscribe"),
-      speakersCard(v, () => go("transcribe", "speakers"), true),
+      navCard("graduation-cap", t("models.checkTalk"), t("page.forCheckCap"), checkValue(v), () => go("models", "forCheck"), "forCheck"),
+      navCard("mic", TITLES.voice, t("models.dictateNote"), speechValue(v, "dictation"), () => go("models", "forDictate"), "forDictate"),
+      navCard("audio-lines", TITLES.recordings, t("models.transcribeNote"), speechValue(v, "transcripts"), () => go("models", "forTranscribe"), "forTranscribe"),
+      speakersCard(v, () => go("recordings", "speakers"), true),
       navCard("volume-2", t("page.voice"), t("page.forVoiceCap"), voiceValue(v), () => go("models", "forVoice"), "forVoice"),
       aside("info", t("models.shared"))
     ].filter((n) => n !== null);
@@ -8854,54 +8863,56 @@
     const [state, note] = translatorChip(v);
     const text = TRY_TRANSLATE[s.native] ?? "Of course, I will send the updated layouts before the call.";
     const how = s.translateKey ? t("translate.tryKey", { how: usage(s.translateKey) }) : t("translate.tryNone");
+    const listenHow = s.selectKey ? t("listen.tryKey", { how: usage(s.selectKey) }) : t("listen.tryNone");
     return [
-      grp(t("keys.group")),
-      keyRow("translateKey", t("translate.select"), s.translateKey ? t("translate.selectNote", { how: usage(s.translateKey) }) : t("translate.selectNoKey"), !v.keysOk.translate, "languages"),
-      keyRow("typeKey", t("translate.type"), t("translate.typeNote"), !v.keysOk.type, "type"),
-      keyRow("inPlaceKey", t("translate.inPlace"), t("translate.inPlaceNote"), !v.keysOk.inPlace, "wand-sparkles"),
-      keyRow("textKey", t("translate.text"), t("listen.boxNote"), !v.keysOk.text, "scan"),
-      fixedKey(t("translate.pasteBack"), "Enter"),
-      grp(t("translate.group")),
-      navCard("boxes", t("translate.model"), t("translate.modelNote"), levelValue(v), () => go("models", "forTranslate"), "models"),
-      grp(t("translate.languages")),
+      shareOffer(v),
+      tiles([{ icon: "history", title: TITLES.translations, count: v.translations.length || "", open: () => go("translations"), id: "translations" }]),
+      grp(t("act.selected")),
+      keyRow("translateKey", t("act.translate"), t("act.translateNote"), !v.keysOk.translate),
+      keyRow("selectKey", t("act.listen"), t("act.listenNote"), !v.keysOk.select),
+      keyRow("inPlaceKey", t("act.inPlace"), t("act.inPlaceNote"), !v.keysOk.inPlace),
+      grp(t("act.screen")),
+      keyRow("textKey", t("act.translate"), t("act.screenNote"), !v.keysOk.text),
+      keyRow("snipKey", t("act.listen"), t("act.screenNote"), !v.keysOk.snip),
+      navCard(null, t("screen.how"), t("act.screenHowNote"), null, () => openSub("screen"), "screen"),
+      grp(t("act.own")),
+      keyRow("typeKey", t("act.ownKey"), t("translate.typeNote"), !v.keysOk.type),
+      grp(t("nav.settings")),
+      speedCard(v),
       card("globe", pairOf(v), [note], state),
       languagesCard(v),
-      grp(t("translate.history")),
-      navCard("clock", t("translate.recent"), t("translate.recentNote"), v.translations.length ? String(v.translations.length) : t("translate.none"), () => go("translations"), "translations"),
-      tryIt(text, how)
-    ];
+      navCard(null, t("listen.cardGroup"), t("act.cardNote"), null, () => openSub("card"), "card"),
+      grp(t("act.try")),
+      tryIt(text, how),
+      tryIt(TRY_LISTEN, listenHow),
+      enginePlate([
+        { title: t("act.quality"), value: levelValue(v), open: () => go("models", "forTranslate") },
+        { title: t("talkPage.voice"), value: voiceValue(v), open: () => go("models", "forVoice") }
+      ])
+    ].filter((n) => n !== null);
   }
   function translationsPage(v) {
     const list2 = v.translations;
     return [
       grp(TITLES.translations, list2.length || void 0, list2.length ? linkBtn(t("keys.clear"), () => post({ type: "clearTranslations" })) : null),
-      ...list2.length ? list2.map(
-        (e) => el(
-          "div",
-          { class: "row phrase" },
-          el(
-            "div",
-            { class: "l" },
-            el("span", { class: "said translated", title: `${e.text}
+      list2.length ? lineList(
+        list2.map((e) => ({
+          text: e.text,
+          more: e.translation,
+          title: `${e.text}
 
-${e.translation}` }, e.translation),
-            el("small", {}, `${e.text.length > 80 ? `${e.text.slice(0, 80)}\u2026` : e.text} \xB7 ${whenSaid(e.at, Date.now())}`)
-          ),
-          linkBtn(t("common.copy"), () => copyText(e.translation))
-        )
-      ) : [aside("info", t("translate.empty"))]
+${e.translation}
+
+${whenSaid(e.at, Date.now())}`,
+          open: () => copyText(e.translation),
+          remove: () => post({ type: "forgetTranslation", at: e.at })
+        }))
+      ) : aside("info", t("translate.empty"))
     ];
   }
   var TRY_CHECK = "I want to learn English and can we made tutor option? I dictate or tupe in English and you show my my mistake.";
   var SLOW_CHECK_S = 4;
   var topicTitle = (id) => TOPICS.some((x) => x.id === id) ? t(`topic.${id}`) : id;
-  function talkCap(v) {
-    if (v.speech.device.at && translationAdvice(v.speech.device).accurate.where !== "card") return t("talkPage.needsCard");
-    const m = v.models[v.settings.model];
-    if (m.status === "downloading") return t("check.downloadingPct", { pct: Math.round(m.progress * 100) });
-    if (m.status !== "ready") return t("check.downloadsOnce");
-    return t("check.capNotes", { lang: languageName2(v.settings.native) });
-  }
   function talkNotice(v) {
     const model = v.settings.model;
     const files = v.models[model];
@@ -8924,7 +8935,7 @@ ${e.translation}` }, e.translation),
       );
     }
     if (!installed(v))
-      return el("div", { class: "row notice" }, lucide("mic"), el("div", { class: "l" }, t("talkPage.engineTitle"), el("small", {}, t("talkPage.engineNote"))), linkBtn(t("talkPage.openDictate"), () => go("dictate")));
+      return el("div", { class: "row notice" }, lucide("mic"), el("div", { class: "l" }, t("talkPage.engineTitle"), el("small", {}, t("talkPage.engineNote"))), linkBtn(t("talkPage.openDictate"), () => go("voice")));
     return null;
   }
   var aboutTimer;
@@ -8950,61 +8961,56 @@ ${e.translation}` }, e.translation),
     field.addEventListener("blur", () => aboutTimer !== void 0 && store());
     return field;
   }
-  function talkPage(v) {
+  function englishPage(v) {
     const s = v.settings;
     const going = v.talk;
-    const keyNote = !installed(v) ? t("talkPage.needsEngine") : s.talkKey ? t("talkPage.keyNote", { keys: usage(s.talkKey) }) : t("talkPage.keyNoteNone");
+    const talkNote = [
+      going ? t("talkPage.openGoing", { topic: topicTitle(going.topic), lines: t("talk.lines", { n: going.lines }) }) : t("act.talkNote"),
+      installed(v) ? "" : t("talkPage.needsEngine")
+    ].filter(Boolean).join("; ");
+    const typed = s.typeCheckKey ? t("check.typedKey", { keys: usage(s.typeCheckKey) }) : t("check.typedTray");
+    const how = s.checkKey ? t("check.tryKey", { keys: usage(s.checkKey), typed }) : t("check.tryNoKey", { typed });
     return [
-      el(
-        "div",
-        { class: "row notice talk-open" },
-        tile(36),
-        el("div", { class: "l" }, "Talk to the duck", el("small", {}, going ? t("talkPage.openGoing", { topic: topicTitle(going.topic), lines: t("talk.lines", { n: going.lines }) }) : t("talkPage.openIdle"))),
-        btn([lucide("message-square"), t("talkPage.open")], () => post({ type: "talkOpen" }), "primary")
-      ),
+      tiles([
+        { icon: "book-open", title: TITLES.words, count: v.words.length || "", open: () => go("words"), id: "words" },
+        { icon: "spell-check", title: TITLES.mistakes, count: v.mistakes.length || "", open: () => go("mistakes"), id: "mistakes" }
+      ]),
       talkNotice(v),
-      grp(t("talkPage.you")),
-      el("div", { class: "row add" }, el("div", { class: "l" }, t("talkPage.aboutYou")), aboutField(s.talkAbout), el("small", {}, t("talkPage.aboutNote"))),
+      grp(t("act.talkGroup")),
+      keyRow("talkKey", t("act.talk"), talkNote, !v.speech.keysOk.talk, void 0, btn(t("tray.open"), () => post({ type: "talkOpen" }), "primary")),
       row(
         t("talkPage.level"),
         [t(`talkPage.level${s.talkLevel}`)],
         seg(s.talkLevel, TALK_LEVELS.map((l) => [l, l]), (talkLevel) => save({ talkLevel }), true)
       ),
-      grp(t("talkPage.keys")),
-      keyRow("talkKey", "Talk to the duck", keyNote, !v.speech.keysOk.talk, "bird"),
-      fixedKey(t("talkPage.spaceKey"), "Space"),
-      fixedKey(t("talkPage.escKey"), "Escape"),
-      grp(t("talkPage.duck")),
+      navCard(null, t("talkPage.aboutYou"), null, s.talkAbout.trim() ? s.talkAbout.trim().slice(0, 32) : t("act.empty"), () => openSub("aboutYou"), "aboutYou"),
+      navCard(null, t("act.talkWindow"), t("act.talkWindowNote"), null, () => openSub("talkWindow"), "talkWindow"),
+      grp(t("page.checkEnglish")),
+      keyRow("checkKey", t("check.keySelected"), t("act.checkNote"), !v.keysOk.check),
+      keyRow("typeCheckKey", t("check.typeKey"), t("check.typeKeyNote"), !v.keysOk.typeCheck),
+      keyRow("practiceKey", t("act.say"), installed(v) ? t("act.sayNote") : t("talkPage.needsEngine"), !v.speech.keysOk.practice),
+      aside("info", t("check.speechNote")),
+      grp(t("act.try")),
+      tryIt(TRY_CHECK, how),
+      enginePlate([
+        { title: t("talkPage.model"), value: checkValue(v), open: () => go("models", "forCheck") },
+        { title: t("talkPage.voice"), value: voiceValue(v), open: () => go("models", "forVoice") }
+      ])
+    ].filter((n) => n !== null);
+  }
+  function aboutYouPage(v) {
+    return [el("div", { class: "row add" }, el("div", { class: "l" }, t("talkPage.aboutYou")), aboutField(v.settings.talkAbout), el("small", {}, t("talkPage.aboutNote")))];
+  }
+  function talkWindowPage(v) {
+    const s = v.settings;
+    return [
       toggleCard("volume-2", t("talkPage.aloud"), s.talkAloud, (talkAloud) => save({ talkAloud }), t("talkPage.aloudNote")),
       toggleCard("pin", t("talkPage.onTop"), s.talkOnTop, (talkOnTop) => save({ talkOnTop }), t("talkPage.onTopNote")),
-      navCard("boxes", t("talkPage.model"), t("talkPage.modelNote"), checkValue(v), () => go("models", "forCheck"), "models"),
-      navCard("volume-2", t("talkPage.voice"), t("talkPage.voiceNote"), voiceValue(v), () => go("models", "forVoice"), "models"),
-      grp(t("talkPage.kept")),
-      aside("history", t("talkPage.history")),
-      navCard("list-checks", t("mistakes.title"), t("talkPage.mistakesNote"), v.mistakes.length ? String(v.mistakes.length) : t("kb.none"), () => go("mistakes"), "mistakes")
-    ].filter((n) => !!n);
-  }
-  function checkCap(v) {
-    const m = v.models[v.settings.model];
-    if (m.status === "downloading") return t("check.downloadingPct", { pct: Math.round(m.progress * 100) });
-    return m.status === "ready" ? t("check.capNotes", { lang: languageName2(v.settings.native) }) : t("check.downloadsOnce");
-  }
-  function checkPage(v) {
-    const s = v.settings;
-    const typed = s.typeCheckKey ? t("check.typedKey", { keys: usage(s.typeCheckKey) }) : t("check.typedTray");
-    const how = s.checkKey ? t("check.tryKey", { keys: usage(s.checkKey), typed }) : t("check.tryNoKey", { typed });
-    return [
       grp(t("talkPage.keys")),
-      keyRow("checkKey", t("check.keySelected"), s.checkKey ? t("check.keySelectedNote", { keys: usage(s.checkKey) }) : t("check.keySelectedNone"), !v.keysOk.check, "graduation-cap"),
-      keyRow("typeCheckKey", t("check.typeKey"), t("check.typeKeyNote"), !v.keysOk.typeCheck, "type"),
-      keyRow("practiceKey", t("check.practiceKey"), installed(v) ? t("check.practiceNote") : t("talkPage.needsEngine"), !v.speech.keysOk.practice, "mic"),
-      fixedKey(t("check.enterKey"), "Enter"),
-      aside("info", t("check.speechNote")),
-      grp(t("talkPage.model")),
-      navCard("boxes", t("talkPage.model"), t("check.modelNote"), checkValue(v), () => go("models", "forCheck"), "models"),
-      grp(t("check.history")),
-      navCard("list-checks", t("mistakes.title"), t("check.mistakesNote"), v.mistakes.length ? String(v.mistakes.length) : t("kb.none"), () => go("mistakes"), "mistakes"),
-      tryIt(TRY_CHECK, how)
+      fixedKey(t("talkPage.spaceKey"), "Space"),
+      fixedKey(t("talkPage.escKey"), "Escape"),
+      grp(t("talkPage.kept")),
+      aside("history", t("talkPage.history"))
     ];
   }
   var diffs = /* @__PURE__ */ new Map();
@@ -9034,15 +9040,16 @@ ${e.translation}` }, e.translation),
       const q = search.trim().toLowerCase();
       const shown2 = q ? all.filter((e) => `${e.text} ${e.corrected} ${e.note}`.toLowerCase().includes(q)) : all;
       list2.replaceChildren(
-        ...shown2.length ? shown2.map(
-          (e) => el(
-            "div",
-            { class: "row phrase mistake" },
-            el("div", { class: "l" }, el("span", { class: "said marks", title: e.corrected }, ...withMarks(partsOf(e))), el("small", {}, [e.note, whenSaid(e.at, Date.now())].filter(Boolean).join(" \xB7 "))),
-            linkBtn(t("common.copy"), () => copyText(e.corrected)),
-            ib("x", t("mistakes.forget"), () => post({ type: "forgetMistake", at: e.at }))
-          )
-        ) : [aside("info", all.length ? t("mistakes.noSuch") : t("mistakes.empty"))]
+        shown2.length ? lineList(
+          shown2.map((e) => ({
+            text: el("span", { class: "marks" }, ...withMarks(partsOf(e))),
+            more: e.note,
+            title: [e.corrected, e.note, whenSaid(e.at, Date.now())].filter(Boolean).join("\n\n"),
+            open: () => copyText(e.corrected),
+            remove: () => post({ type: "forgetMistake", at: e.at }),
+            removeLabel: t("mistakes.forget")
+          }))
+        ) : aside("info", all.length ? t("mistakes.noSuch") : t("mistakes.empty"))
       );
     };
     fill();
@@ -9072,17 +9079,6 @@ ${e.translation}` }, e.translation),
       list2
     ];
   }
-  function screenPage(v) {
-    return [
-      grp(t("talkPage.keys")),
-      keyRow("snipKey", t("screen.snipKey"), t("screen.keyNote"), !v.keysOk.snip, "volume-2"),
-      keyRow("textKey", t("screen.textKey"), t("screen.keyNote"), !v.keysOk.text, "languages"),
-      grp(t("screen.how")),
-      card("scan", t("screen.draw"), [t("screen.drawNote")], null),
-      card("type", t("screen.reads"), [t("screen.readsNote")], linkBtn(t("screen.languages"), () => post({ type: "openLanguageSettings" }))),
-      card("spell-check", t("screen.fix"), [t("screen.fixNote")], null)
-    ];
-  }
   var pathNote = (path) => el("small", { class: "path", title: path }, el("bdi", {}, path));
   function kbRows(v) {
     const e = engineSettings(v);
@@ -9101,10 +9097,6 @@ ${e.translation}` }, e.translation),
       card("notebook-pen", t("dictate.subfolder"), [t("dictate.subfolderNote")], inbox)
     ];
   }
-  function vocabularyCard(v) {
-    const n = v.settings.vocabulary.length;
-    return navCard("spell-check", t("vocab.title"), t("vocab.note"), n ? t("backup.words", { n }) : t("vocab.noneYet"), () => go("vocabulary"), "vocabulary");
-  }
   function speechValue(v, feature) {
     if (!installed(v)) return t("dictate.needsEngine");
     const p = v.speech.plan[feature];
@@ -9112,34 +9104,27 @@ ${e.translation}` }, e.translation),
     const state = live?.name === p.chosen.model && live.state === "downloading" ? ` \xB7 ${t("check.downloadingPct", { pct: Math.round((live.progress ?? 0) * 100) })}` : "";
     return `${p.pinned ? p.chosen.label : t("dictate.automatic", { model: p.chosen.label })}${state}`;
   }
-  function modelCard(v, feature) {
-    if (!running(v)) return null;
-    const p = v.speech.plan[feature];
-    const how = feature === "dictation" ? t("dictate.modelNote", { time: seconds(p.chosen.estimate) }) : t("transcribe.modelNote", { time: minutes(p.chosen.estimate) });
-    return navCard("boxes", t("dictate.speechModel"), how, speechValue(v, feature), () => go("models", feature === "dictation" ? "forDictate" : "forTranscribe"), "models");
-  }
-  function dictatePage(v) {
+  var pathTail = (path) => path.split(/[\\/]/).filter(Boolean).slice(-2).join("\\");
+  function voicePage(v) {
     const s = v.settings;
     const k = v.speech.keysOk;
     const offer = engineRows(v, "Dictate");
-    const recent = v.dictation.recent;
+    const kb = engineSettings(v)?.kbDir;
     return [
+      tiles([
+        { icon: "whole-word", title: TITLES.vocabulary, count: s.vocabulary.length || "", open: () => go("vocabulary"), id: "vocabulary" },
+        { icon: "message-square-text", title: TITLES.phrases, count: v.dictation.recent.length || "", open: () => go("phrases"), id: "phrases" },
+        { icon: "folder", title: t("dictate.notesFolder"), sub: kb ? pathTail(kb) : t("act.notChosen"), open: () => openSub("notes"), id: "notes" }
+      ]),
       ...offer.length ? [grp(t("dictate.engine")), ...offer] : [],
       testOffer(v),
-      grp(t("talkPage.keys")),
-      keyRow("dictateKey", t("dictate.typeKey"), t("dictate.typeNote"), !k.dictate, "mic"),
-      keyRow("englishKey", t("dictate.englishKey"), t("dictate.englishNote", { lang: languageName2(s.native) }), !k.english, "languages"),
-      keyRow("noteKey", t("dictate.noteKey"), t("dictate.noteNote"), !k.note, "notebook-pen"),
-      keyRow("againKey", t("dictate.againKey"), t("dictate.againNote"), !k.again, "rotate-cw"),
-      keyRow("practiceKey", t("check.practiceKey"), t("check.practiceNote"), !k.practice, "graduation-cap"),
+      keyRow("dictateKey", t("dict.type"), t("dictate.typeNote"), !k.dictate),
+      keyRow("englishKey", t("dict.english"), t("dictate.englishNote", { lang: languageName2(s.native) }), !k.english),
+      keyRow("againKey", t("dictate.againKey"), t("dictate.againNote"), !k.again),
+      keyRow("noteKey", t("dict.note"), t("dictate.noteNote"), !k.note),
       aside("info", t("dictate.escNote")),
-      grp(t("dictate.notes")),
-      ...kbRows(v),
-      grp(t("dictate.wordsPhrases")),
-      vocabularyCard(v),
-      navCard("clock", t("dictate.recent"), t("dictate.recentNote"), recent.length ? recent[0]?.text ?? "" : t("vocab.noneYet"), () => go("phrases"), "phrases"),
-      modelCard(v, "dictation"),
-      el("p", { class: "privacy" }, lucide("lock", "s"), t("dictate.privacy"))
+      el("p", { class: "privacy" }, lucide("lock", "s"), t("dictate.privacy")),
+      enginePlate([{ title: t("dictate.speechModel"), value: speechValue(v, "dictation"), open: () => go("models", "forDictate") }])
     ].filter((n) => n !== null);
   }
   function vocabularyPage(v) {
@@ -9170,12 +9155,13 @@ ${e.translation}` }, e.translation),
     };
     const items = s.vocabulary.map((line) => {
       const { word: w, heard: hs } = parseEntry(line);
-      return el(
-        "div",
-        { class: "row" },
-        el("button", { class: "l", title: t("vocab.change"), onclick: () => edit(line) }, w, hs.length ? el("small", {}, t("vocab.heardAs", { forms: hs.join(", ") })) : null),
-        ib("x", t("vocab.remove", { word: w }), () => save({ vocabulary: (view?.settings.vocabulary ?? s.vocabulary).filter((l) => l !== line) }))
-      );
+      return {
+        text: w,
+        more: hs.join(", "),
+        title: t("vocab.change"),
+        open: () => edit(line),
+        remove: () => save({ vocabulary: (view?.settings.vocabulary ?? s.vocabulary).filter((l) => l !== line) })
+      };
     });
     return [
       grp(t("vocab.addGroup")),
@@ -9186,7 +9172,7 @@ ${e.translation}` }, e.translation),
         el("small", {}, t("vocab.addNote"))
       ),
       grp(t("vocab.words"), items.length || void 0, items.length ? linkBtn(t("vocab.clearAll"), () => save({ vocabulary: [] })) : null),
-      ...items.length ? items : [aside("info", t("vocab.empty"))],
+      items.length ? wordChips(items) : aside("info", t("vocab.empty")),
       aside("info", t("vocab.shared"))
     ];
   }
@@ -9194,16 +9180,18 @@ ${e.translation}` }, e.translation),
     const recent = v.dictation.recent;
     return [
       grp(t("dictate.phrases"), recent.length || void 0, recent.length ? linkBtn(t("mistakes.clear"), () => post({ type: "clearDictation" })) : null),
-      ...recent.length ? recent.map(
-        (e) => el(
-          "div",
-          { class: "row phrase" },
-          el("div", { class: "l" }, el("span", { class: "said", title: e.heard ? `${e.text}
+      recent.length ? lineList(
+        recent.map((e) => ({
+          text: e.text,
+          more: whenSaid(e.at, Date.now()),
+          title: e.heard ? `${e.text}
 
-${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, whenSaid(e.at, Date.now()))),
-          linkBtn(t("common.copy"), () => copyText(e.text))
-        )
-      ) : [aside("info", t("dictate.recentEmpty"))]
+${t("dictate.said", { heard: e.heard })}` : e.text,
+          open: () => copyText(e.text),
+          remove: () => post({ type: "forgetPhrase", at: e.at })
+        })),
+        "time"
+      ) : aside("info", t("dictate.recentEmpty"))
     ];
   }
   function whenSaid(iso, now) {
@@ -9250,6 +9238,7 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
     const ext = extensionSeen(v);
     return !!ext && olderVersion(ext.version, FIXED_ID_SINCE);
   };
+  var MIC_PAGE = "chrome-extension://phokhlmnodckgejnaogjgpmfjnjkefpa/permission.html";
   var extensionsPage = (v) => {
     const id = extensionSeen(v)?.id;
     return id && /^[a-p]{32}$/.test(id) ? `chrome://extensions/?id=${id}` : "chrome://extensions/";
@@ -9282,7 +9271,14 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
         [pathNote(dir), t("meet.step2Note")],
         el("span", { class: "kchg" }, linkBtn(t("meet.showFolder"), () => post({ type: "showInFolder", path: dir })), btn([lucide("copy", "s"), t("meet.copyPath")], () => copyText(dir), "primary"))
       ),
-      card("mic", t("meet.step3"), [t("meet.step3Note")], caps(MEET_KEY)),
+      // Chrome asks for the microphone only on the extension's own page; it opens once the extension is in.
+      card(
+        "mic",
+        t("meet.stepMic"),
+        [t("meet.stepMicNote")],
+        ext && !extensionReload(v) ? btn(t("meet.openInChrome"), () => openChrome(MIC_PAGE)) : null
+      ),
+      card("video", t("meet.step3"), [t("meet.step3Note")], caps(MEET_KEY)),
       grp(t("meet.off")),
       card("keyboard", t("meet.keyNothing"), [t("meet.keyNothingNote")], btn(t("meet.openInChrome"), () => openChrome("chrome://extensions/shortcuts"))),
       card("rotate-cw", t("meet.afterUpdate"), [t("meet.afterUpdateNote")], btn(t("meet.openInChrome"), () => openChrome(extensionsPage(v))))
@@ -9317,21 +9313,22 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
     if (quiet) return navCard("users", title, note, ok ? onDevice : value, open2, "speakers");
     return navCard("users", title, note, ok ? `${value} \xB7 ${t(onCard ? "busy.card" : "busy.processor")}` : value, open2, "speakers", ok);
   }
-  function transcribePage(v) {
+  function recordingsPage(v) {
     const offer = engineRows(v, "Transcribe");
     const dataDir = v.speech.health?.dataDir;
     return [
+      tiles([
+        { icon: "file-audio", title: TITLES.transcripts, open: () => go("transcripts"), id: "transcripts" },
+        { icon: "whole-word", title: TITLES.vocabulary, count: v.settings.vocabulary.length || "", open: () => go("vocabulary"), id: "vocabulary" }
+      ]),
       ...offer.length ? [grp(t("dictate.engine")), ...offer] : [],
       testOffer(v),
       ...running(v) ? [grp(t("transcribe.new")), ...newRows(v)] : [],
       grp(t("transcribe.setup")),
-      speakersCard(v),
-      vocabularyCard(v),
       meetCard(v),
-      modelCard(v, "transcripts"),
+      speakersCard(v),
       dataDir ? card("folder", t("transcribe.keptIn"), [pathNote(dataDir)], linkBtn(t("tray.open"), () => post({ type: "openPath", path: dataDir }))) : null,
-      grp(t("transcribe.library")),
-      navCard("file-text", t("tray.transcripts"), t("transcribe.allNote"), null, () => go("transcripts"))
+      enginePlate([{ title: t("dictate.speechModel"), value: speechValue(v, "transcripts"), open: () => go("models", "forTranscribe") }])
     ].filter((n) => n !== null);
   }
   function layoutsPage(v) {
@@ -9474,16 +9471,13 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
   }
   function learnedPage(v) {
     const { alwaysFix, myWords } = v.learned;
-    const name = (code) => languageName2(code);
-    const item = (list2, w, note) => card(list2 === "alwaysFix" ? "wand-sparkles" : "book-open", w.word, [note], ib("x", t("kb.forget", { word: w.word }), () => post({ type: "unlearn", list: list2, word: w.word })));
+    const forget = (list2, word) => () => post({ type: "unlearn", list: list2, word });
     return [
       toggleCard("sparkles", t("kb.learn"), v.settings.learn, (learn) => save({ learn }), t("kb.learnNote")),
       grp(t("kb.fixedAlways"), alwaysFix.length || void 0),
-      ...alwaysFix.length ? alwaysFix.map((w) => item("alwaysFix", w, t("kb.into", { lang: name(w.lang) }))) : [aside("info", t("kb.fixedAlwaysEmpty"))],
-      grp(t("tray.yourWords"), myWords.length || void 0),
-      ...myWords.length ? myWords.map((w) => item("myWords", w, t("kb.myWordNote", { lang: name(w.lang) }))) : [aside("info", t("kb.myWordsEmpty"))],
-      grp(t("kb.neverFixed")),
-      navCard("lock", t("kb.kept"), t("kb.keptNote"), String(v.settings.keepWords.length || t("kb.none")), () => go("kept"), "kept"),
+      alwaysFix.length ? wordChips(alwaysFix.map((w) => ({ text: w.word, more: languageName2(w.lang), title: t("kb.into", { lang: languageName2(w.lang) }), remove: forget("alwaysFix", w.word) })), "\u2192") : aside("info", t("kb.fixedAlwaysEmpty")),
+      grp(t("act.newWords"), myWords.length || void 0),
+      myWords.length ? wordChips(myWords.map((w) => ({ text: w.word, more: w.lang.toUpperCase(), title: t("kb.myWordNote", { lang: languageName2(w.lang) }), remove: forget("myWords", w.word) }))) : aside("info", t("kb.myWordsEmpty")),
       alwaysFix.length || myWords.length ? card("trash-2", t("kb.forgetAll"), [t("kb.forgetAllNote")], linkBtn(t("kb.forgetBtn"), () => post({ type: "forgetLearned" }))) : null
     ].filter((n) => n !== null);
   }
@@ -9512,7 +9506,7 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
       if (open?.name === "programs" && !open.sub) renderBody();
     }, fault);
   }
-  function keyboardPage(v) {
+  function layoutPage(v) {
     const s = v.settings;
     const sample = sampleOf(s.native);
     const [typed = "", fixed = ""] = [sample.typed.split(" ")[0], sample.fixed.split(" ")[0]];
@@ -9520,21 +9514,25 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
     const learnedCount = v.learned.alwaysFix.length + v.learned.myWords.length;
     const onOff = (on, key, label, has) => has ? el("span", { class: "tgwrap" }, toggleKnob(on, (next) => save({ [key]: next }), label)) : null;
     return [
-      grp(t("talkPage.keys")),
+      tiles([
+        { icon: "lock", title: TITLES.kept, count: s.keepWords.length || "", open: () => go("kept"), id: "kept" },
+        { icon: "brain", title: TITLES.learned, count: learnedCount || "", open: () => go("learned"), id: "learned" },
+        { icon: "app-window", title: TITLES.programs, count: s.apps.length || "", open: () => go("programs"), id: "programs" }
+      ]),
+      grp(t("act.fixGroup")),
+      keyRow("fixKey", t("kb.fixKey"), t("kb.fixKeyNote"), false, void 0, onOff(s.fixKeyOn, "fixKeyOn", t("kb.theFixKey"), !!s.fixKey)),
+      toggleCard("spell-check", t("kb.autoFix"), s.autoFix, (autoFix) => save({ autoFix }), t("kb.autoFixNote", { typed, fixed })),
+      s.autoFix ? navCard(null, t("kb.fixing"), t("kb.fixingNote"), null, () => openSub("fixing"), "fixing") : null,
+      grp(t("act.switchGroup")),
       keyRow(
         "switchKey",
         t("kb.switchKey"),
         s.switchKey && isTap(s.switchKey) ? t("kb.switchTap") : t("kb.switchNote"),
         false,
-        "keyboard",
+        void 0,
         onOff(s.switchOn, "switchOn", t("kb.switchingByKeys"), !!s.switchKey || ownKeys > 0)
       ),
-      keyRow("fixKey", t("kb.fixKey"), t("kb.fixKeyNote"), false, "rotate-cw", onOff(s.fixKeyOn, "fixKeyOn", t("kb.theFixKey"), !!s.fixKey)),
-      grp(t("kb.asYouType")),
-      toggleCard("spell-check", t("kb.autoFix"), s.autoFix, (autoFix) => save({ autoFix }), t("kb.autoFixNote", { typed, fixed })),
-      s.autoFix ? navCard("type", t("kb.fixing"), t("kb.fixingNote"), null, () => openSub("fixing"), "fixing") : null,
-      toggleCard("type", t("tray.layoutBadge"), s.layoutBadge, (layoutBadge) => save({ layoutBadge }), t("kb.badgeNote")),
-      toggleCard("keyboard", t("tray.trayLayout"), s.trayLayout, (trayLayout) => save({ trayLayout }), t("kb.trayNote")),
+      navCard(null, TITLES.layouts, ownKeys ? t("kb.layoutsOwn", { n: ownKeys }) : t("kb.layoutsNote"), cycleOf(v).map((l) => l.short).join(" \xB7 "), () => go("layouts"), "layouts"),
       toggleCard("volume-2", t("kb.chime"), s.switchSound, (switchSound) => (switchSound && hearSwitch(s.switchSoundName), save({ switchSound })), t("kb.chimeNote")),
       s.switchSound ? card(
         "volume-2",
@@ -9546,12 +9544,10 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
           (switchSoundName) => (hearSwitch(switchSoundName), save({ switchSoundName }))
         )
       ) : null,
+      toggleCard("type", t("tray.layoutBadge"), s.layoutBadge, (layoutBadge) => save({ layoutBadge }), t("kb.badgeNote")),
+      toggleCard("keyboard", t("tray.trayLayout"), s.trayLayout, (trayLayout) => save({ trayLayout }), t("kb.trayNote")),
+      grp(t("act.general")),
       toggleCard("monitor", t("kb.fullScreen"), s.quietFullScreen, (quietFullScreen) => save({ quietFullScreen }), t("kb.fullScreenNote")),
-      grp(t("kb.lists")),
-      navCard("keyboard", t("kb.layouts"), ownKeys ? t("kb.layoutsOwn", { n: ownKeys }) : t("kb.layoutsNote"), cycleOf(v).map((l) => l.short).join(" \xB7 "), () => go("layouts"), "layouts"),
-      navCard("monitor", t("kb.programs"), t("kb.programsNote"), s.apps.length ? t("kb.programCount", { n: s.apps.length }) : t("kb.none"), () => go("programs"), "programs"),
-      navCard("sparkles", t("kb.learned"), s.learn ? t("kb.learnedNote") : t("kb.learnedOff"), learnedCount ? t("backup.words", { n: learnedCount }) : t("kb.none"), () => go("learned"), "learned"),
-      navCard("lock", t("kb.kept"), t("kb.keptNever"), s.keepWords.length ? t("backup.words", { n: s.keepWords.length }) : t("kb.none"), () => go("kept"), "kept"),
       v.rivals.length ? warn(t("kb.rivals", { n: v.rivals.length, names: v.rivals.join(` ${t("common.and")} `) })) : null,
       v.elevatedApp ? warn(t("kb.elevated", { app: v.elevatedApp })) : null,
       v.keyboardTrouble ? warn(t("kb.trouble", { trouble: v.keyboardTrouble })) : null,
@@ -9560,49 +9556,22 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
     ].filter((n) => n !== null);
   }
   var matches = (w, q) => `${w.word} ${w.base} ${w.sentence} ${w.senses.map((s) => s[1]).join(" ")}`.toLowerCase().includes(q);
-  function dateOf(iso) {
-    const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return "";
-    const now = /* @__PURE__ */ new Date();
-    if (d.toDateString() === now.toDateString()) return t("words.today");
-    return d.toLocaleDateString(uiLanguage() === "en" ? "en-US" : uiLanguage(), d.getFullYear() === now.getFullYear() ? { month: "short", day: "numeric" } : { month: "short", day: "numeric", year: "numeric" });
-  }
-  function sentenceOf(w) {
-    const at = w.word ? w.sentence.toLowerCase().indexOf(w.word.toLowerCase()) : -1;
-    if (at < 0) return el("div", { class: "ws" }, w.sentence);
-    return el("div", { class: "ws" }, w.sentence.slice(0, at), el("mark", {}, w.sentence.slice(at, at + w.word.length)), w.sentence.slice(at + w.word.length));
-  }
-  function wordRow(w) {
-    const senses = w.senses.map(([, s]) => s).join("; ");
-    const full = w.senses.map(([pos, s]) => pos ? `${pos}: ${s}` : s).join("\n");
-    return el(
-      "li",
-      { class: "wi" },
-      el(
-        "div",
-        { class: "wh" },
-        el("b", {}, w.base),
-        w.word.toLowerCase() !== w.base.toLowerCase() ? el("span", { class: "form" }, t("word.from", { word: w.word })) : null,
-        el("span", { class: "tr", title: full }, senses)
-      ),
-      w.sentence ? sentenceOf(w) : null,
-      el(
-        "div",
-        { class: "wr" },
-        el("button", { class: "star", title: t("word.remove"), "aria-label": t("words.removeAria", { word: w.base }), onclick: () => post({ type: "removeWord", id: w.id }) }, icon("star-full")),
-        el("span", { class: "d" }, dateOf(w.addedAt))
-      )
-    );
+  function wordChip(w) {
+    const senses = w.senses.map(([pos, s]) => pos ? `${pos}: ${s}` : s).join("\n");
+    return {
+      text: w.base,
+      more: w.senses[0]?.[1] ?? "",
+      title: [w.word.toLowerCase() !== w.base.toLowerCase() ? t("word.from", { word: w.word }) : "", senses, w.sentence].filter(Boolean).join("\n\n"),
+      remove: () => post({ type: "removeWord", id: w.id })
+    };
   }
   function wordsPage(v) {
-    const list2 = el("ul", { class: "wl" });
+    const list2 = el("div", {});
     const fill = () => {
       const words = view?.words ?? v.words;
       const q = search.trim().toLowerCase();
       const shown2 = q ? words.filter((w) => matches(w, q)) : words;
-      list2.replaceChildren(
-        ...shown2.length ? shown2.map(wordRow) : [el("li", { class: "empty" }, words.length ? t("words.noSuch") : t("words.empty"))]
-      );
+      list2.replaceChildren(shown2.length ? wordChips(shown2.map(wordChip)) : aside("info", words.length ? t("words.noSuch") : t("words.empty")));
     };
     fill();
     const none = v.words.length === 0;
@@ -9627,7 +9596,8 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
         el("button", { class: "btn", disabled: none, onclick: () => post({ type: "exportWords" }) }, icon("export"), t("words.export")),
         el("button", { class: "btn", disabled: none, onclick: () => post({ type: "copyWords" }) }, icon("copy"), t("common.copy"))
       ),
-      list2
+      list2,
+      aside("star", t("words.hint"))
     ];
   }
   function voiceOptions(v) {
@@ -9731,7 +9701,7 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
     }
   }
   var USER_NAMES = { Translate: t("storage.userTranslate"), Listen: t("storage.userListen"), Check: t("storage.userCheck"), Dictate: t("storage.userDictate"), Transcribe: t("storage.userTranscribe") };
-  var usersText = (names) => names.map((n) => USER_NAMES[n] ?? n).join(` ${t("common.and")} `);
+  var usersText = (names) => [...new Set(names.map((n) => USER_NAMES[n] ?? n))].join(` ${t("common.and")} `);
   var asking2 = "";
   function storedLine(v, p) {
     const key = `${p.id}:${p.item ?? ""}`;
@@ -9810,7 +9780,7 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
         "plus",
         t("settings.addLanguage"),
         [t("settings.addLanguageNote")],
-        select("", [["", t("settings.pickLanguage")], ...rest.map((l) => [l.code, `${languageName2(l.code)} \xB7 ${l.native}`])], (code) => code && save({ languages: [...mine(), code] }))
+        select("", [["", t("settings.pickLanguage")], ...rest.map((l) => [l.code, twoNames(languageName2(l.code), l.native)])], (code) => code && save({ languages: [...mine(), code] }))
       ),
       grp(t("settings.languagesGroup"), used.length),
       card("globe", languageName2(used[0] ?? ""), [t("settings.yourLangNote")], null),
@@ -9841,7 +9811,12 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
   function settingsPage(v) {
     const s = v.settings;
     return [
-      grp(t("settings.language")),
+      grp(t("keys.group")),
+      keyRow("menuKey", t("menu.keyTitle"), t("menu.keyNote")),
+      keyRow("pauseKey", t("settings.pauseKey"), t("settings.pauseKeyNote"), !v.keysOk.pause),
+      keyRow("windowKey", t("settings.windowKey"), t("settings.windowKeyNote"), !v.keysOk.window),
+      card("rotate-ccw", t("settings.resetKeys"), [t("settings.resetKeysNote")], linkBtn(t("main.resetKeys"), () => post({ type: "resetKeys" }))),
+      grp(t("act.general")),
       uiLanguageCard(s.uiLanguage, (uiLanguage2) => save({ uiLanguage: uiLanguage2 })),
       card(
         "languages",
@@ -9849,12 +9824,11 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
         [t("settings.yourLanguageNote")],
         select(
           s.native,
-          v.languages.map((l) => [l.name, `${l.native} \xB7 ${languageName2(l.name)}`]),
+          v.languages.map((l) => [l.name, twoNames(l.native, languageName2(l.name))]),
           (native) => save({ native })
         )
       ),
       languagesCard(v),
-      grp(t("app.name")),
       card(
         "monitor",
         t("settings.theme"),
@@ -9871,14 +9845,11 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
       ),
       toggleCard("power", t("settings.startWithWindows"), s.startWithWindows, (startWithWindows) => save({ startWithWindows })),
       toggleCard("pause", t("settings.pause"), s.paused, (paused) => save({ paused }), t("settings.pauseNote")),
-      keyRow("pauseKey", t("settings.pauseKey"), t("settings.pauseKeyNote"), !v.keysOk.pause, "pause"),
-      keyRow("windowKey", t("settings.windowKey"), t("settings.windowKeyNote"), !v.keysOk.window, "house"),
-      card("rotate-ccw", t("settings.resetKeys"), [t("settings.resetKeysNote")], linkBtn(t("main.resetKeys"), () => post({ type: "resetKeys" }))),
       // New versions are downloaded by hand from GitHub (the owner, 2026-10-30): nothing installs itself.
       card(
         "rotate-cw",
-        t(v.dev ? "settings.versionDev" : "settings.version", { version: v.version }),
-        [v.dev ? t("settings.built", { build: v.build }) : t("settings.versionNote")],
+        t(v.dev ? "settings.versionDev" : "settings.version", { version: versionText(v.version) }),
+        [v.dev ? t("settings.built", { build: v.build }) : t("settings.versionNote"), isBeta(v.version) ? t("settings.betaNote") : null],
         linkBtn(t("settings.newVersions"), () => post({ type: "openLink", url: RELEASES }))
       ),
       grp(t("settings.backup")),
@@ -9892,39 +9863,43 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
       card("rotate-ccw", t("settings.resetAll"), [t("settings.resetAllNote")], linkBtn(t("main.reset"), () => post({ type: "resetSettings" })))
     ].filter((n) => n !== null);
   }
+  var AUTHOR_LINKS = [
+    ["ikstro.com", "https://ikstro.com"],
+    ["GitHub", "https://github.com/ikstro"],
+    ["LinkedIn", "https://linkedin.com/in/ikstro"],
+    ["Telegram", "https://t.me/ikstrovert"],
+    ["Behance", "https://behance.net/ikstro"]
+  ];
+  var AUTHOR_MAIL = "hello@ikstro.com";
+  var CREDITS = "Firefox Translations (Mozilla) \xB7 Gemma 4 (Google) \xB7 llama.cpp \xB7 Whisper (OpenAI) \xB7 Parakeet (NVIDIA) \xB7 pyannote \xB7 Kokoro \xB7 eSpeak NG \xB7 Windows OCR \xB7 WikDict \xB7 FrequencyWords \xB7 Inter, JetBrains Mono \xB7 Electron \xB7 Lucide \xB7 VS Code icons";
+  var linkChips = (links) => el(
+    "div",
+    { class: "links" },
+    ...links.map(([text, url]) => el("a", { class: "lchip", href: url, onclick: (event) => (event.preventDefault(), post({ type: "openLink", url })) }, text, lucide("arrow-up-right")))
+  );
   function aboutPage(v) {
-    const fact = (term, ...detail) => [el("dt", {}, term), el("dd", {}, ...detail)];
     return [
-      el(
-        "div",
-        { class: "about" },
-        el("div", { class: "mk" }, tile(88), logo()),
-        el("p", { class: "tag" }, "Talk to the duck."),
-        // A run from source says when it was built, so it is never taken for the last release.
-        el("p", { class: "ver" }, v.dev ? t("about.versionDev", { version: v.version, build: v.build }) : t("about.version", { version: v.version })),
-        el(
-          "dl",
-          { class: "facts" },
-          ...fact(t("about.madeBy"), t("about.author"), el("br"), link("https://ikstro.com", "ikstro.com")),
-          ...fact(
-            t("about.runsOffline"),
-            t("about.credits"),
-            el("span", { class: "q" }, t("about.neverSent"))
-          ),
-          ...fact(t("about.madeWith"), t("about.madeWithList")),
-          ...fact(t("about.online"), t("about.onlineList", { size: v.natural.size })),
-          ...fact(
-            t("about.links"),
-            link(RELEASES, t("about.newVersions")),
-            " \xB7 ",
-            link("https://github.com/ikstro/kryakl", t("about.source")),
-            " \xB7 ",
-            link("https://github.com/ikstro/kryakl/blob/main/NOTICE", t("about.licenses")),
-            " \xB7 ",
-            linkBtn(t("report.title"), () => go("report"))
-          )
-        )
-      )
+      el("div", { class: "hero" }, tile(48), el("div", { class: "ht" }, logo(), el("small", {}, "Talk to the duck"))),
+      grp(t("about.story")),
+      el("p", { class: "para" }, t("about.storyText")),
+      grp(t("about.authorGroup")),
+      row("Yevhen Peshynskyi", [t("about.role")]),
+      el("p", { class: "para" }, t("about.bio")),
+      linkChips(AUTHOR_LINKS),
+      row(t("about.mail"), [], el("span", { class: "kchg" }, el("span", { class: "mail" }, AUTHOR_MAIL), btn(t("about.write"), () => post({ type: "openLink", url: `mailto:${AUTHOR_MAIL}` })))),
+      grp(t("app.name")),
+      // A run from source says when it was built, so it is never taken for the last release.
+      row(t("about.versionTitle"), [v.dev ? t("settings.built", { build: v.build }) : null], el("span", { class: "v" }, v.dev ? `${versionText(v.version)} dev` : versionText(v.version))),
+      row(t("about.license"), [], el("span", { class: "v" }, t("about.licenseValue"))),
+      row(t("about.offline"), [t("about.offlineNote"), `${t("about.online")} ${t("about.onlineList", { size: v.natural.size })}`]),
+      row(t("about.bug"), [isBeta(v.version) ? t("about.bugNote") : null], btn(t("about.report"), () => go("report"))),
+      linkChips([
+        [t("about.newVersions"), RELEASES],
+        [t("about.source"), "https://github.com/ikstro/kryakl"],
+        [t("about.licenses"), "https://github.com/ikstro/kryakl/blob/main/NOTICE"]
+      ]),
+      grp(t("about.thanks")),
+      el("p", { class: "para credits" }, CREDITS)
     ];
   }
   var reported;
@@ -9965,10 +9940,11 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
     const state = { off: t("report.stateOff"), starting: t("report.stateStarting"), ready: t(sp.health?.busy ? "report.stateBusy" : "report.stateRunning"), down: t("report.stateDown") }[sp.service];
     return row(t("report.restart"), [t("report.restartNote", { state }), sp.trouble ? bad(sp.trouble) : null], linkBtn(t("report.restartBtn"), () => post({ type: "restartSpeech" }), sp.pack.status !== "ready"));
   }
+  var OLD_TABS = { talk: "english", check: "english", listen: "translate", screen: "translate", dictate: "voice", transcribe: "recordings", keyboard: "layout" };
   function showTab(tab) {
     if (tab === "checkModel") return go("models", "forCheck");
     if (tab !== "home" && tab !== "howto") {
-      go(tab);
+      go(OLD_TABS[tab] ?? tab);
       if (tab === "vocabulary" || tab === "kept") pBody.querySelector("input[data-live]")?.focus();
       return;
     }
@@ -10000,6 +9976,7 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
       return;
     }
     if (m.type === "appWindow") return windowState(m.maximized);
+    if (m.type === "keyEvent") return keyTarget?.(m.code, m.down, m.at);
     if (m.type === "reported") {
       reported = { file: m.file, error: m.error };
       if (open?.name === "report") renderBody();
@@ -10062,7 +10039,7 @@ ${t("dictate.said", { heard: e.heard })}` : e.text }, e.text), el("small", {}, w
     view: () => view,
     shown: () => open?.name === "transcripts",
     show: () => go("transcripts"),
-    setup: () => go("transcribe", "speakers")
+    setup: () => go("recordings", "speakers")
   });
   post({ type: "appReady" });
 })();

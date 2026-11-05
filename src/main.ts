@@ -52,7 +52,7 @@ import { openStream } from './download'
 import { frameWindow, WIN11 } from './dwm'
 import { createTranslator, NATIVES } from './engine'
 import { LEVEL_VRAM_MB, translationAdvice } from './hardware'
-import { hotkeyLabel, isAccelerator } from './hotkey'
+import { COPY_TWICE, hotkeyLabel, isAccelerator } from './hotkey'
 import { levelName, setUiLanguage, t } from './i18n'
 import { engineMessage } from './i18n/engine'
 import { FIX_LANGUAGES, KeyboardHelper, keyboardLayouts } from './keyboard'
@@ -73,6 +73,8 @@ import { recognize } from './ocr'
 import { pickLines } from './ocrpick'
 import { adoptLocalFolder, adoptOldFolders, freeFolder, hasToMove, healSpeech, leftIn, moveDownloads, OLD_LOCAL_FOLDERS, partDir, removeOldUpdaterCaches, type LeftPart, type Warn } from './oldfolder'
 import { paragraphsOf } from './ocrtext'
+import { menuGroups, type MenuAction } from './menu'
+import { KryaklMenu } from './menuwindow'
 import { placeByTray, placeNear, resize, type Point } from './placement'
 import type { AppTab, AppView, BusyPart, CardKind, CardState, CheckResult, DictationMode, DictionaryStatus, GlossMissing, HostCall, HostVoice, Refused, StorageId, StoragePart, StorageView, TalkWindowView, TextResult, ToHost, ToView, TranslationState, TrayCommand, TrayView, ViewConfig } from './protocol'
 import { draftsIn, englishHtml, textOutHtml, translationHtml } from './render'
@@ -109,7 +111,7 @@ import type { Translator } from './translator'
 import manifest from './voice-manifest.json'
 import { VoiceStore, type VoiceManifest } from './voicestore'
 import { wordDiff } from './worddiff'
-import { focus, focusedElement, release, selectedText } from './uia'
+import { focus, focusedElement, release, saysNothingSelected, selectedText } from './uia'
 import { allowForeground, ctrlHeld, handleOf, inFront, keysLetGo, pressAddressBar, pressCopy, pressEnter, pressPaste, pressSelectBack, watchClipboard, watchRendering } from './winclip'
 import {
   privateCopy,
@@ -122,7 +124,7 @@ import {
   writeText as writeClipboardText,
   type ClipboardSnapshot,
 } from './winclipboard'
-import { exeOf, focusWindow, foreground, fullScreenNow, installedLayouts, layoutTable, windowedApps } from './winkbd'
+import { caretOf, exeOf, focusWindow, foreground, fullScreenNow, installedLayouts, layoutTable, press, windowedApps } from './winkbd'
 import { ankiTsv, WordStore, wordsText } from './words'
 
 const CARD_MIN = 96
@@ -160,10 +162,10 @@ const KEYBOARD_APPS: Record<string, string> = {
 /** The tray's panel: its width; a click on the tray icon this soon after the panel hid on that click's blur only closes it. */
 const TRAY_WIDTH = 360
 const TRAY_REOPEN_MS = 300
-/** Ctrl+C pressed twice, as a card's header draws the key that called it. */
-const DOUBLE_COPY = 'Control+C*2'
+/** Ctrl+C pressed twice, a key of an action on the selection (settings.ts COPY_TWICE_KEYS), as a card's header draws it too. */
+const DOUBLE_COPY = COPY_TWICE
 /** The settings that are keys of actions. */
-const ACTION_KEYS: readonly (keyof Settings)[] = ['selectKey', 'snipKey', 'translateKey', 'textKey', 'inPlaceKey', 'checkKey', 'typeKey', 'typeCheckKey', 'switchKey', 'fixKey', 'pauseKey', 'windowKey']
+const ACTION_KEYS: readonly (keyof Settings)[] = ['menuKey', 'selectKey', 'snipKey', 'translateKey', 'textKey', 'inPlaceKey', 'checkKey', 'typeKey', 'typeCheckKey', 'switchKey', 'fixKey', 'pauseKey', 'windowKey']
 /** The settings the keyboard thread is given (besides the keys). */
 const KEYBOARD_SETTINGS: readonly (keyof Settings)[] = [
   'layouts',
@@ -193,6 +195,12 @@ const LINKS = new Set([
   'https://github.com/ikstro/kryakl',
   'https://github.com/ikstro/kryakl/releases',
   'https://github.com/ikstro/kryakl/blob/main/NOTICE',
+  // The author's own places, and a letter to him (About).
+  'https://github.com/ikstro',
+  'https://linkedin.com/in/ikstro',
+  'https://t.me/ikstrovert',
+  'https://behance.net/ikstro',
+  'mailto:hello@ikstro.com',
   // The steps to the speakers' model: an account, the model's terms, a Read token.
   'https://huggingface.co/join',
   'https://huggingface.co/pyannote/speaker-diarization-community-1',
@@ -275,6 +283,8 @@ let dictation: Dictation
 /** What a click on the tray's balloon does, for the balloon shown last. */
 let balloonClick: (() => void) | undefined
 let keyboard: KeyboardHelper
+/** The menu on one key, by the text cursor. */
+let oneKeyMenu: KryaklMenu | undefined
 let keyboardTrouble: string | undefined
 let lastApp: string | undefined
 /** A program run as administrator was in front lately: Windows keeps its keys from Kryakl's hooks. */
@@ -521,6 +531,7 @@ function applyUiLanguage(): void {
     void trayPanel.loadFile(media('tray.html'), pageOptions())
   }
   dictation?.languageChanged()
+  oneKeyMenu?.languageChanged()
 }
 
 /** Light, dark or as Windows is: the pages follow `prefers-color-scheme`, which this sets. */
@@ -547,6 +558,7 @@ function applyColors(): void {
     talkWin.setBackgroundColor(cardColor())
     frameWindow(talkWin, { corner: 'round', border: borderColor() })
   }
+  oneKeyMenu?.repaint()
   // The dictation badge needs nothing: its page draws its ground and edge, and follows the theme itself.
 }
 
@@ -832,7 +844,8 @@ async function importBackup(): Promise<void> {
   dictationLog.merge(read.dictation)
   talks.merge(read.talks)
   // All of the settings saved: the keys and the keyboard are applied again, the learned words with them; this computer's window places stay.
-  saveSettings(normalize({ ...settings, ...read.settings, dictationBadge: settings.dictationBadge, talkBounds: settings.talkBounds, setupDone: true }, settings.native))
+  // A backup from before Ctrl+C twice was a key (no keysVersion) moves its switch as an old settings file does (settings.ts).
+  saveSettings(normalize({ ...settings, keysVersion: undefined, ...read.settings, dictationBadge: settings.dictationBadge, talkBounds: settings.talkBounds, setupDone: true }, settings.native))
   postApp()
 }
 
@@ -852,7 +865,7 @@ async function resetSettings(): Promise<void> {
   saveSettings({ ...DEFAULTS, native: settings.native, languages: settings.languages, uiLanguage: settings.uiLanguage, setupDone: true, introSeen: true })
 }
 
-/** Every key back to how it came, after a question: the actions', the layouts' own, Ctrl+C twice and the keys turned off. */
+/** Every key back to how it came, after a question: the actions', the layouts' own and the keys turned off (Ctrl+C twice is no action's then). */
 async function resetKeys(): Promise<void> {
   const options: Electron.MessageBoxOptions = {
     type: 'question',
@@ -866,7 +879,7 @@ async function resetKeys(): Promise<void> {
   const { response } = appWin ? await dialog.showMessageBox(appWin, options) : await dialog.showMessageBox(options)
   if (response !== 0) return
   const keys = Object.fromEntries([...ACTION_KEYS, ...DICTATION_KEYS].map(k => [k, DEFAULTS[k]]))
-  saveSettings({ ...keys, layoutKeys: {}, doubleCopy: true, switchOn: true, fixKeyOn: true })
+  saveSettings({ ...keys, layoutKeys: {}, switchOn: true, fixKeyOn: true })
 }
 
 // ---------------------------------------------------------------- the card
@@ -1488,6 +1501,7 @@ function setCardHeight(px: number): void {
 /** `page`: who sent it (bridge.ts), which the voice and the word card answer. */
 function onMessage(message: ToHost, page: Page): void {
   if (dictation?.onMessage(message)) return
+  if (oneKeyMenu?.onMessage(message)) return
   const asker: VoicePage = page === 'talk' ? 'talk' : 'card'
   switch (message.type) {
     case 'clearDictation':
@@ -1495,6 +1509,14 @@ function onMessage(message: ToHost, page: Page): void {
       return
     case 'clearTranslations':
       translationLog.clear()
+      postApp()
+      return
+    case 'forgetPhrase':
+      dictationLog.remove(message.at)
+      postApp()
+      return
+    case 'forgetTranslation':
+      translationLog.remove(message.at)
       postApp()
       return
     case 'unlearn':
@@ -1711,6 +1733,16 @@ function onMessage(message: ToHost, page: Page): void {
     case 'openLogs':
       void shell.openPath(userDir())
       return
+    case 'recordKeys':
+      // The keys go to the field only while the app window is in front (the thread compares its window).
+      // Without the thread, the page records from its own key events.
+      try {
+        if (message.on && appWin && !appWin.isDestroyed()) keyboard.record(true, handleOf(appWin))
+        else keyboard.record(false)
+      } catch (error) {
+        console.warn('Kryakl: the keyboard thread could not read the keys for a key field', error)
+      }
+      return
     case 'window':
       if (message.action === 'minimize') appWin?.minimize()
       else if (message.action === 'maximize') {
@@ -1755,7 +1787,7 @@ function onMessage(message: ToHost, page: Page): void {
       saveSettings({ talkOnTop: message.on === true })
       return
     case 'talkWindow':
-      if (message.action === 'settings') openApp('talk')
+      if (message.action === 'settings') openApp('english')
       else if (message.action === 'model') openApp('checkModel')
       else if (message.action === 'maximize') {
         if (talkWin?.isMaximized()) talkWin.unmaximize()
@@ -2095,6 +2127,16 @@ function selectionIn(field: unknown): string {
   } catch (error) {
     console.warn('Kryakl: could not read the selection through UI Automation', error)
     return ''
+  }
+}
+
+/** Whether a field says outright that nothing is selected in it. */
+function fieldSaysNothing(field: unknown): boolean {
+  if (!field) return false
+  try {
+    return saysNothingSelected(field)
+  } catch {
+    return false
   }
 }
 
@@ -2585,8 +2627,11 @@ function warmModel(purpose: Purpose): void {
   )
 }
 
-/** A selection key: Kryakl presses Ctrl+C in the program in front and shows what it copies; the clipboard is put back after. */
-async function useSelection(purpose: Purpose, via?: string): Promise<void> {
+/**
+ * A selection key: Kryakl presses Ctrl+C in the program in front and shows what it copies; the clipboard is put back after.
+ * `nothing`: what to do when no copy comes in time, in place of saying so (the menu's items).
+ */
+async function useSelection(purpose: Purpose, via?: string, nothing?: () => void): Promise<void> {
   warmModel(purpose)
   const at = screen.getCursorScreenPoint()
   const front = foreground()
@@ -2602,10 +2647,25 @@ async function useSelection(purpose: Purpose, via?: string): Promise<void> {
   const since = Date.now()
   releaseField(copyWanted?.field)
   copyWanted = { since, at, purpose, window, field, exe, ...(via ? { via } : {}) }
+  const giveUp = (waited: number) => {
+    if (!copyWanted) return
+    releaseField(copyWanted.field)
+    copyWanted = undefined
+    lateCopyUntil = Date.now() + LATE_COPY_MS
+    // Put back once a late copy has had its time; nothing changed, nothing is written.
+    clipGuard.release(LATE_COPY_MS)
+    log(`copy: nothing in ${waited} ms from ${exe}`)
+    if (nothing) nothing()
+    else tray?.displayBalloon({ title: t('app.name'), content: t('main.nothingCopied') })
+  }
   setTimeout(() => {
     if (copyWanted?.since !== since) return
     const text = selectionIn(field)
-    if (!text) return
+    if (!text) {
+      // The menu has something to do with no selection: a field that says it has none is not waited for.
+      if (nothing && fieldSaysNothing(field)) giveUp(UIA_WAIT_MS)
+      return
+    }
     copyWanted = undefined
     // A copy the program makes after all is its late answer: taken back with the rest.
     lateCopyUntil = Date.now() + LATE_COPY_MS
@@ -2614,14 +2674,7 @@ async function useSelection(purpose: Purpose, via?: string): Promise<void> {
     showText(text, purpose, at, window, via, field)
   }, UIA_WAIT_MS)
   setTimeout(() => {
-    if (copyWanted?.since !== since) return
-    releaseField(copyWanted.field)
-    copyWanted = undefined
-    lateCopyUntil = Date.now() + LATE_COPY_MS
-    // Put back once a late copy has had its time; nothing changed, nothing is written.
-    clipGuard.release(LATE_COPY_MS)
-    log(`copy: nothing in ${COPY_WAIT_MS} ms from ${exe}`)
-    tray?.displayBalloon({ title: t('app.name'), content: t('main.nothingCopied') })
+    if (copyWanted?.since === since) giveUp(COPY_WAIT_MS)
   }, COPY_WAIT_MS)
 }
 
@@ -2687,21 +2740,74 @@ function onClipboardChange(): void {
   doubleCopyChange(now, ctrl)
 }
 
-/** A change of the clipboard by the person: Ctrl+C twice asks for the card. */
+/** The action on the selection whose key is Ctrl+C twice, if one has it (one at most: the settings keep a key for one use). */
+function copyTwicePurpose(): Purpose | undefined {
+  if (settings.selectKey === DOUBLE_COPY) return 'listen'
+  if (settings.translateKey === DOUBLE_COPY) return 'translate'
+  if (settings.inPlaceKey === DOUBLE_COPY) return 'inPlace'
+  if (settings.checkKey === DOUBLE_COPY) return 'check'
+  return undefined
+}
+
+/** A change of the clipboard by the person: Ctrl+C twice runs the action whose key it is, on what was copied. */
 function doubleCopyChange(now: number, ctrl: boolean): void {
   // Copying from the card itself is not a request, nor is any copy while Kryakl is paused, nor a password
   // manager's copy (marked "do not watch"): Ctrl+C twice on a password never shows or reads it.
-  if (card?.isFocused() || !settings.doubleCopy || settings.paused || privateCopy()) return
+  const purpose = copyTwicePurpose()
+  if (card?.isFocused() || !purpose || settings.paused || privateCopy()) return
   if (!copies.change(now, ctrl)) return
+  warmModel(purpose)
   const at = screen.getCursorScreenPoint()
+  // Paste and Translate in place go back to the window copied from (and the translator's and the checker's to its field), as the selection keys do.
+  const window = purpose === 'listen' ? undefined : foreground().hwnd
+  const field = purpose === 'translate' || purpose === 'check' ? focusedField() : undefined
   afterSettling(async () => {
     const text = (await clipboard.readText()).trim()
-    if (text) translateText(text, 'selection', at, DOUBLE_COPY)
+    if (text) showText(text, purpose, at, window, DOUBLE_COPY, field)
+    else releaseField(field)
   })
 }
 
-function selection(purpose: Purpose, via?: string): void {
-  useSelection(purpose, via).catch(error => console.warn('Kryakl: could not copy the selection', error))
+function selection(purpose: Purpose, via?: string, nothing?: () => void): void {
+  useSelection(purpose, via, nothing).catch(error => console.warn('Kryakl: could not copy the selection', error))
+}
+
+/** How long the badge says there is nothing selected. */
+const NOTHING_SAY_MS = 2600
+
+/**
+ * The menu key: the menu by the text cursor, and pressed again it goes. A
+ * dictation under way (the menu starts them) is stopped by it instead; a phrase
+ * being finished is left to finish.
+ */
+function menuPressed(): void {
+  if (dictation.state === 'recording') return dictation.press(dictation.mode, settings.menuKey)
+  if (dictation.state === 'idle') oneKeyMenu?.toggle()
+}
+
+/** An item of the menu, by the handlers the keys use: with nothing selected, the translator and the checker open empty; reading and replacing say so by the cursor. */
+function runMenu(action: MenuAction): void {
+  const via = settings.menuKey
+  switch (action) {
+    case 'translate':
+      return selection('translate', via, () => typeInto('translate', via))
+    case 'listen':
+      return selection('listen', via, () => keyboard.say(t('menu.nothingToRead'), NOTHING_SAY_MS))
+    case 'inPlace':
+      return selection('inPlace', via, () => keyboard.say(t('menu.nothingToReplace'), NOTHING_SAY_MS))
+    case 'screen':
+      return snip('translate', via)
+    case 'check':
+      return selection('check', via, () => typeInto('check', via))
+    case 'talk':
+      return openTalk()
+    case 'dictate':
+      return dictation.press('type', via)
+    case 'english':
+      return dictation.press('english', via)
+    case 'fix':
+      return keyboard.fixNow()
+  }
 }
 
 /** The pause key: Kryakl paused, or back. */
@@ -2937,7 +3043,7 @@ function keyLabel(hotkey: string): string {
 function trayView(): TrayView {
   return {
     keys: {
-      listenCopied: settings.doubleCopy ? DOUBLE_COPY : '',
+      listenCopied: settings.selectKey,
       typeToTranslate: settings.typeKey,
       checkEnglish: settings.typeCheckKey,
       talk: settings.talkKey,
@@ -2949,7 +3055,6 @@ function trayView(): TrayView {
     switchOn: settings.switchOn,
     layoutBadge: settings.layoutBadge,
     trayLayout: settings.trayLayout,
-    doubleCopy: settings.doubleCopy,
     paused: settings.paused,
     keep: {
       on: settings.autoFix || (!!settings.fixKey && settings.fixKeyOn),
@@ -3056,8 +3161,7 @@ async function layoutIcon(short: string, caps: boolean, dark: boolean): Promise<
 function tooltip(): string {
   if (recordingNow()) return t('tray.tipRecording')
   if (settings.paused) return t('tray.tipPaused')
-  const ways = [settings.doubleCopy ? t('tray.tipTwice') : '', settings.selectKey ? keyLabel(settings.selectKey) : ''].filter(Boolean)
-  const listen = ways.length ? t('tray.tipListen', { keys: ways.join(` ${t('common.or')} `) }) : ''
+  const listen = settings.selectKey ? t('tray.tipListen', { keys: keyLabel(settings.selectKey) }) : ''
   const translate = settings.translateKey ? t('tray.tipTranslate', { key: keyLabel(settings.translateKey) }) : ''
   return [t('app.name'), listen, translate].filter(Boolean).join(' · ')
 }
@@ -3257,20 +3361,18 @@ async function typeText(text: string): Promise<void> {
 }
 
 /**
- * Types an address into the browser window in front: Ctrl+L, the address pasted (a pasted address is not
- * completed into another one, as typed letters may be), Enter; the clipboard put back after.
+ * Types an address into the browser window in front: Ctrl+L, the address typed as characters, Delete (the
+ * rest Chrome completes it with, "…/shortcuts", goes), Enter. Not pasted: the clipboard guard handed Chrome
+ * an empty paste there (2026-11-03, a blank new tab), and typing leaves the clipboard alone.
  */
+const VK_DELETE = 0x2e
 async function typeAddress(url: string): Promise<void> {
   const pause = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-  await borrowClipboard(async () => {
-    await clipGuard.write(url, true)
-    await pressAddressBar()
-    await pause(120)
-    await pressPaste()
-    clipGuard.pasted()
-    await pause(120)
-    pressEnter()
-  })
+  await pressAddressBar()
+  await pause(120)
+  press([{ char: url }, { vk: VK_DELETE }])
+  await pause(120)
+  pressEnter()
 }
 
 function balloon(title: string, content: string, click?: () => void): void {
@@ -3313,7 +3415,7 @@ function setUpSpeechEngine(): void {
     expected: () => myLanguages(settings),
     languageOf: text => languageOf(text, settings.native, languageWords(), myLanguages(settings)),
     balloon,
-    needsEngine: () => openApp('dictate'),
+    needsEngine: () => openApp('voice'),
     report: () => openApp('report'),
     openTranscript,
     onChange: () => {
@@ -3532,6 +3634,7 @@ function start(): void {
       else if (action === 'typeCheck') typeInto('check', settings.typeCheckKey)
       else if (action === 'text') snip('translate', settings.textKey)
       else if (action === 'window') openApp()
+      else if (action === 'menu') menuPressed()
       else snip('listen', settings.snipKey)
     },
     app: (exe, elevated) => {
@@ -3549,11 +3652,32 @@ function start(): void {
       findRivals()
       postApp()
     },
+    // A key field of the app window waits for a key: the hook's keys go to it (Ctrl+Esc, Shift+Caps Lock, Alt never reach its page).
+    recorded: (code, down, at) => {
+      if (appWin && appReady && !appWin.isDestroyed()) appWin.webContents.send('to-view', { type: 'keyEvent', code, down, at } satisfies ToView)
+    },
+    menuKey: code => oneKeyMenu?.key(code),
+    menuClosed: () => oneKeyMenu?.closed(),
     failed: message => {
       keyboardTrouble = message
       console.warn(`Kryakl keyboard: ${message}`)
       postApp()
     },
+  })
+  oneKeyMenu = new KryaklMenu({
+    page: path.join(app.getAppPath(), 'media', 'menu.html'),
+    preload: path.join(__dirname, 'preload.js'),
+    query: pageQuery,
+    background: cardColor,
+    border: borderColor,
+    groups: () => menuGroups(settings.uiLanguage, !!speech?.installed),
+    caret: () => {
+      const front = foreground()
+      return front.tid ? caretOf(front.tid) : undefined
+    },
+    keys: (on, codes, rect) => keyboard.menu(on, codes, rect),
+    run: runMenu,
+    log: win => logPageErrors(win, 'menu'),
   })
   applyKeyboard()
   card = createCard()

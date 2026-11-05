@@ -127,8 +127,38 @@ export type WordHintMode = 'shift' | 'hover' | 'off'
 
 export type ViewConfig = { voice: string; rate: number; wordHint: WordHintMode; rareWords: boolean; oneAtATime: boolean }
 
-/** The app window's places: Home (always first), its action pages, and Words, Mistakes, Settings, About; 'checkModel' is Models › Check my English; 'howto' is the old name of Home. */
-export type AppTab = 'home' | 'talk' | 'listen' | 'translate' | 'check' | 'screen' | 'dictate' | 'transcribe' | 'keyboard' | 'words' | 'mistakes' | 'transcripts' | 'vocabulary' | 'kept' | 'settings' | 'models' | 'checkModel' | 'storage' | 'about' | 'report' | 'howto'
+/**
+ * The app window's places: Home (always first), the five action pages, the person's lists, Settings, Models,
+ * Disk space, About; 'checkModel' is Models › Check and talk. The names before 2026-11-04 still come (a second
+ * start, an older page): 'talk' and 'check' open English, 'listen' and 'screen' Translate, 'dictate' Voice typing,
+ * 'transcribe' Recordings and meetings, 'keyboard' Keyboard layout, 'howto' Home.
+ */
+export type AppTab =
+  | 'home'
+  | 'translate'
+  | 'english'
+  | 'voice'
+  | 'recordings'
+  | 'layout'
+  | 'words'
+  | 'mistakes'
+  | 'transcripts'
+  | 'vocabulary'
+  | 'kept'
+  | 'settings'
+  | 'models'
+  | 'checkModel'
+  | 'storage'
+  | 'about'
+  | 'report'
+  | 'talk'
+  | 'listen'
+  | 'check'
+  | 'screen'
+  | 'dictate'
+  | 'transcribe'
+  | 'keyboard'
+  | 'howto'
 
 export type HostVoice = { name: string; lang: string }
 
@@ -295,12 +325,11 @@ export type OldFolder = { dir: string; why?: string; moving: boolean }
 export type TrayView = {
   /** The keys of its commands, hotkey.ts notation ("Control+C*2" for Ctrl+C twice); empty when there is none. */
   keys: { listenCopied: string; typeToTranslate: string; checkEnglish: string; talk: string; snipListen: string; snipTranslate: string; switch: string }
-  /** The quick settings' switches: fixing as one types, the switch key, the badge, the layout in the tray's icon, Ctrl+C twice, Kryakl paused. */
+  /** The quick settings' switches: fixing as one types, the switch key, the badge, the layout in the tray's icon, Kryakl paused. */
   autoFix: boolean
   switchOn: boolean
   layoutBadge: boolean
   trayLayout: boolean
-  doubleCopy: boolean
   paused: boolean
   /** "Keep a word as typed…": shown while the fixer works (fixing as one types, or the fix key on); `word` the last word fixed by itself, as typed, and `fixed` what it became (empty when none, or it is kept already). */
   keep: { on: boolean; word: string; fixed: string }
@@ -347,6 +376,8 @@ export type ToView =
   | { type: 'appTab'; tab: AppTab }
   /** The app window fills the screen or not (its button, a double click on its bar, Windows' keys): Maximize or Restore. */
   | { type: 'appWindow'; maximized: boolean }
+  /** A key went down or up while a key field waits for one (`recordKeys`), read by the keyboard thread's hook: KeyboardEvent.code ('' for a key no hotkey names), at (ms since 1970). */
+  | { type: 'keyEvent'; code: string; down: boolean; at: number }
   /** The tray's panel's whole state. */
   | { type: 'tray'; view: TrayView }
   /** Show this transcript in the app window (a finished note's balloon, the extension). */
@@ -368,6 +399,8 @@ export type ToView =
   | { type: 'dictationError'; message: string }
   /** The tray's panel was just shown: focus its first command. */
   | { type: 'trayShown' }
+  /** Kryakl's menu on one key: what it draws now. */
+  | { type: 'menu'; view: MenuView }
   | { type: 'natural'; state: NaturalState }
   /** One sentence of reading `id` in the natural voice: 24 kHz audio and when each of its words is spoken. */
   | { type: 'naturalAudio'; id: number; index: number; samples: Float32Array; words: WordTime[] }
@@ -375,6 +408,9 @@ export type ToView =
 
 /** What a dictated phrase becomes: typed where the cursor is, typed in English, a note in the knowledge base, or English checked in the card (practice). */
 export type DictationMode = 'type' | 'english' | 'note' | 'check'
+
+/** The menu on one key: its groups of items by letter and name, the one lit, and the one just picked (-1 for none); both count through all the groups. */
+export type MenuView = { groups: { letter: string; label: string }[][]; lit: number; fired: number }
 
 export type ToHost =
   | { type: 'lookup'; word: string }
@@ -423,6 +459,8 @@ export type ToHost =
   | { type: 'openLink'; url: string }
   /** The app window's own buttons: it has no Windows frame. Close hides it, as Kryakl lives in the tray. */
   | { type: 'window'; action: 'minimize' | 'maximize' | 'close' }
+  /** A key field waits for a key, or no longer: the keyboard thread reads the keys first (Ctrl+Esc, Shift+Caps Lock, Alt) and sends them as `keyEvent`. */
+  | { type: 'recordKeys'; on: boolean }
   /** The Transcribe page's microphone recording (or Talk's listening) began or ended: the tray shows it. */
   | { type: 'micRecording'; on: boolean }
   /** Talk (talk.ts), from the talk window: a new talk on a topic, a line said or typed, the duck's answer under way dropped, New talk; `talkListen`: it began listening, so the model loads meanwhile. */
@@ -443,6 +481,11 @@ export type ToHost =
   | { type: 'talksClear' }
   /** From the app window's Talk page: open the talk window. */
   | { type: 'talkOpen' }
+  // The menu on one key (menuwindow.ts): its page is ready; its content is this tall, in CSS pixels; the pointer is on an item, or clicked one (counted through all the groups).
+  | { type: 'menuReady' }
+  | { type: 'menuHeight'; px: number }
+  | { type: 'menuHover'; index: number }
+  | { type: 'menuPick'; index: number }
   // The tray's panel.
   | { type: 'trayReady' }
   /** The panel's content is this tall, in CSS pixels; the window follows. */
@@ -475,6 +518,9 @@ export type ToHost =
   /** Forget the phrases dictated lately; the texts translated lately. */
   | { type: 'clearDictation' }
   | { type: 'clearTranslations' }
+  /** One phrase or one translation forgotten, by when it was kept. */
+  | { type: 'forgetPhrase'; at: string }
+  | { type: 'forgetTranslation'; at: string }
   /** What Kryakl learned from the person's typing: one word out of a list, or everything. */
   | { type: 'unlearn'; list: 'alwaysFix' | 'myWords'; word: string }
   | { type: 'forgetLearned' }

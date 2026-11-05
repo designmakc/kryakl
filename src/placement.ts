@@ -19,6 +19,26 @@ export function placeNear(point: Point, size: { width: number; height: number },
   return { x: Math.round(x), y: Math.round(y), width, height }
 }
 
+const MENU_GAP = 8
+/** The menu starts a little left of the text cursor, so its letters stand under the text. */
+const MENU_LEFT = 12
+
+/**
+ * Kryakl's menu: under the text cursor (`top` to `bottom`, at `x`; the pointer
+ * has them equal), over it where the screen ends, never outside the work area.
+ */
+export function placeMenu(at: { x: number; top: number; bottom: number }, size: { width: number; height: number }, area: Rect): Rect {
+  const width = Math.min(size.width, area.width)
+  const height = Math.min(size.height, area.height)
+  const right = area.x + area.width
+  const bottom = area.y + area.height
+  const x = Math.min(Math.max(at.x - MENU_LEFT, area.x), right - width)
+  let y = at.bottom + MENU_GAP
+  if (y + height > bottom) y = at.top - MENU_GAP - height
+  y = Math.min(Math.max(y, area.y), bottom - height)
+  return { x: Math.round(x), y: Math.round(y), width, height }
+}
+
 const TRAY_GAP = 8
 
 /**

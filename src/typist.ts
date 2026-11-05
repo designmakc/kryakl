@@ -15,13 +15,15 @@
 //     theirs typed right again and again (learning.ts keeps them);
 //   - a change of layout in front is reported, for the badge by the cursor;
 //   - the other keys Electron's shortcuts cannot hold (a double tap of Ctrl,
-//     a mouse button) are reported to the main process, which acts on them.
+//     a mouse button, Ctrl+Esc) are reported to the main process, which acts on them;
+//   - while a key field of Kryakl's waits for a key, every key goes to it and
+//     to nothing else (Ctrl+Esc opens no Start, Shift+Caps Lock turns nothing).
 // Words in a password field are never fixed nor learned; in a program on the
 // full screen (a game, a presentation) nothing is done at all.
 
 import { createHash } from 'node:crypto'
 
-import { DOUBLE_MS, modOf, parseHotkey, type HotkeySpec, type Mod } from './hotkey'
+import { codeOfVk, DOUBLE_MS, modOf, parseHotkey, type HotkeySpec, type Mod } from './hotkey'
 import {
   bestLayout,
   caseSlip,
@@ -42,10 +44,32 @@ import {
   type Reading,
   type Stroke,
 } from './layoutfix'
+import { MENU_MOVES } from './menu'
+import type { Rect } from './placement'
 import type { Press } from './winkbd'
 
 /** What a key does: switch or fix the layout here, or go to one layout; the others are the main process's. */
-export type KeyAction = 'switch' | 'fix' | 'layout' | 'select' | 'snip' | 'translate' | 'text' | 'inPlace' | 'check' | 'type' | 'typeCheck' | 'dictate' | 'english' | 'note' | 'again' | 'practice' | 'talk' | 'pause' | 'window'
+export type KeyAction =
+  | 'switch'
+  | 'fix'
+  | 'layout'
+  | 'select'
+  | 'snip'
+  | 'translate'
+  | 'text'
+  | 'inPlace'
+  | 'check'
+  | 'type'
+  | 'typeCheck'
+  | 'dictate'
+  | 'english'
+  | 'note'
+  | 'again'
+  | 'practice'
+  | 'talk'
+  | 'pause'
+  | 'window'
+  | 'menu'
 
 /** The parts of the keyboard helper a program can be left out of: fixing as one types, the switch and layout keys, the badge, every key of Kryakl's. */
 export type AppPart = 'fix' | 'switch' | 'badge' | 'keys'
@@ -86,8 +110,8 @@ export const UNLEARNED_APPS: ReadonlySet<string> = new Set([
   'proton pass.exe',
 ])
 
-/** The keys that start and stop a dictation. */
-const DICTATION_ACTIONS: ReadonlySet<KeyAction> = new Set(['dictate', 'english', 'note', 'practice'])
+/** The keys that start and stop a dictation; the menu's starts one from its items. */
+const DICTATION_ACTIONS: ReadonlySet<KeyAction> = new Set(['dictate', 'english', 'note', 'practice', 'menu'])
 
 /** A word learned from the person's typing: as typed (lower case), and the language it goes into, or belongs to. */
 export type Learned = { word: string; lang: string }
@@ -140,6 +164,15 @@ export type KbdIn =
   | { type: 'converted'; selected: boolean }
   /** A dictation started or ended: while it runs, its keys work on the full screen too, so it can always be stopped. */
   | { type: 'dictating'; on: boolean }
+  /** A key field of the app window (`hwnd`) waits for a key: the keys pressed there are reported and kept from Windows, `RECORD_MS` at most; `on: false` ends it. */
+  | { type: 'record'; on: boolean; hwnd?: bigint }
+  /**
+   * Kryakl's menu (the menu key) is open by the window in front, or no longer: its letters (`codes`, KeyboardEvent.code),
+   * ↑ ↓, Enter and Esc go to it alone, as `menuKey`; any other key, or a click outside `rect` (physical pixels), closes it and goes on.
+   */
+  | { type: 'menu'; on: boolean; codes?: string[]; rect?: Rect }
+  /** The fix key's action, asked by the menu's item. */
+  | { type: 'fix' }
   | { type: 'quit' }
 
 export type KbdOut =
@@ -167,6 +200,12 @@ export type KbdOut =
   | { type: 'hotkey'; action: Exclude<KeyAction, 'switch' | 'fix' | 'layout'> }
   /** Another program pressed keys by itself, for the first time since the thread started. */
   | { type: 'foreignKeys' }
+  /** A key went down or up while a key field waits (`record`), as KeyboardEvent.code names it ('' for a key no hotkey names), at `at` (ms since 1970). */
+  | { type: 'recorded'; code: string; down: boolean; at: number }
+  /** A key the open menu took: one of its letters, ArrowUp, ArrowDown, Enter or Escape, as KeyboardEvent.code names it. */
+  | { type: 'menuKey'; code: string }
+  /** Another key, a click outside, or another window in front closed the menu; the key or click went on. */
+  | { type: 'menuClosed' }
   | { type: 'error'; message: string }
 
 export type Caret = { x: number; y: number; h: number }
@@ -231,6 +270,11 @@ const VK_LCONTROL = 0xa2
 const ALTGR_CTRL_SCAN = 0x21d
 /** Alt and Win, left and right: tapped alone, they open a program's menu or Start. */
 const MENU_KEYS: ReadonlySet<number> = new Set([0xa4, 0xa5, 0x5b, 0x5c])
+
+/** A key field waits for a key this long at most: then the keys are Windows' again, whatever the page said. */
+export const RECORD_MS = 20_000
+/** The menu left open this long stops taking keys, whatever the main process said. */
+export const MENU_MS = 120_000
 
 /** Caps Lock is asked of Windows again when the last answer is older than this (Windows may turn it off on Shift). */
 const CAPS_FRESH_MS = 1000
@@ -368,6 +412,13 @@ export class Typist {
   /** For the switch's sound: the layout last heard in front, and the last switch Kryakl made (silent, or sounded already). */
   private heard: { hwnd: bigint; layout: string } | undefined
   private made: { hwnd: bigint; layout: string } | undefined
+  /** A key field waits for a key in this window, until then; the keys it took down, whose release it takes too. */
+  private recording: { hwnd: bigint; until: number } | undefined
+  private recordDown = new Set<number>()
+  /** The menu is open over this window, until then: the keys it takes, and where it is on the screen (physical pixels). */
+  private menuOpen: { codes: ReadonlySet<string>; rect: Rect | undefined; hwnd: bigint; until: number } | undefined
+  /** The left button went down on the menu: its release is the menu's too. */
+  private clickInMenu = false
 
   constructor(private readonly env: TypistEnv) {}
 
@@ -456,6 +507,8 @@ export class Typist {
       this.foreignKey(vk, down)
       return false
     }
+    if (this.recordKey(vk, down)) return true
+    if (down && this.menuKey(vk)) return true
     // Typed while a fix is on its way: pressed again after it.
     if (this.pending) {
       this.queued.push({ vk, scan, up: !down })
@@ -514,6 +567,112 @@ export class Typist {
     return this.onTyping(vk, mods)
   }
 
+  /** A key field of Kryakl's waits for a key in window `hwnd` (`on`), or no longer. */
+  record(on: boolean, hwnd = 0n): void {
+    this.recording = on ? { hwnd, until: this.env.now() + RECORD_MS } : undefined
+  }
+
+  /**
+   * While a key field waits and its window is in front, a key goes to the field
+   * alone: reported, and kept from Windows and every program (Ctrl+Esc opens no
+   * Start, Alt no menu, Caps Lock turns nothing). A key let go is kept too when
+   * its press was, even once the field is done; a key held from before goes up
+   * as usual. True keeps it.
+   */
+  private recordKey(vk: number, down: boolean): boolean {
+    const at = this.env.now()
+    if (!down) {
+      if (!this.recordDown.delete(vk)) return false
+      this.env.send({ type: 'recorded', code: codeOfVk(vk) ?? '', down: false, at })
+      return true
+    }
+    const r = this.recording
+    if (!r) return false
+    if (at > r.until) {
+      this.recording = undefined
+      return false
+    }
+    if (this.env.foreground().hwnd !== r.hwnd) return false
+    // Held down, Windows repeats it: the field has it already.
+    if (this.recordDown.has(vk)) return true
+    this.recordDown.add(vk)
+    this.spoilTap()
+    this.last = 'none'
+    this.env.send({ type: 'recorded', code: codeOfVk(vk) ?? '', down: true, at })
+    return true
+  }
+
+  /** Kryakl's menu opened over the window in front (its letters, `codes`; `rect`: where it is, once known), or closed by the main process. */
+  menu(on: boolean, codes: readonly string[] = [], rect?: Rect): void {
+    this.menuOpen = on ? { codes: new Set(codes), rect, hwnd: this.env.foreground().hwnd, until: this.env.now() + MENU_MS } : undefined
+  }
+
+  /** The fix key's action, asked by the menu's item: what was typed or selected before the menu opened is still there. */
+  fixNow(): void {
+    this.fixKey()
+  }
+
+  /** Closes the menu from here: the main process hides it. */
+  private closeMenu(): void {
+    this.menuOpen = undefined
+    this.env.send({ type: 'menuClosed' })
+  }
+
+  /**
+   * A key went down while the menu is open. Its letters (by physical key, so in
+   * any layout, Shift or not), the arrows, Enter and Esc go to it alone, their
+   * release too, and leave what was typed as it is, for the fix item. A modifier
+   * passes and the menu stays; so does the menu key, which closes it by the usual
+   * way. Any other key, or one with Ctrl, Alt or Win, closes it and goes on to
+   * the program. True keeps it.
+   */
+  private menuKey(vk: number): boolean {
+    const m = this.menuOpen
+    if (!m) return false
+    if (this.env.now() > m.until || this.env.foreground().hwnd !== m.hwnd) {
+      this.closeMenu()
+      return false
+    }
+    if (modOf(vk)) return false
+    // Held down, Windows repeats it: the menu has it already; a key held from before the menu is no answer to it.
+    if (this.swallowed.has(vk)) return true
+    if (this.held.has(vk)) return false
+    const mods = this.heldMods()
+    if (this.hotkeyOf(vk, mods)?.action === 'menu') return false
+    const code = codeOfVk(vk) ?? ''
+    if (!mods.has('Control') && !mods.has('Alt') && !mods.has('Super') && (MENU_MOVES.has(code) || m.codes.has(code))) {
+      this.swallowed.add(vk)
+      this.spoilTap()
+      this.env.send({ type: 'menuKey', code })
+      return true
+    }
+    this.closeMenu()
+    return false
+  }
+
+  /**
+   * A mouse event while the menu is open. A click on it is its own: the text
+   * under it keeps what was typed. A click anywhere else closes it and goes on
+   * (the menu's own side button closes it by the usual way). True: it was the menu's.
+   */
+  private menuMouse(event: MouseEvent, x: number, y: number, button: number): boolean {
+    if (event === 'left-up' && this.clickInMenu) {
+      this.clickInMenu = false
+      return true
+    }
+    const m = this.menuOpen
+    if (!m || (event !== 'left-down' && event !== 'other-down' && event !== 'x-down')) return false
+    const r = m.rect
+    if (r && x >= r.x && x < r.x + r.width && y >= r.y && y < r.y + r.height) {
+      this.clickInMenu = event === 'left-down'
+      return true
+    }
+    const mods = this.heldMods()
+    const own = event === 'x-down' && this.keys.some(k => k.action === 'menu' && k.spec.kind === 'mouse' && k.spec.button === button && sameMods(mods, k.spec.mods))
+    if (!own) this.closeMenu()
+    return false
+  }
+
   /**
    * A key another program pressed (another layout switcher, a macro tool, Kryakl's
    * own copy and paste): it never makes or breaks a tap of the person's keys,
@@ -536,6 +695,7 @@ export class Typist {
 
   /** A mouse event; true keeps it from the program (a side button that is a hotkey). */
   mouse(event: MouseEvent, x: number, y: number, time: number, button = 0): boolean {
+    if (this.menuMouse(event, x, y, button)) return false
     if (event === 'x-down') {
       this.spoilTap()
       const mods = this.heldMods()
@@ -1323,6 +1483,7 @@ export class Typist {
     const now = this.env.now()
     if (this.asking && now - this.asking.since > FIELD_WAIT_MS) this.fieldIs('unknown')
     const front = this.env.foreground()
+    if (this.menuOpen && (now > this.menuOpen.until || (front.hwnd && front.hwnd !== this.menuOpen.hwnd))) this.closeMenu()
     if (front.hwnd && front.hwnd !== this.frontWindow) {
       this.frontWindow = front.hwnd
       this.reportApp(front.pid)

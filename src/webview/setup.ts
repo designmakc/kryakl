@@ -15,7 +15,7 @@ import { minutes, seconds } from '../speechplan'
 import { el } from './dom'
 import { lucide, type LucideName } from './lucide'
 import { installed, running } from './speech'
-import { aside, bad, bar, btn, card, chip, grp, ib, linkBtn, recommended, seg, select, toggleCard, uiLanguageCard } from './ui'
+import { aside, bad, bar, btn, card, chip, grp, ib, linkBtn, recommended, seg, select, toggleCard, twoNames, uiLanguageCard } from './ui'
 
 export type SetupHooks = {
   save: (patch: Partial<Settings>) => void
@@ -101,9 +101,7 @@ export function setupNodes(v: AppView, h: SetupHooks): HTMLElement[] {
 function languageStep(v: AppView, h: SetupHooks): HTMLElement[] {
   const s = v.settings
   const nameOf = (code: string) => LANGUAGES.find(l => l.code === code)?.name ?? code
-  /** A language as the list shows it: its own name, then the interface's (one when they are the same). */
-  const both = (first: string, second: string) => (first.toLowerCase() === second.toLowerCase() ? first : `${first} · ${second}`)
-  const used = [s.native, 'English', ...s.languages.map(nameOf)]
+  const used =[s.native, 'English', ...s.languages.map(nameOf)]
   const rest = LANGUAGES.filter(l => !used.includes(l.name))
   const own = card(
     'languages',
@@ -111,7 +109,7 @@ function languageStep(v: AppView, h: SetupHooks): HTMLElement[] {
     [t('setup.languageNote')],
     select(
       s.native,
-      v.languages.map(l => [l.name, both(l.native, languageName(l.name))]),
+      v.languages.map(l => [l.name, twoNames(l.native, languageName(l.name))]),
       native => {
         choice = undefined
         h.save({ native })
@@ -129,7 +127,7 @@ function languageStep(v: AppView, h: SetupHooks): HTMLElement[] {
       'plus',
       t('setup.addLanguage'),
       [t('setup.addLanguageNote')],
-      select<string>('', [['', t('setup.pickLanguage')], ...rest.map((l): [string, string] => [l.code, both(languageName(l.name), l.native)])], code => code && h.save({ languages: [...s.languages, code] })),
+      select<string>('', [['', t('setup.pickLanguage')], ...rest.map((l): [string, string] => [l.code, twoNames(languageName(l.name), l.native)])], code => code && h.save({ languages: [...s.languages, code] })),
     ),
     card('globe', languageName('English'), [t('setup.always')], null),
     ...s.languages.map(code => card('globe', languageName(nameOf(code)), [], ib('x', t('ui.remove', { item: languageName(nameOf(code)) }), () => h.save({ languages: s.languages.filter(x => x !== code) })))),

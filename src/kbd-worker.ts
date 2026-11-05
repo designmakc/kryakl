@@ -156,6 +156,9 @@ function drainPort(): void {
     else if (message.type === 'switchTo') typist.switchTo(message.layout)
     else if (message.type === 'converted') typist.converted(message.selected)
     else if (message.type === 'dictating') typist.setDictating(message.on)
+    else if (message.type === 'record') typist.record(message.on, message.hwnd)
+    else if (message.type === 'menu') typist.menu(message.on, message.codes, message.rect)
+    else if (message.type === 'fix') typist.fixNow()
     else {
       const badgeWas = config?.badge || config?.trayLayout
       config = message.config
@@ -164,7 +167,8 @@ function drainPort(): void {
       if (config.autoFix || config.learn) fieldThread()
       // The word lists of the cycle's languages, for fixing; read once, then given the person's own words.
       let read = false
-      if (config.autoFix || config.keys.fix) {
+      // The menu has the fix key's action among its items.
+      if (config.autoFix || config.keys.fix || config.keys.menu) {
         for (const lang of new Set(typist.cycle().map(id => layout(id)?.lang ?? ''))) {
           const file = config.words[lang]
           if (lexicons[lang] || !file) continue

@@ -105,19 +105,25 @@ export function focus(element: unknown): boolean {
  * does not answer Ctrl+C (Claude's question box in VS Code). Empty when nothing
  * is selected or the element has no text pattern.
  */
-export function selectedText(element: unknown): string {
+export const selectedText = (element: unknown): string => readSelection(element) ?? ''
+
+/** Whether an element says outright that nothing is selected in it; false also when it cannot say. */
+export const saysNothingSelected = (element: unknown): boolean => readSelection(element) === ''
+
+/** The selected text; '' when nothing is, undefined when the element has no text pattern or would not answer. */
+function readSelection(element: unknown): string | undefined {
   const held: unknown[] = []
   const take = (object: unknown) => (held.push(object), object)
   try {
     const pattern: unknown[] = [null]
     const getPattern = method<(self: unknown, id: number, iid: unknown, out: unknown[]) => number>(element, GET_CURRENT_PATTERN_AS, GetPatternAs)
-    if (getPattern(element, UIA_TextPatternId, IID_IUIAutomationTextPattern, pattern) < 0 || !pattern[0]) return ''
+    if (getPattern(element, UIA_TextPatternId, IID_IUIAutomationTextPattern, pattern) < 0 || !pattern[0]) return undefined
     const text = take(pattern[0])
     const ranges: unknown[] = [null]
-    if (method<(self: unknown, out: unknown[]) => number>(text, GET_SELECTION, GetObject)(text, ranges) < 0 || !ranges[0]) return ''
+    if (method<(self: unknown, out: unknown[]) => number>(text, GET_SELECTION, GetObject)(text, ranges) < 0 || !ranges[0]) return undefined
     const array = take(ranges[0])
     const length = [0]
-    if (method<(self: unknown, out: number[]) => number>(array, GET_LENGTH, GetInt)(array, length) < 0) return ''
+    if (method<(self: unknown, out: number[]) => number>(array, GET_LENGTH, GetInt)(array, length) < 0) return undefined
     const parts: string[] = []
     for (let i = 0; i < (length[0] ?? 0); i++) {
       const range: unknown[] = [null]
@@ -131,7 +137,7 @@ export function selectedText(element: unknown): string {
     }
     return parts.join('\n')
   } catch {
-    return ''
+    return undefined
   } finally {
     for (const object of held.reverse()) release(object)
   }

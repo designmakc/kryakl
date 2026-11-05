@@ -264,12 +264,8 @@ async function loadRows(): Promise<void> {
   }
 }
 
-/** The page's caption under its title. */
-export function transcriptsCap(): string {
-  const n = tx.rows?.length
-  if (n === undefined || tx.query) return t('tr.searched')
-  return n ? t('tr.countSearched', { n }) : t('tr.noneYet')
-}
+/** A transcript is open, not the library: the bar's crumb then leads back to it. */
+export const transcriptOpen = () => !!tx.openId
 
 export function transcriptsBody(v: AppView): HTMLElement[] {
   if (!installed(v)) return [row(t('tr.needEngine'), [t('tr.needEngineNote')], linkBtn(t('tr.transcribeLink'), () => hooks.setup()))]

@@ -4,7 +4,9 @@
 // matches what Electron cannot: a modifier tapped alone ("LeftControl") or
 // twice ("LeftControl*2"), modifiers pressed together and let go
 // ("Control+Shift", as Windows switches layouts), a key alone ("Pause"), and
-// the mouse's side buttons ("MouseBack", "Control+MouseForward").
+// the mouse's side buttons ("MouseBack", "Control+MouseForward"). Ctrl+C
+// pressed twice ("Control+C*2") is neither's: clipboard.ts DoubleCopy sees it
+// as two copies, and main.ts runs the action whose key it is.
 
 import { t } from './i18n'
 
@@ -20,6 +22,11 @@ export type HotkeySpec =
   | { kind: 'key'; mods: Mod[]; vk: number }
   /** A side button of the mouse: 1 back, 2 forward. */
   | { kind: 'mouse'; mods: Mod[]; button: 1 | 2 }
+  /** Ctrl+C pressed twice: two copies, seen on the clipboard (never by the hooks nor Electron). */
+  | { kind: 'copyTwice' }
+
+/** Ctrl+C pressed twice, a key of the actions on the selected text. */
+export const COPY_TWICE = 'Control+C*2'
 
 /** The second tap of a double comes within this of the first. */
 export const DOUBLE_MS = 400
@@ -57,6 +64,8 @@ const NAMED: Record<string, number> = {
   Down: 0x28,
   Left: 0x25,
   Right: 0x27,
+  // Esc alone cancels everywhere; with a modifier (Ctrl+Esc, which opens Start) it is a key of the keyboard thread's.
+  Escape: 0x1b,
   '`': 0xc0,
   '-': 0xbd,
   '=': 0xbb,
@@ -83,6 +92,7 @@ function keyCode(name: string): { vk: number; alone: boolean } | undefined {
 }
 
 export function parseHotkey(hotkey: string): HotkeySpec | undefined {
+  if (hotkey === COPY_TWICE) return { kind: 'copyTwice' }
   const parts = hotkey.split('+').map(p => p.trim()).filter(Boolean)
   if (parts.length === 0) return undefined
   if (parts.length === 1) {
@@ -105,13 +115,20 @@ export function parseHotkey(hotkey: string): HotkeySpec | undefined {
 
 /**
  * Whether Electron's shortcuts can hold a hotkey: a key with a modifier, or
- * F1–F24. Everything else is the keyboard thread's.
+ * F1–F24. Everything else is the keyboard thread's, Esc with a modifier too
+ * (Windows takes Ctrl+Esc for Start before a shortcut sees it; the hook keeps
+ * it from Start).
  */
 export function isAccelerator(hotkey: string): boolean {
   const spec = parseHotkey(hotkey)
   if (spec?.kind !== 'key') return false
   const name = hotkey.split('+').pop() ?? ''
-  return !(name in LONE) && (spec.mods.length > 0 || /^F\d+$/.test(name))
+  return !(name in LONE) && name !== 'Escape' && (spec.mods.length > 0 || /^F\d+$/.test(name))
+}
+
+/** Ctrl+C twice: the clipboard's, never a key of the keyboard thread or of Electron. */
+export function isCopyTwice(hotkey: string): boolean {
+  return hotkey === COPY_TWICE
 }
 
 function sortMods(mods: readonly Mod[]): Mod[] {
@@ -141,6 +158,8 @@ export function isExtendedKey(vk: number): boolean {
 
 /** A hotkey as Windows writes keys: "Left Ctrl", "Ctrl+Shift", "Left Ctrl twice", "Mouse Back". */
 export function hotkeyLabel(hotkey: string): string {
+  // A key pressed twice that is not a modifier tapped: "Ctrl+C twice".
+  if (hotkey.endsWith('*2') && hotkey.includes('+')) return t('keys.twice', { key: hotkeyLabel(hotkey.slice(0, -2)) })
   const name = (mod: string) => (mod === 'Control' ? 'Ctrl' : mod === 'Super' ? 'Win' : mod)
   return hotkey
     .split('+')
@@ -152,6 +171,7 @@ export function hotkeyLabel(hotkey: string): string {
         return times === '2' ? t('keys.twice', { key: label }) : label
       }
       if (part === 'CapsLock') return 'Caps Lock'
+      if (part === 'Escape') return 'Esc'
       if (part === 'ScrollLock') return 'Scroll Lock'
       if (part === 'MouseBack') return 'Mouse Back'
       if (part === 'MouseForward') return 'Mouse Forward'
@@ -171,17 +191,42 @@ function nameOfCode(code: string): string | undefined {
   return undefined
 }
 
+/** Virtual-key codes of the keys named by KeyboardEvent.code alone (Space, Tab…), for the hook's keys. */
+const CODES: Record<number, string> = Object.fromEntries([
+  ...Object.entries(LONE).map(([code, vk]) => [vk, code]),
+  ...Object.entries(NAMED).filter(([name]) => /^[A-Z]/.test(name)).map(([name, vk]) => [vk, /^(Up|Down|Left|Right)$/.test(name) ? `Arrow${name}` : name]),
+  ...Object.entries(SIGNS).map(([code, sign]) => [NAMED[sign] as number, code]),
+  ...TAPS.map(t => [t.vk, t.code]),
+  [0x10, 'ShiftLeft'],
+  [0x11, 'ControlLeft'],
+  [0x12, 'AltLeft'],
+])
+
+/**
+ * KeyboardEvent.code of a key the low-level hook saw, by its virtual-key code
+ * (the hook names Left and Right Ctrl, Shift, Alt and Win apart), so the hook's
+ * keys feed the recorder as a page's would; undefined for a key no hotkey names.
+ */
+export function codeOfVk(vk: number): string | undefined {
+  if (vk >= 0x41 && vk <= 0x5a) return `Key${String.fromCharCode(vk)}`
+  if (vk >= 0x30 && vk <= 0x39) return `Digit${String.fromCharCode(vk)}`
+  if (vk >= 0x70 && vk <= 0x87) return `F${vk - 0x6f}`
+  return CODES[vk]
+}
+
 /**
  * A hotkey recorded; `more`: a tap, which a second tap within DOUBLE_MS
  * makes a double. It counts as it is once that time passes with no key.
  */
-export type Recorded = { hotkey: string; more?: boolean }
+export type Recorded = { hotkey: string; more?: boolean; partial?: boolean }
 
 /**
  * Records a hotkey from the key and mouse events of a settings field: a key
  * or side button with the modifiers held at that moment, or, once every
  * modifier is let go with no other key pressed, the modifier tapped alone
- * (or twice) or the modifiers pressed together.
+ * (or twice) or the modifiers pressed together. Ctrl+C is copying, no key:
+ * pressed once it comes `partial` (nothing, unless a second follows within
+ * DOUBLE_MS), twice it is "Control+C*2".
  */
 export class HotkeyRecorder {
   private held = new Set<string>()
@@ -190,6 +235,8 @@ export class HotkeyRecorder {
   /** When the modifier held alone went down, and the last tap: when it was let go. */
   private downAt = 0
   private lastTap: { name: string; at: number } | undefined
+  /** When Ctrl+C was pressed, waiting for a second. */
+  private lastCopy: number | undefined
 
   /** A key went down at `now` (ms); returns the hotkey a non-modifier key makes, if any. */
   keydown(code: string, now = 0): Recorded | undefined {
@@ -202,7 +249,19 @@ export class HotkeyRecorder {
     this.other = true
     this.lastTap = undefined
     const name = nameOfCode(code)
-    return name ? this.withMods(name) : undefined
+    const recorded = name ? this.withMods(name) : undefined
+    if (recorded?.hotkey !== 'Control+C') {
+      this.lastCopy = undefined
+      return recorded
+    }
+    const twice = this.lastCopy !== undefined && now - this.lastCopy <= DOUBLE_MS
+    this.lastCopy = twice ? undefined : now
+    return twice ? { hotkey: COPY_TWICE } : { hotkey: recorded.hotkey, more: true, partial: true }
+  }
+
+  /** Whether a modifier is held now (Esc alone gives up; with one, it is a key). */
+  holding(): boolean {
+    return this.held.size > 0
   }
 
   /** A key went up at `now`; returns the tap, double or chord once the last modifier is let go. */
@@ -232,6 +291,7 @@ export class HotkeyRecorder {
   /** A mouse button went down: the back or forward button (3, 4 in DOM numbering) is a hotkey. */
   mouse(button: number): Recorded | undefined {
     this.lastTap = undefined
+    this.lastCopy = undefined
     this.other = this.held.size > 0
     const name = button === 3 ? 'MouseBack' : button === 4 ? 'MouseForward' : undefined
     return name ? this.withMods(name) : undefined
@@ -242,6 +302,7 @@ export class HotkeyRecorder {
     this.peak = []
     this.other = false
     this.lastTap = undefined
+    this.lastCopy = undefined
   }
 
   private withMods(name: string): Recorded | undefined {

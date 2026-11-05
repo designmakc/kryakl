@@ -7,6 +7,8 @@
 // transcripts (their own folder), this computer's measurements. Importing
 // replaces the settings and adds the rest to what is here, so nothing here is
 // lost. A settings file exported by 0.10.0–0.10.1 (the settings alone) imports too.
+// An older backup's switch Ctrl+C twice (`doubleCopy`) is read as settings.ts
+// normalize reads an old settings file: the key of Translate and read aloud.
 
 import { t } from './i18n'
 import type { LearnedLists } from './learning'

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { isChromePage, openInChrome, regDefault, type ChromeDeps } from './chrome'
+import { isChromePage, lastProfile, openInChrome, regDefault, type ChromeDeps } from './chrome'
 
 describe('regDefault', () => {
   it('reads the default value of reg query /ve', () => {
@@ -33,12 +33,26 @@ function desktop(after: number | undefined, other = false) {
     allowFront: () => {},
     typeAddress: async url => void typed.push(url),
     find: async () => 'C:\\Chrome\\chrome.exe',
+    profile: () => undefined,
     start: (_exe, args) => void started.push(args),
     sleep: async () => {},
     waitMs: 0,
   }
   return { deps, typed, started }
 }
+
+describe('lastProfile', () => {
+  it('reads the profile used last', () => {
+    expect(lastProfile('{"profile":{"last_used":"Profile 1","last_active_profiles":["Default"]}}')).toBe('Profile 1')
+    expect(lastProfile('{"profile":{"last_active_profiles":["Profile 2"]}}')).toBe('Profile 2')
+  })
+
+  it('takes no path and no broken file', () => {
+    expect(lastProfile('{"profile":{"last_used":"..\\\\x"}}')).toBeUndefined()
+    expect(lastProfile('{"profile":{}}')).toBeUndefined()
+    expect(lastProfile('not json')).toBeUndefined()
+  })
+})
 
 describe('isChromePage', () => {
   it('takes the extensions, their keys and one extension card', () => {
@@ -47,6 +61,9 @@ describe('isChromePage', () => {
     expect(isChromePage(`chrome://extensions/?id=${'abcdefghijklmnop'.repeat(2)}`)).toBe(true)
     expect(isChromePage('chrome://extensions/?id=xyz')).toBe(false)
     expect(isChromePage('chrome://settings/')).toBe(false)
+    expect(isChromePage('chrome-extension://phokhlmnodckgejnaogjgpmfjnjkefpa/permission.html')).toBe(true)
+    expect(isChromePage('chrome-extension://phokhlmnodckgejnaogjgpmfjnjkefpa/popup.html')).toBe(false)
+    expect(isChromePage(`chrome-extension://${'a'.repeat(32)}/permission.html`)).toBe(false)
     expect(isChromePage('https://example.com/')).toBe(false)
   })
 })
@@ -65,6 +82,13 @@ describe('openInChrome', () => {
     expect(await openInChrome('chrome://extensions/', d.deps)).toBe('typed')
     expect(d.started).toEqual([['--new-window']])
     expect(d.typed).toEqual(['chrome://extensions/'])
+  })
+
+  it('opens the window in the profile used last, past the profile picker', async () => {
+    const d = desktop(1)
+    d.deps.profile = () => 'Profile 1'
+    await openInChrome('chrome://extensions/', d.deps)
+    expect(d.started).toEqual([['--new-window', '--profile-directory=Profile 1']])
   })
 
   it('types nothing when Chrome does not come to the front', async () => {

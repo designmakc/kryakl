@@ -97,8 +97,8 @@
         <span><span class="step-name">Translate</span><span class="step-ex">привіт світ → hello world</span></span>
       </li>
       <li class="step">
-        <span class="keys"><kbd class="key">Ctrl</kbd><kbd class="key">C</kbd><span class="x2">×2</span></span>
-        <span><span class="step-name">Listen</span><span class="step-ex">hello world, read aloud</span></span>
+        <span class="keys"><span class="eg">e.g.</span><kbd class="key">Ctrl</kbd><kbd class="key">C</kbd><span class="x2">×2</span></span>
+        <span><span class="step-name">Read aloud</span><span class="step-ex">hello world, read aloud</span></span>
       </li>
     </ol>
   </div>
@@ -107,7 +107,7 @@
 <section class="band" id="try" aria-labelledby="try-h">
   <div class="wrap band-grid">
     <div class="band-copy">
-      <div class="kicker"><span class="keys"><kbd class="key">Ctrl</kbd><kbd class="key">C</kbd><span class="x2">×2</span></span>Listen</div>
+      <div class="kicker"><span class="keys"><span class="eg">e.g.</span><kbd class="key">Ctrl</kbd><kbd class="key">C</kbd><span class="x2">×2</span></span>Translate and read aloud</div>
       <h2 id="try-h">Try it on this page.</h2>
       <p class="band-hint">Select a sentence below, then press <span class="keys" id="hintKeys"><kbd class="key" id="modKey">Ctrl</kbd><kbd class="key">C</kbd></span> twice.<span class="more" id="more">once more</span></p>
       <div class="story" id="story"></div>
@@ -176,10 +176,10 @@
     <div class="kgroup">
       <h3><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/> <path d="M16 9a5 5 0 0 1 0 6"/> <path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>Read</h3>
       <ul>
-        <li class="krow"><span>Listen to the selected text</span><span class="keys"><kbd class="key">Ctrl</kbd><kbd class="key">C</kbd><span class="x2">×2</span></span></li>
-        <li class="krow"><span>Listen to a piece of the screen</span><span class="keys"><kbd class="key">Ctrl</kbd><kbd class="key">Alt</kbd><kbd class="key">S</kbd></span></li>
         <li class="krow"><span>Translate the selected text</span><span class="keys"><button class="key mine rec" type="button" data-act="translate">your key</button></span></li>
-        <li class="krow"><span>Translate text from the screen</span><span class="keys"><kbd class="key">Ctrl</kbd><kbd class="key">Alt</kbd><kbd class="key">T</kbd></span></li>
+        <li class="krow"><span>Translate and read aloud</span><span class="keys"><span class="eg">e.g.</span><kbd class="key">Ctrl</kbd><kbd class="key">C</kbd><span class="x2">×2</span></span></li>
+        <li class="krow"><span>Translate from the screen</span><span class="keys"><kbd class="key">Ctrl</kbd><kbd class="key">Alt</kbd><kbd class="key">T</kbd></span></li>
+        <li class="krow"><span>Translate and read aloud from the screen</span><span class="keys"><kbd class="key">Ctrl</kbd><kbd class="key">Alt</kbd><kbd class="key">S</kbd></span></li>
       </ul>
     </div>
     <div class="kgroup">
@@ -187,7 +187,7 @@
       <ul>
         <li class="krow"><span>Fix the layout as I type</span><span class="auto">automatic</span></li>
         <li class="krow"><span>Fix the last words or the selection</span><span class="keys"><kbd class="key">Pause</kbd></span></li>
-        <li class="krow"><span>Translate in place, no window</span><span class="keys"><button class="key mine rec" type="button" data-act="inplace">your key</button></span></li>
+        <li class="krow"><span>Replace with translation</span><span class="keys"><button class="key mine rec" type="button" data-act="inplace">your key</button></span></li>
         <li class="krow"><span>Check my English</span><span class="keys"><button class="key mine rec" type="button" data-act="check">your key</button></span></li>
       </ul>
     </div>
@@ -195,9 +195,9 @@
       <h3><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19v3"/> <path d="M19 10v2a7 7 0 0 1-14 0v-2"/> <rect x="9" y="2" width="6" height="13" rx="3"/></svg>Speak</h3>
       <ul>
         <li class="krow"><span>Talk to the duck</span><span class="keys"><button class="key mine rec" type="button" data-act="talk">your key</button></span></li>
-        <li class="krow"><span>Dictate where the cursor is</span><span class="keys"><button class="key mine rec" type="button" data-act="dictate">your key</button></span></li>
-        <li class="krow"><span>Dictate in my language, type English</span><span class="keys"><button class="key mine rec" type="button" data-act="english">your key</button></span></li>
-        <li class="krow"><span>Dictate a note into my notes folder</span><span class="keys"><button class="key mine rec" type="button" data-act="note">your key</button></span></li>
+        <li class="krow"><span>Type by voice</span><span class="keys"><button class="key mine rec" type="button" data-act="dictate">your key</button></span></li>
+        <li class="krow"><span>Type by voice into English</span><span class="keys"><button class="key mine rec" type="button" data-act="english">your key</button></span></li>
+        <li class="krow"><span>Voice note</span><span class="keys"><button class="key mine rec" type="button" data-act="note">your key</button></span></li>
         <li class="krow"><span>Record a Google Meet call</span><span class="keys"><kbd class="key">Alt</kbd><kbd class="key">Shift</kbd><kbd class="key">M</kbd></span></li>
       </ul>
     </div>
@@ -209,7 +209,7 @@
 
   <section class="chapter wide" aria-labelledby="kb-h">
     <div class="ch-copy">
-      <div class="kicker"><span class="keys"><kbd class="key">Pause</kbd></span>Keyboard</div>
+      <div class="kicker"><span class="keys"><kbd class="key">Pause</kbd></span>Keyboard layout</div>
       <div class="wide-head">
         <h2 id="kb-h">Typed in the wrong layout? Keep typing.</h2>
         <p>Kryakl fixes a word typed in the wrong layout as soon as you finish it, and switches the layout for the next one. It reads the keys of the word you are typing, never the text around it.</p>
@@ -307,7 +307,7 @@
 
   <section class="chapter wide" aria-labelledby="sp-h">
     <div class="ch-copy">
-      <div class="kicker"><span class="keys"><button class="key mine rec" type="button" data-act="dictate">your key</button></span>Dictate and transcribe</div>
+      <div class="kicker"><span class="keys"><button class="key mine rec" type="button" data-act="dictate">your key</button></span>Voice typing and recordings</div>
       <div class="wide-head">
         <h2 id="sp-h">Say it, and it's typed.</h2>
         <p>Press a key and speak. Kryakl types the phrase where the cursor is, in the language you spoke or straight in English. It recognizes while you talk, so the text is there a moment after the key.</p>
@@ -331,7 +331,7 @@
     <ul class="facts cols three">
       <li><b>Quick on an ordinary processor.</b> 22 seconds of speech were typed 0.2 s after the key (Parakeet, on an Intel i9).</li>
       <li><b>Transcripts</b> of files, the microphone and Google Meet calls. Telling an hour's speakers apart takes about 2 minutes on an RTX card.</li>
-      <li><b>Words to spell.</b> Names and terms come out written your way, in dictation and in transcripts.</li>
+      <li><b>Names and terms.</b> They come out written your way, in dictation and in transcripts.</li>
     </ul>
   </section>
 
@@ -379,7 +379,7 @@
     <button class="quack" id="quack" type="button" aria-label="The duck says krya"><svg viewBox="16 16 224 224" aria-hidden="true"><rect x="16" y="16" width="224" height="224" rx="52" fill="#141414"/><g transform="translate(-4 -2)" fill="none" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"><path stroke="#FFFFFF" d="M118 58C92 58 84 68 84 88V96C84 108 78 114 62 114C78 114 84 120 84 132V174C84 194 92 202 118 202"/><path class="beak" stroke="#FFD60A" d="M166 86L202 114L166 142"/></g><circle cx="132" cy="96" r="13" fill="#FFFFFF"/></svg><span class="bubble" aria-hidden="true">кря!</span></button>
     <div>
       <h2 id="end-h">Talk to the duck.</h2>
-      <p>Select any text and press Ctrl+C twice to hear it in English, or press your Talk key and say hello. The rest is a key away.</p>
+      <p>Give reading aloud a key, Ctrl+C twice if you like, and select any text. Or press your Talk key and say hello. The rest is a key away.</p>
       <div class="ctas">
         <a class="btn primary" href="https://github.com/ikstro/kryakl/releases/latest"><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3"/> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/> <path d="m7 10 5 5 5-5"/></svg>Download for Windows</a>
         <a class="btn ghost" href="https://github.com/ikstro/kryakl"><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6"/> <path d="M10 14 21 3"/> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>Source on GitHub</a>

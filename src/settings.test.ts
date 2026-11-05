@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { addKept, DEFAULTS, keptForm, myLanguages, normalize } from './settings'
+import { addKept, DEFAULTS, KEYS_VERSION, keptForm, myLanguages, normalize } from './settings'
 
 describe('Kept as typed', () => {
   test('a word is kept trimmed and in lower case', () => {
@@ -21,7 +21,7 @@ describe('normalize', () => {
   })
 
   test('keeps valid values, replaces the rest', () => {
-    const s = normalize({ native: 'Українська', voice: 'natural:bf_emma', rate: 3, autoRead: false, wordHint: 'hover', theme: 'blue', oneAtATime: 'yes' })
+    const s = normalize({ native: 'Українська', voice: 'natural:bf_emma', rate: 3, autoRead: false, wordHint: 'hover', theme: 'blue', oneAtATime: 'yes', keysVersion: KEYS_VERSION })
     expect(s).toEqual({ ...DEFAULTS, native: 'Ukrainian', voice: 'natural:bf_emma', autoRead: false, wordHint: 'hover' })
     expect(normalize({ rate: 1.5, theme: 'dark', oneAtATime: true })).toMatchObject({ rate: 1.5, theme: 'dark', oneAtATime: true })
   })
@@ -44,6 +44,26 @@ describe('normalize', () => {
     expect(normalize({ translationLevel: 'accurate', model: 'most' })).toMatchObject({ translationLevel: 'most', model: 'most' })
     expect(normalize({ translationLevel: 'fast', model: 'most' })).toMatchObject({ translationLevel: 'fast', model: 'most' })
     expect(normalize({ model: 'gemma' }).model).toBe('accurate')
+  })
+
+  test('Ctrl+C twice, a switch before 0.16, becomes the key of Translate and read aloud when that has none', () => {
+    // On, or absent (on was the default then): moved.
+    expect(normalize({ doubleCopy: true, selectKey: '' })).toMatchObject({ selectKey: 'Control+C*2', keysVersion: KEYS_VERSION })
+    expect(normalize({ selectKey: '' }).selectKey).toBe('Control+C*2')
+    expect(normalize({}).selectKey).toBe('Control+C*2')
+    // Its own key stays, and Ctrl+C twice is off.
+    expect(normalize({ doubleCopy: true, selectKey: 'Control+Alt+L' }).selectKey).toBe('Control+Alt+L')
+    // Turned off: nothing moves.
+    expect(normalize({ doubleCopy: false, selectKey: '' }).selectKey).toBe('')
+    // No longer a setting.
+    expect('doubleCopy' in normalize({ doubleCopy: true })).toBe(false)
+    // Moved once: a file of now with the key cleared keeps it cleared.
+    const moved = normalize({ doubleCopy: true })
+    expect(normalize({ ...moved, selectKey: '' }).selectKey).toBe('')
+    expect(normalize({ ...moved, selectKey: '', translateKey: 'Control+C*2' })).toMatchObject({ selectKey: '', translateKey: 'Control+C*2' })
+    // A fresh install has none.
+    expect(normalize(undefined).selectKey).toBe('')
+    expect(DEFAULTS.selectKey).toBe('')
   })
 
   test('a shortcut may be cleared; a missing one is the default', () => {

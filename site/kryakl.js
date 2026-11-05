@@ -21,7 +21,7 @@ const T = merge({
   eg: 'e.g.',
   keyAria: 'Your key to {act}: {k}. Click to set it again',
   setAria: 'Set your key to {act}',
-  takenListen: '{k} is taken by Listen.',
+  takenListen: '{k} is taken by reading aloud.',
   taken: '{k} is taken: it would {act}.',
   setTranslate: 'Set. Select a line on this page and press {k}.',
   setTalk: 'Set. Press {k} to say your line to the duck, and again to send it.',
@@ -309,7 +309,7 @@ function renderCard(c, pop) {
   el.innerHTML = `
     <div class="kc-head">
       <span class="keys">${c.via ? capsHtml(c.via, true) : ''}</span>
-      <span class="kc-title">${c.kind}</span>
+      <span class="kc-title">${c.kind === 'Listen' ? 'Read aloud' : c.kind}</span>
       <span class="kc-tools">
         <button class="kc-lang" type="button" aria-pressed="${c.lower}" title="Show or hide the translation">${lang.toUpperCase()}</button>
         <button class="kc-icon" type="button" data-act="close" aria-label="Close the card">${ico('x')}</button>

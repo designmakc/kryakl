@@ -171,8 +171,8 @@ describe('recommendedModels', () => {
     expect(a.patch).toEqual({ translationLevel: 'accurate', dictationModel: '', speechPrefer: 'accuracy' })
     expect(a.changes.map(c => `${c.what}: ${c.from} → ${c.to} ${c.mb}`)).toEqual([
       'Translate: Fast → Accurate 5155',
-      'Listen voice: Windows voice → Natural voice 170',
-      `Dictate: ${v.speech.plan.dictation.chosen.label} → Automatic 0`,
+      'Voice: Windows voice → Natural voice 170',
+      `Voice typing: ${v.speech.plan.dictation.chosen.label} → Automatic 0`,
       'Automatic speech models: Speed first → Accuracy first 0',
     ])
     expect(a.download).toBe(5155 + 170)
@@ -191,7 +191,7 @@ describe('recommendedModels', () => {
     }
     const a = recommendedModels(v)
     expect(a.patch).toEqual({ translationLevel: 'fast', voice: 'Microsoft Zira Desktop' })
-    expect(a.changes.map(c => `${c.what}: ${c.from} → ${c.to} ${c.mb}`)).toEqual(['Translate: Accurate → Fast 84', 'Listen voice: Natural voice → Microsoft Zira Desktop 0'])
+    expect(a.changes.map(c => `${c.what}: ${c.from} → ${c.to} ${c.mb}`)).toEqual(['Translate: Accurate → Fast 84', 'Voice: Natural voice → Microsoft Zira Desktop 0'])
     expect(a.model).toBe(false)
   })
 
@@ -206,8 +206,8 @@ describe('recommendedModels', () => {
     const v = withEngine({ ...base, settings: { ...base.settings, speakersDevice: 'cpu' } }, ['core', 'speakers'], 'cpu')
     const a = recommendedModels(v)
     expect(a.parts).toEqual(['gpu', 'speakers'])
-    expect(a.changes.filter(c => c.what !== 'Translate' && c.what !== 'Listen voice').map(c => `${c.what}: ${c.from} → ${c.to} ${c.mb}`)).toEqual([
-      'Dictate and Transcribe: processor → graphics card 1150',
+    expect(a.changes.filter(c => c.what !== 'Translate' && c.what !== 'Voice').map(c => `${c.what}: ${c.from} → ${c.to} ${c.mb}`)).toEqual([
+      'Voice typing and recordings: processor → graphics card 1150',
       'Who spoke when: processor → graphics card 3000',
     ])
   })

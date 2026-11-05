@@ -9,9 +9,9 @@ import * as path from 'node:path'
 
 import type { HostCall, ToHost } from './protocol'
 
-export type Page = 'app' | 'card' | 'tray' | 'dictation' | 'talk' | 'other'
+export type Page = 'app' | 'card' | 'tray' | 'dictation' | 'talk' | 'menu' | 'other'
 
-const PAGES: Record<string, Page> = { 'app.html': 'app', 'card.html': 'card', 'tray.html': 'tray', 'dictation.html': 'dictation', 'talk.html': 'talk' }
+const PAGES: Record<string, Page> = { 'app.html': 'app', 'card.html': 'card', 'tray.html': 'tray', 'dictation.html': 'dictation', 'talk.html': 'talk', 'menu.html': 'menu' }
 
 /** The page a window shows, by its file (media/<page>.html, with or without a query); 'other' for anything else. */
 export function pageOf(url: string): Page {
@@ -27,6 +27,8 @@ export function pageOf(url: string): Page {
 const APP_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>([
   'clearDictation',
   'clearTranslations',
+  'forgetPhrase',
+  'forgetTranslation',
   'clearMistakes',
   'forgetMistake',
   'unlearn',
@@ -57,6 +59,8 @@ const APP_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>([
   'talkOpen',
   'reportProblem',
   'openLogs',
+  // The keyboard thread keeps every key from Windows while a key field waits: only the settings may ask.
+  'recordKeys',
 ])
 
 /** Messages only the talk window sends: the talk itself, its history and its own window. */
@@ -74,8 +78,13 @@ const TALK_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>([
   'talksClear',
 ])
 
+/** Messages only the menu on one key sends, and the only ones it may: it is drawn over any program, so it asks for nothing but its own items. */
+const MENU_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>(['menuReady', 'menuHeight', 'menuHover', 'menuPick'])
+
 export function messageAllowed(page: Page, type: string): boolean {
   if (page === 'other') return false
+  if (MENU_ONLY.has(type as ToHost['type'])) return page === 'menu'
+  if (page === 'menu') return false
   if (TALK_ONLY.has(type as ToHost['type'])) return page === 'talk'
   // The talk window listens too: the tray shows the red dot meanwhile.
   if (type === 'micRecording') return page === 'app' || page === 'talk'
@@ -85,7 +94,7 @@ export function messageAllowed(page: Page, type: string): boolean {
 /** The settings a page other than the app window may change: the card its reading mode, the tray panel its switches. */
 const PAGE_SETTINGS: Partial<Record<Page, ReadonlySet<string>>> = {
   card: new Set(['oneAtATime']),
-  tray: new Set(['autoFix', 'switchOn', 'layoutBadge', 'trayLayout', 'doubleCopy', 'paused']),
+  tray: new Set(['autoFix', 'switchOn', 'layoutBadge', 'trayLayout', 'paused']),
 }
 
 /** Whether `page` may save this settings patch: the app window any, the card and the tray panel only their own. */

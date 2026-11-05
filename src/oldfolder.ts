@@ -27,7 +27,7 @@ export const OLD_PROGRAMS = ['krya.exe', 'altype.exe']
  * updater's id, and the downloads that lived here until 0.10.1.
  */
 export const ITEMS: readonly (string | readonly [from: string, to: string])[] = [
-  'settings.json', 'words.json', 'dictation.json', 'translations.json', 'learning.json', 'mistakes.json',
+  'settings.json', 'words.json', 'dictation.json', 'translations.json', 'learning.json', 'mistakes.json', 'talks.json', 'speech-token',
   'device.json', 'speech.json', 'extension.json', 'speech.log', 'translate.log', ['krya.log', 'kryakl.log'], ['altype.log', 'kryakl.log'],
   '.updaterId', 'models', 'voice', 'dict',
 ]

@@ -2,11 +2,11 @@
 
 *Talk to the duck.* (Formerly Altype and 2Talker.) Website: [ikstro.com/kryakl](https://ikstro.com/kryakl/), where you can try it in the browser.
 
-Select any text, press **Ctrl+C twice**, and hear it in English. A small Windows app for people learning English: it translates what you picked, reads the English aloud, and shows the translation under it; or, with another key, just translates it, like DeepL. Everything runs on your computer: nothing you read leaves it.
+Select any text, press your key, and hear it in English. A small Windows app for people learning English: it translates what you picked, reads the English aloud, and shows the translation under it; or, with another key, just translates it, like DeepL. Everything runs on your computer: nothing you read leaves it.
 
 ![A card with an English text on top, its translation under it, and a word's meanings](docs/card.png)
 
-- **Any text.** Select it in any program and press **Ctrl+C twice**. A card opens by the pointer: the English on top, read aloud at once, your language under it. An English text shows up before its translation is in; a text in your language is translated into English first.
+- **Any text.** Select it in any program and press the key you gave it, **Ctrl+C twice** if you like. A card opens by the pointer: the English on top, read aloud at once, your language under it. An English text shows up before its translation is in; a text in your language is translated into English first.
 - **A piece of the screen.** Press **Ctrl+Alt+S** and draw a box over the words: a picture, a video with subtitles, a game. Kryakl reads the text with the OCR built into Windows.
 - **Translate.** A key of your own (Shift twice, say) for the selection, **Ctrl+Alt+T** for a piece of the screen: the text as it is and its translation, from the language it is in into yours, from yours into English. **Paste** (Enter; Shift+Enter is a new line) puts the translation over the selected text; change either language, swap them, copy either side. Your clipboard is left as it was.
 - **Keyboard layout** (off at first, in Settings). A key that switches the layout (a tap of Left Ctrl, Caps Lock, any key); a fix key (Pause) that types again, in the right layout, what you just typed in the wrong one, or the selected text; words typed in the wrong layout fixed as you type, for English, Russian and Ukrainian; a badge with the layout by the cursor.
@@ -42,7 +42,7 @@ The first translation downloads the translator for your language (about 85 MB fo
 | **RU** (your language's code) | hide or show the translation |
 | pin | keep the card open when another window is clicked |
 
-The tray icon opens the menu: Listen and Translate (the selection, the copied text, a piece of the screen), fixing the layout as you type, read aloud, voice, speed (up to 1.5×), your language, theme (as Windows, light, dark). **Open Kryakl…** (or a double click) opens the window: Home with every action and its keys (tap one to change them), Words, Settings, About.
+The tray icon opens a panel: the actions, the layout's quick settings and your words. **Open** opens the window: Home with Kryakl's state and your keys, then Translate, English, Voice typing, Recordings and meetings, Keyboard layout, Settings, Models, Disk space and About. One key can also open Kryakl's menu by the cursor, where a letter picks the action (Settings › Keys).
 
 From a launcher or a mouse button: `Kryakl.exe --clipboard` listens to the copied text and `--translate` translates it; `--snip` snips to listen, `--text` to translate.
 

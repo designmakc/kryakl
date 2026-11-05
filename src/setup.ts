@@ -228,10 +228,10 @@ export function recommendedModels(v: AppView): ModelAdvice {
     change(t('rec.voice'), voiceName, windows)
   }
 
-  // Dictate and Transcribe: Automatic, accuracy first, on the graphics card when it can take them; who spoke when where advised.
+  // Voice typing and recordings: Automatic, accuracy first, on the graphics card when it can take them; who spoke when where advised.
   if (sp.pack.parts.includes('core')) {
     const features = [
-      ['dictationModel', t('dict.type'), sp.plan.dictation],
+      ['dictationModel', t('rec.dictate'), sp.plan.dictation],
       ['transcriptsModel', t('rec.transcribe'), sp.plan.transcripts],
     ] as const
     for (const [key, what, plan] of features) if (s[key]) (patch[key] = ''), change(what, plan.chosen.label, t('rec.automatic'))

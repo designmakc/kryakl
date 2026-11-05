@@ -48,7 +48,7 @@ function command(id: string, icon: LucideName, label: string, run: TrayCommand, 
   )
 }
 
-type Switch = 'autoFix' | 'switchOn' | 'layoutBadge' | 'trayLayout' | 'doubleCopy' | 'paused'
+type Switch = 'autoFix' | 'switchOn' | 'layoutBadge' | 'trayLayout' | 'paused'
 
 /** One quick setting: saved at once, and the panel stays, as a switch is not a command. */
 function toggle(id: Switch, icon: LucideName, label: string, on: boolean): HTMLElement {
@@ -220,7 +220,7 @@ function render(v: TrayView): void {
       command('translateCopied', 'languages', t('tray.translateCopied'), 'translateCopied'),
       command('typeToTranslate', 'pencil-line', t('tray.typeToTranslate'), 'typeToTranslate', v.keys.typeToTranslate),
       command('checkEnglish', 'graduation-cap', t('tray.checkEnglish'), 'checkEnglish', v.keys.checkEnglish),
-      v.speech.installed ? command('talk', 'bird', 'Talk to the duck…', 'talk', v.keys.talk) : null,
+      v.speech.installed ? command('talk', 'bird', `${t('menu.talk')}…`, 'talk', v.keys.talk) : null,
       command('listenScreen', 'monitor-speaker', t('tray.listenScreen'), 'listenScreen', v.keys.snipListen),
       command('translateScreen', 'scan-text', t('tray.translateScreen'), 'translateScreen', v.keys.snipTranslate),
       v.speech.installed ? command('note', 'notebook-pen', v.speech.recording ? t('tray.saveNote') : t('tray.newNote'), 'note', v.speech.noteKey) : null,
@@ -232,7 +232,6 @@ function render(v: TrayView): void {
       v.keys.switch ? toggle('switchOn', 'keyboard', t('tray.switchWith', { key: hotkeyLabel(v.keys.switch) }), v.switchOn) : null,
       toggle('layoutBadge', 'text-cursor', t('tray.layoutBadge'), v.layoutBadge),
       toggle('trayLayout', 'panel-bottom', t('tray.trayLayout'), v.trayLayout),
-      toggle('doubleCopy', 'copy', t('tray.doubleCopy'), v.doubleCopy),
     ),
     group(
       t('tray.yourWords'),

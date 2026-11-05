@@ -1,6 +1,7 @@
 // The main process's side of the keyboard helper (kbd-worker.ts): the thread
 // runs only while one of its parts is on (the switch key, fixing as one types,
-// the fix key, the layout badge) and gets the settings each time they change.
+// the fix key, the layout badge) or a key field of the app window waits for a
+// key (`record`), and gets the settings each time they change.
 // The badge itself is a small window that never takes focus or clicks.
 
 import * as path from 'node:path'
@@ -9,9 +10,10 @@ import { MessageChannel, Worker } from 'node:worker_threads'
 import { BrowserWindow, screen } from 'electron'
 import koffi from 'koffi'
 
-import { isAccelerator } from './hotkey'
+import { isAccelerator, isCopyTwice } from './hotkey'
 import type { LearnedConfig } from './learning'
-import type { KbdConfig, KbdIn, KbdOut, KeyAction, Learned } from './typist'
+import type { Rect } from './placement'
+import { RECORD_MS, type KbdConfig, type KbdIn, type KbdOut, type KeyAction, type Learned } from './typist'
 import type { KeyboardLayout } from './protocol'
 import { myLanguages, type Settings } from './settings'
 import { caretOf, foreground, installedLayouts } from './winkbd'
@@ -54,6 +56,12 @@ export type KeyboardEvents = {
   layout(layout: string, caps: boolean): void
   /** Another program pressed keys by itself. */
   foreignKeys(): void
+  /** A key went down or up while a key field waits for one (`record`): KeyboardEvent.code, at (ms since 1970). */
+  recorded(code: string, down: boolean, at: number): void
+  /** A key the open menu took (KeyboardEvent.code). */
+  menuKey(code: string): void
+  /** Another key, a click elsewhere or another window closed the menu. */
+  menuClosed(): void
   failed(message: string): void
 }
 
@@ -78,6 +86,10 @@ export class KeyboardHelper {
   private badge: BrowserWindow | undefined
   private badgeTimer: NodeJS.Timeout | undefined
   private shorts = new Map<string, string>()
+  /** A part of the settings needs the thread; a key field waits for a key (and stops waiting by itself after RECORD_MS). */
+  private needed = false
+  private recording = false
+  private recordTimer: NodeJS.Timeout | undefined
 
   constructor(
     private readonly workerPath: string,
@@ -95,13 +107,15 @@ export class KeyboardHelper {
    */
   apply(s: Settings, learned: LearnedConfig): void {
     const keys: KbdConfig['keys'] = {}
-    const its = (key: string) => !!key && !isAccelerator(key)
+    // Ctrl+C twice is the clipboard's (main.ts), never the thread's.
+    const its = (key: string) => !!key && !isAccelerator(key) && !isCopyTwice(key)
     if (s.paused) {
-      if (!its(s.pauseKey)) return this.stop()
-      keys.pause = s.pauseKey
+      if (its(s.pauseKey)) keys.pause = s.pauseKey
     } else {
       if (s.switchKey && s.switchOn) keys.switch = s.switchKey
       if (s.fixKey && s.fixKeyOn) keys.fix = s.fixKey
+      // Always the thread's, with a modifier too: Electron's shortcut would end what was typed before the menu's fix item could fix it.
+      if (s.menuKey && !isCopyTwice(s.menuKey)) keys.menu = s.menuKey
       for (const [action, key] of [
         ['select', s.selectKey],
         ['snip', s.snipKey],
@@ -127,7 +141,8 @@ export class KeyboardHelper {
     const layoutKeys = on && s.switchOn ? s.layoutKeys : {}
     const apps = Object.fromEntries(s.apps.map(a => [a.exe, { off: a.off, layout: a.layout }]))
     const watched = on && (s.autoFix || s.layoutBadge || s.trayLayout || s.switchSound || Object.keys(layoutKeys).length > 0 || s.apps.some(a => a.layout))
-    if (Object.keys(keys).length === 0 && !watched) return this.stop()
+    this.needed = Object.keys(keys).length > 0 || watched
+    if (!this.needed && !this.recording) return this.stop()
     const config: KbdConfig = {
       keys,
       layoutKeys,
@@ -151,6 +166,8 @@ export class KeyboardHelper {
       quietFullScreen: s.quietFullScreen,
       words: Object.fromEntries(FIX_LANGUAGES.map(code => [code, path.join(this.wordsDir, `${code}.txt`)])),
     }
+    // Kept for a key field alone: no part of it acts (nothing is fixed, so nothing is learned).
+    if (!this.needed) config.learn = false
     const fresh = !this.worker
     if (fresh) this.start()
     this.post({ type: 'config', config })
@@ -172,12 +189,48 @@ export class KeyboardHelper {
 
   private dictatingNow = false
 
+  /**
+   * A key field of the app window (`hwnd`) waits for a key, or no longer: the
+   * thread reports the keys pressed there and keeps them from Windows, so
+   * Ctrl+Esc, Shift+Caps Lock or Alt can be recorded; it starts for this when
+   * nothing else needs it, and ends after. RECORD_MS at most, whatever the page says.
+   */
+  record(on: boolean, hwnd: bigint = 0n): void {
+    if (this.recordTimer) clearTimeout(this.recordTimer)
+    this.recordTimer = undefined
+    this.recording = on
+    if (on) {
+      if (!this.worker) {
+        this.start()
+        if (this.dictatingNow) this.post({ type: 'dictating', on: true })
+      }
+      this.post({ type: 'record', on: true, hwnd })
+      this.recordTimer = setTimeout(() => this.record(false), RECORD_MS)
+      return
+    }
+    if (!this.worker) return
+    if (this.needed) this.post({ type: 'record', on: false })
+    else this.stop()
+  }
+
+  /** The menu on one key opened or closed: while open the thread takes its keys (`codes`), and knows where it is on the screen (`rect`, physical pixels). */
+  menu(on: boolean, codes: string[] = [], rect?: Rect): void {
+    this.post(rect ? { type: 'menu', on, codes, rect } : { type: 'menu', on, codes })
+  }
+
+  /** The fix key's action, asked by the menu. */
+  fixNow(): void {
+    this.post({ type: 'fix' })
+  }
+
   /** Switches the window in front to a layout. */
   switchTo(layout: string): void {
     this.post({ type: 'switchTo', layout })
   }
 
   dispose(): void {
+    if (this.recordTimer) clearTimeout(this.recordTimer)
+    this.recording = false
     this.stop()
     this.badge?.destroy()
     this.badge = undefined
@@ -254,6 +307,15 @@ export class KeyboardHelper {
         return
       case 'foreignKeys':
         this.events.foreignKeys()
+        return
+      case 'recorded':
+        this.events.recorded(message.code, message.down, message.at)
+        return
+      case 'menuKey':
+        this.events.menuKey(message.code)
+        return
+      case 'menuClosed':
+        this.events.menuClosed()
         return
       case 'error':
         this.events.failed(message.message)

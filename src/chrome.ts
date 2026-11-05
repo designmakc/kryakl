@@ -12,8 +12,14 @@ import * as path from 'node:path'
 
 import { system32 } from './system32'
 
-/** The only pages a page of Kryakl may open in Chrome: the extensions, their keys, and one extension's card. */
-export const CHROME_PAGES = ['chrome://extensions/', 'chrome://extensions/shortcuts']
+/** Kryakl's extension, fixed by the key in extension/manifest.json (engine/auth.py EXTENSION_ID). */
+const EXTENSION_ID = 'phokhlmnodckgejnaogjgpmfjnjkefpa'
+
+/**
+ * The only pages a page of Kryakl may open in Chrome: the extensions, their keys, one extension's card, and
+ * Kryakl's extension's own page that asks for the microphone (Chrome asks only on a page it can show).
+ */
+export const CHROME_PAGES = ['chrome://extensions/', 'chrome://extensions/shortcuts', `chrome-extension://${EXTENSION_ID}/permission.html`]
 const EXTENSION_CARD = /^chrome:\/\/extensions\/\?id=[a-p]{32}$/
 
 export const isChromePage = (url: string) => CHROME_PAGES.includes(url) || EXTENSION_CARD.test(url)
@@ -48,6 +54,55 @@ export async function findChrome(): Promise<string | undefined> {
   return candidates.find((p): p is string => !!p && fs.existsSync(p))
 }
 
+/** A profile's folder name as Chrome writes it ("Default", "Profile 1"): never a path. */
+const PROFILE_DIR = /^[\w -]{1,64}$/
+
+/**
+ * The profile Chrome used last, from its `Local State`: Kryakl opens its window in it, as with several
+ * profiles Chrome would show "Who's using Chrome?" first, take the address into that picker and drop it
+ * (2026-11-03). Undefined when the file says none.
+ */
+export function lastProfile(localState: string): string | undefined {
+  try {
+    const profile = (JSON.parse(localState) as { profile?: { last_used?: unknown; last_active_profiles?: unknown } }).profile
+    const active = Array.isArray(profile?.last_active_profiles) ? profile.last_active_profiles[0] : undefined
+    const name = typeof profile?.last_used === 'string' ? profile.last_used : active
+    return typeof name === 'string' && PROFILE_DIR.test(name) ? name : undefined
+  } catch {
+    return undefined
+  }
+}
+
+const readText = (file: string) => {
+  try {
+    return fs.readFileSync(file, 'utf8')
+  } catch {
+    return ''
+  }
+}
+
+/** Whether a profile has Kryakl's extension: Chrome lists an unpacked one in its Secure Preferences. */
+const hasExtension = (dir: string) => ['Secure Preferences', 'Preferences'].some(file => readText(path.join(dir, file)).includes(`"${EXTENSION_ID}"`))
+
+/**
+ * The profile to open Chrome's window in: one that has Kryakl's extension (the last used first; the
+ * owner's is in Profile 1 while Default is the last used), else the last used, else Default.
+ */
+export function chromeProfile(): string | undefined {
+  const local = process.env.LOCALAPPDATA
+  if (!local) return undefined
+  const userData = path.join(local, 'Google', 'Chrome', 'User Data')
+  const last = lastProfile(readText(path.join(userData, 'Local State')))
+  let profiles: string[] = []
+  try {
+    profiles = fs.readdirSync(userData).filter(name => /^(Default|Profile \d+)$/.test(name))
+  } catch {
+    return undefined
+  }
+  const ordered = [...(last && profiles.includes(last) ? [last] : []), ...profiles.filter(p => p !== last)]
+  return ordered.find(p => hasExtension(path.join(userData, p))) ?? ordered[0]
+}
+
 /** What became of a page asked for: typed into a new Chrome window, Chrome opened without it, no Chrome, or not a page Kryakl opens. */
 export type ChromeOpened = 'typed' | 'opened' | 'missing' | 'refused'
 
@@ -59,9 +114,11 @@ export type ChromeDeps = {
   exeOf: (pid: number) => string
   /** Lets the Chrome that runs already come to the front (Windows asks the window in front to allow it). */
   allowFront: () => void
-  /** Ctrl+L, the address pasted, Enter: in the window in front. */
+  /** Ctrl+L, the address typed, Enter: in the window in front. */
   typeAddress: (url: string) => Promise<void>
   find?: () => Promise<string | undefined>
+  /** The profile's folder to open the window in, so no profile picker comes first. */
+  profile?: () => string | undefined
   start?: (exe: string, args: string[]) => void
   sleep?: (ms: number) => Promise<void>
   /** How long a new Chrome window may take to come to the front. */
@@ -100,7 +157,8 @@ export async function openInChrome(url: string, deps: ChromeDeps): Promise<Chrom
     }
     const before = deps.front().hwnd
     deps.allowFront()
-    ;(deps.start ?? startDetached)(exe, ['--new-window'])
+    const profile = (deps.profile ?? chromeProfile)()
+    ;(deps.start ?? startDetached)(exe, ['--new-window', ...(profile ? [`--profile-directory=${profile}`] : [])])
     const window = await waitForChrome(deps, before)
     if (!window) return 'opened'
     // The new tab page takes a moment to put the cursor in the address bar; still the same window after it, the address goes in.

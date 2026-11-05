@@ -374,7 +374,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .kgroup h3 { display: flex; align-items: center; gap: 10px; padding-bottom: 14px; border-bottom: 2px solid var(--ink); font: 700 15px/1 var(--font); letter-spacing: -0.005em; color: var(--ink); }
 .kgroup h3 .lu { font-size: 18px; color: var(--muted); }
 .krow { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 58px; padding: 10px 0; border-bottom: 1px solid var(--line); }
-.krow span:first-child { font-size: 15px; line-height: 1.35; color: var(--text); }
+.krow > span:first-child { font-size: 15px; line-height: 1.35; color: var(--text); }
 .krow .keys { flex: none; }
 .auto { font: 600 12px/1 var(--font); color: var(--muted); padding: 6px 8px; border-radius: 999px; background: var(--sunk); white-space: nowrap; }
 .keynote { margin-top: 22px; font-size: var(--t-small); color: var(--muted); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
