@@ -89,7 +89,7 @@
     </div>
     <ol class="steps" id="steps">
       <li class="step">
-        <span class="keys"><kbd class="key">Pause</kbd></span>
+        <span class="keys"><span class="eg">e.g.</span><kbd class="key">Pause</kbd></span>
         <span><span class="step-name">Fix the layout</span><span class="step-ex">ghbdsn cdsn → привіт світ</span></span>
       </li>
       <li class="step">
@@ -186,7 +186,7 @@
       <h3><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 8h.01"/> <path d="M12 12h.01"/> <path d="M14 8h.01"/> <path d="M16 12h.01"/> <path d="M18 8h.01"/> <path d="M6 8h.01"/> <path d="M7 16h10"/> <path d="M8 12h.01"/> <rect width="20" height="16" x="2" y="4" rx="2"/></svg>Write</h3>
       <ul>
         <li class="krow"><span>Fix the layout as I type</span><span class="auto">automatic</span></li>
-        <li class="krow"><span>Fix the last words or the selection</span><span class="keys"><kbd class="key">Pause</kbd></span></li>
+        <li class="krow"><span>Fix the last words or the selection</span><span class="keys"><span class="eg">e.g.</span><kbd class="key">Pause</kbd></span></li>
         <li class="krow"><span>Replace with translation</span><span class="keys"><button class="key mine rec" type="button" data-act="inplace">your key</button></span></li>
         <li class="krow"><span>Check my English</span><span class="keys"><button class="key mine rec" type="button" data-act="check">your key</button></span></li>
       </ul>
@@ -203,13 +203,40 @@
     </div>
   </div>
   <p class="keynote"><kbd class="key mine">your key</kbd>Click one and press the key you want, as you would in Kryakl: a combination, a modifier tapped twice, Pause or F-keys. Backspace clears it. The Translate and Talk keys you set work on this page.</p>
+  <div class="onekey">
+    <div class="ch-copy">
+      <div class="kicker"><span class="keys"><button class="key mine rec" type="button" data-act="menu">your key</button></span>Kryakl menu</div>
+      <h3 class="onekey-h">Or one key for all of them.</h3>
+      <p>Press it in any program: Kryakl's menu opens by the text cursor, and your selection stays. A letter picks the action, in any layout. Each action keeps its own key too.</p>
+    </div>
+    <figure class="desk">
+      <!-- English on every page, as Kryakl's other windows here: class="mn-l" and the logo's attribute order keep the translations off it. -->
+      <div class="mn" aria-label="Kryakl's menu">
+        <div class="mn-head"><span class="logo">Kryakl <span aria-hidden="true" class="duck">(<span class="eye">'</span>)&gt;</span></span></div>
+          <div class="mn-row on"><kbd class="key">T</kbd><span class="mn-l">Translate</span></div>
+          <div class="mn-row"><kbd class="key">R</kbd><span class="mn-l">Translate and read aloud</span></div>
+          <div class="mn-row"><kbd class="key">P</kbd><span class="mn-l">Replace with translation</span></div>
+          <div class="mn-row"><kbd class="key">S</kbd><span class="mn-l">Translate from the screen</span></div>
+          <div class="mn-rule"></div>
+          <div class="mn-row"><kbd class="key">C</kbd><span class="mn-l">Check my English</span></div>
+          <div class="mn-row"><kbd class="key">D</kbd><span class="mn-l">Talk to the duck</span></div>
+          <div class="mn-rule"></div>
+          <div class="mn-row"><kbd class="key">V</kbd><span class="mn-l">Type by voice</span></div>
+          <div class="mn-row"><kbd class="key">E</kbd><span class="mn-l">Type by voice into English</span></div>
+          <div class="mn-rule"></div>
+          <div class="mn-row"><kbd class="key">F</kbd><span class="mn-l">Fix the layout</span></div>
+        <div class="mn-foot">Letter to pick · Esc to close</div>
+      </div>
+      <figcaption>Kryakl's menu, redrawn.</figcaption>
+    </figure>
+  </div>
 </section>
 
 <div class="chapters wrap" id="features">
 
   <section class="chapter wide" aria-labelledby="kb-h">
     <div class="ch-copy">
-      <div class="kicker"><span class="keys"><kbd class="key">Pause</kbd></span>Keyboard layout</div>
+      <div class="kicker"><span class="keys"><span class="eg">e.g.</span><kbd class="key">Pause</kbd></span>Keyboard layout</div>
       <div class="wide-head">
         <h2 id="kb-h">Typed in the wrong layout? Keep typing.</h2>
         <p>Kryakl fixes a word typed in the wrong layout as soon as you finish it, and switches the layout for the next one. It reads the keys of the word you are typing, never the text around it.</p>
@@ -227,8 +254,8 @@
       <figcaption>A chat message typed without looking at the layout. The badge by the caret is Kryakl's own.</figcaption>
     </figure>
     <ul class="facts cols">
-      <li><b>Pause right after a fix</b> takes it back and keeps the word as typed.</li>
-      <li><b>Pause</b> retypes the last words, or the selected text, in the layout that reads best. Again for the next one.</li>
+      <li><b>The fix key right after a fix</b> takes it back and keeps the word as typed.</li>
+      <li><b>The fix key</b> retypes the last words, or the selected text, in the layout that reads best. Again for the next one.</li>
       <li><b>Learns as you go.</b> A word you fix by hand twice is fixed always; a word of yours typed three times becomes yours.</li>
       <li><b>Stays out of the way</b> in password fields and full-screen games. NB and other abbreviations are left alone.</li>
     </ul>
@@ -282,7 +309,7 @@
       <ul class="facts">
         <li><b>Real mistakes only.</b> No rephrasing; code and names are left alone.</li>
         <li><b>Measured on 44 texts,</b> it caught 31 of 32 mistakes and changed none of the 11 right ones.</li>
-        <li><b>Your mistakes, kept.</b> Library › Mistakes shows the ones you repeat first.</li>
+        <li><b>Your mistakes, kept.</b> English › My mistakes shows the ones you repeat first.</li>
       </ul>
     </div>
     <figure class="desk">
@@ -314,9 +341,10 @@
       </div>
     </div>
     <figure class="desk duo">
-      <div class="dbadge" aria-label="Kryakl's dictation badge">
+      <div class="dbadge" aria-label="Kryakl's dictation panel">
+        <span class="db-fold" aria-hidden="true"><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
         <p class="db-text" id="dbText">Let's move the release to Friday and keep the old installer for now.</p>
-        <div class="db-status"><span class="rec-dot"></span><span class="db-name">Dictate</span><span class="db-time" id="dbTime">0:05</span><canvas class="db-wave" id="dbWave" aria-hidden="true"></canvas></div>
+        <div class="db-status"><span class="rec-dot"></span><span class="db-name">Type by voice</span><span class="db-time" id="dbTime">0:05</span><canvas class="db-wave" id="dbWave" aria-hidden="true"></canvas></div>
       </div>
       <div class="ts" aria-label="A transcript of a call">
         <div class="ts-head"><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/> <rect x="2" y="6" width="14" height="12" rx="2"/></svg><b>Design review</b><span class="muted">Google Meet, 32 min</span></div>
@@ -326,12 +354,13 @@
           <li><span class="t">00:24</span><span class="spk" style="--c: var(--sp3)">Speaker 3</span><p>Then let's ship it on Friday.</p></li>
         </ol>
       </div>
-      <figcaption>The dictation badge while you speak, and a call transcribed with who spoke when.</figcaption>
+      <figcaption>The dictation panel while you speak: drag it anywhere, or fold it into the tray and keep talking. And a call transcribed with who spoke when.</figcaption>
     </figure>
-    <ul class="facts cols three">
+    <ul class="facts cols">
       <li><b>Quick on an ordinary processor.</b> 22 seconds of speech were typed 0.2 s after the key (Parakeet, on an Intel i9).</li>
       <li><b>Transcripts</b> of files, the microphone and Google Meet calls. Telling an hour's speakers apart takes about 2 minutes on an RTX card.</li>
       <li><b>Names and terms.</b> They come out written your way, in dictation and in transcripts.</li>
+      <li><b>Text editing.</b> Off until you turn it on. Your local model cleans up a phrase before it is typed, or makes it a list, a business message or a task for an AI: about half a second on an RTX 2080 SUPER.</li>
     </ul>
   </section>
 
@@ -347,7 +376,7 @@
     <div class="lrow"><h3>The texts you select and translate</h3><span class="st here"><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Stay here</span><p>Translated on this computer; the recent ones are kept only here.</p></div>
     <div class="lrow"><h3>What you type</h3><span class="st here"><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Stays here</span><p>Kryakl reads the keys of the word being typed and keeps nothing else. Learned words stay on this computer, and nothing is learned in a password field.</p></div>
     <div class="lrow"><h3>Your talks with the duck</h3><span class="st here"><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Stay here</span><p>The duck answers on your own graphics card. Talks are kept on this computer for 30 days, and what you write about yourself never leaves it.</p></div>
-    <div class="lrow"><h3>Your voice and transcripts</h3><span class="st here"><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Stay here</span><p>Recognized on this computer. A compressed copy of the sound stays beside the transcript; the source file is never copied.</p></div>
+    <div class="lrow"><h3>Your voice and transcripts</h3><span class="st here"><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Stay here</span><p>Recognized and edited on this computer. A compressed copy of the sound stays beside the transcript; the source file is never copied.</p></div>
     <div class="lrow"><h3>Your clipboard</h3><span class="st here"><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>As it was</span><p>Every copy Kryakl borrows is put back, and Windows' clipboard history never sees Kryakl's own copies.</p></div>
     <div class="lrow"><h3>Models and voices</h3><span class="st once"><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3"/> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/> <path d="m7 10 5 5 5-5"/></svg>Once</span><p>Downloaded when you first need them, from Mozilla and Hugging Face, each checked by size and SHA-256.</p></div>
     <div class="lrow"><h3>New versions</h3><span class="st you"><svg class="lu" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6"/> <path d="M10 14 21 3"/> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>You decide</span><p>Kryakl never updates itself. You download a new installer from GitHub when you want it.</p></div>
@@ -357,7 +386,7 @@
 <section class="section wrap after" id="install" aria-labelledby="in-h">
   <div class="sec-head">
     <h2 id="in-h">Three steps to the tray.</h2>
-    <p class="sec-lead">Free, open source, about a minute to set up. It installs over Altype and 2Talker and takes their words and settings along.</p>
+    <p class="sec-lead">Free, open source, about a minute to set up. It installs over Krya, Altype and 2Talker and takes their words and settings along.</p>
   </div>
   <ol class="install">
     <li class="istep"><kbd class="key">1</kbd><h3>Download the installer</h3><p>Get <b>Kryakl-Setup.exe</b> from the latest release on GitHub.</p></li>
@@ -368,7 +397,7 @@
     <h3>What your computer needs</h3>
     <ul class="facts cols three">
       <li><b>Any PC with Windows 10 or 11, 64-bit.</b> Layout fixing, Fast translation, text from the screen and reading aloud in a Windows voice. The natural voice wants 4 processor cores.</li>
-      <li><b>All of Kryakl: a graphics card with 4 GB of its own memory</b> and about 12 GB of disk with every model. Accurate translation, Check my English and the talk with the duck run on it; speech on the card needs NVIDIA. Dictation and transcripts run on the processor too; telling speakers apart on the card wants 6 GB.</li>
+      <li><b>All of Kryakl: a graphics card with 4 GB of its own memory</b> and about 12 GB of disk with every model. Accurate translation, Check my English, text editing and the talk with the duck run on it; speech on the card needs NVIDIA. Dictation and transcripts run on the processor too; telling speakers apart on the card wants 6 GB.</li>
       <li><b>Most accurate: a graphics card with 9 GB of its own memory</b> and 1.8 GB more of disk, about 14 GB in all.</li>
     </ul>
   </div>
@@ -394,7 +423,7 @@
 <footer>
   <div class="wrap foot-in">
     <a class="logo" href="#top" aria-label="Kryakl, to the top">Kryakl <span class="duck" aria-hidden="true">(<span class="eye">'</span>)&gt;</span></a>
-    <p>Made by Yevhen Peshynskyi · Design automation engineer · <a href="https://ikstro.com">ikstro.com</a><br>Open source under the MIT license. Formerly Altype and 2Talker.</p>
+    <p>Made by Yevhen Peshynskyi · Design automation engineer · <a href="https://ikstro.com">ikstro.com</a><br>Open source under the MIT license. Formerly Krya, Altype and 2Talker.</p>
     <nav class="foot-links" aria-label="Links">
       <a href="https://github.com/ikstro/kryakl">GitHub</a>
       <a href="https://github.com/ikstro/kryakl/releases">Releases</a>
