@@ -42,11 +42,11 @@ describe('SpeechPack', () => {
     // A fake uv: "unpacking" makes uv.exe, "sync" makes the environment's python.
     const run: Run = (exe, args, env) => {
       calls.push({ exe, args, env })
-      if (exe.endsWith('tar.exe')) {
+      if (exe.endsWith('tar.exe') || exe.endsWith('/tar')) {
         const dir = args[args.indexOf('-C') + 1]!
-        fs.writeFileSync(path.join(dir, 'uv.exe'), '')
+        fs.writeFileSync(path.join(dir, UV_EXE), '')
       } else {
-        const python = path.join(env.UV_PROJECT_ENVIRONMENT!, 'Scripts', 'python.exe')
+        const python = path.join(env.UV_PROJECT_ENVIRONMENT!, ...PYTHON)
         fs.mkdirSync(path.dirname(python), { recursive: true })
         fs.writeFileSync(python, '')
       }
@@ -55,11 +55,15 @@ describe('SpeechPack', () => {
     return { root, engineDir, calls, run }
   }
 
+  const WIN = process.platform === 'win32'
+  const UV_EXE = WIN ? 'uv.exe' : 'uv'
+  const PYTHON = WIN ? ['Scripts', 'python.exe'] : ['bin', 'python']
+
   // A zip with UV's exact size and hash cannot be made here: a uv.exe already in place stands for it.
   function withUv(root: string) {
     const dir = path.join(root, 'uv', UV.version)
     fs.mkdirSync(dir, { recursive: true })
-    fs.writeFileSync(path.join(dir, 'uv.exe'), '')
+    fs.writeFileSync(path.join(dir, UV_EXE), '')
   }
 
   it('installs the parts and remembers them with the lock it used', async () => {
@@ -166,7 +170,7 @@ describe('SpeechPack', () => {
     expect(fs.existsSync(path.join(root, 'env'))).toBe(false)
   })
 
-  it('finds a launcher left on Krya\'s folder and makes it again in place, the packages kept', async () => {
+  it.skipIf(process.platform !== 'win32')('finds a launcher left on Krya\'s folder and makes it again in place, the packages kept', async () => {
     const { root, engineDir, calls, run } = setup()
     withUv(root)
     const pack = new SpeechPack({ root, engineDir, nvidia: false, open: vi.fn(), run, onChange: () => undefined })

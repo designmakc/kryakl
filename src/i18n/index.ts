@@ -54,7 +54,9 @@ function pluralOf(n: number): Intl.LDMLPluralRule {
   return r.select(n)
 }
 
-const isPlural = (p: Phrase): p is Plural => typeof p === 'object'
+const onMac = typeof process !== 'undefined' && process.platform ? process.platform === 'darwin' : typeof navigator !== 'undefined' && /Mac/.test(navigator.userAgent)
+
+const isPlural =(p: Phrase): p is Plural => typeof p === 'object'
 
 /**
  * The phrase for `key` in the interface's language, `{name}` replaced by
@@ -69,6 +71,8 @@ export function t(key: Key, vars?: Record<string, string | number>): string {
     const n = Number(vars?.n ?? 0)
     s = (p as Partial<Record<Intl.LDMLPluralRule, string>>)[pluralOf(n)] ?? p.other
   } else s = p
+  // ponytail: on a Mac the phrases name macOS in place of Windows; Mac-only phrases when a step there differs (Windows settings paths, OCR)
+  if (onMac && !s.includes('macOS')) s = s.replace(/Windows/g, 'macOS')
   if (!vars) return s
   return s.replace(/\{(\w+)\}/g, (whole, name: string) => (name in vars ? String(vars[name]) : whole))
 }

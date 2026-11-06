@@ -19,13 +19,22 @@ import { OLD_LOCAL_FOLDERS } from './oldfolder'
 
 export type SpeechPart = 'core' | 'gpu' | 'speakers'
 
-/** uv 0.13.0 for Windows x64, as Astral publishes it with its .sha256. */
-export const UV = {
-  version: '0.13.0',
-  url: 'https://github.com/astral-sh/uv/releases/download/0.13.0/uv-x86_64-pc-windows-msvc.zip',
-  bytes: 15_722_003,
-  sha256: '088962f9e7b7bd9ea740c04c650b2a21c8928c345bd99ac24350dc924dba656c',
-}
+const WIN = process.platform === 'win32'
+
+/** uv 0.13.0 for Windows x64 or a Mac on Apple silicon, as Astral publishes it with its .sha256. */
+export const UV = WIN
+  ? {
+      version: '0.13.0',
+      url: 'https://github.com/astral-sh/uv/releases/download/0.13.0/uv-x86_64-pc-windows-msvc.zip',
+      bytes: 15_722_003,
+      sha256: '088962f9e7b7bd9ea740c04c650b2a21c8928c345bd99ac24350dc924dba656c',
+    }
+  : {
+      version: '0.13.0',
+      url: 'https://github.com/astral-sh/uv/releases/download/0.13.0/uv-aarch64-apple-darwin.tar.gz',
+      bytes: 14_692_549,
+      sha256: 'a9c1b29002cf3c83f07fa9cd8a887a3be0107d90e23189721221e7257db8e3d6',
+    }
 
 /** What each part downloads, roughly, in MB: what an install costs, and how far it is. */
 export const DOWNLOAD_MB = { core: 160, gpu: 1150, speakers: 250, speakersGpu: 3000 }
@@ -142,7 +151,7 @@ export class SpeechPack {
   }
 
   get python(): string {
-    return path.join(this.o.root, 'env', 'Scripts', 'python.exe')
+    return WIN ? path.join(this.o.root, 'env', 'Scripts', 'python.exe') : path.join(this.o.root, 'env', 'bin', 'python')
   }
 
   get models(): string {
@@ -150,7 +159,7 @@ export class SpeechPack {
   }
 
   private get uvExe(): string {
-    return path.join(this.o.root, 'uv', UV.version, 'uv.exe')
+    return path.join(this.o.root, 'uv', UV.version, WIN ? 'uv.exe' : 'uv')
   }
 
   private marker(): Marker | undefined {
@@ -223,9 +232,9 @@ export class SpeechPack {
     fs.mkdirSync(dir, { recursive: true })
     const zip = path.join(dir, 'uv.zip')
     await fetchPinned({ url: UV.url, size: UV.bytes, sha256: UV.sha256 }, zip, 'The Python manager', got => this.tick(got / UV.bytes), this.o.open)
-    // Windows' own tar reads zip files.
-    const tar = path.join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe')
-    const unzip = this.runner(tar, ['-xf', zip, '-C', dir], {})
+    // Windows' own tar reads zip files; the Mac's archive keeps uv in a folder of its own.
+    const tar = WIN ? path.join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe') : '/usr/bin/tar'
+    const unzip = this.runner(tar, ['-xf', zip, '-C', dir, ...(WIN ? [] : ['--strip-components', '1'])], {})
     if ((await unzip.exit) !== 0 || !fs.existsSync(this.uvExe)) throw new Error(`Could not unpack the Python manager: ${unzip.output()}`)
     fs.rmSync(zip, { force: true })
   }
