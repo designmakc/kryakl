@@ -7,11 +7,14 @@
 // never to invent; checkSummary drops what it made up anyway. Never logged.
 
 import { LLM_LANGUAGES, type LlmFiles, type LlmModel } from './llmfiles'
+import { SHOT_WORD } from './summaryflow'
 
 export type SummaryTemplate = 'general' | 'standup' | 'interview' | 'lecture' | 'own'
 /** One utterance; `speaker` is the name the page shows. */
 export interface SummaryLine { speaker: string; start: number; text: string }
-export interface SummaryInput { title: string; lines: SummaryLine[]; duration: number; language: string | null; lost?: number }
+/** `shots`: the text read off the call's key and the person's screenshots (main's OCR), by their time; context for the model, never its own lines. */
+export interface SummaryInput { title: string; lines: SummaryLine[]; duration: number; language: string | null; lost?: number; shots?: ScreenText[] }
+export interface ScreenText { at: number; text: string }
 /** `native`: the person's own language by its English name ("Russian"), used when `mine`. */
 export interface SummaryOptions { template: SummaryTemplate; own?: string; mine: boolean; native: string }
 /** Parts done of `parts`; `parts + 1` while they are joined. */
@@ -22,7 +25,8 @@ export type SummaryJson = {
   decisions: string[]
   tasks: { who: string; what: string; due: string }[]
   questions: string[]
-  topics: { title: string; at: number }[]
+  /** `shot`: the time of the screen text the topic is about, when there is one. */
+  topics: { title: string; at: number; shot?: number }[]
 }
 
 const PART_SECONDS = 1200
@@ -30,6 +34,9 @@ const PART_CHARS = 12_000
 const MAX_TOKENS = 1500
 /** One join request's summaries at most, as a part's transcript: room for the instructions and the answer in `-c 8192`. */
 const JOIN_CHARS = 12_000
+/** The screen's text a part is given at most, and of one screenshot: a part keeps under PART_CHARS + SCREEN_CHARS. */
+const SCREEN_CHARS = 2400
+const SHOT_CHARS = 600
 /** A part on the processor may take minutes. */
 const REQUEST_MS = 10 * 60_000
 
@@ -89,6 +96,19 @@ export function splitParts(lines: SummaryLine[], partSeconds = PART_SECONDS, par
   return parts
 }
 
+/** The screen's text of a part: the shots from its first line up to the next part's, each and all cut to their budget. */
+export function screenOf(shots: readonly ScreenText[], from: number, until: number): string {
+  let left = SCREEN_CHARS
+  const out: string[] = []
+  for (const s of shots) {
+    if (s.at < from || s.at >= until || left <= 0) continue
+    const line = `Text on screen at [${clock(s.at)}]: ${s.text.replace(/\s+/g, ' ').trim().slice(0, Math.min(SHOT_CHARS, left))}`
+    left -= line.length
+    out.push(line)
+  }
+  return out.length ? `\n<screen>\n${out.join('\n')}\n</screen>` : ''
+}
+
 const HEADINGS: Record<string, { short: string; decisions: string; tasks: string; questions: string; topics: string; lost: string }> = {
   en: { short: 'Short', decisions: 'Decisions', tasks: 'Tasks', questions: 'Open questions', topics: 'Main topics', lost: 'Chunks of the recording lost: {n} (10 s each)' },
   uk: { short: 'Коротко', decisions: 'Рішення', tasks: 'Завдання', questions: 'Відкриті питання', topics: 'Головні теми', lost: 'Втрачено шматків запису: {n} (по 10 с)' },
@@ -97,14 +117,16 @@ const HEADINGS: Record<string, { short: string; decisions: string; tasks: string
 
 /** The summary as Markdown: a heading per section in its language (English, Ukrainian, Russian; else English), "—" for an empty one. */
 export function renderSummary(json: SummaryJson, language: string | null, lost?: number): string {
-  const h = HEADINGS[(language ?? '').slice(0, 2).toLowerCase()] ?? HEADINGS.en!
+  const code = (language ?? '').slice(0, 2).toLowerCase()
+  const h = HEADINGS[code] ?? HEADINGS.en!
+  const shot = SHOT_WORD[code as keyof typeof SHOT_WORD] ?? SHOT_WORD.en
   const list = (items: string[]) => (items.length ? items.map(item => `- ${item}`).join('\n') : '—')
   const sections = [
     `### ${h.short}\n${json.short.trim() || '—'}`,
     `### ${h.decisions}\n${list(json.decisions)}`,
     `### ${h.tasks}\n${list(json.tasks.map(t => [t.who, t.what, t.due].map(s => s.trim()).filter(Boolean).join(' — ')))}`,
     `### ${h.questions}\n${list(json.questions)}`,
-    `### ${h.topics}\n${list(json.topics.map(t => `[${clock(t.at)}] ${t.title}`))}`,
+    `### ${h.topics}\n${list(json.topics.map(t => `[${clock(t.at)}] ${t.title}${t.shot !== undefined ? ` (${shot} ${clock(t.shot)})` : ''}`))}`,
   ]
   if (lost && lost > 0) sections.push(h.lost.replace('{n}', String(lost)))
   return sections.join('\n\n')
@@ -121,7 +143,8 @@ const stem = (word: string) => word.slice(0, 4)
  * `translated`: the summary is in another language than the meeting (`mine`), so a deadline and a name are checked by their numbers alone.
  */
 export function checkSummary(json: SummaryJson, input: SummaryInput, translated = false): SummaryJson {
-  const said = input.lines.map(l => l.text).join('\n')
+  // What was on the screen counts as said: the model may name a number or a word shown there.
+  const said = [...input.lines.map(l => l.text), ...(input.shots ?? []).map(s => s.text)].join('\n')
   const words = new Set(wordsOf(said).map(stem))
   const numbers = new Set(numbersOf(said))
   const speakers = new Set(input.lines.map(l => l.speaker.trim().toLowerCase()))
@@ -139,7 +162,13 @@ export function checkSummary(json: SummaryJson, input: SummaryInput, translated 
       .filter(t => numbersSaid(t.what))
       .map(t => ({ who: who(t.who), what: t.what, due: t.due.trim() && numbersSaid(t.due) && wordsSaid(t.due) ? t.due : '' })),
     questions: json.questions.filter(numbersSaid),
-    topics: json.topics.filter(t => Number.isFinite(t.at) && t.at >= 0 && t.at <= input.duration && numbersSaid(t.title)),
+    topics: json.topics
+      .filter(t => Number.isFinite(t.at) && t.at >= 0 && t.at <= input.duration && numbersSaid(t.title))
+      // A screenshot only as given, at its own time.
+      .map(({ shot, ...t }) => {
+        const given = shot === undefined ? undefined : input.shots?.find(s => Math.abs(s.at - shot) <= 1)
+        return given ? { ...t, shot: given.at } : t
+      }),
   }
 }
 
@@ -160,7 +189,12 @@ const SCHEMA = {
     questions: { type: 'array', items: { type: 'string' } },
     topics: {
       type: 'array',
-      items: { type: 'object', properties: { title: { type: 'string' }, at: { type: 'number' } }, required: ['title', 'at'], additionalProperties: false },
+      items: {
+        type: 'object',
+        properties: { title: { type: 'string' }, at: { type: 'number' }, shot: { type: 'number' } },
+        required: ['title', 'at'],
+        additionalProperties: false,
+      },
     },
   },
   required: ['short', 'decisions', 'tasks', 'questions', 'topics'],
@@ -176,7 +210,7 @@ const KINDS: Record<SummaryTemplate, string> = {
 }
 
 /** The instructions: the rules first, around everything else, the person's own instruction too. */
-export function summaryPrompt(options: SummaryOptions, language: string | null, step: 'whole' | 'part' | 'join'): string {
+export function summaryPrompt(options: SummaryOptions, language: string | null, step: 'whole' | 'part' | 'join', screen = false): string {
   const meeting = language && LLM_LANGUAGES[language] ? LLM_LANGUAGES[language] : null
   const writeIn = options.mine
     ? `Write every text in ${options.native}, whatever language the meeting is in.`
@@ -199,6 +233,10 @@ export function summaryPrompt(options: SummaryOptions, language: string | null, 
     'Answer in JSON. "short": three to five sentences on what it was about and how it ended. "decisions": what was decided. "tasks": who does what and by when. ' +
     '"questions": what was asked and left open. "topics": the main topics, each with "at", the seconds from the start of the line where it begins (a line\'s time [mm:ss] is minutes and seconds). ' +
     'An empty list for a section with nothing in it.' +
+    (screen
+      ? '\nLines "Text on screen at [mm:ss]" are what the screen showed then, read by text recognition: use them only to understand and name what was shown, never as something said. ' +
+        'A topic about what was shown may have "shot", the seconds of that screen text\'s time; leave "shot" out otherwise.'
+      : '') +
     own
   )
 }
@@ -220,7 +258,9 @@ const asJson = (content: unknown): SummaryJson => {
     decisions: strings(answer.decisions),
     tasks: objects(answer.tasks).map(t => ({ who: text(t.who), what: text(t.what), due: text(t.due) })).filter(t => t.what),
     questions: strings(answer.questions),
-    topics: objects(answer.topics).map(t => ({ title: text(t.title), at: Number(t.at) })).filter(t => t.title && Number.isFinite(t.at)),
+    topics: objects(answer.topics)
+      .map(t => ({ title: text(t.title), at: Number(t.at), ...(typeof t.shot === 'number' && Number.isFinite(t.shot) ? { shot: t.shot } : {}) }))
+      .filter(t => t.title && Number.isFinite(t.at)),
   }
 }
 
@@ -259,19 +299,24 @@ export function createSummarizer(o: { files: LlmFiles; model: () => LlmModel; fe
       if (!input.lines.some(l => l.text.trim())) throw new Error('Nothing to summarize')
       const nativeCode = Object.keys(LLM_LANGUAGES).find(code => LLM_LANGUAGES[code] === options.native) ?? null
       const language = options.mine ? nativeCode : input.language
-      const parts = splitParts(input.lines)
+      const shots = input.shots ?? []
+      const screen = shots.length > 0
+      // Room for the screen's text: a part's transcript is that much shorter.
+      const parts = splitParts(input.lines, PART_SECONDS, screen ? PART_CHARS - SCREEN_CHARS : PART_CHARS)
+      const screenFor = (i: number) => (screen ? screenOf(shots, i === 0 ? -Infinity : parts[i]![0]!.start, i + 1 < parts.length ? parts[i + 1]![0]!.start : Infinity) : '')
       onProgress({ part: 0, parts: parts.length })
       const job = files.server.run(files.target(o.model()), async base => {
         const ask = asker(base, signal)
-        const transcript = (lines: SummaryLine[]) => `<transcript title="${input.title.replace(/"/g, "'")}">\n${lines.map(lineText).join('\n')}\n</transcript>`
+        const transcript = (i: number) =>
+          `<transcript title="${input.title.replace(/"/g, "'")}">\n${parts[i]!.map(lineText).join('\n')}\n</transcript>${screenFor(i)}`
         if (parts.length === 1) {
-          const whole = await ask(summaryPrompt(options, input.language, 'whole'), transcript(parts[0]!))
+          const whole = await ask(summaryPrompt(options, input.language, 'whole', screen), transcript(0))
           onProgress({ part: 1, parts: 1 })
           return whole
         }
         const summaries: SummaryJson[] = []
-        for (const [i, part] of parts.entries()) {
-          summaries.push(await ask(summaryPrompt(options, input.language, 'part'), transcript(part)))
+        for (const i of parts.keys()) {
+          summaries.push(await ask(summaryPrompt(options, input.language, 'part', screen), transcript(i)))
           onProgress({ part: i + 1, parts: parts.length })
         }
         onProgress({ part: parts.length + 1, parts: parts.length })
@@ -280,12 +325,12 @@ export function createSummarizer(o: { files: LlmFiles; model: () => LlmModel; fe
         for (;;) {
           const blocks = level.map(p => `<part from="${clock(p.from)}">\n${JSON.stringify(p.json)}\n</part>`)
           const groups = joinGroups(blocks.map(b => b.length + 1))
-          if (groups.length === 1) return ask(summaryPrompt(options, input.language, 'join'), blocks.join('\n'))
+          if (groups.length === 1) return ask(summaryPrompt(options, input.language, 'join', screen), blocks.join('\n'))
           const next: typeof level = []
           for (const group of groups) {
             next.push(group.length === 1
               ? level[group[0]!]!
-              : { from: level[group[0]!]!.from, json: await ask(summaryPrompt(options, input.language, 'join'), group.map(i => blocks[i]).join('\n')) })
+              : { from: level[group[0]!]!.from, json: await ask(summaryPrompt(options, input.language, 'join', screen), group.map(i => blocks[i]).join('\n')) })
           }
           level = next
         }

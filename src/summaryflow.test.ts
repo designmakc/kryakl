@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { autoSummaryWanted, secondsLeft, summaryInput, topicIn } from './summaryflow'
+import { autoSummaryWanted, secondsLeft, shotIn, summaryInput, topicIn } from './summaryflow'
 
 describe('summaryInput', () => {
   it('names the speakers, drops empty lines and keeps lost', () => {
@@ -52,5 +52,14 @@ describe('topicIn', () => {
   })
   it('is null without a time', () => {
     expect(topicIn('Decided to ship')).toBeNull()
+  })
+})
+
+describe('shotIn', () => {
+  it('finds a topic’s screenshot in any of the three languages', () => {
+    expect(shotIn(' показали онбординг (снимок 12:41)')).toEqual({ text: ' показали онбординг', mark: '(снимок 12:41)', at: 761 })
+    expect(shotIn(' demo (screenshot 1:02:03)')?.at).toBe(3723)
+    expect(shotIn(' demo (знімок 00:05) далі')?.text).toBe(' demo далі')
+    expect(shotIn(' no shot here')).toBeNull()
   })
 })

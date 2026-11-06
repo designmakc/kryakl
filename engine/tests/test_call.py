@@ -226,3 +226,28 @@ def test_screenshots_are_kept_beside_the_sound_and_listed_by_time(client, fake_s
 def test_a_microphone_recording_takes_no_screenshots(client):
     id = client.post("/recordings", headers=KEY, json={"source": "mic", "tracks": {"main": {"startedAt": 0}}}).json()["id"]
     assert client.request("PUT", f"/recordings/{id}/shots/1", headers=KEY, content=JPEG).status_code == 409
+
+
+def test_key_screenshots_and_speaker_hints_are_marks_not_edits(client, fake_sound):
+    id = client.post("/recordings", headers=KEY, json={"source": "system", "tracks": {"system": {"startedAt": 0}}}).json()["id"]
+    client.request("PUT", f"/recordings/{id}/system/0", headers=KEY, content=b"webm")
+    client.request("PUT", f"/recordings/{id}/shots/12000", headers=KEY, content=JPEG)
+    client.post(f"/recordings/{id}/finish", headers=KEY, json={})
+    store = engine.state.get_store()
+    worker()._transcribe(id, store.row(id))
+    speaker = next(iter(store.transcript(id)["speakers"]))
+    got = client.request("PATCH", f"/transcripts/{id}", headers=KEY, json={
+        "shots": {"12000.jpg": {"key": True}, "../x.jpg": {"key": True}, "9.jpg": {"key": True}},
+        "speakerHints": {speaker: "Olga Petrova", "S9": "Nobody", "me": "Me Myself"},
+    })
+    assert got.status_code == 200
+    t = store.transcript(id)
+    assert t["shots"] == [{"at": 12.0, "file": "12000.jpg", "manual": False, "key": True}]
+    assert t["speakerHints"] == ({speaker: "Olga Petrova"} if speaker != "me" else {})
+    assert "edited" not in t
+    client.request("PATCH", f"/transcripts/{id}", headers=KEY, json={"shots": {"12000.jpg": {"key": False}}, "speakerHints": {speaker: None}})
+    t = store.transcript(id)
+    assert "key" not in t["shots"][0] and "speakerHints" not in t
+    # Only Kryakl: no key, or the extension's Origin, is refused.
+    assert client.request("PATCH", f"/transcripts/{id}", json={"shots": {}}).status_code == 401
+    assert client.request("PATCH", f"/transcripts/{id}", headers={"origin": engine.auth.EXTENSION_ORIGIN}, json={"shots": {}}).status_code in (401, 403)

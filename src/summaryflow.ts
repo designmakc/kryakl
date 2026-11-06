@@ -40,3 +40,16 @@ export function topicIn(line: string): { before: string; stamp: string; at: numb
   const at = (m[1] as string).split(':').reduce((sum, n) => sum * 60 + Number(n), 0)
   return { before: line.slice(0, m.index), stamp: m[1] as string, at, after: line.slice(m.index + m[0].length) }
 }
+
+/** The word of a topic that links a screenshot, by the summary's language: "(screenshot 12:41)". */
+export const SHOT_WORD = { en: 'screenshot', uk: 'знімок', ru: 'снимок' } as const
+
+const SHOT_STAMP = new RegExp(`\\s*\\((?:${Object.values(SHOT_WORD).join('|')}) ((?:\\d+:)?\\d{1,2}:\\d{2})\\)`)
+
+/** A summary line's screenshot: the text without it, the mark as written and its time; null when it has none. */
+export function shotIn(line: string): { text: string; mark: string; at: number } | null {
+  const m = SHOT_STAMP.exec(line)
+  if (!m) return null
+  const at = (m[1] as string).split(':').reduce((sum, n) => sum * 60 + Number(n), 0)
+  return { text: line.slice(0, m.index) + line.slice(m.index + m[0].length), mark: m[0].trim(), at }
+}

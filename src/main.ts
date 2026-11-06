@@ -45,7 +45,8 @@ import { answer as answerCall, idleWatch, keepRecording, step as stepCall, type 
 import { watchMic } from './micwatch'
 import { CallCapture } from './capture'
 import { createChecker, type Checker } from './checker'
-import { createSummarizer, type SummaryTemplate } from './summary'
+import { keyShots, shotAt, shownShots, speakerHints, type Shot } from './shots'
+import { createSummarizer, type ScreenText, type SummaryTemplate } from './summary'
 import { autoSummaryWanted, summaryInput, type SummarySource } from './summaryflow'
 import { createEditor, type Editor } from './dictedit'
 import { openInChrome } from './chrome'
@@ -2115,11 +2116,7 @@ async function recognizeSnip(id: number, png: Buffer): Promise<{ text: string; m
   try {
     fs.writeFileSync(file, png)
     const native = langCode(settings.native)
-    // Every one of the person's languages Windows reads (their own first), English last; each line from the one that reads it best.
-    const result =
-      process.platform === 'darwin'
-        ? await recognizeMac(unpacked('vendor', 'ocr-mac'), file, native)
-        : await recognize(file, [...new Set([native, ...settings.languages, 'en'].filter(Boolean))])
+    const result = await ocrRead(file)
     if (result.readings.length === 0) return void setState(id, { status: 'no-ocr' })
     const text = paragraphsOf(pickLines(result.readings, ocrKnown()))
     if (!text.trim()) return void setState(id, { status: 'empty' })
@@ -2128,6 +2125,14 @@ async function recognizeSnip(id: number, png: Buffer): Promise<{ text: string; m
   } finally {
     fs.rmSync(file, { force: true })
   }
+}
+
+/** A picture's text (a PNG or a JPEG): every one of the person's languages Windows reads (their own first), English last; on a Mac, Vision. */
+function ocrRead(file: string): ReturnType<typeof recognize> {
+  const native = langCode(settings.native)
+  return process.platform === 'darwin'
+    ? recognizeMac(unpacked('vendor', 'ocr-mac'), file, native)
+    : recognize(file, [...new Set([native, ...settings.languages, 'en'].filter(Boolean))])
 }
 
 /** Reads a snipped picture with Windows OCR, then translates what it says. */
@@ -3339,10 +3344,18 @@ async function makeSummary(id: string, o: { template: SummaryTemplate; own?: str
   summaries.set(id, { part: 0, parts: 1, started: Date.now() })
   postApp()
   try {
-    const got = await speech.call<{ transcript: (SummarySource & { id: string }) | null }>('GET', `/transcripts/${encodeURIComponent(id)}`)
+    const got = await speech.call<{ transcript: CallTranscript | null }>('GET', `/transcripts/${encodeURIComponent(id)}`)
     if (!got.ok || !got.data.transcript) throw new Error('the transcript is not there')
     const input = summaryInput(got.data.transcript)
     if (!input.lines.length) throw new Error('the transcript has no words')
+    // The text of the key screenshots and the person's own, as context for the model.
+    const screen: ScreenText[] = []
+    for (const shot of shownShots(got.data.transcript.shots).slice(0, SHOTS_READ_MAX)) {
+      abort.signal.throwIfAborted()
+      const lines = await shotLines(got.data.transcript, shot)
+      if (lines.length) screen.push({ at: shot.at, text: lines.join('\n') })
+    }
+    if (screen.length) input.shots = screen
     const done = await summarizer.summarize(
       input,
       { template: o.template, own: o.own?.slice(0, SUMMARY_OWN_MAX), mine: o.mine, native: settings.native },
@@ -3355,7 +3368,7 @@ async function makeSummary(id: string, o: { template: SummaryTemplate; own?: str
     const saved = await speech.call('PUT', `/transcripts/${encodeURIComponent(id)}/summary`, { summary: done })
     if (!saved.ok) throw new Error(saved.error)
     summaries.delete(id)
-    log(`summary: made (${o.template}, ${input.lines.length} lines)`)
+    log(`summary: made (${o.template}, ${input.lines.length} lines, ${screen.length} screenshots read)`)
   } catch (error) {
     if (abort.signal.aborted) summaries.delete(id)
     else {
@@ -3383,9 +3396,83 @@ async function summaryWhenDone(id: string): Promise<void> {
     const status = got.data.row.status
     if (status === 'failed') return
     if (status !== 'done') continue
+    await markShots(id)
     if (autoSummaryWanted(settings.callSummaryAuto, llmFiles.state(settings.model).status === 'ready'))
       void makeSummary(id, { template: settings.callTemplate, own: settings.callOwn, mine: settings.callSummaryMine })
     return
+  }
+}
+
+// ---------------------------------------------------------------- a call's screenshots: key frames, their text, names as hints
+
+/** A call's transcript as main reads it: for its summary and its screenshots (in the folder of its sound). */
+type CallTranscript = SummarySource & { id: string; audioPath?: string; shots?: Shot[] }
+/** Screenshots read at most in one pass (OCR: about a second each on a Mac, a few on Windows). */
+const SHOTS_READ_MAX = 40
+/** Screenshots read per speaker for a name. */
+const NAME_SHOTS = 6
+const SHOT_FILE = /^\d{1,9}(-m)?\.jpg$/
+/** Each screenshot's lines, read once while Kryakl runs (a summary made again reads none again). Never logged. */
+const shotTexts = new Map<string, string[]>()
+
+async function shotLines(tr: CallTranscript, shot: Shot): Promise<string[]> {
+  const key = `${tr.id}/${shot.file}`
+  const known = shotTexts.get(key)
+  if (known) return known
+  let lines: string[] = []
+  if (tr.audioPath && SHOT_FILE.test(shot.file)) {
+    try {
+      const result = await ocrRead(path.join(path.dirname(tr.audioPath), 'shots', shot.file))
+      lines = pickLines(result.readings, ocrKnown()).map(l => l.text.trim()).filter(Boolean)
+    } catch (error) {
+      log(`shots: one could not be read: ${messageOf(error)}`)
+    }
+  }
+  // ponytail: dropped whole past 500, an LRU when people make many summaries in one run
+  if (shotTexts.size > 500) shotTexts.clear()
+  shotTexts.set(key, lines)
+  return lines
+}
+
+/**
+ * After a call is transcribed: the screenshots of the moments a speaker points at the screen ("смотрите", "as you can
+ * see") are marked key, and with `callNames` each other speaker gets a name read off the shots of their turns, as a
+ * hint the page offers (never applied by itself). Only counts are logged.
+ */
+async function markShots(id: string): Promise<void> {
+  try {
+    const got = await speech?.call<{ transcript: CallTranscript | null }>('GET', `/transcripts/${encodeURIComponent(id)}`)
+    const tr = got?.ok ? got.data.transcript : null
+    if (!tr?.shots?.length) return
+    const shots = tr.shots
+    const keys = keyShots(shots, tr.utterances)
+    let hints: Record<string, string> = {}
+    if (settings.callNames) {
+      const seen: Record<string, string[][]> = {}
+      let read = 0
+      for (const speaker of Object.keys(tr.speakers)) {
+        if (speaker === 'me') continue
+        const near = [...new Set(tr.utterances
+          .filter((u, i) => u.speaker === speaker && tr.utterances[i - 1]?.speaker !== speaker)
+          .map(u => shotAt(shots, u.start))
+          .filter((s): s is Shot => !!s))]
+        const step = Math.ceil(near.length / NAME_SHOTS)
+        seen[speaker] = []
+        for (const shot of near.filter((_, i) => i % step === 0)) if (read++ < SHOTS_READ_MAX) seen[speaker].push(await shotLines(tr, shot))
+      }
+      hints = speakerHints(seen)
+    }
+    const changes = {
+      ...(keys.length ? { shots: Object.fromEntries(keys.map(file => [file, { key: true }])) } : {}),
+      ...(Object.keys(hints).length ? { speakerHints: hints } : {}),
+    }
+    if (Object.keys(changes).length) {
+      const saved = await speech.call('PATCH', `/transcripts/${encodeURIComponent(id)}`, changes)
+      if (!saved.ok) throw new Error(saved.error)
+    }
+    log(`shots: ${keys.length} key of ${shots.length}, ${Object.keys(hints).length} speaker name hints`)
+  } catch (error) {
+    log(`shots: not marked: ${messageOf(error)}`)
   }
 }
 

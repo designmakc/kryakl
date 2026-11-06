@@ -176,6 +176,8 @@ export type Settings = {
   callOwn: string
   /** Summaries are written in the person's language instead of the meeting's. */
   callSummaryMine: boolean
+  /** Experimental: names for a call's speakers read off its screenshots, offered as hints, never applied by themselves. Off by default. */
+  callNames: boolean
   /** Talk: the duck's answers are read aloud as they come. */
   talkAloud: boolean
   /** The talk window (webview/talk.ts) stays over other windows: its pin. */
@@ -307,6 +309,7 @@ export const DEFAULTS: Settings = {
   callTemplate: 'general',
   callOwn: '',
   callSummaryMine: false,
+  callNames: false,
   talkAloud: true,
   talkOnTop: false,
   talkLevel: 'B1',
@@ -519,6 +522,7 @@ export function normalize(raw: unknown, native = DEFAULTS.native): Settings {
     callTemplate: SUMMARY_TEMPLATES.includes(r.callTemplate as SummaryTemplate) ? (r.callTemplate as SummaryTemplate) : DEFAULTS.callTemplate,
     callOwn: typeof r.callOwn === 'string' ? r.callOwn.slice(0, SUMMARY_OWN_MAX) : DEFAULTS.callOwn,
     callSummaryMine: flag(r.callSummaryMine, DEFAULTS.callSummaryMine),
+    callNames: flag(r.callNames, DEFAULTS.callNames),
     talkAloud: flag(r.talkAloud, DEFAULTS.talkAloud),
     talkOnTop: flag(r.talkOnTop, DEFAULTS.talkOnTop),
     talkLevel: TALK_LEVELS.includes(r.talkLevel as TalkLevel) ? (r.talkLevel as TalkLevel) : DEFAULTS.talkLevel,

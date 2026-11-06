@@ -553,9 +553,33 @@ def get_transcript(id: str):
 
 @app.patch("/transcripts/{id}")
 def patch_transcript(id: str, changes: dict = Body(...)):
-    """Title, speaker names, an utterance's text or speaker: {title?, speakers?: {key: name}, utterances?: {index: {text?, speaker?}}}."""
+    """Title, speaker names, an utterance's text or speaker: {title?, speakers?: {key: name}, utterances?: {index: {text?, speaker?}}}.
+
+    Kryakl's own marks, which are no edit of the text: shots: {file: {key: bool}} (a call's key screenshots), speakerHints:
+    {key: name | null} (names read off the call's screen, a suggestion until the person applies one)."""
     store = state.get_store()
     t = transcript_or_404(id)
+    marks = {k for k in ("shots", "speakerHints") if k in changes}
+    for shot in t.get("shots") or []:
+        mark = (changes.get("shots") or {}).get(shot["file"])
+        if SHOT_NAME.fullmatch(shot["file"]) and isinstance(mark, dict) and isinstance(mark.get("key"), bool):
+            if mark["key"]:
+                shot["key"] = True
+            else:
+                shot.pop("key", None)
+    hints = t.get("speakerHints") or {}
+    for key, name in (changes.get("speakerHints") or {}).items():
+        if name is None:
+            hints.pop(key, None)
+        elif key in t["speakers"] and key != "me" and isinstance(name, str) and 0 < len(name.strip()) <= 80:
+            hints[key] = name.strip()
+    if hints:
+        t["speakerHints"] = hints
+    else:
+        t.pop("speakerHints", None)
+    if marks and not set(changes) - marks:
+        store.save(id, t)
+        return public(t, id)
     if isinstance(changes.get("title"), str) and changes["title"].strip():
         t["title"] = changes["title"].strip()
     for key, name in (changes.get("speakers") or {}).items():

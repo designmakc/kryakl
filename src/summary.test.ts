@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import type { LlmFiles } from './llmfiles'
-import { checkSummary, createSummarizer, renderSummary, splitParts, TOPIC_TIME, topicSeconds, type SummaryInput, type SummaryJson, type SummaryLine } from './summary'
+import { checkSummary, createSummarizer, renderSummary, screenOf, splitParts, TOPIC_TIME, topicSeconds, type SummaryInput, type SummaryJson, type SummaryLine } from './summary'
 
 const line = (start: number, text = 'x'.repeat(100), speaker = 'Me'): SummaryLine => ({ speaker, start, text })
 const empty: SummaryJson = { short: '', decisions: [], tasks: [], questions: [], topics: [] }
@@ -202,5 +202,48 @@ describe('createSummarizer', () => {
   it('fails on an answer that is not JSON', async () => {
     const { summarizer } = setup(() => 'Sure! Here is the summary')
     await expect(summarizer.summarize(short, { template: 'general', mine: false, native: 'English' }, () => {})).rejects.toThrow(/summary/)
+  })
+})
+
+describe('the screen’s text', () => {
+  const input: SummaryInput = {
+    title: 'Demo', duration: 900, language: 'ru',
+    lines: [{ speaker: 'Me', start: 0, text: 'Смотрите, вот новый онбординг.' }],
+    shots: [{ at: 761, text: 'Onboarding 2.0\nConversion 42%' }],
+  }
+
+  it('counts as said for the check, and a topic keeps only a screenshot that was given', () => {
+    const out = checkSummary({ ...empty, decisions: ['Conversion is 42%', 'Budget 900'], topics: [
+      { title: 'Онбординг', at: 0, shot: 761.4 },
+      { title: 'Другое', at: 10, shot: 300 },
+    ] }, input)
+    expect(out.decisions).toEqual(['Conversion is 42%'])
+    expect(out.topics).toEqual([{ title: 'Онбординг', at: 0, shot: 761 }, { title: 'Другое', at: 10 }])
+    expect(renderSummary(out, 'ru')).toContain('- [00:00] Онбординг (снимок 12:41)')
+  })
+
+  it('is given to a part as lines with their time, within its budget', () => {
+    expect(screenOf(input.shots!, 0, 900)).toBe('\n<screen>\nText on screen at [12:41]: Onboarding 2.0 Conversion 42%\n</screen>')
+    expect(screenOf(input.shots!, 0, 700)).toBe('')
+    const many = Array.from({ length: 20 }, (_, i) => ({ at: i, text: 'x'.repeat(1000) }))
+    expect(screenOf(many, 0, 100).length).toBeLessThan(2600)
+  })
+
+  it('reaches the model beside the transcript, with the rule on it', async () => {
+    const asked: string[] = []
+    const files = {
+      target: () => ({}),
+      server: { apiKey: 'k', run: async (_t: unknown, job: (base: string) => Promise<unknown>) => job('http://x') },
+    } as unknown as LlmFiles
+    const post = async (_u: string, init: RequestInit) => {
+      const body = JSON.parse(String(init.body)) as { messages: { content: string }[] }
+      asked.push(body.messages[0]!.content + '\n' + body.messages[1]!.content)
+      return new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ ...empty, short: 'Ok.', topics: [{ title: 'A', at: 0, shot: 761 }] }) } }] }))
+    }
+    const out = await createSummarizer({ files, model: () => 'accurate', fetch: post as unknown as typeof fetch })
+      .summarize(input, { template: 'general', mine: false, native: 'Russian' }, () => {})
+    expect(asked[0]).toContain('Text on screen at [12:41]')
+    expect(asked[0]).toContain('"shot"')
+    expect(out.text).toContain('(снимок 12:41)')
   })
 })

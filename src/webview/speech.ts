@@ -60,6 +60,8 @@ export type Transcript = {
   summary?: SummaryRecord
   /** A call's screenshots (shots.ts): the transcript shows the person's and the key ones. */
   shots?: Shot[]
+  /** Names read off the call's screen (callNames), by speaker: offered until applied or dismissed. */
+  speakerHints?: Record<string, string>
 }
 
 /** A summary as the engine keeps it (PUT /transcripts/{id}/summary): Markdown with `[mm:ss]` topics. */

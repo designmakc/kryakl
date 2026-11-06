@@ -11,7 +11,7 @@ import type { AppView } from '../protocol'
 import { SUMMARY_OWN_MAX } from '../settings'
 import type { SummaryTemplate } from '../summary'
 import { shownShots } from '../shots'
-import { secondsLeft, topicIn } from '../summaryflow'
+import { secondsLeft, shotIn, topicIn } from '../summaryflow'
 import { el, icon } from './dom'
 import { caps } from './keycaps'
 import { ChunkRecorder, micTrouble } from './recorder'
@@ -749,7 +749,30 @@ function speakersStrip(tr: Transcript): HTMLElement | null {
     strip.append(chipNode)
   }
   strip.append(el('small', {}, t('tr.tapRename')))
-  return strip
+  // Names read off the screen (callNames): only offered; Apply renames as a tap on the chip does.
+  const hints = Object.entries(tr.speakerHints ?? {}).filter(([key]) => tr.speakers[key])
+  if (hints.length === 0) return strip
+  const offers = hints.map(([key, name]) => {
+    const forget = () => {
+      delete tr.speakerHints?.[key]
+      offer.remove()
+      if (!box.querySelector('.namehint')) box.remove()
+    }
+    const offer = el(
+      'div',
+      { class: 'namehint' },
+      el('span', {}, `${tr.speakers[key]!.name} → ${name}?`),
+      linkBtn(t('tr.applyName'), () => {
+        tr.speakers[key]!.name = name
+        forget()
+        void patch({ speakers: { [key]: name }, speakerHints: { [key]: null } }).then(redrawPage)
+      }),
+      linkBtn(t('tr.dismissName'), () => (forget(), void patch({ speakerHints: { [key]: null } }))),
+    )
+    return offer
+  })
+  const box = el('div', { class: 'namehints' }, ...offers, el('small', {}, t('tr.nameHintNote')))
+  return el('div', {}, strip, box)
 }
 
 function speakerMenu(tr: Transcript, i: number, label: HTMLElement): void {
@@ -905,7 +928,7 @@ function summaryBlock(v: AppView, tr: Transcript): HTMLElement | null {
       ),
     )
   }
-  if (tr.summary) box.append(summaryView(tr))
+  if (tr.summary) box.append(summaryView(v, tr))
   if (files.status === 'ready') box.append(summaryControls(tr))
   return box
 }
@@ -961,7 +984,7 @@ function summaryControls(tr: Transcript): HTMLElement {
   )
 }
 
-function summaryView(tr: Transcript): HTMLElement {
+function summaryView(v: AppView, tr: Transcript): HTMLElement {
   const sum = tr.summary!
   const tools = el(
     'div',
@@ -977,7 +1000,7 @@ function summaryView(tr: Transcript): HTMLElement {
     btn(tx.editing ? t('sum.done') : t('sum.edit'), () => ((tx.editing = !tx.editing), redrawPage())),
     tx.editing ? el('small', {}, t('sum.editHint')) : null,
   )
-  if (!tx.editing) return el('div', { class: 'sumbody' }, summaryText(tr, sum.text), tools)
+  if (!tx.editing) return el('div', { class: 'sumbody' }, summaryText(v, tr, sum.text), tools)
   const field = el('textarea', { class: 'field report sumedit', 'aria-label': t('sum.title') })
   field.value = sum.text
   field.rows = Math.min(24, Math.max(8, sum.text.split('\n').length + 1))
@@ -986,7 +1009,7 @@ function summaryView(tr: Transcript): HTMLElement {
 }
 
 /** The summary's Markdown as headings, lines and bullets; a topic's time is a link to that place in the recording. */
-function summaryText(tr: Transcript, text: string): HTMLElement {
+function summaryText(v: AppView, tr: Transcript, text: string): HTMLElement {
   const out = el('div', { class: 'sumtext' })
   for (const raw of text.split('\n')) {
     const line = raw.trim()
@@ -999,7 +1022,13 @@ function summaryText(tr: Transcript, text: string): HTMLElement {
     const body = bullet ? line.slice(2) : line
     const node = el('div', { class: bullet ? 'sli' : 'sp' })
     const topic = topicIn(body)
-    if (topic) node.append(topic.before, el('button', { class: 'stamp', title: t('sum.seek'), onclick: () => jumpTo(tr, topic.at) }, topic.stamp), topic.after)
+    // A topic's screenshot, "(снимок 12:41)", opens it large.
+    const shot = topic ? shotIn(topic.after) : null
+    const file = shot ? tr.shots?.find(s => Math.abs(s.at - shot.at) <= 1)?.file : undefined
+    const after = shot && file
+      ? [shot.text, ' ', el('button', { class: 'stamp', title: t('sum.shot'), onclick: () => showShot(shotImage(v, tr, file)) }, shot.mark)]
+      : [topic?.after ?? '']
+    if (topic) node.append(topic.before, el('button', { class: 'stamp', title: t('sum.seek'), onclick: () => jumpTo(tr, topic.at) }, topic.stamp), ...after)
     else node.append(body)
     out.append(node)
   }
