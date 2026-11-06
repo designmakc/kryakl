@@ -11,6 +11,7 @@ from test_security import KEY, OURS, client  # noqa: F401  (the fixture)
 def models(tmp_path, monkeypatch):
     monkeypatch.setattr(asr, "MODELS_DIR", tmp_path / "models")
     monkeypatch.setattr(asr, "WHISPER_DIR", tmp_path / "models" / "whisper")
+    monkeypatch.setattr(asr, "mlx_ready", lambda: False)  # faster-whisper's files, also on a Mac with the mac part
     return tmp_path / "models"
 
 

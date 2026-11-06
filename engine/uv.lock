@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = "==3.12.*"
 resolution-markers = [
     "sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu'",
@@ -88,63 +88,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/93/1c/00909e0fbebad2121
 wheels = [
     { url = "https://files.pythonhosted.org/packages/11/3c/8740f5b4e1bd57333e4f84265b9b6363da4f7cf70f5622dd1e2fde7a0bd5/alembic-1.20.1-py3-none-any.whl", hash = "sha256:9970712cfb81ea26c8658d378aaa5b8f6ff9146e5bb111d70497c164016cf598", size = 270355, upload-time = "2026-10-22T03:24:37.667Z" },
 ]
-
-[[package]]
-name = "krya-speech"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "av" },
-    { name = "fastapi" },
-    { name = "faster-whisper" },
-    { name = "numpy" },
-    { name = "onnx-asr", extra = ["hub"] },
-    { name = "python-docx" },
-    { name = "python-multipart" },
-    { name = "uvicorn" },
-]
-
-[package.optional-dependencies]
-gpu = [
-    { name = "nvidia-cublas-cu12" },
-    { name = "nvidia-cudnn-cu12" },
-]
-speakers = [
-    { name = "pyannote-audio" },
-    { name = "torch", version = "2.14.1", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-11-krya-speech-speakers') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
-    { name = "torch", version = "2.14.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-11-krya-speech-speakers') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
-]
-speakers-gpu = [
-    { name = "pyannote-audio" },
-    { name = "torch", version = "2.11.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" } },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "av", specifier = ">=14" },
-    { name = "fastapi", specifier = ">=0.115" },
-    { name = "faster-whisper", specifier = ">=1.2" },
-    { name = "numpy" },
-    { name = "nvidia-cublas-cu12", marker = "extra == 'gpu'" },
-    { name = "nvidia-cudnn-cu12", marker = "extra == 'gpu'", specifier = ">=9,<10" },
-    { name = "onnx-asr", extras = ["hub"], specifier = ">=0.12" },
-    { name = "pyannote-audio", marker = "extra == 'speakers'", specifier = ">=4.0" },
-    { name = "pyannote-audio", marker = "extra == 'speakers-gpu'", specifier = ">=4.0" },
-    { name = "python-docx", specifier = ">=1.1" },
-    { name = "python-multipart" },
-    { name = "torch", marker = "extra == 'speakers'", specifier = ">=2.8", index = "https://download.pytorch.org/whl/cpu", conflict = { package = "krya-speech", extra = "speakers" } },
-    { name = "torch", marker = "extra == 'speakers-gpu'", specifier = ">=2.8", index = "https://download.pytorch.org/whl/cu128", conflict = { package = "krya-speech", extra = "speakers-gpu" } },
-    { name = "uvicorn", specifier = ">=0.32" },
-]
-provides-extras = ["gpu", "speakers", "speakers-gpu"]
-
-[package.metadata.requires-dev]
-dev = [{ name = "pytest", specifier = ">=8" }]
 
 [[package]]
 name = "annotated-doc"
@@ -350,13 +293,30 @@ wheels = [
 name = "cuda-bindings"
 version = "12.9.10"
 source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "sys_platform != 'emscripten' and sys_platform != 'win32'",
+]
 dependencies = [
-    { name = "cuda-pathfinder", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "cuda-pathfinder", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'emscripten' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7f/b2/8cef7e30e02e7ec3bf157ec192c0522546ed807c262752e884c693813494/cuda_bindings-12.9.10-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:aa1e07b12ae190a01ba3e0c85253be6ec1bfa13545a88eac5fd45ae4b0c04333", size = 7063851, upload-time = "2026-10-15T14:12:01.26Z" },
     { url = "https://files.pythonhosted.org/packages/7b/6e/0e07e8b3578547e1083a7ee105c5736033ecb189466f40e45283b46bc7c6/cuda_bindings-12.9.10-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:420e44cfcd939cd69d6cfe8efc5f08b44850994cae399a49b9299a464324ce97", size = 7627380, upload-time = "2026-10-15T14:12:03.328Z" },
     { url = "https://files.pythonhosted.org/packages/69/d9/f3a7223079160b384ccd32729dde6cf24d5e1667a43a8d5dd947c7c7aaee/cuda_bindings-12.9.10-cp312-cp312-win_amd64.whl", hash = "sha256:a43a26d9b42da215d3ecac5dc35a7e75c219083a7eeab765a718567393b34fca", size = 7601037, upload-time = "2026-10-15T14:12:05.493Z" },
+]
+
+[[package]]
+name = "cuda-bindings"
+version = "13.5.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "cuda-pathfinder", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b9/a6/13d14600381bdbfe55dfc35564e4bf4a208f169ee9f6cbeb356564268aff/cuda_bindings-13.5.0-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:40eadfad6ae1554f8c1aa456620a85a49a275fc902f2c6dd93ee8c488b2c5e9f", size = 7354398, upload-time = "2026-11-05T12:06:03.542Z" },
+    { url = "https://files.pythonhosted.org/packages/27/68/14bf44f386672b03fcc0799be8d18df3e1c45847ee23b95721f6022abbaf/cuda_bindings-13.5.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:a46a8cc84112d769d0f57bf3ae3fedc115cf09348f14da85a1a8200968b6f262", size = 8378158, upload-time = "2026-11-05T12:06:05.253Z" },
+    { url = "https://files.pythonhosted.org/packages/e5/ea/87bd4fa1e1e70d3895b4e46606902fa7974111a81002dbd0418b68fb5b74/cuda_bindings-13.5.0-cp312-cp312-win_amd64.whl", hash = "sha256:2e8d562f928fe0bb254b1ade02133f9f6bc5e395efd2f1fbdb8533d64bf16e1f", size = 8423332, upload-time = "2026-11-05T12:06:07.32Z" },
+    { url = "https://files.pythonhosted.org/packages/ca/b5/caabd4780b999bc7c8ae70c76eae6eed07ad966abfa7a0fb1e7af708e8b6/cuda_bindings-13.5.0-cp312-cp312-win_arm64.whl", hash = "sha256:64d9c337209736eadc807a36925f11528a4815fed9869df77f259bc9341bc1e1", size = 7302369, upload-time = "2026-11-05T12:06:09.65Z" },
 ]
 
 [[package]]
@@ -371,6 +331,9 @@ wheels = [
 name = "cuda-toolkit"
 version = "12.8.1"
 source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "sys_platform != 'emscripten' and sys_platform != 'win32'",
+]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d4/c8/7dce3a0b15b42a3b58e7d96eb22a687d3bf2c44e01d149a6874629cd9938/cuda_toolkit-12.8.1-py2.py3-none-any.whl", hash = "sha256:adc7906af4ecbf9a352f9dca5734eceb21daec281ccfcf5675e1d2f724fc2cba", size = 2283, upload-time = "2025-08-13T02:03:07.842Z" },
 ]
@@ -408,6 +371,55 @@ nvrtc = [
 ]
 nvtx = [
     { name = "nvidia-nvtx-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+
+[[package]]
+name = "cuda-toolkit"
+version = "13.0.3.0"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d1/c7/a79086a62c98befcdb8349656c6f114e2db3b8b2422f6e25c97a7f2a9a3c/cuda_toolkit-13.0.3.0-py2.py3-none-any.whl", hash = "sha256:d693caaa261214ddd7dbb60d68e71cbed884e68c2be7509778f3051da0b91c3f", size = 2512, upload-time = "2026-04-14T00:50:08.173Z" },
+]
+
+[package.optional-dependencies]
+cublas = [
+    { name = "nvidia-cublas", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-cuda-nvrtc", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+cudart = [
+    { name = "nvidia-cuda-runtime", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+cufft = [
+    { name = "nvidia-cufft", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-nvjitlink", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+cufile = [
+    { name = "nvidia-cufile", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'aarch64' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+cupti = [
+    { name = "nvidia-cuda-cupti", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+curand = [
+    { name = "nvidia-curand", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+cusolver = [
+    { name = "nvidia-cublas", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-cusolver", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-cusparse", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-nvjitlink", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+cusparse = [
+    { name = "nvidia-cusparse", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-nvjitlink", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+nvjitlink = [
+    { name = "nvidia-nvjitlink", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+nvrtc = [
+    { name = "nvidia-cuda-nvrtc", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+nvtx = [
+    { name = "nvidia-nvtx", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (platform_machine == 'AMD64' and sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'linux' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
 ]
 
 [[package]]
@@ -598,8 +610,8 @@ name = "httpcore2"
 version = "2.16.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "h11" },
-    { name = "truststore" },
+    { name = "h11", marker = "sys_platform != 'emscripten' or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "truststore", marker = "sys_platform != 'emscripten' or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/c0/61/afa9d6b7452f9eca73f73d45324eb0bb52f098fd5e6049bf6b8263be9b4e/httpcore2-2.16.0.tar.gz", hash = "sha256:c72cd0413563b17e1cd8354677dff887466f8ec2551679759e93126534428643", size = 69886, upload-time = "2026-10-21T07:09:45.31Z" }
 wheels = [
@@ -611,11 +623,11 @@ name = "httpx2"
 version = "2.16.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "anyio", marker = "sys_platform != 'emscripten'" },
-    { name = "httpcore2", marker = "sys_platform != 'emscripten'" },
-    { name = "httpx2-jsfetch", marker = "sys_platform == 'emscripten'" },
+    { name = "anyio", marker = "sys_platform != 'emscripten' or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "httpcore2", marker = "sys_platform != 'emscripten' or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "httpx2-jsfetch", marker = "sys_platform == 'emscripten' or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
     { name = "idna" },
-    { name = "truststore", marker = "sys_platform != 'emscripten'" },
+    { name = "truststore", marker = "sys_platform != 'emscripten' or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
     { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/43/73/5ca2cedf5e4e50423d1c258877865a6b62793633b561c58499f8aeb33b7e/httpx2-2.16.0.tar.gz", hash = "sha256:0d54c98128e8f2ff7fbbde0fca8c359e5f032edeaaaac443cdb7f31f685bcd7f", size = 103116, upload-time = "2026-10-21T07:09:46.348Z" }
@@ -640,7 +652,7 @@ dependencies = [
     { name = "click" },
     { name = "filelock" },
     { name = "fsspec" },
-    { name = "hf-xet", marker = "platform_machine == 'AMD64' or platform_machine == 'ARM64' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64'" },
+    { name = "hf-xet", marker = "platform_machine == 'AMD64' or platform_machine == 'ARM64' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64' or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
     { name = "httpx2" },
     { name = "packaging" },
     { name = "pyyaml" },
@@ -735,6 +747,67 @@ wheels = [
 ]
 
 [[package]]
+name = "krya-speech"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "av" },
+    { name = "fastapi" },
+    { name = "faster-whisper" },
+    { name = "numpy" },
+    { name = "onnx-asr", extra = ["hub"] },
+    { name = "python-docx" },
+    { name = "python-multipart" },
+    { name = "uvicorn" },
+]
+
+[package.optional-dependencies]
+gpu = [
+    { name = "nvidia-cublas-cu12" },
+    { name = "nvidia-cudnn-cu12" },
+]
+mac = [
+    { name = "mlx-whisper", marker = "(platform_machine == 'arm64' and sys_platform == 'darwin') or (platform_machine != 'arm64' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform != 'darwin' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+speakers = [
+    { name = "pyannote-audio" },
+    { name = "torch", version = "2.14.1", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-11-krya-speech-speakers') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "torch", version = "2.14.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-11-krya-speech-speakers') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+speakers-gpu = [
+    { name = "pyannote-audio" },
+    { name = "torch", version = "2.11.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" } },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "av", specifier = ">=14" },
+    { name = "fastapi", specifier = ">=0.115" },
+    { name = "faster-whisper", specifier = ">=1.2" },
+    { name = "mlx-whisper", marker = "platform_machine == 'arm64' and sys_platform == 'darwin' and extra == 'mac'", specifier = ">=0.4" },
+    { name = "numpy" },
+    { name = "nvidia-cublas-cu12", marker = "extra == 'gpu'" },
+    { name = "nvidia-cudnn-cu12", marker = "extra == 'gpu'", specifier = ">=9,<10" },
+    { name = "onnx-asr", extras = ["hub"], specifier = ">=0.12" },
+    { name = "pyannote-audio", marker = "extra == 'speakers'", specifier = ">=4.0" },
+    { name = "pyannote-audio", marker = "extra == 'speakers-gpu'", specifier = ">=4.0" },
+    { name = "python-docx", specifier = ">=1.1" },
+    { name = "python-multipart" },
+    { name = "torch", marker = "extra == 'speakers'", specifier = ">=2.8", index = "https://download.pytorch.org/whl/cpu", conflict = { package = "krya-speech", extra = "speakers" } },
+    { name = "torch", marker = "extra == 'speakers-gpu'", specifier = ">=2.8", index = "https://download.pytorch.org/whl/cu128", conflict = { package = "krya-speech", extra = "speakers-gpu" } },
+    { name = "uvicorn", specifier = ">=0.32" },
+]
+provides-extras = ["gpu", "speakers", "speakers-gpu", "mac"]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8" }]
+
+[[package]]
 name = "lightning"
 version = "2.6.6"
 source = { registry = "https://pypi.org/simple" }
@@ -767,6 +840,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/f1/45/7fa8f56b17dc0f0a41ec70dd307ecd6787254483549843bef4c30ab5adce/lightning_utilities-0.15.3.tar.gz", hash = "sha256:792ae0204c79f6859721ac7f386c237a33b0ed06ba775009cb894e010a842033", size = 33553, upload-time = "2026-02-22T14:48:53.348Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/25/f4/ead6e0e37209b07c9baa3e984ccdb0348ca370b77cea3aaea8ddbb097e00/lightning_utilities-0.15.3-py3-none-any.whl", hash = "sha256:6c55f1bee70084a1cbeaa41ada96e4b3a0fea5909e844dd335bd80f5a73c5f91", size = 31906, upload-time = "2026-02-22T14:48:52.488Z" },
+]
+
+[[package]]
+name = "llvmlite"
+version = "0.50.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/11/c5/907cec40688a34eb489cded74d555e1ee4af8cf49d83e03dba2c2d4cfe27/llvmlite-0.50.0.tar.gz", hash = "sha256:f2a2cd6ec9ffcc1b7147dea0d7a49efebf17a2b434e0c2844fe175999d571eb4", size = 194522, upload-time = "2026-09-29T18:44:46.782Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d9/1f/2576416b3e9b73f77b8331b7f2e41ce5ae7bbff0489eb16d98099a71693c/llvmlite-0.50.0-cp312-cp312-macosx_12_0_arm64.whl", hash = "sha256:55f50a6b7c0b8de88b05d6bc407d70a60486ce024013997dc97e202bd187c75b", size = 40534277, upload-time = "2026-09-29T18:42:56.244Z" },
+    { url = "https://files.pythonhosted.org/packages/7a/c4/e86f30b2b09c310c02ffdd8afd00f7e127d365131d163c926c98fc3ece22/llvmlite-0.50.0-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:6e8df54380110ea5e9127386e739d2b0829cc6dfa4a24a9195226336c91b06d5", size = 58344485, upload-time = "2026-09-29T18:43:00.67Z" },
+    { url = "https://files.pythonhosted.org/packages/4c/72/22b6449e15bec4cc86c62b659e6c625ab777d01e87aaec717ecef440f87a/llvmlite-0.50.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:d501e5103076b9a14be885d2574dc2f6793171aa54a853d1244e011d476f1399", size = 59696588, upload-time = "2026-09-29T18:43:04.763Z" },
+    { url = "https://files.pythonhosted.org/packages/64/70/f395702c20b514363061055b5bdebe3513e544139e6d412a5c86e8ea0b30/llvmlite-0.50.0-cp312-cp312-win_amd64.whl", hash = "sha256:c20595cc3a76e3c85140fdafbf9246c732ddf8e0e646ba2f4e4881f87567300d", size = 41865553, upload-time = "2026-09-29T18:43:08.29Z" },
+    { url = "https://files.pythonhosted.org/packages/a6/86/9cde7ac29e183e994dd2d67c998752c66ff6d714ca61837428e1896c3cc9/llvmlite-0.50.0-cp312-cp312-win_arm64.whl", hash = "sha256:4b78a8b669eda09ca1ff4c1a75003023912092974d3e771d1da0777f1b383bdf", size = 37441845, upload-time = "2026-09-29T18:43:12.054Z" },
 ]
 
 [[package]]
@@ -878,6 +964,63 @@ wheels = [
 ]
 
 [[package]]
+name = "mlx"
+version = "0.32.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "mlx-metal", marker = "sys_platform == 'darwin' or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/69/b0/e726ce51e1b445e4ed08c2d0e036a01c7532f4d1a856328da546a6f883bd/mlx-0.32.4-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:ff1d7be54758ea3a875b8fe54eff13bed17ad9566505e301f5d7851bf869680f", size = 667597, upload-time = "2026-10-14T21:16:00.688Z" },
+    { url = "https://files.pythonhosted.org/packages/6d/92/7a999dcf6460525a31e555905cdca2f835ec0d786c528e969e04cd00d158/mlx-0.32.4-cp312-cp312-macosx_15_0_arm64.whl", hash = "sha256:f0604cb3015091f285c79c7b7dbfcabcfa9948248728c7bab6e0263513c3d3fe", size = 667599, upload-time = "2026-10-14T21:16:02.467Z" },
+    { url = "https://files.pythonhosted.org/packages/af/44/90bbdc3cdd120e1181f7c4f617ff996530159f2ea3ba3c08b83b08314d21/mlx-0.32.4-cp312-cp312-macosx_26_0_arm64.whl", hash = "sha256:7928869076db6267ab3ebdb253b2c80be1e738b3032c783170bd1d59d460c578", size = 667622, upload-time = "2026-10-14T21:16:04.219Z" },
+    { url = "https://files.pythonhosted.org/packages/bf/3f/3f935d7bdb77e124077a2e043857cd00ebe966b3ef2a87e70e45d382be3d/mlx-0.32.4-cp312-cp312-manylinux_2_35_aarch64.whl", hash = "sha256:0c3cb35b709275d1791d435d2f1c4bd734e8a82ba99c340954cdda68570acaa2", size = 696253, upload-time = "2026-10-14T21:16:05.975Z" },
+    { url = "https://files.pythonhosted.org/packages/73/73/b2c85f71e1852ab0396d800985ea9c27ff6d8d7cf120259da6c4aa602b5e/mlx-0.32.4-cp312-cp312-manylinux_2_35_x86_64.whl", hash = "sha256:b517badcb8174f8937699465a0ba5b58c2daeaa9bd13d69b1e6ab13401d24a74", size = 773181, upload-time = "2026-10-14T21:16:07.469Z" },
+    { url = "https://files.pythonhosted.org/packages/f0/78/13ae5e3b10724e8cdb54561af3aec30f03036bd257d73d04f6703f3d0d27/mlx-0.32.4-cp312-cp312-win_amd64.whl", hash = "sha256:9dee6ddc835bc16968daaa0fb804ef99bcc3cca5abf6c33bca17c52a1dd99823", size = 646827, upload-time = "2026-10-14T21:16:09.204Z" },
+    { url = "https://files.pythonhosted.org/packages/36/ca/6c274b04656f6c5c15890d3f7faa2fd4ae6154d4602d40af4bd313e66f55/mlx-0.32.4-cp312-cp312-win_arm64.whl", hash = "sha256:82716e3051bbf12d67d95397ce5018236c15edb87fe55f949bc383e5668d8f1e", size = 638392, upload-time = "2026-10-14T21:16:10.946Z" },
+]
+
+[[package]]
+name = "mlx-metal"
+version = "0.32.4"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/77/24/7e5b7ed5d28abacab4577c7a8dd1fca6e9058504f5f95ae4333c09420e2e/mlx_metal-0.32.4-py3-none-macosx_14_0_arm64.whl", hash = "sha256:8019b2db622599267d66cc168b2f0dbf5af929790a6c3b3913e00eabc42a7947", size = 44958619, upload-time = "2026-10-14T21:14:45.727Z" },
+    { url = "https://files.pythonhosted.org/packages/54/8c/9754dd6c4db485037f59cc8be6495738e14cdeb8bf19d5bddb5e96da890f/mlx_metal-0.32.4-py3-none-macosx_15_0_arm64.whl", hash = "sha256:9f0a3cc26d89724434d9684932fc6f3e4e83669d2a895d858ed2c8a55eb84e8b", size = 44942974, upload-time = "2026-10-14T21:14:50.012Z" },
+    { url = "https://files.pythonhosted.org/packages/2a/d6/4340ed6e184f71693d7f531c9ae55d677451351245760d71f8dd714dcbe5/mlx_metal-0.32.4-py3-none-macosx_26_0_arm64.whl", hash = "sha256:514df92d41a286895d2564b4b18f4da45096bd7a4a0c47e1042f345ad5a7f936", size = 78106861, upload-time = "2026-10-14T21:14:56.184Z" },
+]
+
+[[package]]
+name = "mlx-whisper"
+version = "0.4.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "huggingface-hub", marker = "sys_platform == 'darwin' or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-11-krya-speech-speakers') or (sys_platform == 'emscripten' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "mlx", marker = "sys_platform == 'darwin' or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-11-krya-speech-speakers') or (sys_platform == 'emscripten' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "more-itertools", marker = "sys_platform == 'darwin' or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-11-krya-speech-speakers') or (sys_platform == 'emscripten' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "numba", marker = "sys_platform == 'darwin' or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-11-krya-speech-speakers') or (sys_platform == 'emscripten' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "numpy", marker = "sys_platform == 'darwin' or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-11-krya-speech-speakers') or (sys_platform == 'emscripten' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "scipy", marker = "sys_platform == 'darwin' or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-11-krya-speech-speakers') or (sys_platform == 'emscripten' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "tiktoken", marker = "sys_platform == 'darwin' or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-11-krya-speech-speakers') or (sys_platform == 'emscripten' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "torch", version = "2.11.0+cu128", source = { registry = "https://download.pytorch.org/whl/cu128" }, marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'emscripten' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "torch", version = "2.14.1", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-11-krya-speech-speakers') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "torch", version = "2.14.1", source = { registry = "https://pypi.org/simple" }, marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "tqdm", marker = "sys_platform == 'darwin' or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-11-krya-speech-speakers') or (sys_platform == 'emscripten' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/22/b7/a35232812a2ccfffcb7614ba96a91338551a660a0e9815cee668bf5743f0/mlx_whisper-0.4.3-py3-none-any.whl", hash = "sha256:6b82b6597a994643a3e5496c7bc229a672e5ca308458455bfe276e76ae024489", size = 890544, upload-time = "2025-08-29T14:56:13.815Z" },
+]
+
+[[package]]
+name = "more-itertools"
+version = "11.2.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/52/b8/c63995bebbb9ac9c059350e0fb8c82c2420c85aeca7d34e40aecf3df9281/more_itertools-11.2.1.tar.gz", hash = "sha256:cbf08fd0af284dc69718b9b76a8e6203df624d70209ea511e4219d350c856f63", size = 154133, upload-time = "2026-10-14T18:50:30.407Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5d/57/3c4b1c6f2e0cc29ba023802458ea3d2a996f87085559e4a5f2192d549532/more_itertools-11.2.1-py3-none-any.whl", hash = "sha256:35a7377edd1dd6608dcb2cdf534ded55ea32d49448875ad042cd3f879fb1ded0", size = 74405, upload-time = "2026-10-14T18:50:29.116Z" },
+]
+
+[[package]]
 name = "mpmath"
 version = "1.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -934,6 +1077,23 @@ wheels = [
 ]
 
 [[package]]
+name = "numba"
+version = "0.68.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "llvmlite", marker = "sys_platform == 'darwin' or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-11-krya-speech-speakers') or (sys_platform == 'emscripten' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "numpy", marker = "sys_platform == 'darwin' or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-11-krya-speech-speakers') or (sys_platform == 'emscripten' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0f/a4/a60b14d955b898ce00d815dfe14435ae3b30c1dd2587aa0a172e92310cf8/numba-0.68.1.tar.gz", hash = "sha256:9de461812470173a14eeb7e0bbd27c897dffe835402a33861166842fc5f6ea57", size = 2858572, upload-time = "2026-10-27T18:13:04.352Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d4/a7/2e54558d08bb64c8718ad398314605b6c73d154a593cf2bbf1360047fa4e/numba-0.68.1-cp312-cp312-macosx_12_0_arm64.whl", hash = "sha256:7de5e5d00e6c8967fc861be2a015eb8ad701ab3cf65d7f4a2c4d950990cf65d3", size = 2762483, upload-time = "2026-10-27T18:12:24.865Z" },
+    { url = "https://files.pythonhosted.org/packages/a5/4c/64fb7fe88e040e85a16e2c2924d36c0289529403de11e017e65d707d786c/numba-0.68.1-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:fc764aa37deab88718de20151af0f53aa72d1c5cb3b54c6eb648473323f80a5c", size = 3602382, upload-time = "2026-10-27T18:12:26.361Z" },
+    { url = "https://files.pythonhosted.org/packages/43/23/0813ab091f60403c33cb741392ae77db13324587748df6f52167bf3a2404/numba-0.68.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:8b33fee239194b9b6cb9b176f3c2563b94e5882fd846748ad0cf960daeee5406", size = 3890001, upload-time = "2026-10-27T18:12:27.988Z" },
+    { url = "https://files.pythonhosted.org/packages/e9/bb/c9b0129a57e82b97befeca60a53289359653eef33dd3bffd840898fa33aa/numba-0.68.1-cp312-cp312-win_amd64.whl", hash = "sha256:6d115039768cc2eb3cc99b32355ca507e1bbc653eca5492c83ab6399f218df27", size = 2832823, upload-time = "2026-10-27T18:12:29.726Z" },
+    { url = "https://files.pythonhosted.org/packages/b3/2e/9f48e0a003ebb22a7ce7f54f18a67fc5df589c7db995c3b497bc23cb47e2/numba-0.68.1-cp312-cp312-win_arm64.whl", hash = "sha256:26064885ae0ffcd365e1801beacc524ac4a9bd306b7552749dcca42e0ef2fed3", size = 2814259, upload-time = "2026-10-27T18:12:31.321Z" },
+]
+
+[[package]]
 name = "numpy"
 version = "2.5.4"
 source = { registry = "https://pypi.org/simple" }
@@ -953,6 +1113,19 @@ wheels = [
 ]
 
 [[package]]
+name = "nvidia-cublas"
+version = "13.1.1.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "nvidia-cuda-nvrtc", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a7/a1/0bd24ee8c8d03adac032fd2909426a00c88f8c57961b1277ded97f91119f/nvidia_cublas-13.1.1.3-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:b7a210458267ac818974c53038fbec2e969d5c99f305ab15c72522fa9f001dd5", size = 542848918, upload-time = "2026-04-08T18:46:22.985Z" },
+    { url = "https://files.pythonhosted.org/packages/3b/cd/154ca20c38269e05eff77c1464e6c1da89f50a6390b565e9d82e06bc11e1/nvidia_cublas-13.1.1.3-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:37936a16db8fe4ac1f065c2139360608a543a09275cb1a1af612e08cfa065436", size = 423138758, upload-time = "2026-04-08T18:46:58.655Z" },
+    { url = "https://files.pythonhosted.org/packages/45/9e/2f562daf80eb8f7a685fb7bea4fda71f6048e4f359d6fdd1b6e70206cb2f/nvidia_cublas-13.1.1.3-py3-none-win_amd64.whl", hash = "sha256:b6cdce694e47ff6aadf0a69df1cab6628d696f5ff56e8d16af50309d855fa20f", size = 404358158, upload-time = "2026-04-08T18:47:26.987Z" },
+]
+
+[[package]]
 name = "nvidia-cublas-cu12"
 version = "12.8.4.1"
 source = { registry = "https://pypi.org/simple" }
@@ -960,6 +1133,16 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/29/99/db44d685f0e257ff0e213ade1964fc459b4a690a73293220e98feb3307cf/nvidia_cublas_cu12-12.8.4.1-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:b86f6dd8935884615a0683b663891d43781b819ac4f2ba2b0c9604676af346d0", size = 590537124, upload-time = "2025-03-07T01:43:53.556Z" },
     { url = "https://files.pythonhosted.org/packages/dc/61/e24b560ab2e2eaeb3c839129175fb330dfcfc29e5203196e5541a4c44682/nvidia_cublas_cu12-12.8.4.1-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:8ac4e771d5a348c551b2a426eda6193c19aa630236b418086020df5ba9667142", size = 594346921, upload-time = "2025-03-07T01:44:31.254Z" },
     { url = "https://files.pythonhosted.org/packages/70/61/7d7b3c70186fb651d0fbd35b01dbfc8e755f69fd58f817f3d0f642df20c3/nvidia_cublas_cu12-12.8.4.1-py3-none-win_amd64.whl", hash = "sha256:47e9b82132fa8d2b4944e708049229601448aaad7e6f296f630f2d1a32de35af", size = 567544208, upload-time = "2025-03-07T01:53:30.535Z" },
+]
+
+[[package]]
+name = "nvidia-cuda-cupti"
+version = "13.0.85"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2a/2a/80353b103fc20ce05ef51e928daed4b6015db4aaa9162ed0997090fe2250/nvidia_cuda_cupti-13.0.85-py3-none-manylinux_2_25_aarch64.whl", hash = "sha256:796bd679890ee55fb14a94629b698b6db54bcfd833d391d5e94017dd9d7d3151", size = 10310827, upload-time = "2025-09-04T08:26:42.012Z" },
+    { url = "https://files.pythonhosted.org/packages/33/6d/737d164b4837a9bbd202f5ae3078975f0525a55730fe871d8ed4e3b952b0/nvidia_cuda_cupti-13.0.85-py3-none-manylinux_2_25_x86_64.whl", hash = "sha256:4eb01c08e859bf924d222250d2e8f8b8ff6d3db4721288cf35d14252a4d933c8", size = 10715597, upload-time = "2025-09-04T08:26:51.312Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/df/b74b10025c1205695c5676373f2edd3e87a7202cc62ead0dfbc373b0f6ea/nvidia_cuda_cupti-13.0.85-py3-none-win_amd64.whl", hash = "sha256:683f58d301548deeefcb8f6fac1b8d907691b9d8b18eccab417f51e362102f00", size = 7736776, upload-time = "2025-09-04T08:38:08.38Z" },
 ]
 
 [[package]]
@@ -973,6 +1156,16 @@ wheels = [
 ]
 
 [[package]]
+name = "nvidia-cuda-nvrtc"
+version = "13.0.88"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c3/68/483a78f5e8f31b08fb1bb671559968c0ca3a065ac7acabfc7cee55214fd6/nvidia_cuda_nvrtc-13.0.88-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl", hash = "sha256:ad9b6d2ead2435f11cbb6868809d2adeeee302e9bb94bcf0539c7a40d80e8575", size = 90215200, upload-time = "2025-09-04T08:28:44.204Z" },
+    { url = "https://files.pythonhosted.org/packages/b7/dc/6bb80850e0b7edd6588d560758f17e0550893a1feaf436807d64d2da040f/nvidia_cuda_nvrtc-13.0.88-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:d27f20a0ca67a4bb34268a5e951033496c5b74870b868bacd046b1b8e0c3267b", size = 43015449, upload-time = "2025-09-04T08:28:20.239Z" },
+    { url = "https://files.pythonhosted.org/packages/4a/af/345fedb9f4c76c84ab4fa445b36bd4048a4d9db60e6bc76b4f913ff4b852/nvidia_cuda_nvrtc-13.0.88-py3-none-win_amd64.whl", hash = "sha256:6bcd4e7f8e205cbe644f5a98f2f799bef9556fefc89dd786e79a16312ce49872", size = 76807835, upload-time = "2025-09-04T08:39:15.274Z" },
+]
+
+[[package]]
 name = "nvidia-cuda-nvrtc-cu12"
 version = "12.8.93"
 source = { registry = "https://pypi.org/simple" }
@@ -980,6 +1173,16 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/05/6b/32f747947df2da6994e999492ab306a903659555dddc0fbdeb9d71f75e52/nvidia_cuda_nvrtc_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl", hash = "sha256:a7756528852ef889772a84c6cd89d41dfa74667e24cca16bb31f8f061e3e9994", size = 88040029, upload-time = "2025-03-07T01:42:13.562Z" },
     { url = "https://files.pythonhosted.org/packages/eb/d1/e50d0acaab360482034b84b6e27ee83c6738f7d32182b987f9c7a4e32962/nvidia_cuda_nvrtc_cu12-12.8.93-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:fc1fec1e1637854b4c0a65fb9a8346b51dd9ee69e61ebaccc82058441f15bce8", size = 43106076, upload-time = "2025-03-07T01:41:59.817Z" },
     { url = "https://files.pythonhosted.org/packages/45/51/52a3d84baa2136cc8df15500ad731d74d3a1114d4c123e043cb608d4a32b/nvidia_cuda_nvrtc_cu12-12.8.93-py3-none-win_amd64.whl", hash = "sha256:7a4b6b2904850fe78e0bd179c4b655c404d4bb799ef03ddc60804247099ae909", size = 73586838, upload-time = "2025-03-07T01:52:13.483Z" },
+]
+
+[[package]]
+name = "nvidia-cuda-runtime"
+version = "13.0.96"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/87/4f/17d7b9b8e285199c58ce28e31b5c5bbaa4d8271af06a89b6405258245de2/nvidia_cuda_runtime-13.0.96-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:ef9bcbe90493a2b9d810e43d249adb3d02e98dd30200d86607d8d02687c43f55", size = 2261060, upload-time = "2025-10-09T08:55:15.78Z" },
+    { url = "https://files.pythonhosted.org/packages/2e/24/d1558f3b68b1d26e706813b1d10aa1d785e4698c425af8db8edc3dced472/nvidia_cuda_runtime-13.0.96-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:7f82250d7782aa23b6cfe765ecc7db554bd3c2870c43f3d1821f1d18aebf0548", size = 2243632, upload-time = "2025-10-09T08:55:36.117Z" },
+    { url = "https://files.pythonhosted.org/packages/b7/94/6b867483bec07da24ffa32736c79fabb94ef3a7af4d787a9d4a974868576/nvidia_cuda_runtime-13.0.96-py3-none-win_amd64.whl", hash = "sha256:f79298c8a098cec150a597c8eba58ecdab96e3bdc4b9bc4f9983635031740492", size = 2927037, upload-time = "2025-10-09T09:04:23.782Z" },
 ]
 
 [[package]]
@@ -1006,16 +1209,51 @@ wheels = [
 ]
 
 [[package]]
+name = "nvidia-cudnn-cu13"
+version = "9.24.0.43"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "nvidia-cublas", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ca/30/7c257e3d5cb4fecb147b93895c66e29c93f8e76d74b45bb418ff0587c4ec/nvidia_cudnn_cu13-9.24.0.43-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:a6812a554a1ff0413e9c52b84c26c050380649ab9615f9c16bded368ce9f421f", size = 650976863, upload-time = "2026-07-02T16:23:39.248Z" },
+    { url = "https://files.pythonhosted.org/packages/5c/ba/791cffd048fe5b044e620df55267e3e95c0e6e07d50b41e377c03dfc910f/nvidia_cudnn_cu13-9.24.0.43-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:71f181cd810e90f9b6023b01186fe82d13d65f0ec098581ee201d39fad769e4b", size = 553099438, upload-time = "2026-07-02T16:27:42.58Z" },
+    { url = "https://files.pythonhosted.org/packages/31/23/1dd3aa15cc4ab62c8fc88f8049ef137bc44c17892f5577bc80d994941f77/nvidia_cudnn_cu13-9.24.0.43-py3-none-win_amd64.whl", hash = "sha256:67a7273b5cf062f9446fd76cf464351a1c0f66501e6cd78f6675c0d604d8ac87", size = 412314771, upload-time = "2026-07-02T16:31:07.973Z" },
+]
+
+[[package]]
+name = "nvidia-cufft"
+version = "12.0.0.61"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "nvidia-nvjitlink", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8b/ae/f417a75c0259e85c1d2f83ca4e960289a5f814ed0cea74d18c353d3e989d/nvidia_cufft-12.0.0.61-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:2708c852ef8cd89d1d2068bdbece0aa188813a0c934db3779b9b1faa8442e5f5", size = 214053554, upload-time = "2025-09-04T08:31:38.196Z" },
+    { url = "https://files.pythonhosted.org/packages/a8/2f/7b57e29836ea8714f81e9898409196f47d772d5ddedddf1592eadb8ab743/nvidia_cufft-12.0.0.61-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:6c44f692dce8fd5ffd3e3df134b6cdb9c2f72d99cf40b62c32dde45eea9ddad3", size = 214085489, upload-time = "2025-09-04T08:31:56.044Z" },
+    { url = "https://files.pythonhosted.org/packages/85/b2/f8af21a2ed1beed337a6a02c5a28aeb85441f4d578ec3d529543c775ea4b/nvidia_cufft-12.0.0.61-py3-none-win_amd64.whl", hash = "sha256:2abce5b39d2f5ae12730fb7e5db6696533e36c26e2d3e8fd1750bdd2853364eb", size = 213342123, upload-time = "2025-09-04T08:40:51.145Z" },
+]
+
+[[package]]
 name = "nvidia-cufft-cu12"
 version = "11.3.3.83"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-nvjitlink-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'emscripten' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/60/bc/7771846d3a0272026c416fbb7e5f4c1f146d6d80704534d0b187dd6f4800/nvidia_cufft_cu12-11.3.3.83-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:848ef7224d6305cdb2a4df928759dca7b1201874787083b6e7550dd6765ce69a", size = 193109211, upload-time = "2025-03-07T01:44:56.873Z" },
     { url = "https://files.pythonhosted.org/packages/1f/13/ee4e00f30e676b66ae65b4f08cb5bcbb8392c03f54f2d5413ea99a5d1c80/nvidia_cufft_cu12-11.3.3.83-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:4d2dd21ec0b88cf61b62e6b43564355e5222e4a3fb394cac0db101f2dd0d4f74", size = 193118695, upload-time = "2025-03-07T01:45:27.821Z" },
     { url = "https://files.pythonhosted.org/packages/7d/ec/ce1629f1e478bb5ccd208986b5f9e0316a78538dd6ab1d0484f012f8e2a1/nvidia_cufft_cu12-11.3.3.83-py3-none-win_amd64.whl", hash = "sha256:7a64a98ef2a7c47f905aaf8931b69a3a43f27c55530c698bb2ed7c75c0b42cb7", size = 192216559, upload-time = "2025-03-07T01:53:57.106Z" },
+]
+
+[[package]]
+name = "nvidia-cufile"
+version = "1.15.1.6"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3f/70/4f193de89a48b71714e74602ee14d04e4019ad36a5a9f20c425776e72cd6/nvidia_cufile-1.15.1.6-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:08a3ecefae5a01c7f5117351c64f17c7c62efa5fffdbe24fc7d298da19cd0b44", size = 1223672, upload-time = "2025-09-04T08:32:22.779Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/73/cc4a14c9813a8a0d509417cf5f4bdaba76e924d58beb9864f5a7baceefbf/nvidia_cufile-1.15.1.6-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:bdc0deedc61f548bddf7733bdc216456c2fdb101d020e1ab4b88d232d5e2f6d1", size = 1136992, upload-time = "2025-09-04T08:32:14.119Z" },
 ]
 
 [[package]]
@@ -1025,6 +1263,16 @@ source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/bb/fe/1bcba1dfbfb8d01be8d93f07bfc502c93fa23afa6fd5ab3fc7c1df71038a/nvidia_cufile_cu12-1.13.1.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:1d069003be650e131b21c932ec3d8969c1715379251f8d23a1860554b1cb24fc", size = 1197834, upload-time = "2025-03-07T01:45:50.723Z" },
     { url = "https://files.pythonhosted.org/packages/1e/f5/5607710447a6fe9fd9b3283956fceeee8a06cda1d2f56ce31371f595db2a/nvidia_cufile_cu12-1.13.1.3-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:4beb6d4cce47c1a0f1013d72e02b0994730359e17801d395bdcbf20cfb3bb00a", size = 1120705, upload-time = "2025-03-07T01:45:41.434Z" },
+]
+
+[[package]]
+name = "nvidia-curand"
+version = "10.4.0.35"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1e/72/7c2ae24fb6b63a32e6ae5d241cc65263ea18d08802aaae087d9f013335a2/nvidia_curand-10.4.0.35-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:133df5a7509c3e292aaa2b477afd0194f06ce4ea24d714d616ff36439cee349a", size = 61962106, upload-time = "2025-08-04T10:21:41.128Z" },
+    { url = "https://files.pythonhosted.org/packages/a5/9f/be0a41ca4a4917abf5cb9ae0daff1a6060cc5de950aec0396de9f3b52bc5/nvidia_curand-10.4.0.35-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:1aee33a5da6e1db083fe2b90082def8915f30f3248d5896bcec36a579d941bfc", size = 59544258, upload-time = "2025-08-04T10:22:03.992Z" },
+    { url = "https://files.pythonhosted.org/packages/99/27/72103153b1ffc00e09fdc40ac970235343dcd1ea8bd762e84d2d73219ffa/nvidia_curand-10.4.0.35-py3-none-win_amd64.whl", hash = "sha256:65b1710aa6961d326b411e314b374290904c5ddf41dc3f766ebc3f1d7d4ca69f", size = 55242481, upload-time = "2025-08-04T10:30:41.831Z" },
 ]
 
 [[package]]
@@ -1038,13 +1286,28 @@ wheels = [
 ]
 
 [[package]]
+name = "nvidia-cusolver"
+version = "12.0.4.66"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "nvidia-cublas", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-cusparse", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-nvjitlink", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c8/c3/b30c9e935fc01e3da443ec0116ed1b2a009bb867f5324d3f2d7e533e776b/nvidia_cusolver-12.0.4.66-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:02c2457eaa9e39de20f880f4bd8820e6a1cfb9f9a34f820eb12a155aa5bc92d2", size = 223467760, upload-time = "2025-09-04T08:33:04.222Z" },
+    { url = "https://files.pythonhosted.org/packages/5f/67/cba3777620cdacb99102da4042883709c41c709f4b6323c10781a9c3aa34/nvidia_cusolver-12.0.4.66-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:0a759da5dea5c0ea10fd307de75cdeb59e7ea4fcb8add0924859b944babf1112", size = 200941980, upload-time = "2025-09-04T08:33:22.767Z" },
+    { url = "https://files.pythonhosted.org/packages/99/ef/332a0101260ca78a1daef046bf0b06199e8ed4dac1d2aa698289c358169c/nvidia_cusolver-12.0.4.66-py3-none-win_amd64.whl", hash = "sha256:16515bd33a8e76bb54d024cfa068fa68d30e80fc34b9e1090813ea9362e0cb65", size = 193551444, upload-time = "2025-09-04T08:41:46.813Z" },
+]
+
+[[package]]
 name = "nvidia-cusolver-cu12"
 version = "11.7.3.90"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-cublas-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
-    { name = "nvidia-cusparse-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
-    { name = "nvidia-nvjitlink-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-cublas-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'emscripten' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-cusparse-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'emscripten' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-nvjitlink-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'emscripten' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c8/32/f7cd6ce8a7690544d084ea21c26e910a97e077c9b7f07bf5de623ee19981/nvidia_cusolver_cu12-11.7.3.90-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:db9ed69dbef9715071232caa9b69c52ac7de3a95773c2db65bdba85916e4e5c0", size = 267229841, upload-time = "2025-03-07T01:46:54.356Z" },
@@ -1053,11 +1316,24 @@ wheels = [
 ]
 
 [[package]]
+name = "nvidia-cusparse"
+version = "12.6.3.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "nvidia-nvjitlink", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f8/94/5c26f33738ae35276672f12615a64bd008ed5be6d1ebcb23579285d960a9/nvidia_cusparse-12.6.3.3-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:80bcc4662f23f1054ee334a15c72b8940402975e0eab63178fc7e670aa59472c", size = 162155568, upload-time = "2025-09-04T08:33:42.864Z" },
+    { url = "https://files.pythonhosted.org/packages/fa/18/623c77619c31d62efd55302939756966f3ecc8d724a14dab2b75f1508850/nvidia_cusparse-12.6.3.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:2b3c89c88d01ee0e477cb7f82ef60a11a4bcd57b6b87c33f789350b59759360b", size = 145942937, upload-time = "2025-09-04T08:33:58.029Z" },
+    { url = "https://files.pythonhosted.org/packages/02/b0/b043d6f3480f102f885cf87fc3ffd3edcb5e23b855025a50e2ef4d059185/nvidia_cusparse-12.6.3.3-py3-none-win_amd64.whl", hash = "sha256:cbcf42feb737bd7ec15b4c0a63e62351886bd3f975027b8815d7f720a2b5ea79", size = 143783033, upload-time = "2025-09-04T08:42:12.391Z" },
+]
+
+[[package]]
 name = "nvidia-cusparse-cu12"
 version = "12.5.8.93"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-nvjitlink-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'emscripten' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/bc/f7/cd777c4109681367721b00a106f491e0d0d15cfa1fd59672ce580ce42a97/nvidia_cusparse_cu12-12.5.8.93-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:9b6c161cb130be1a07a27ea6923df8141f3c295852f4b260c65f18f3e0a091dc", size = 288117129, upload-time = "2025-03-07T01:47:40.407Z" },
@@ -1076,12 +1352,42 @@ wheels = [
 ]
 
 [[package]]
+name = "nvidia-cusparselt-cu13"
+version = "0.8.1"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/46/e1/cdc1797eadf82d3a9a575a19b33fdc871a97edbec42c00b5b5e914f4aff4/nvidia_cusparselt_cu13-0.8.1-py3-none-manylinux2014_aarch64.whl", hash = "sha256:4dca476c50bf4780d46cd0bfbd82e2bc10a08e4fef7950917ce8d7578d22a23f", size = 221051344, upload-time = "2025-09-05T18:49:51.289Z" },
+    { url = "https://files.pythonhosted.org/packages/34/7d/2661f2fb3ac4302f3a246f5fc030213ac60c1fe0bce84f9783dbd831dbb7/nvidia_cusparselt_cu13-0.8.1-py3-none-manylinux2014_x86_64.whl", hash = "sha256:786ce87568c303fadb5afcc7102d454cd3040d75f6f8626f5db460d1871f4dd0", size = 170148586, upload-time = "2025-09-05T18:50:50.248Z" },
+    { url = "https://files.pythonhosted.org/packages/31/83/f3647ce26916c94a6ca4ff1810623e2c405cff2dea6e78d29516b2514df9/nvidia_cusparselt_cu13-0.8.1-py3-none-win_amd64.whl", hash = "sha256:dccbd362f91a7b9024d1f55ee9f548ac065027ff15d8c8b0db889ab3a8f31215", size = 156885108, upload-time = "2025-09-05T18:51:35.958Z" },
+]
+
+[[package]]
 name = "nvidia-nccl-cu12"
 version = "2.28.9"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/08/c4/120d2dfd92dff2c776d68f361ff8705fdea2ca64e20b612fab0fd3f581ac/nvidia_nccl_cu12-2.28.9-py3-none-manylinux_2_18_aarch64.whl", hash = "sha256:50a36e01c4a090b9f9c47d92cec54964de6b9fcb3362d0e19b8ffc6323c21b60", size = 296766525, upload-time = "2025-11-18T05:49:16.094Z" },
     { url = "https://files.pythonhosted.org/packages/4a/4e/44dbb46b3d1b0ec61afda8e84837870f2f9ace33c564317d59b70bc19d3e/nvidia_nccl_cu12-2.28.9-py3-none-manylinux_2_18_x86_64.whl", hash = "sha256:485776daa8447da5da39681af455aa3b2c2586ddcf4af8772495e7c532c7e5ab", size = 296782137, upload-time = "2025-11-18T05:49:34.248Z" },
+]
+
+[[package]]
+name = "nvidia-nccl-cu13"
+version = "2.30.7"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d1/21/a73174c6157101bdf1ffc22b517f76ff0082613989dd9bc8f43e8034caac/nvidia_nccl_cu13-2.30.7-py3-none-manylinux_2_18_aarch64.whl", hash = "sha256:ca786ffa5a647c75d4d1f5cc72a6c4f537947e2ba8823d7c8aaf768e7a7b9f77", size = 215983881, upload-time = "2026-06-09T03:23:15.633Z" },
+    { url = "https://files.pythonhosted.org/packages/3f/34/c500f90c7ae641b8e0f98965b36b8a7ac79cc8b296e8d251fe3eb592ee54/nvidia_nccl_cu13-2.30.7-py3-none-manylinux_2_18_x86_64.whl", hash = "sha256:cefa7fdb9710efd0f39c5f1be1d61ff6fc9a996c451265bd7fbdcf9455ed4b50", size = 215965170, upload-time = "2026-06-09T03:23:39.73Z" },
+]
+
+[[package]]
+name = "nvidia-nvjitlink"
+version = "13.5.37"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cc/1f/2321702b8d60b4b4dd18b957f61612dbac9cb1c07e940cf6582106b7c8b8/nvidia_nvjitlink-13.5.37-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl", hash = "sha256:280d7cb9649704145f074b8dbde500de04ce02d0872e066e20a83c17bcaa93eb", size = 46642491, upload-time = "2026-11-04T23:33:31.696Z" },
+    { url = "https://files.pythonhosted.org/packages/24/15/dd228f798cd01d7aeaf19d872b2b20f9aeafc1a7d8b6bfaa878b30b8d6f7/nvidia_nvjitlink-13.5.37-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:893f6f9a55b2720ed94913b5ba3332e972da8c78dfa2863d0244403dbd528ffc", size = 45253761, upload-time = "2026-11-04T23:33:22.854Z" },
+    { url = "https://files.pythonhosted.org/packages/a7/53/c43398492e8374880d5e01c23c4dac33ba0c3bd03515d6ecc574254c0967/nvidia_nvjitlink-13.5.37-py3-none-win_amd64.whl", hash = "sha256:4465d4e8f2212118220b580c82523c5654f93a62906bd51d29d79bdfc12376c1", size = 41467665, upload-time = "2026-11-04T23:38:44.689Z" },
+    { url = "https://files.pythonhosted.org/packages/d7/4a/1ff9ab7d0c961a1b5539f8291c881bea82adbbf8ba40a9e81f9c9b3a8d5d/nvidia_nvjitlink-13.5.37-py3-none-win_arm64.whl", hash = "sha256:eb30348ae64c525180a280025dd12a089c3e2e1dc4e19cdd58f68c6edc622404", size = 38552904, upload-time = "2026-11-04T23:43:27.658Z" },
 ]
 
 [[package]]
@@ -1101,6 +1407,25 @@ source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1d/6a/03aa43cc9bd3ad91553a88b5f6fb25ed6a3752ae86ce2180221962bc2aa5/nvidia_nvshmem_cu12-3.4.5-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:0b48363fc6964dede448029434c6abed6c5e37f823cb43c3bcde7ecfc0457e15", size = 138936938, upload-time = "2025-09-06T00:32:05.589Z" },
     { url = "https://files.pythonhosted.org/packages/b5/09/6ea3ea725f82e1e76684f0708bbedd871fc96da89945adeba65c3835a64c/nvidia_nvshmem_cu12-3.4.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:042f2500f24c021db8a06c5eec2539027d57460e1c1a762055a6554f72c369bd", size = 139103095, upload-time = "2025-09-06T00:32:31.266Z" },
+]
+
+[[package]]
+name = "nvidia-nvshmem-cu13"
+version = "3.4.5"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/dc/0f/05cc9c720236dcd2db9c1ab97fff629e96821be2e63103569da0c9b72f19/nvidia_nvshmem_cu13-3.4.5-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:6dc2a197f38e5d0376ad52cd1a2a3617d3cdc150fd5966f4aee9bcebb1d68fe9", size = 60215947, upload-time = "2025-09-06T00:32:20.022Z" },
+    { url = "https://files.pythonhosted.org/packages/3c/35/a9bf80a609e74e3b000fef598933235c908fcefcef9026042b8e6dfde2a9/nvidia_nvshmem_cu13-3.4.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:290f0a2ee94c9f3687a02502f3b9299a9f9fe826e6d0287ee18482e78d495b80", size = 60412546, upload-time = "2025-09-06T00:32:41.564Z" },
+]
+
+[[package]]
+name = "nvidia-nvtx"
+version = "13.0.85"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c2/f3/d86c845465a2723ad7e1e5c36dcd75ddb82898b3f53be47ebd429fb2fa5d/nvidia_nvtx-13.0.85-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:4936d1d6780fbe68db454f5e72a42ff64d1fd6397df9f363ae786930fd5c1cd4", size = 148047, upload-time = "2025-09-04T08:29:01.761Z" },
+    { url = "https://files.pythonhosted.org/packages/a8/64/3708a90d1ebe202ffdeb7185f878a3c84d15c2b2c31858da2ce0583e2def/nvidia_nvtx-13.0.85-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:cb7780edb6b14107373c835bf8b72e7a178bac7367e23da7acb108f973f157a6", size = 148878, upload-time = "2025-09-04T08:28:53.627Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/50/0e2220f8620a177de994211186ffc5bfa9f2ce1e1282797f8f90096f9f88/nvidia_nvtx-13.0.85-py3-none-win_amd64.whl", hash = "sha256:d66ea44254dd3c6eacc300047af6e1288d2269dd072b417e0adffbf479e18519", size = 137066, upload-time = "2025-09-04T08:39:25.649Z" },
 ]
 
 [[package]]
@@ -1599,7 +1924,7 @@ name = "pytest"
 version = "9.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
     { name = "iniconfig" },
     { name = "packaging" },
     { name = "pluggy" },
@@ -1699,6 +2024,30 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/74/93/7baea19427dcfbe1e5a372d81473250b379f04b1bd3c4c5ff825e2327202/pyyaml-6.0.3-cp312-cp312-win32.whl", hash = "sha256:96b533f0e99f6579b3d4d4995707cf36df9100d67e0c8303a0c55b27b5f99bc5", size = 137658, upload-time = "2025-09-25T21:32:20.209Z" },
     { url = "https://files.pythonhosted.org/packages/86/bf/899e81e4cce32febab4fb42bb97dcdf66bc135272882d1987881a4b519e9/pyyaml-6.0.3-cp312-cp312-win_amd64.whl", hash = "sha256:5fcd34e47f6e0b794d17de1b4ff496c00986e1c83f7ab2fb8fcfe9616ff7477b", size = 154003, upload-time = "2025-09-25T21:32:21.167Z" },
     { url = "https://files.pythonhosted.org/packages/1a/08/67bd04656199bbb51dbed1439b7f27601dfb576fb864099c7ef0c3e55531/pyyaml-6.0.3-cp312-cp312-win_arm64.whl", hash = "sha256:64386e5e707d03a7e172c0701abfb7e10f0fb753ee1d773128192742712a98fd", size = 140344, upload-time = "2025-09-25T21:32:22.617Z" },
+]
+
+[[package]]
+name = "regex"
+version = "2026.9.29"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/fc/f2/af1da9d3ceed77bfcdce40427d49ba0be94e4fe84245e3bfef68c10e75b6/regex-2026.9.29.tar.gz", hash = "sha256:8b5fcc4771732191b2b7d1dd68d8f0353f47f8d90b6150f6dce58bf1112442cb", size = 419199, upload-time = "2026-09-29T00:49:58.298Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/84/48/3fdcde9a0baa84d7d25571223265d6e434e114763b438601d54a8028bf3e/regex-2026.9.29-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:dc79d36d0618752265f0d575915bdc5c5130ecb9c9f6b3bcefeae32e4bdfafcf", size = 497903, upload-time = "2026-09-29T00:46:38.938Z" },
+    { url = "https://files.pythonhosted.org/packages/2e/1c/4ee3e97c76f53940488dfe7a7e18705e78daac8cd7fb161d246b9e328449/regex-2026.9.29-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:3a21a9509d0ee88e7a70e1ad228cd2f0e0fd1e187458db132e8a8d18c97daf9d", size = 296416, upload-time = "2026-09-29T00:46:40.406Z" },
+    { url = "https://files.pythonhosted.org/packages/37/14/f3f0ba083d2094392d5eabf56db5ea6ba469fd6e927afd187042054ea68a/regex-2026.9.29-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:f57dc6b8fef170f105d2cf5cdce254f47b137d7755086cf7050f47e16582abba", size = 293633, upload-time = "2026-09-29T00:46:41.959Z" },
+    { url = "https://files.pythonhosted.org/packages/c9/72/67e7a8ce17f1aea49df215564048efb49cc8c2b31a0e0fc30f36838f8516/regex-2026.9.29-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:f93bc1c3486ef3747e07c9d7c1d0a147b8fbaab975f80e348aed6f71309dfaca", size = 805885, upload-time = "2026-09-29T00:46:43.373Z" },
+    { url = "https://files.pythonhosted.org/packages/f6/78/25436bcfd4d2260b4b4090094d55d7ab53ec8a1ab4865a0b8bcb33c7d5c0/regex-2026.9.29-cp312-cp312-manylinux2014_ppc64le.manylinux_2_17_ppc64le.manylinux_2_28_ppc64le.whl", hash = "sha256:9e1d3a4cb7993b708f0ada8d0c84590efd853f169e7147d2202c9da503180242", size = 878344, upload-time = "2026-09-29T00:46:45.328Z" },
+    { url = "https://files.pythonhosted.org/packages/97/e6/a09ec3a23ae41d6179880e67f0aace9284b2d95f2d7b326eff203f8eec5e/regex-2026.9.29-cp312-cp312-manylinux2014_s390x.manylinux_2_17_s390x.manylinux_2_28_s390x.whl", hash = "sha256:dabee8f4935e731fb46b2a3091bdda0d3d94b3bbfb907d2b4f12eefce4009619", size = 919181, upload-time = "2026-09-29T00:46:47.041Z" },
+    { url = "https://files.pythonhosted.org/packages/26/83/d2fbd2e4e3afb1167daa825187d196f313cbaa1a4768f311fb041bb0e3d2/regex-2026.9.29-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:39ab5894d971f9ac68baa6eca5c50387db579cfcacf36ae8df3feceb1815e6d0", size = 807783, upload-time = "2026-09-29T00:46:48.894Z" },
+    { url = "https://files.pythonhosted.org/packages/46/0b/eb429a7016610d44fc89a597163f8c9127505f0d7dc724dc9effbb6a3ac0/regex-2026.9.29-cp312-cp312-manylinux_2_31_riscv64.manylinux_2_39_riscv64.whl", hash = "sha256:c1a9a6651197fbed6f0212591418b9def774fc3f8324f78d1bf0e6a63e5f8aa1", size = 783465, upload-time = "2026-09-29T00:46:50.64Z" },
+    { url = "https://files.pythonhosted.org/packages/1b/07/58a3c0153c7476898430f6a7cf3d9062a1d17fbea4f43399ecaf411c7b4c/regex-2026.9.29-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:87fb80cbe3557e27e7b28b995c2b2eedf689b8886f941ab93e0e288f0976518a", size = 793519, upload-time = "2026-09-29T00:46:52.396Z" },
+    { url = "https://files.pythonhosted.org/packages/2a/e8/161b94d39164520e21a7befe0245569bf7fda4c7cf1fc4e2df2b5def49da/regex-2026.9.29-cp312-cp312-musllinux_1_2_ppc64le.whl", hash = "sha256:3c5c2ef13797466aa64170cbb66ad98a32351dd4127694cea7199f80f213750d", size = 869293, upload-time = "2026-09-29T00:46:54.128Z" },
+    { url = "https://files.pythonhosted.org/packages/8f/07/3b02ed829aa2decdc1955d222bd1e2f99d1c8bb4873bbb9a66b2f0a36bff/regex-2026.9.29-cp312-cp312-musllinux_1_2_riscv64.whl", hash = "sha256:59b49507f47479e299a9e1bc41b5cb83a7afda0540625f1dbae886615978acbf", size = 770239, upload-time = "2026-09-29T00:46:56.106Z" },
+    { url = "https://files.pythonhosted.org/packages/42/5b/ba61f6fe062eb8562e742367d177bb75370434138ef6c9d2a27114f8d613/regex-2026.9.29-cp312-cp312-musllinux_1_2_s390x.whl", hash = "sha256:0dd8af32e9f7b56b7f95cc1fd79b23054c3bdc172392ae560acc24d57b7ffe71", size = 861973, upload-time = "2026-09-29T00:46:57.665Z" },
+    { url = "https://files.pythonhosted.org/packages/cc/27/767259b20e8a842948990f5e99138d6c077248fd42f8b5468b1d9ca4b814/regex-2026.9.29-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:db5e82ba15c142425b8406690032df89e39cca4a2e8afbbb9a3d84edc2373ac3", size = 796470, upload-time = "2026-09-29T00:46:59.236Z" },
+    { url = "https://files.pythonhosted.org/packages/a0/05/2566c4ba849b68a8ab81a6bf428fa79d20aae7ddee83979103c0381df254/regex-2026.9.29-cp312-cp312-win32.whl", hash = "sha256:d0c3082bf79bcd6a614d55916590ad4b8f93200e10b97f463ea5d9d07c9b5f23", size = 269327, upload-time = "2026-09-29T00:47:01.135Z" },
+    { url = "https://files.pythonhosted.org/packages/93/19/489bc8db91196381c935752df01ba3f607140daece33b78d88573f028e64/regex-2026.9.29-cp312-cp312-win_amd64.whl", hash = "sha256:fdd88ed5e20b1bcdd234421e454962c971aa44b653bdb7f1ea9ef683e90fb649", size = 280334, upload-time = "2026-09-29T00:47:04.436Z" },
+    { url = "https://files.pythonhosted.org/packages/0b/47/fb88ba779d0e5e7d4b0ec1aceeb13845948a2cb876bd572a2d1dfdba090b/regex-2026.9.29-cp312-cp312-win_arm64.whl", hash = "sha256:4fe97894d1b306c919b4e50def1e6f6c522f4d03a7283811f4d108f1ce5d3ac2", size = 279614, upload-time = "2026-09-29T00:47:06.541Z" },
 ]
 
 [[package]]
@@ -1879,6 +2228,25 @@ wheels = [
 ]
 
 [[package]]
+name = "tiktoken"
+version = "0.14.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "regex", marker = "sys_platform == 'darwin' or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-11-krya-speech-speakers') or (sys_platform == 'emscripten' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "requests", marker = "sys_platform == 'darwin' or (sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-11-krya-speech-speakers') or (sys_platform == 'emscripten' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (sys_platform == 'win32' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/66/62/167a842aa0429d45f5e797354fd4343a96f6043d67d0513c675c7b8d36e6/tiktoken-0.14.0.tar.gz", hash = "sha256:231dec90efcdccf1b565a1416107736f1e09b1a08fe736ef9d6363e626d03874", size = 38898, upload-time = "2026-08-17T19:49:49.514Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8c/da/e273746b9d24a63c776bc60fba914351573ad9c575b52601eb5e60632564/tiktoken-0.14.0-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:8e947aefe98ef74cce94923f90e48c98fe34eb1ec0a6bfdfadfc5a96359bfc36", size = 1094408, upload-time = "2026-08-17T19:48:49.269Z" },
+    { url = "https://files.pythonhosted.org/packages/69/9f/fe6b1aca23331aa5271df5a4bd07bf68a7059254d47faee1b8272592a777/tiktoken-0.14.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:d6cebe67765569df3dafac8474e4eccf5c19d24140492567a5e58a11445732a4", size = 1038499, upload-time = "2026-08-17T19:48:50.666Z" },
+    { url = "https://files.pythonhosted.org/packages/0b/35/e9f47647c9e163bd1de30fe1a491669b7248cfc67b7404c35c009a701e1a/tiktoken-0.14.0-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:7db45b98e94adf4173a5cd7422b150999a7ee11ff847783a14f6e1b80cc38cb6", size = 1186355, upload-time = "2026-08-17T19:48:51.93Z" },
+    { url = "https://files.pythonhosted.org/packages/51/11/9976ad86980a00cdef05e730a0127a2578a1bc6d11644d8d47246de2eb26/tiktoken-0.14.0-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:7896eea257fe497a2b7134474d909156c6744ce8da35bce88011a960e008aa0d", size = 1204197, upload-time = "2026-08-17T19:48:53.18Z" },
+    { url = "https://files.pythonhosted.org/packages/d4/9c/7035b0bcfaa68d1ee4803fc5be5214ad865669b05bd20e7105ae8a18afc6/tiktoken-0.14.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:b950248272f1b303dc32986396e2dccfa10cf6d1e83ec8f0bba1776660305482", size = 1250635, upload-time = "2026-08-17T19:48:54.392Z" },
+    { url = "https://files.pythonhosted.org/packages/bc/1d/69cabf18bed7f4366da076735816abce0d4db3fae491ae338a6612128777/tiktoken-0.14.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:3de75343041a1c57333b1e707ac8a9769738241d7d6a55d39e12cf84548337c6", size = 1316085, upload-time = "2026-08-17T19:48:55.525Z" },
+    { url = "https://files.pythonhosted.org/packages/bd/bd/a2e884fb1402cba5be08836590320012b2d8ada0e2eef9911a64df4bcd2d/tiktoken-0.14.0-cp312-cp312-win_amd64.whl", hash = "sha256:087538c080e5ff421abd3a0785ed63c5111d06af98e6cd0d374dbe5969147ca3", size = 941208, upload-time = "2026-08-17T19:48:56.938Z" },
+]
+
+[[package]]
 name = "tokenizers"
 version = "0.23.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1915,8 +2283,8 @@ resolution-markers = [
     "sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "cuda-bindings", marker = "(sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
-    { name = "cuda-toolkit", extra = ["cublas", "cudart", "cufft", "cufile", "cupti", "curand", "cusolver", "cusparse", "nvjitlink", "nvrtc", "nvtx"], marker = "(sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "cuda-bindings", version = "12.9.10", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "cuda-toolkit", version = "12.8.1", source = { registry = "https://pypi.org/simple" }, extra = ["cublas", "cudart", "cufft", "cufile", "cupti", "curand", "cusolver", "cusparse", "nvjitlink", "nvrtc", "nvtx"], marker = "(sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
     { name = "filelock", marker = "extra == 'extra-11-krya-speech-speakers-gpu'" },
     { name = "fsspec", marker = "extra == 'extra-11-krya-speech-speakers-gpu'" },
     { name = "jinja2", marker = "extra == 'extra-11-krya-speech-speakers-gpu'" },
@@ -1927,7 +2295,7 @@ dependencies = [
     { name = "nvidia-nvshmem-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
     { name = "setuptools", marker = "extra == 'extra-11-krya-speech-speakers-gpu'" },
     { name = "sympy", marker = "extra == 'extra-11-krya-speech-speakers-gpu'" },
-    { name = "triton", marker = "(sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "triton", version = "3.6.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform == 'linux' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
     { name = "typing-extensions", marker = "extra == 'extra-11-krya-speech-speakers-gpu'" },
 ]
 wheels = [
@@ -1954,6 +2322,33 @@ dependencies = [
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:9cf3082d25560efb1eef921871595227c0cf305abb7761ca45b6b988ef6cdd45", upload-time = "2026-09-30T19:50:32Z" },
+]
+
+[[package]]
+name = "torch"
+version = "2.14.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "cuda-bindings", version = "13.5.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "cuda-toolkit", version = "13.0.3.0", source = { registry = "https://pypi.org/simple" }, extra = ["cublas", "cudart", "cufft", "cufile", "cupti", "curand", "cusolver", "cusparse", "nvjitlink", "nvrtc", "nvtx"], marker = "(sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "filelock", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "fsspec", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "jinja2", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "networkx", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-cudnn-cu13", marker = "(sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-cusparselt-cu13", marker = "(sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-nccl-cu13", marker = "(sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "nvidia-nvshmem-cu13", marker = "(sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "setuptools", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "sympy", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "triton", version = "3.8.0", source = { registry = "https://pypi.org/simple" }, marker = "(sys_platform == 'linux' and extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu') or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
+    { name = "typing-extensions", marker = "(extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu') or (extra != 'extra-11-krya-speech-speakers' and extra != 'extra-11-krya-speech-speakers-gpu')" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4b/3c/379349820e9a6e713826de3d0b88f07728541bdcabe2a3afd128871cdc4b/torch-2.14.1-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:420dbf314c180ee4b86e9bc00aee5746a7d6e5bacdd7df925af671ed393f0b2e", size = 127307099, upload-time = "2026-09-30T17:44:10.421Z" },
+    { url = "https://files.pythonhosted.org/packages/a4/3e/474930ab971e306957ec763b7df695d659179e15ccab9e7073d47ae14ce8/torch-2.14.1-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:0b13acde294b401509830d85a8906cbf2fc97425a12a66cce1d9fa13c5106a2a", size = 453998918, upload-time = "2026-09-30T17:52:45.134Z" },
+    { url = "https://files.pythonhosted.org/packages/ba/fd/c470857d0dfc5d4c94430658b3eed60fd5292b0bf596a8aae7b9fd66d674/torch-2.14.1-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:23011fe29a99b591eabb3a31a25080c62e2c2f0690a3c798744e5489dae50451", size = 554618695, upload-time = "2026-09-30T17:53:06.8Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/1a/b9648b0d228e513f69f8453ec3f90a8d436d78ff6d85a2773e539f0c07cf/torch-2.14.1-cp312-cp312-win_amd64.whl", hash = "sha256:38bee9f2a2ccfc6898172a5075e4ba52522fbe143eeb099674fc67ab390e858d", size = 124113906, upload-time = "2026-09-30T17:52:21.377Z" },
 ]
 
 [[package]]
@@ -2060,7 +2455,7 @@ name = "tqdm"
 version = "4.70.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-11-krya-speech-speakers' and extra == 'extra-11-krya-speech-speakers-gpu')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/0d/ea/b2a5bd54b28a324dae8211928b2d730b6547500342c7e6c6dea08bd0a485/tqdm-4.70.1.tar.gz", hash = "sha256:cefd0eca11b2a37a3aee776544d4f4ae913f02688135b5556b8788dfa474afc4", size = 171846, upload-time = "2026-09-11T07:25:16.601Z" }
 wheels = [
@@ -2071,9 +2466,21 @@ wheels = [
 name = "triton"
 version = "3.6.0"
 source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "sys_platform != 'emscripten' and sys_platform != 'win32'",
+]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/17/5d/08201db32823bdf77a0e2b9039540080b2e5c23a20706ddba942924ebcd6/triton-3.6.0-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:374f52c11a711fd062b4bfbb201fd9ac0a5febd28a96fb41b4a0f51dde3157f4", size = 176128243, upload-time = "2026-01-20T16:16:07.857Z" },
     { url = "https://files.pythonhosted.org/packages/ab/a8/cdf8b3e4c98132f965f88c2313a4b493266832ad47fb52f23d14d4f86bb5/triton-3.6.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:74caf5e34b66d9f3a429af689c1c7128daba1d8208df60e81106b115c00d6fca", size = 188266850, upload-time = "2026-01-20T16:00:43.041Z" },
+]
+
+[[package]]
+name = "triton"
+version = "3.8.0"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/87/07/0f8cd8e8db0472334253efdaaab3d0819fea27aa99bf0e7f1aeea4ceb5ae/triton-3.8.0-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:a9c404c69ed4a39e8ec632eaf6b9fe058a060bf98979c177f6ef666f06bb8d50", size = 226474486, upload-time = "2026-08-28T16:08:18.29Z" },
+    { url = "https://files.pythonhosted.org/packages/c1/09/b7012e5bfae67640f268aa584caa80fe1674f6b0da949046b679972c33e3/triton-3.8.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:e91ffa46d095b252248297292dd22bcbacd53a125a0c2eefbbbf74925a320bc3", size = 247972921, upload-time = "2026-08-28T15:55:53.157Z" },
 ]
 
 [[package]]

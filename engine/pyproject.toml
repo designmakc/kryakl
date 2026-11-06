@@ -8,7 +8,7 @@
 #   speakers-gpu  the same on an NVIDIA card; its torch also carries
 #                 the CUDA libraries, so it replaces gpu              ~4 GB
 #   mac           Whisper on a Mac's graphics (mlx-whisper, Apple
-#                 silicon only; src/speechpack.ts adds it to core)    size not measured
+#                 silicon only; src/speechpack.ts adds it to core)    ~800 MB (torch ~530, mlx 236, llvmlite 129; 2026-11-06)
 
 [project]
 name = "krya-speech"
