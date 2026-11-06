@@ -58,6 +58,8 @@ const APP_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>([
   'micRecording',
   'talkOpen',
   'toggleCall',
+  'summarize',
+  'cancelSummary',
   'reportProblem',
   'openLogs',
   // The keyboard thread keeps every key from Windows while a key field waits: only the settings may ask.

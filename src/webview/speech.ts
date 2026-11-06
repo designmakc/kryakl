@@ -7,11 +7,12 @@
 import { cardText, mainCard, nvidiaCard, shortCpu } from '../hardware'
 import { levelName, sizeText, t, type Key } from '../i18n'
 import type { AppView, Choice, Feature, SpeechHealth, SpeechPart, SpeechResult } from '../protocol'
+import type { SummaryTemplate } from '../summary'
 import { estimateText, minutes, MODELS, seconds, type Basis } from '../speechplan'
 import { el, icon } from './dom'
 import { aside, bad, bar, btn, card, chip, grp, ib, link, linkBtn, post, radioRow, recommended, row, seg, toggleKnob } from './ui'
 
-export type Source = 'file' | 'mic' | 'meet' | 'note'
+export type Source = 'file' | 'mic' | 'meet' | 'system' | 'note'
 export type Stage = '' | 'decode' | 'words' | 'speakers' | 'save'
 
 /** A line of the engine's library (store.py LIST_COLUMNS), with the found words when searched. */
@@ -27,6 +28,10 @@ export type Row = {
   error: string
   language: string
   speakers_status: string
+  /** 1 when the transcript has a summary. */
+  summarized?: number
+  /** The call program's name, when the engine gives it with the row. */
+  app?: string
   snippet?: string
 }
 
@@ -47,7 +52,14 @@ export type Transcript = {
   /** The words' times are kept: speakers can be split later without recognizing the text again. */
   hasWords?: boolean
   edited?: string
+  /** The call program recorded (Zoom…), pieces of the recording that never reached the engine. */
+  app?: string
+  lost?: number
+  summary?: SummaryRecord
 }
+
+/** A summary as the engine keeps it (PUT /transcripts/{id}/summary): Markdown with `[mm:ss]` topics. */
+export type SummaryRecord = { text: string; template: SummaryTemplate; mine: boolean; language: string | null; made: string; edited?: string }
 
 /** The engine's own settings (engine/settings.py); the key itself never comes back, only whether there is one. */
 export type EngineSettings = {

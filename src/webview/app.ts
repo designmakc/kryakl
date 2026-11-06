@@ -21,7 +21,7 @@ import { DOUBLE_MS, HotkeyRecorder, hotkeyLabel, onMac, type Recorded } from '..
 import type { AppTab, AppView, DiffPart, Feature, KeyboardLayout, MistakeEntry, SavedWord, Settings, StorageId, StoragePart, StorageView, ToView, TutorHost } from '../protocol'
 import { LANGUAGES } from '../languages'
 import { translationAdvice, type LevelFit } from '../hardware'
-import { COPY_TWICE_KEYS, DEFAULTS, EDIT_OWN_MAX, EDIT_STYLES, keptForm, myLanguages, RATES, SWITCH_SOUNDS, TALK_ABOUT_MAX, TALK_LEVELS, type AppRule, type LlmModel, type TalkLevel, type ThemeMode, type TranslationLevel } from '../settings'
+import { COPY_TWICE_KEYS, DEFAULTS, EDIT_OWN_MAX, EDIT_STYLES, keptForm, myLanguages, RATES, SUMMARY_OWN_MAX, SWITCH_SOUNDS, TALK_ABOUT_MAX, TALK_LEVELS, type AppRule, type LlmModel, type TalkLevel, type ThemeMode, type TranslationLevel } from '../settings'
 import type { AppPart } from '../typist'
 // app.ts has a languageName of its own (a code's English name); the interface's is langName here.
 import { formatDate, languageName as langName, levelName, setUiLanguage, t, uiLanguage, type Key } from '../i18n'
@@ -38,6 +38,7 @@ import { recommend, recommendedModels } from '../setup'
 import { resetSetup, setupNodes } from './setup'
 import { aboutOf, api, computerRows, diarizationOf, engineRows, engineSettings, fault, forgetEngine, gpuRow, hasPart, installed, onRedraw, pickKb, preferRow, running, saveEngine, size as speechSize, speakerRows, speechChoiceRows, testOffer, toast } from './speech'
 import { TOPICS } from '../topics'
+import type { SummaryTemplate } from '../summary'
 import { isBeta, versionText } from '../version'
 import { withMarks } from './marks'
 import { backToList, enterTranscripts, leaveTranscripts, newRows, openTranscript, setTranscriptHooks, transcriptOpen, transcriptsBody } from './transcripts'
@@ -2524,6 +2525,7 @@ function recordingsPage(v: AppView): HTMLElement[] {
     testOffer(v),
     installed(v) ? callRow(v) : null,
     keyRow('meetingKey', t('call.record'), t('call.keyNote'), !v.speech.keysOk.meeting),
+    ...summarySettings(v),
     ...(running(v) ? [grp(t('transcribe.new')), ...newRows(v)] : []),
     grp(t('transcribe.setup')),
     meetCard(v),
@@ -2538,6 +2540,50 @@ function callRow(v: AppView): HTMLElement {
   const on = v.call.state !== 'idle'
   const label = on ? t('call.stop') : t('call.record')
   return row(t('call.record'), [t('call.recordNote')], btn([el('i', { class: on ? 'dot pulse' : 'dot' }), label], () => post({ type: 'toggleCall' }), on ? 'primary' : 'rec'))
+}
+
+/** What a call's summary does by itself: made right away or not, the template, the language. */
+function summarySettings(v: AppView): HTMLElement[] {
+  const s = v.settings
+  const names: [SummaryTemplate, string][] = [
+    ['general', t('sum.tGeneral')],
+    ['standup', t('sum.tStandup')],
+    ['interview', t('sum.tInterview')],
+    ['lecture', t('sum.tLecture')],
+    ['own', t('sum.tOwn')],
+  ]
+  return [
+    grp(t('sum.title')),
+    toggleCard('sparkles', t('sum.setAuto'), s.callSummaryAuto, callSummaryAuto => save({ callSummaryAuto }), t('sum.setAutoNote')),
+    card('file-text', t('sum.setTemplate'), [t('sum.setTemplateNote')], select(s.callTemplate, names, callTemplate => save({ callTemplate }))),
+    s.callTemplate === 'own' ? el('div', { class: 'row add' }, el('div', { class: 'l' }, t('sum.tOwn')), summaryOwnField(s.callOwn)) : null,
+    toggleCard('languages', t('sum.mine'), s.callSummaryMine, callSummaryMine => save({ callSummaryMine }), t('sum.setMineNote')),
+  ].filter((n): n is HTMLElement => n !== null)
+}
+
+let summaryOwnTimer: number | undefined
+
+function summaryOwnField(value: string): HTMLTextAreaElement {
+  const field = el('textarea', {
+    class: 'field report about',
+    rows: 3,
+    maxlength: SUMMARY_OWN_MAX,
+    placeholder: t('sum.ownPlaceholder'),
+    'aria-label': t('sum.tOwn'),
+    'data-live': 'callOwn',
+  })
+  field.value = value
+  const store = () => {
+    window.clearTimeout(summaryOwnTimer)
+    summaryOwnTimer = undefined
+    if (field.value !== view?.settings.callOwn) save({ callOwn: field.value })
+  }
+  field.addEventListener('input', () => {
+    window.clearTimeout(summaryOwnTimer)
+    summaryOwnTimer = window.setTimeout(store, 600)
+  })
+  field.addEventListener('blur', () => summaryOwnTimer !== undefined && store())
+  return field
 }
 
 /** Windows' layouts in the order the keys go through them: each moved earlier or later, left out, another added. */

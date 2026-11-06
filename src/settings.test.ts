@@ -21,6 +21,14 @@ describe('normalize', () => {
     expect(normalize({ dictationPanel: 'no' }).dictationPanel).toBe(true)
   })
 
+  test('makes a call summary by itself with the general template, an unknown template and a long instruction are tamed', () => {
+    const fresh = normalize({})
+    expect([fresh.callSummaryAuto, fresh.callTemplate, fresh.callOwn, fresh.callSummaryMine]).toEqual([true, 'general', '', false])
+    const odd = normalize({ callTemplate: 'weekly', callOwn: 'x'.repeat(900), callSummaryAuto: false })
+    expect([odd.callTemplate, odd.callOwn.length, odd.callSummaryAuto]).toEqual(['general', 500, false])
+    expect(normalize({ callTemplate: 'lecture' }).callTemplate).toBe('lecture')
+  })
+
   test('keeps text editing off until it is turned on, with a known style and a short own instruction', () => {
     expect(normalize({})).toMatchObject({ dictateEdit: false, dictateEditStyle: 'clean', dictateEditOwn: '' })
     expect(normalize({ dictateEdit: true, dictateEditStyle: 'aiTask' })).toMatchObject({ dictateEdit: true, dictateEditStyle: 'aiTask' })

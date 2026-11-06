@@ -43,6 +43,8 @@ import { callAllowed, messageAllowed, openable, pageOf, patchAllowed, type Page 
 import { callApp, callTitle, runningProcessNames } from './callapps'
 import { CallCapture } from './capture'
 import { createChecker, type Checker } from './checker'
+import { createSummarizer, type SummaryTemplate } from './summary'
+import { autoSummaryWanted, summaryInput, type SummarySource } from './summaryflow'
 import { createEditor, type Editor } from './dictedit'
 import { openInChrome } from './chrome'
 import { DoubleCopy } from './clipboard'
@@ -82,7 +84,7 @@ import { placeByTray, placeNear, resize, type Point } from './placement'
 import type { AppTab, AppView, BusyPart, CardKind, CardState, CheckResult, DictationMode, DictionaryStatus, GlossMissing, HostCall, HostVoice, Refused, StorageId, StoragePart, StorageView, TalkWindowView, TextResult, ToHost, ToView, TranslationState, TrayCommand, TrayView, ViewConfig } from './protocol'
 import { draftsIn, englishHtml, textOutHtml, translationHtml } from './render'
 import { issueUrl, mailUrl, makeReport, namesHere, reportName, type ReportFacts } from './report'
-import { addKept, CARD_WIDTH, DEFAULTS, keptForm, LEVEL_NAMES, myLanguages, normalize, TARGET, type LlmModel, type Settings, type TranslationLevel } from './settings'
+import { addKept, CARD_WIDTH, DEFAULTS, keptForm, LEVEL_NAMES, myLanguages, normalize, SUMMARY_OWN_MAX, TARGET, type LlmModel, type Settings, type TranslationLevel } from './settings'
 import { Speaker, listHostVoices } from './speech'
 import { SpeechHost } from './speechhost'
 import { MODELS as SPEECH_MODELS } from './speechplan'
@@ -1296,6 +1298,7 @@ function appView(): AppView {
     foreignKeys,
     speech: speech.view(speechKeysOk),
     call: { state: capture?.state ?? 'idle', seconds: capture?.seconds ?? 0 },
+    summaries: Object.fromEntries(summaries),
     dictation: { recent: dictationLog.list(10) },
   }
 }
@@ -1773,6 +1776,12 @@ function onMessage(message: ToHost, page: Page): void {
       return
     case 'toggleCall':
       toggleCall()
+      return
+    case 'summarize':
+      void makeSummary(message.id, { template: message.template, own: message.own, mine: message.mine })
+      return
+    case 'cancelSummary':
+      summaryAborts.get(message.id)?.abort()
       return
     case 'talkStart':
       // A topic starts a new talk: the one going on, if any, is put away first.
@@ -2332,6 +2341,7 @@ async function translateTextCard(id: number, text: string, from: string, to: str
 /** Check my English (the one local model, which translates too, on llama.cpp's server), and the mistakes it found. */
 let llmFiles: LlmFiles
 let checker: Checker
+let summarizer: ReturnType<typeof createSummarizer>
 let editor: Editor
 let mistakes: MistakeStore
 
@@ -3216,8 +3226,81 @@ export async function startCall(): Promise<void> {
 }
 
 /** Stops and saves the call: its transcript's id once the engine has it, null when there was none. */
-export function stopCall(): Promise<string | null> {
-  return capture?.stop() ?? Promise.resolve(null)
+export async function stopCall(): Promise<string | null> {
+  const id = (await capture?.stop()) ?? null
+  if (id) void summaryWhenDone(id)
+  return id
+}
+
+// ---------------------------------------------------------------- a call's summary
+
+/** Summaries being made, by transcript id (AppView.summaries): a failed one stays, with its error, until it is tried again. */
+const summaries = new Map<string, { part: number; parts: number; started: number; error?: string }>()
+const summaryAborts = new Map<string, AbortController>()
+const SUMMARY_POLL_MS = 5000
+/** A call's transcript is waited for this long (a very long recording on the processor). */
+const SUMMARY_WAIT_MS = 6 * 3600_000
+
+/**
+ * Makes a transcript's summary with the person's local model and keeps it in the
+ * engine (PUT /transcripts/{id}/summary); the page shows `summaries` meanwhile
+ * and reads the summary back when the entry is gone. Nothing of the text is logged.
+ */
+async function makeSummary(id: string, o: { template: SummaryTemplate; own?: string; mine: boolean }): Promise<void> {
+  if (!speech || (summaries.has(id) && !summaries.get(id)!.error)) return
+  const abort = new AbortController()
+  summaryAborts.set(id, abort)
+  summaries.set(id, { part: 0, parts: 1, started: Date.now() })
+  postApp()
+  try {
+    const got = await speech.call<{ transcript: (SummarySource & { id: string }) | null }>('GET', `/transcripts/${encodeURIComponent(id)}`)
+    if (!got.ok || !got.data.transcript) throw new Error('the transcript is not there')
+    const input = summaryInput(got.data.transcript)
+    if (!input.lines.length) throw new Error('the transcript has no words')
+    const done = await summarizer.summarize(
+      input,
+      { template: o.template, own: o.own?.slice(0, SUMMARY_OWN_MAX), mine: o.mine, native: settings.native },
+      p => {
+        summaries.set(id, { ...p, started: summaries.get(id)?.started ?? Date.now() })
+        postApp()
+      },
+      abort.signal,
+    )
+    const saved = await speech.call('PUT', `/transcripts/${encodeURIComponent(id)}/summary`, { summary: done })
+    if (!saved.ok) throw new Error(saved.error)
+    summaries.delete(id)
+    log(`summary: made (${o.template}, ${input.lines.length} lines)`)
+  } catch (error) {
+    if (abort.signal.aborted) summaries.delete(id)
+    else {
+      const why = error instanceof Error ? error.message : String(error)
+      log(`summary: failed: ${why}`)
+      summaries.set(id, { part: 0, parts: 1, started: Date.now(), error: why })
+    }
+  } finally {
+    summaryAborts.delete(id)
+    postApp()
+  }
+}
+
+/** After a call is saved: its summary is made once the engine has transcribed it, when the person wants that and the model is here. */
+async function summaryWhenDone(id: string): Promise<void> {
+  const until = Date.now() + SUMMARY_WAIT_MS
+  while (Date.now() < until && !quitting) {
+    await new Promise(resolve => setTimeout(resolve, SUMMARY_POLL_MS))
+    const got = await speech?.call<{ row: { status: string } }>('GET', `/transcripts/${encodeURIComponent(id)}`)
+    if (!got?.ok) {
+      // Gone (deleted) or the engine is down for good: nothing to wait for.
+      if (got && got.status === 404) return
+      continue
+    }
+    const status = got.data.row.status
+    if (status === 'failed') return
+    if (status !== 'done') continue
+    if (autoSummaryWanted(settings.callSummaryAuto, llmFiles.state(settings.model).status === 'ready'))
+      void makeSummary(id, { template: settings.callTemplate, own: settings.callOwn, mine: settings.callSummaryMine })
+    return
+  }
 }
 
 /** Quitting while a call is recorded asks first; stopped, it is saved before Kryakl goes. */
@@ -3776,6 +3859,7 @@ function start(): void {
   llm = createLlmTranslators({ files: llmFiles, onTimed: modelTimed })
   setInterval(watchModel, FULL_SCREEN_LOOK_MS)
   checker = createChecker({ files: llmFiles, model: () => settings.model, onTimed: modelTimed })
+  summarizer = createSummarizer({ files: llmFiles, model: () => settings.model })
   editor = createEditor({ files: llmFiles, model: () => settings.model })
   mistakes = new MistakeStore(path.join(userDir(), 'mistakes.json'))
   // Talk: the same model checks each line and the duck answers it (talk.ts, duck.ts).

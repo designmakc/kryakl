@@ -150,4 +150,10 @@ describe('the call recording\'s panel', () => {
     expect(messageAllowed('app', 'toggleCall')).toBe(true)
     for (const page of ['card', 'tray', 'dictation', 'talk', 'capture'] as const) expect(messageAllowed(page, 'toggleCall'), page).toBe(false)
   })
+  test('only the app window makes or cancels a summary', () => {
+    for (const type of ['summarize', 'cancelSummary'] as const) {
+      expect(messageAllowed('app', type)).toBe(true)
+      for (const page of ['card', 'tray', 'dictation', 'talk', 'capture'] as const) expect(messageAllowed(page, type), page).toBe(false)
+    }
+  })
 })

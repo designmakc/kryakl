@@ -1278,6 +1278,7 @@
     "kb.rivals": { one: "{names} is running: turn off its layout switching, or words get fixed twice.", other: "{names} are running: turn off its layout switching, or words get fixed twice." },
     "kb.elevated": "{app} runs as administrator: Windows keeps its keys from Kryakl, so nothing is fixed or switched there.",
     "kb.trouble": "The keyboard helper: {trouble}",
+    "kb.windowsOnly": "The keyboard layout features (switching and fixing) are Windows-only for now.",
     "kb.privacy": "Kryakl reads your keystrokes only to fix the layout, and sends nothing anywhere. It keeps only the words it learned, on this computer.",
     "words.noSuch": "No such word.",
     "words.empty": "No words yet. Click a word in a card and tap its star.",
@@ -1469,7 +1470,69 @@
     "act.general": "General",
     "act.notChosen": "not chosen",
     "act.newWords": "New words",
-    "ui.forget": "Forget"
+    "ui.forget": "Forget",
+    // The call recording (capture.ts): all of the computer's sound and the microphone, in a small panel.
+    "call.title": "Call {when}",
+    "call.record": "Record a call",
+    "call.stop": "Stop recording the call",
+    "call.recordNote": "Your microphone and all of the computer\u2019s sound, until you stop; then it is transcribed",
+    "call.keyNote": "Starts and stops a call recording",
+    "call.panel": "Call",
+    "call.allSound": "All of the computer\u2019s sound",
+    "call.pause": "Pause",
+    "call.resume": "Resume",
+    "call.stopShort": "Stop",
+    "call.paused": "Paused",
+    "call.hide": "Hide: the recording goes on",
+    "call.starting": "Starting\u2026",
+    "call.saving": "Saving\u2026",
+    "call.noMic": "Microphone unavailable: recording the others only",
+    "call.silent": "I don\u2019t hear the others: check the sound source",
+    "call.failed": "Could not record the computer\u2019s sound: {why}",
+    "call.noSound": "the system gave no sound",
+    "call.openSettings": "Open settings",
+    "call.consentAsk": "Many countries require the other people\u2019s consent to record a call",
+    "call.consentDetail": "Tell them you are recording. Kryakl says this once.",
+    "call.consentRecord": "Record",
+    "call.quitAsk": "A call is being recorded. Stop and save it?",
+    "call.quitStop": "Stop and save",
+    "call.screenAsk": "Kryakl needs permission to record the computer\u2019s sound",
+    "call.screenDetail": "Windows gives a program the computer\u2019s sound only with \u201CScreen & System Audio Recording\u201D. Kryakl keeps the sound alone and drops the picture at once. Turn Kryakl on there, then start the recording again.",
+    "keys.useMeeting": "recording a call",
+    "sum.title": "Summary",
+    "sum.make": "Make a summary",
+    "sum.again": "Make again",
+    "sum.tGeneral": "General",
+    "sum.tStandup": "Stand-up",
+    "sum.tInterview": "Interview",
+    "sum.tLecture": "Lecture or webinar",
+    "sum.tOwn": "My own instruction",
+    "sum.ownPlaceholder": "What the summary should say (up to 500 characters)",
+    "sum.mine": "In my language",
+    "sum.starting": "Making the summary\u2026",
+    "sum.working": "Making the summary: part {part} of {parts}",
+    "sum.joining": "Making the summary: putting the parts together",
+    "sum.passed": "{time} passed",
+    "sum.left": "about {time} left",
+    "sum.failed": "Could not make the summary",
+    "sum.failedNote": "The transcript is untouched.",
+    "sum.needModel": "The summary needs the {name} model ({size})",
+    "sum.needModelNote": "It is downloaded once and runs on this computer.",
+    "sum.downloading": "Downloading the model\u2026",
+    "sum.edit": "Edit",
+    "sum.editHint": "Saved when you leave the field",
+    "sum.done": "Done",
+    "sum.replaceAsk": "Replace the corrected summary?",
+    "sum.replace": "Replace",
+    "sum.copied": "The summary is copied",
+    "sum.lost": "Lost pieces of the recording: {n} (10 s each)",
+    "sum.seek": "Listen from here",
+    "sum.setAuto": "Make the summary right away",
+    "sum.setAutoNote": "After a recorded call is transcribed, if the model is downloaded",
+    "sum.setTemplate": "Summary template",
+    "sum.setTemplateNote": "For summaries made by themselves; each page can pick another",
+    "sum.setMineNote": "Otherwise it is written in the language of the meeting",
+    "tr.srcAllSound": "All sound"
   };
 
   // src/i18n/ru.ts
@@ -2669,6 +2732,7 @@
     "kb.rivals": { one: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u0430 {names}: \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0432 \u043D\u0435\u0439 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u043D\u0430\u0447\u0435 \u0441\u043B\u043E\u0432\u0430 \u0431\u0443\u0434\u0443\u0442 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C\u0441\u044F \u0434\u0432\u0430\u0436\u0434\u044B.", few: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u044B {names}: \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0432 \u043D\u0438\u0445 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u043D\u0430\u0447\u0435 \u0441\u043B\u043E\u0432\u0430 \u0431\u0443\u0434\u0443\u0442 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C\u0441\u044F \u0434\u0432\u0430\u0436\u0434\u044B.", many: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u044B {names}: \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0432 \u043D\u0438\u0445 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u043D\u0430\u0447\u0435 \u0441\u043B\u043E\u0432\u0430 \u0431\u0443\u0434\u0443\u0442 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C\u0441\u044F \u0434\u0432\u0430\u0436\u0434\u044B.", other: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u044B {names}: \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0432 \u043D\u0438\u0445 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u043D\u0430\u0447\u0435 \u0441\u043B\u043E\u0432\u0430 \u0431\u0443\u0434\u0443\u0442 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C\u0441\u044F \u0434\u0432\u0430\u0436\u0434\u044B." },
     "kb.elevated": "{app} \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043E\u0442 \u0438\u043C\u0435\u043D\u0438 \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430: Windows \u043D\u0435 \u0434\u0430\u0451\u0442 \u041A\u0440\u044F\u043A\u043B\u0443 \u0435\u0451 \u043A\u043B\u0430\u0432\u0438\u0448, \u043F\u043E\u044D\u0442\u043E\u043C\u0443 \u0442\u0430\u043C \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u0438 \u043D\u0435 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0435\u0442\u0441\u044F.",
     "kb.trouble": "\u041F\u043E\u043C\u043E\u0449\u043D\u0438\u043A \u043A\u043B\u0430\u0432\u0438\u0430\u0442\u0443\u0440\u044B: {trouble}",
+    "kb.windowsOnly": "\u041F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u0438 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438 \u043F\u043E\u043A\u0430 \u0440\u0430\u0431\u043E\u0442\u0430\u044E\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0432 Windows.",
     "kb.privacy": "\u041A\u0440\u044F\u043A\u043B \u0447\u0438\u0442\u0430\u0435\u0442 \u043D\u0430\u0436\u0430\u0442\u0438\u044F \u043A\u043B\u0430\u0432\u0438\u0448 \u0442\u043E\u043B\u044C\u043A\u043E \u0434\u043B\u044F \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0438 \u0438 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0438\u043A\u0443\u0434\u0430 \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442. \u041E\u043D \u0445\u0440\u0430\u043D\u0438\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0432\u044B\u0443\u0447\u0435\u043D\u043D\u044B\u0435 \u0441\u043B\u043E\u0432\u0430, \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435.",
     "words.noSuch": "\u0422\u0430\u043A\u043E\u0433\u043E \u0441\u043B\u043E\u0432\u0430 \u043D\u0435\u0442.",
     "words.empty": "\u0421\u043B\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u0429\u0451\u043B\u043A\u043D\u0438\u0442\u0435 \u0441\u043B\u043E\u0432\u043E \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u0438 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u0435\u0433\u043E \u0437\u0432\u0451\u0437\u0434\u043E\u0447\u043A\u0443.",
@@ -2860,7 +2924,68 @@
     "act.general": "\u041E\u0431\u0449\u0435\u0435",
     "act.notChosen": "\u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u0430",
     "act.newWords": "\u041D\u043E\u0432\u044B\u0435 \u0441\u043B\u043E\u0432\u0430",
-    "ui.forget": "\u0417\u0430\u0431\u044B\u0442\u044C"
+    "ui.forget": "\u0417\u0430\u0431\u044B\u0442\u044C",
+    "call.title": "\u0421\u043E\u0437\u0432\u043E\u043D {when}",
+    "call.record": "\u0417\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0441\u043E\u0437\u0432\u043E\u043D",
+    "call.stop": "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0437\u0430\u043F\u0438\u0441\u044C \u0441\u043E\u0437\u0432\u043E\u043D\u0430",
+    "call.recordNote": "\u0412\u0430\u0448 \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D \u0438 \u0432\u0435\u0441\u044C \u0437\u0432\u0443\u043A \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0430, \u043F\u043E\u043A\u0430 \u043D\u0435 \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435; \u043F\u043E\u0442\u043E\u043C \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u044B\u0432\u0430\u0435\u0442\u0441\u044F",
+    "call.keyNote": "\u041D\u0430\u0447\u0438\u043D\u0430\u0435\u0442 \u0438 \u043E\u0441\u0442\u0430\u043D\u0430\u0432\u043B\u0438\u0432\u0430\u0435\u0442 \u0437\u0430\u043F\u0438\u0441\u044C \u0441\u043E\u0437\u0432\u043E\u043D\u0430",
+    "call.panel": "\u0421\u043E\u0437\u0432\u043E\u043D",
+    "call.allSound": "\u0412\u0435\u0441\u044C \u0437\u0432\u0443\u043A \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0430",
+    "call.pause": "\u041F\u0430\u0443\u0437\u0430",
+    "call.resume": "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C",
+    "call.stopShort": "\u0421\u0442\u043E\u043F",
+    "call.paused": "\u041F\u0430\u0443\u0437\u0430",
+    "call.hide": "\u0421\u043A\u0440\u044B\u0442\u044C: \u0437\u0430\u043F\u0438\u0441\u044C \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0435\u0442\u0441\u044F",
+    "call.starting": "\u041D\u0430\u0447\u0438\u043D\u0430\u044E\u2026",
+    "call.saving": "\u0421\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u2026",
+    "call.noMic": "\u041C\u0438\u043A\u0440\u043E\u0444\u043E\u043D \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D \u2014 \u043F\u0438\u0448\u0443 \u0442\u043E\u043B\u044C\u043A\u043E \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u043E\u0432",
+    "call.silent": "\u041D\u0435 \u0441\u043B\u044B\u0448\u0443 \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u043E\u0432: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0437\u0432\u0443\u043A\u0430",
+    "call.failed": "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0437\u0432\u0443\u043A \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0430: {why}",
+    "call.noSound": "\u0441\u0438\u0441\u0442\u0435\u043C\u0430 \u043D\u0435 \u0434\u0430\u043B\u0430 \u0437\u0432\u0443\u043A\u0430",
+    "call.openSettings": "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438",
+    "call.consentAsk": "\u0412\u043E \u043C\u043D\u043E\u0433\u0438\u0445 \u0441\u0442\u0440\u0430\u043D\u0430\u0445 \u043D\u0443\u0436\u043D\u043E \u0441\u043E\u0433\u043B\u0430\u0441\u0438\u0435 \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043D\u0438\u043A\u043E\u0432 \u043D\u0430 \u0437\u0430\u043F\u0438\u0441\u044C",
+    "call.consentDetail": "\u0421\u043A\u0430\u0436\u0438\u0442\u0435 \u0438\u043C, \u0447\u0442\u043E \u0437\u0430\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0442\u0435. \u041A\u0440\u044F\u043A\u043B \u043D\u0430\u043F\u043E\u043C\u0438\u043D\u0430\u0435\u0442 \u043E\u0431 \u044D\u0442\u043E\u043C \u043E\u0434\u0438\u043D \u0440\u0430\u0437.",
+    "call.consentRecord": "\u0417\u0430\u043F\u0438\u0441\u0430\u0442\u044C",
+    "call.quitAsk": "\u0418\u0434\u0451\u0442 \u0437\u0430\u043F\u0438\u0441\u044C \u0441\u043E\u0437\u0432\u043E\u043D\u0430. \u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C?",
+    "call.quitStop": "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C",
+    "call.screenAsk": "\u041A\u0440\u044F\u043A\u043B\u0443 \u043D\u0443\u0436\u043D\u043E \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043D\u0438\u0435 \u0437\u0430\u043F\u0438\u0441\u044B\u0432\u0430\u0442\u044C \u0437\u0432\u0443\u043A \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0430",
+    "call.screenDetail": "Windows \u0434\u0430\u0451\u0442 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0435 \u0437\u0432\u0443\u043A \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0430 \u0442\u043E\u043B\u044C\u043A\u043E \u0441 \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043D\u0438\u0435\u043C \xAB\u0417\u0430\u043F\u0438\u0441\u044C \u044D\u043A\u0440\u0430\u043D\u0430 \u0438 \u0441\u0438\u0441\u0442\u0435\u043C\u043D\u043E\u0433\u043E \u0437\u0432\u0443\u043A\u0430\xBB. \u041A\u0440\u044F\u043A\u043B \u0431\u0435\u0440\u0451\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0437\u0432\u0443\u043A, \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u043E\u0442\u0431\u0440\u0430\u0441\u044B\u0432\u0430\u0435\u0442 \u0441\u0440\u0430\u0437\u0443. \u0412\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0442\u0430\u043C \u041A\u0440\u044F\u043A\u043B \u0438 \u043D\u0430\u0447\u043D\u0438\u0442\u0435 \u0437\u0430\u043F\u0438\u0441\u044C \u0441\u043D\u043E\u0432\u0430.",
+    "keys.useMeeting": "\u0437\u0430\u043F\u0438\u0441\u0438 \u0441\u043E\u0437\u0432\u043E\u043D\u0430",
+    "sum.title": "\u0418\u0442\u043E\u0433",
+    "sum.make": "\u0421\u0434\u0435\u043B\u0430\u0442\u044C \u0438\u0442\u043E\u0433",
+    "sum.again": "\u041F\u0435\u0440\u0435\u0441\u043E\u0437\u0434\u0430\u0442\u044C",
+    "sum.tGeneral": "\u041E\u0431\u0449\u0438\u0439",
+    "sum.tStandup": "\u041F\u043B\u0430\u043D\u0451\u0440\u043A\u0430",
+    "sum.tInterview": "\u0418\u043D\u0442\u0435\u0440\u0432\u044C\u044E",
+    "sum.tLecture": "\u041B\u0435\u043A\u0446\u0438\u044F \u0438\u043B\u0438 \u0432\u0435\u0431\u0438\u043D\u0430\u0440",
+    "sum.tOwn": "\u0421\u0432\u043E\u044F \u0438\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044F",
+    "sum.ownPlaceholder": "\u0427\u0442\u043E \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u0432 \u0438\u0442\u043E\u0433\u0435 (\u0434\u043E 500 \u0437\u043D\u0430\u043A\u043E\u0432)",
+    "sum.mine": "\u041D\u0430 \u043C\u043E\u0451\u043C \u044F\u0437\u044B\u043A\u0435",
+    "sum.starting": "\u0414\u0435\u043B\u0430\u044E \u0438\u0442\u043E\u0433\u2026",
+    "sum.working": "\u0414\u0435\u043B\u0430\u044E \u0438\u0442\u043E\u0433: \u0447\u0430\u0441\u0442\u044C {part} \u0438\u0437 {parts}",
+    "sum.joining": "\u0414\u0435\u043B\u0430\u044E \u0438\u0442\u043E\u0433: \u0441\u043E\u0431\u0438\u0440\u0430\u044E \u0447\u0430\u0441\u0442\u0438",
+    "sum.passed": "\u043F\u0440\u043E\u0448\u043B\u043E {time}",
+    "sum.left": "\u043E\u0441\u0442\u0430\u043B\u043E\u0441\u044C \u2248{time}",
+    "sum.failed": "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u0434\u0435\u043B\u0430\u0442\u044C \u0438\u0442\u043E\u0433",
+    "sum.failedNote": "\u0420\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0430 \u043D\u0435 \u0442\u0440\u043E\u043D\u0443\u0442\u0430.",
+    "sum.needModel": "\u0414\u043B\u044F \u0438\u0442\u043E\u0433\u0430 \u043D\u0443\u0436\u043D\u0430 \u043C\u043E\u0434\u0435\u043B\u044C {name} ({size})",
+    "sum.needModelNote": "\u0421\u043A\u0430\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043E\u0434\u0438\u043D \u0440\u0430\u0437 \u0438 \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435.",
+    "sum.downloading": "\u0421\u043A\u0430\u0447\u0438\u0432\u0430\u044E \u043C\u043E\u0434\u0435\u043B\u044C\u2026",
+    "sum.edit": "\u041F\u0440\u0430\u0432\u0438\u0442\u044C",
+    "sum.editHint": "\u0421\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u0442\u0441\u044F, \u043A\u043E\u0433\u0434\u0430 \u0432\u044B \u0432\u044B\u0445\u043E\u0434\u0438\u0442\u0435 \u0438\u0437 \u043F\u043E\u043B\u044F",
+    "sum.done": "\u0413\u043E\u0442\u043E\u0432\u043E",
+    "sum.replaceAsk": "\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044B\u0439 \u0438\u0442\u043E\u0433?",
+    "sum.replace": "\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C",
+    "sum.copied": "\u0418\u0442\u043E\u0433 \u0441\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D",
+    "sum.lost": "\u041F\u043E\u0442\u0435\u0440\u044F\u043D\u043E \u043A\u0443\u0441\u043A\u043E\u0432 \u0437\u0430\u043F\u0438\u0441\u0438: {n} (\u043F\u043E 10 \u0441)",
+    "sum.seek": "\u041F\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C \u0441 \u044D\u0442\u043E\u0433\u043E \u043C\u0435\u0441\u0442\u0430",
+    "sum.setAuto": "\u0414\u0435\u043B\u0430\u0442\u044C \u0438\u0442\u043E\u0433 \u0441\u0440\u0430\u0437\u0443",
+    "sum.setAutoNote": "\u041F\u043E\u0441\u043B\u0435 \u0440\u0430\u0441\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u043E\u0433\u043E \u0441\u043E\u0437\u0432\u043E\u043D\u0430, \u0435\u0441\u043B\u0438 \u043C\u043E\u0434\u0435\u043B\u044C \u0441\u043A\u0430\u0447\u0430\u043D\u0430",
+    "sum.setTemplate": "\u0428\u0430\u0431\u043B\u043E\u043D \u0438\u0442\u043E\u0433\u0430",
+    "sum.setTemplateNote": "\u0414\u043B\u044F \u0438\u0442\u043E\u0433\u043E\u0432, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0434\u0435\u043B\u0430\u044E\u0442\u0441\u044F \u0441\u0430\u043C\u0438; \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 \u043C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u0434\u0440\u0443\u0433\u043E\u0439",
+    "sum.setMineNote": "\u0418\u043D\u0430\u0447\u0435 \u043E\u043D \u043F\u0438\u0448\u0435\u0442\u0441\u044F \u043D\u0430 \u044F\u0437\u044B\u043A\u0435 \u0432\u0441\u0442\u0440\u0435\u0447\u0438",
+    "tr.srcAllSound": "\u0412\u0435\u0441\u044C \u0437\u0432\u0443\u043A"
   };
 
   // src/i18n/uk.ts
@@ -4060,6 +4185,7 @@
     "kb.rivals": { one: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u043E {names}: \u0432\u0438\u043C\u043A\u043D\u0456\u0442\u044C \u0443 \u043D\u0456\u0439 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438, \u0456\u043D\u0430\u043A\u0448\u0435 \u0441\u043B\u043E\u0432\u0430 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438\u043C\u0443\u0442\u044C\u0441\u044F \u0434\u0432\u0456\u0447\u0456.", few: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u043E {names}: \u0432\u0438\u043C\u043A\u043D\u0456\u0442\u044C \u0443 \u043D\u0438\u0445 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438, \u0456\u043D\u0430\u043A\u0448\u0435 \u0441\u043B\u043E\u0432\u0430 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438\u043C\u0443\u0442\u044C\u0441\u044F \u0434\u0432\u0456\u0447\u0456.", many: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u043E {names}: \u0432\u0438\u043C\u043A\u043D\u0456\u0442\u044C \u0443 \u043D\u0438\u0445 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438, \u0456\u043D\u0430\u043A\u0448\u0435 \u0441\u043B\u043E\u0432\u0430 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438\u043C\u0443\u0442\u044C\u0441\u044F \u0434\u0432\u0456\u0447\u0456.", other: "\u0417\u0430\u043F\u0443\u0449\u0435\u043D\u043E {names}: \u0432\u0438\u043C\u043A\u043D\u0456\u0442\u044C \u0443 \u043D\u0438\u0445 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438, \u0456\u043D\u0430\u043A\u0448\u0435 \u0441\u043B\u043E\u0432\u0430 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u0438\u043C\u0443\u0442\u044C\u0441\u044F \u0434\u0432\u0456\u0447\u0456." },
     "kb.elevated": "{app} \u043F\u0440\u0430\u0446\u044E\u0454 \u0432\u0456\u0434 \u0456\u043C\u0435\u043D\u0456 \u0430\u0434\u043C\u0456\u043D\u0456\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430: Windows \u043D\u0435 \u0434\u0430\u0454 \u041A\u0440\u044F\u043A\u043B\u0443 \u0457\u0457 \u043A\u043B\u0430\u0432\u0456\u0448, \u0442\u043E\u0436 \u0442\u0430\u043C \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0435 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u044F\u0454\u0442\u044C\u0441\u044F \u0439 \u043D\u0435 \u043F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u0454\u0442\u044C\u0441\u044F.",
     "kb.trouble": "\u041F\u043E\u043C\u0456\u0447\u043D\u0438\u043A \u043A\u043B\u0430\u0432\u0456\u0430\u0442\u0443\u0440\u0438: {trouble}",
+    "kb.windowsOnly": "\u041F\u0435\u0440\u0435\u043C\u0438\u043A\u0430\u043D\u043D\u044F \u0439 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438 \u043F\u043E\u043A\u0438 \u0449\u043E \u043F\u0440\u0430\u0446\u044E\u044E\u0442\u044C \u043B\u0438\u0448\u0435 \u0443 Windows.",
     "kb.privacy": "\u041A\u0440\u044F\u043A\u043B \u0447\u0438\u0442\u0430\u0454 \u043D\u0430\u0442\u0438\u0441\u043A\u0430\u043D\u043D\u044F \u043A\u043B\u0430\u0432\u0456\u0448 \u043B\u0438\u0448\u0435 \u0434\u043B\u044F \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043D\u044F \u0440\u043E\u0437\u043A\u043B\u0430\u0434\u043A\u0438 \u0456 \u043D\u0456\u0447\u043E\u0433\u043E \u043D\u0456\u043A\u0443\u0434\u0438 \u043D\u0435 \u043D\u0430\u0434\u0441\u0438\u043B\u0430\u0454. \u0412\u0456\u043D \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u0454 \u0442\u0456\u043B\u044C\u043A\u0438 \u0432\u0438\u0432\u0447\u0435\u043D\u0456 \u0441\u043B\u043E\u0432\u0430, \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456.",
     "words.noSuch": "\u0422\u0430\u043A\u043E\u0433\u043E \u0441\u043B\u043E\u0432\u0430 \u043D\u0435\u043C\u0430\u0454.",
     "words.empty": "\u0421\u043B\u0456\u0432 \u043F\u043E\u043A\u0438 \u043D\u0435\u043C\u0430\u0454. \u041A\u043B\u0430\u0446\u043D\u0456\u0442\u044C \u0441\u043B\u043E\u0432\u043E \u0432 \u043A\u0430\u0440\u0442\u0446\u0456 \u0439 \u043D\u0430\u0442\u0438\u0441\u043D\u0456\u0442\u044C \u0439\u043E\u0433\u043E \u0437\u0456\u0440\u043E\u0447\u043A\u0443.",
@@ -4251,7 +4377,68 @@
     "act.general": "\u0417\u0430\u0433\u0430\u043B\u044C\u043D\u0435",
     "act.notChosen": "\u043D\u0435 \u0432\u0438\u0431\u0440\u0430\u043D\u043E",
     "act.newWords": "\u041D\u043E\u0432\u0456 \u0441\u043B\u043E\u0432\u0430",
-    "ui.forget": "\u0417\u0430\u0431\u0443\u0442\u0438"
+    "ui.forget": "\u0417\u0430\u0431\u0443\u0442\u0438",
+    "call.title": "\u0414\u0437\u0432\u0456\u043D\u043E\u043A {when}",
+    "call.record": "\u0417\u0430\u043F\u0438\u0441\u0430\u0442\u0438 \u0434\u0437\u0432\u0456\u043D\u043E\u043A",
+    "call.stop": "\u0417\u0443\u043F\u0438\u043D\u0438\u0442\u0438 \u0437\u0430\u043F\u0438\u0441 \u0434\u0437\u0432\u0456\u043D\u043A\u0430",
+    "call.recordNote": "\u0412\u0430\u0448 \u043C\u0456\u043A\u0440\u043E\u0444\u043E\u043D \u0456 \u0432\u0435\u0441\u044C \u0437\u0432\u0443\u043A \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0430, \u0434\u043E\u043A\u0438 \u043D\u0435 \u0437\u0443\u043F\u0438\u043D\u0438\u0442\u0435; \u043F\u043E\u0442\u0456\u043C \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u0443\u0454\u0442\u044C\u0441\u044F",
+    "call.keyNote": "\u041F\u043E\u0447\u0438\u043D\u0430\u0454 \u0456 \u0437\u0443\u043F\u0438\u043D\u044F\u0454 \u0437\u0430\u043F\u0438\u0441 \u0434\u0437\u0432\u0456\u043D\u043A\u0430",
+    "call.panel": "\u0414\u0437\u0432\u0456\u043D\u043E\u043A",
+    "call.allSound": "\u0412\u0435\u0441\u044C \u0437\u0432\u0443\u043A \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0430",
+    "call.pause": "\u041F\u0430\u0443\u0437\u0430",
+    "call.resume": "\u041F\u0440\u043E\u0434\u043E\u0432\u0436\u0438\u0442\u0438",
+    "call.stopShort": "\u0421\u0442\u043E\u043F",
+    "call.paused": "\u041F\u0430\u0443\u0437\u0430",
+    "call.hide": "\u0421\u0445\u043E\u0432\u0430\u0442\u0438: \u0437\u0430\u043F\u0438\u0441 \u0442\u0440\u0438\u0432\u0430\u0454",
+    "call.starting": "\u041F\u043E\u0447\u0438\u043D\u0430\u044E\u2026",
+    "call.saving": "\u0417\u0431\u0435\u0440\u0456\u0433\u0430\u044E\u2026",
+    "call.noMic": "\u041C\u0456\u043A\u0440\u043E\u0444\u043E\u043D \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0438\u0439 \u2014 \u043F\u0438\u0448\u0443 \u0442\u0456\u043B\u044C\u043A\u0438 \u0441\u043F\u0456\u0432\u0440\u043E\u0437\u043C\u043E\u0432\u043D\u0438\u043A\u0456\u0432",
+    "call.silent": "\u041D\u0435 \u0447\u0443\u044E \u0441\u043F\u0456\u0432\u0440\u043E\u0437\u043C\u043E\u0432\u043D\u0438\u043A\u0456\u0432: \u043F\u0435\u0440\u0435\u0432\u0456\u0440\u0442\u0435 \u0434\u0436\u0435\u0440\u0435\u043B\u043E \u0437\u0432\u0443\u043A\u0443",
+    "call.failed": "\u041D\u0435 \u0432\u0434\u0430\u043B\u043E\u0441\u044F \u0437\u0430\u043F\u0438\u0441\u0430\u0442\u0438 \u0437\u0432\u0443\u043A \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0430: {why}",
+    "call.noSound": "\u0441\u0438\u0441\u0442\u0435\u043C\u0430 \u043D\u0435 \u0434\u0430\u043B\u0430 \u0437\u0432\u0443\u043A\u0443",
+    "call.openSettings": "\u0412\u0456\u0434\u043A\u0440\u0438\u0442\u0438 \u043D\u0430\u043B\u0430\u0448\u0442\u0443\u0432\u0430\u043D\u043D\u044F",
+    "call.consentAsk": "\u0423 \u0431\u0430\u0433\u0430\u0442\u044C\u043E\u0445 \u043A\u0440\u0430\u0457\u043D\u0430\u0445 \u043D\u0430 \u0437\u0430\u043F\u0438\u0441 \u043F\u043E\u0442\u0440\u0456\u0431\u043D\u0430 \u0437\u0433\u043E\u0434\u0430 \u0441\u043F\u0456\u0432\u0440\u043E\u0437\u043C\u043E\u0432\u043D\u0438\u043A\u0456\u0432",
+    "call.consentDetail": "\u0421\u043A\u0430\u0436\u0456\u0442\u044C \u0457\u043C, \u0449\u043E \u0437\u0430\u043F\u0438\u0441\u0443\u0454\u0442\u0435. \u041A\u0440\u044F\u043A\u043B \u043D\u0430\u0433\u0430\u0434\u0443\u0454 \u043F\u0440\u043E \u0446\u0435 \u043E\u0434\u0438\u043D \u0440\u0430\u0437.",
+    "call.consentRecord": "\u0417\u0430\u043F\u0438\u0441\u0430\u0442\u0438",
+    "call.quitAsk": "\u0406\u0434\u0435 \u0437\u0430\u043F\u0438\u0441 \u0434\u0437\u0432\u0456\u043D\u043A\u0430. \u0417\u0443\u043F\u0438\u043D\u0438\u0442\u0438 \u0456 \u0437\u0431\u0435\u0440\u0435\u0433\u0442\u0438?",
+    "call.quitStop": "\u0417\u0443\u043F\u0438\u043D\u0438\u0442\u0438 \u0456 \u0437\u0431\u0435\u0440\u0435\u0433\u0442\u0438",
+    "call.screenAsk": "\u041A\u0440\u044F\u043A\u043B\u0443 \u043F\u043E\u0442\u0440\u0456\u0431\u0435\u043D \u0434\u043E\u0437\u0432\u0456\u043B \u0437\u0430\u043F\u0438\u0441\u0443\u0432\u0430\u0442\u0438 \u0437\u0432\u0443\u043A \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0430",
+    "call.screenDetail": "Windows \u0434\u0430\u0454 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u0456 \u0437\u0432\u0443\u043A \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0430 \u043B\u0438\u0448\u0435 \u0437 \u0434\u043E\u0437\u0432\u043E\u043B\u043E\u043C \xAB\u0417\u0430\u043F\u0438\u0441 \u0435\u043A\u0440\u0430\u043D\u0430 \u0456 \u0441\u0438\u0441\u0442\u0435\u043C\u043D\u043E\u0433\u043E \u0437\u0432\u0443\u043A\u0443\xBB. \u041A\u0440\u044F\u043A\u043B \u0431\u0435\u0440\u0435 \u0442\u0456\u043B\u044C\u043A\u0438 \u0437\u0432\u0443\u043A, \u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u043D\u044F \u0432\u0456\u0434\u043A\u0438\u0434\u0430\u0454 \u043E\u0434\u0440\u0430\u0437\u0443. \u0423\u0432\u0456\u043C\u043A\u043D\u0456\u0442\u044C \u0442\u0430\u043C \u041A\u0440\u044F\u043A\u043B \u0456 \u043F\u043E\u0447\u043D\u0456\u0442\u044C \u0437\u0430\u043F\u0438\u0441 \u0437\u043D\u043E\u0432\u0443.",
+    "keys.useMeeting": "\u0437\u0430\u043F\u0438\u0441\u0443 \u0434\u0437\u0432\u0456\u043D\u043A\u0430",
+    "sum.title": "\u041F\u0456\u0434\u0441\u0443\u043C\u043E\u043A",
+    "sum.make": "\u0417\u0440\u043E\u0431\u0438\u0442\u0438 \u043F\u0456\u0434\u0441\u0443\u043C\u043E\u043A",
+    "sum.again": "\u0417\u0440\u043E\u0431\u0438\u0442\u0438 \u0437\u043D\u043E\u0432\u0443",
+    "sum.tGeneral": "\u0417\u0430\u0433\u0430\u043B\u044C\u043D\u0438\u0439",
+    "sum.tStandup": "\u041F\u043B\u0430\u043D\u0435\u0440\u043A\u0430",
+    "sum.tInterview": "\u0406\u043D\u0442\u0435\u0440\u0432\u2019\u044E",
+    "sum.tLecture": "\u041B\u0435\u043A\u0446\u0456\u044F \u0430\u0431\u043E \u0432\u0435\u0431\u0456\u043D\u0430\u0440",
+    "sum.tOwn": "\u0421\u0432\u043E\u044F \u0456\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0456\u044F",
+    "sum.ownPlaceholder": "\u0429\u043E \u043C\u0430\u0454 \u0431\u0443\u0442\u0438 \u0432 \u043F\u0456\u0434\u0441\u0443\u043C\u043A\u0443 (\u0434\u043E 500 \u0437\u043D\u0430\u043A\u0456\u0432)",
+    "sum.mine": "\u041C\u043E\u0454\u044E \u043C\u043E\u0432\u043E\u044E",
+    "sum.starting": "\u0420\u043E\u0431\u043B\u044E \u043F\u0456\u0434\u0441\u0443\u043C\u043E\u043A\u2026",
+    "sum.working": "\u0420\u043E\u0431\u043B\u044E \u043F\u0456\u0434\u0441\u0443\u043C\u043E\u043A: \u0447\u0430\u0441\u0442\u0438\u043D\u0430 {part} \u0437 {parts}",
+    "sum.joining": "\u0420\u043E\u0431\u043B\u044E \u043F\u0456\u0434\u0441\u0443\u043C\u043E\u043A: \u0437\u0431\u0438\u0440\u0430\u044E \u0447\u0430\u0441\u0442\u0438\u043D\u0438",
+    "sum.passed": "\u043C\u0438\u043D\u0443\u043B\u043E {time}",
+    "sum.left": "\u0437\u0430\u043B\u0438\u0448\u0438\u043B\u043E\u0441\u044C \u0431\u043B\u0438\u0437\u044C\u043A\u043E {time}",
+    "sum.failed": "\u041D\u0435 \u0432\u0434\u0430\u043B\u043E\u0441\u044F \u0437\u0440\u043E\u0431\u0438\u0442\u0438 \u043F\u0456\u0434\u0441\u0443\u043C\u043E\u043A",
+    "sum.failedNote": "\u0420\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0443 \u043D\u0435 \u0437\u043C\u0456\u043D\u0435\u043D\u043E.",
+    "sum.needModel": "\u0414\u043B\u044F \u043F\u0456\u0434\u0441\u0443\u043C\u043A\u0443 \u043F\u043E\u0442\u0440\u0456\u0431\u043D\u0430 \u043C\u043E\u0434\u0435\u043B\u044C {name} ({size})",
+    "sum.needModelNote": "\u0407\u0457 \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u044E\u0442\u044C \u043E\u0434\u0438\u043D \u0440\u0430\u0437, \u0432\u043E\u043D\u0430 \u043F\u0440\u0430\u0446\u044E\u0454 \u043D\u0430 \u0446\u044C\u043E\u043C\u0443 \u043A\u043E\u043C\u043F\u2019\u044E\u0442\u0435\u0440\u0456.",
+    "sum.downloading": "\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0443\u044E \u043C\u043E\u0434\u0435\u043B\u044C\u2026",
+    "sum.edit": "\u0412\u0438\u043F\u0440\u0430\u0432\u0438\u0442\u0438",
+    "sum.editHint": "\u0417\u0431\u0435\u0440\u0456\u0433\u0430\u0454\u0442\u044C\u0441\u044F, \u043A\u043E\u043B\u0438 \u0432\u0438 \u0432\u0438\u0445\u043E\u0434\u0438\u0442\u0435 \u0437 \u043F\u043E\u043B\u044F",
+    "sum.done": "\u0413\u043E\u0442\u043E\u0432\u043E",
+    "sum.replaceAsk": "\u0417\u0430\u043C\u0456\u043D\u0438\u0442\u0438 \u0432\u0438\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0439 \u043F\u0456\u0434\u0441\u0443\u043C\u043E\u043A?",
+    "sum.replace": "\u0417\u0430\u043C\u0456\u043D\u0438\u0442\u0438",
+    "sum.copied": "\u041F\u0456\u0434\u0441\u0443\u043C\u043E\u043A \u0441\u043A\u043E\u043F\u0456\u0439\u043E\u0432\u0430\u043D\u043E",
+    "sum.lost": "\u0412\u0442\u0440\u0430\u0447\u0435\u043D\u043E \u0448\u043C\u0430\u0442\u043A\u0456\u0432 \u0437\u0430\u043F\u0438\u0441\u0443: {n} (\u043F\u043E 10 \u0441)",
+    "sum.seek": "\u041F\u043E\u0441\u043B\u0443\u0445\u0430\u0442\u0438 \u0437 \u0446\u044C\u043E\u0433\u043E \u043C\u0456\u0441\u0446\u044F",
+    "sum.setAuto": "\u0420\u043E\u0431\u0438\u0442\u0438 \u043F\u0456\u0434\u0441\u0443\u043C\u043E\u043A \u043E\u0434\u0440\u0430\u0437\u0443",
+    "sum.setAutoNote": "\u041F\u0456\u0441\u043B\u044F \u0440\u043E\u0437\u0448\u0438\u0444\u0440\u043E\u0432\u043A\u0438 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043E\u0433\u043E \u0434\u0437\u0432\u0456\u043D\u043A\u0430, \u044F\u043A\u0449\u043E \u043C\u043E\u0434\u0435\u043B\u044C \u0437\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u0430",
+    "sum.setTemplate": "\u0428\u0430\u0431\u043B\u043E\u043D \u043F\u0456\u0434\u0441\u0443\u043C\u043A\u0443",
+    "sum.setTemplateNote": "\u0414\u043B\u044F \u043F\u0456\u0434\u0441\u0443\u043C\u043A\u0456\u0432, \u0449\u043E \u0440\u043E\u0431\u043B\u044F\u0442\u044C\u0441\u044F \u0441\u0430\u043C\u0456; \u043D\u0430 \u0441\u0442\u043E\u0440\u0456\u043D\u0446\u0456 \u0437\u0430\u043F\u0438\u0441\u0443 \u043C\u043E\u0436\u043D\u0430 \u0432\u0438\u0431\u0440\u0430\u0442\u0438 \u0456\u043D\u0448\u0438\u0439",
+    "sum.setMineNote": "\u0406\u043D\u0430\u043A\u0448\u0435 \u0432\u0456\u043D \u043F\u0438\u0448\u0435\u0442\u044C\u0441\u044F \u043C\u043E\u0432\u043E\u044E \u0437\u0443\u0441\u0442\u0440\u0456\u0447\u0456",
+    "tr.srcAllSound": "\u0412\u0435\u0441\u044C \u0437\u0432\u0443\u043A"
   };
 
   // src/i18n/index.ts
@@ -4278,6 +4465,7 @@
     if (!r) rules.set(current, r = new Intl.PluralRules(current));
     return r.select(n);
   }
+  var onMac = typeof process !== "undefined" && process.platform ? process.platform === "darwin" : typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent);
   var isPlural = (p) => typeof p === "object";
   function t(key, vars) {
     const p = PHRASES[current][key] ?? en[key];
@@ -4287,6 +4475,7 @@
       const n = Number(vars?.n ?? 0);
       s = p[pluralOf(n)] ?? p.other;
     } else s = p;
+    if (onMac && key !== "kb.windowsOnly" && !s.includes("macOS")) s = s.replace(/Windows/g, "macOS");
     if (!vars) return s;
     return s.replace(/\{(\w+)\}/g, (whole, name) => name in vars ? String(vars[name]) : whole);
   }
@@ -4399,9 +4588,10 @@
   function sortMods(mods) {
     return MODS.filter((m) => mods.includes(m));
   }
+  var onMac2 = typeof process !== "undefined" && process.platform ? process.platform === "darwin" : typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent);
   function hotkeyLabel(hotkey) {
     if (hotkey.endsWith("*2") && hotkey.includes("+")) return t("keys.twice", { key: hotkeyLabel(hotkey.slice(0, -2)) });
-    const name = (mod) => mod === "Control" ? "Ctrl" : mod === "Super" ? "Win" : mod;
+    const name = (mod) => mod === "Control" ? onMac2 ? "\u2318" : "Ctrl" : mod === "Alt" && onMac2 ? "\u2325" : mod === "Super" ? "Win" : mod;
     return hotkey.split("+").map((part) => {
       const [key, times] = part.split("*");
       const side2 = /^(Left|Right)(Control|Shift|Alt|Super)$/.exec(key ?? "");
@@ -4414,7 +4604,7 @@
       if (part === "ScrollLock") return "Scroll Lock";
       if (part === "MouseBack") return "Mouse Back";
       if (part === "MouseForward") return "Mouse Forward";
-      if (part === "CommandOrControl" || part === "CmdOrCtrl") return "Ctrl";
+      if (part === "CommandOrControl" || part === "CmdOrCtrl") return onMac2 ? "\u2318" : "Ctrl";
       return name(part);
     }).join("+");
   }
@@ -4548,6 +4738,7 @@
   // src/settings.ts
   var RATES = [0.75, 0.9, 1, 1.15, 1.3, 1.5];
   var SWITCH_SOUNDS = ["glass", "pluck", "string", "duck"];
+  var SUMMARY_OWN_MAX = 500;
   var TALK_LEVELS = ["A2", "B1", "B2"];
   var TALK_ABOUT_MAX = 500;
   var EDIT_STYLES = ["clean", "business", "aiTask", "list", "own"];
@@ -4602,6 +4793,13 @@
     againKey: "",
     practiceKey: "",
     talkKey: "",
+    meetingKey: "",
+    callConsentSeen: false,
+    callPanelOffset: { dx: 0, dy: 0 },
+    callSummaryAuto: true,
+    callTemplate: "general",
+    callOwn: "",
+    callSummaryMine: false,
     talkAloud: true,
     talkOnTop: false,
     talkLevel: "B1",
@@ -6653,6 +6851,19 @@
     );
   }
 
+  // src/summaryflow.ts
+  function secondsLeft(part, parts, started2, now) {
+    if (part < 1 || part > parts) return null;
+    return Math.max(0, Math.round((now - started2) / 1e3 / part * (parts - part)));
+  }
+  var TOPIC_STAMP = /\[((?:\d+:)?\d{1,2}:\d{2})\]/;
+  function topicIn(line) {
+    const m = TOPIC_STAMP.exec(line);
+    if (!m) return null;
+    const at = m[1].split(":").reduce((sum, n) => sum * 60 + Number(n), 0);
+    return { before: line.slice(0, m.index), stamp: m[1], at, after: line.slice(m.index + m[0].length) };
+  }
+
   // src/webview/recorder.ts
   async function microphone(close) {
     return navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: close, noiseSuppression: close, autoGainControl: true, channelCount: 1 } });
@@ -6782,6 +6993,7 @@
     file: { label: t("tr.srcFile"), icon: "file-media" },
     mic: { label: t("tr.srcMic"), icon: "mic" },
     meet: { label: "Google Meet", icon: "organization" },
+    system: { label: t("tr.srcAllSound"), icon: "organization" },
     note: { label: t("tr.srcNote"), icon: "note" }
   };
   var STAGES = [
@@ -6848,14 +7060,23 @@
     /** The export menu is open. */
     exporting: false,
     /** "Transcribe again" was tapped once: it asks. */
-    redoing: false
+    redoing: false,
+    // The summary block of the transcript `sumFor`: the template, the person's own instruction, the language, and its two questions.
+    sumFor: "",
+    template: "general",
+    own: "",
+    mine: false,
+    editing: false,
+    replacing: false,
+    /** The transcript whose summary was being made when last drawn: it is read again once that is over. */
+    sumBusy: ""
   };
   var DATE = { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" };
   var DAY = { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" };
   function meta(r, long = false) {
     const parts = [formatDate(new Date(r.created), long ? DAY : DATE)];
     if (r.duration) parts.push(length(r.duration));
-    parts.push(SOURCES[r.source]?.label ?? r.source);
+    parts.push(r.source === "system" && r.app || (SOURCES[r.source]?.label ?? r.source));
     return parts.join(" \xB7 ");
   }
   var languages = (v) => {
@@ -7058,7 +7279,7 @@
             { class: "ti", onclick: () => openTranscript(r.id) },
             el("span", { class: "src" }, icon(SOURCES[r.source]?.icon ?? "file")),
             el("span", { class: "tm" }, el("b", {}, r.title), el("small", {}, meta(r)), r.snippet ? snippet(r.snippet) : null),
-            statusChip(r)
+            statusChip(r) ?? (r.summarized ? el("span", { class: "chip lit" }, t("sum.title")) : null)
           )
         )
       )
@@ -7146,7 +7367,7 @@
       stopPlayer();
       return [head, progressCard(r)];
     }
-    return [head, actions(tr), ...notices(v, r, tr), speakersStrip(tr), utterances(tr), player(v, tr)].filter((n) => n !== null);
+    return [head, actions(tr), ...notices(v, r, tr), summaryBlock(v, tr), speakersStrip(tr), utterances(tr), player(v, tr)].filter((n) => n !== null);
   }
   function progressCard(r) {
     if (r.status === "failed") {
@@ -7324,6 +7545,7 @@
     }
     if (tr.noteError) out.push(aside("info", tr.noteError, " ", linkBtn(t("tr.chooseFolder"), () => void pickKb())));
     if (r.error) out.push(aside("circle-alert", r.error));
+    if (tr.lost) out.push(aside("info", t("sum.lost", { n: tr.lost })));
     const speakers = speakersNotice(v, tr);
     if (speakers) out.push(speakers);
     return out;
@@ -7335,7 +7557,7 @@
   }
   function speakersNotice(v, tr) {
     if (tr.source === "note" || tr.speakersStatus === "ok" || tr.speakersStatus === "single") return null;
-    const meet = tr.source === "meet" ? ` ${t("tr.meetNote")}` : "";
+    const meet = tr.source === "meet" || tr.source === "system" ? ` ${t("tr.meetNote")}` : "";
     const why = tr.speakersStatus === "failed" ? t("tr.whyFailed") : tr.speakersStatus === "no-part" ? `${t("tr.whyNoPart")}${meet}` : `${t("tr.whyNoKey")}${meet}`;
     const missing = speakersMissing(v, () => hooks.setup());
     if (missing) return aside("users", why, " ", linkBtn(t("tr.setUpSpeakers"), () => hooks.setup()));
@@ -7471,6 +7693,179 @@
       );
     });
     return list2;
+  }
+  var TEMPLATES = () => [
+    ["general", t("sum.tGeneral")],
+    ["standup", t("sum.tStandup")],
+    ["interview", t("sum.tInterview")],
+    ["lecture", t("sum.tLecture")],
+    ["own", t("sum.tOwn")]
+  ];
+  function summaryBlock(v, tr) {
+    if (tr.source === "note") return null;
+    if (tx.sumFor !== tr.id) {
+      tx.sumFor = tr.id;
+      tx.template = tr.summary?.template ?? v.settings.callTemplate;
+      tx.own = v.settings.callOwn;
+      tx.mine = tr.summary?.mine ?? v.settings.callSummaryMine;
+      tx.editing = tx.replacing = false;
+    }
+    const run = v.summaries[tr.id];
+    if (run && !run.error) tx.sumBusy = tr.id;
+    else if (tx.sumBusy === tr.id) {
+      tx.sumBusy = "";
+      void reloadSummary(tr.id);
+    }
+    const box = el("div", { class: "sum" }, el("div", { class: "sumhead" }, el("b", {}, t("sum.title"))));
+    if (run && !run.error) {
+      const stat = el("small", { class: "sumstat" }, summaryLine(run));
+      box.append(el("div", { class: "sumrun" }, stat, bar(run.part / (run.parts + 1)), btn(t("common.cancel"), () => post({ type: "cancelSummary", id: tr.id }))));
+      return box;
+    }
+    if (run?.error) {
+      box.append(
+        el(
+          "div",
+          { class: "card bad" },
+          el("b", {}, t("sum.failed")),
+          el("small", {}, t("sum.failedNote")),
+          el("div", { class: "cardbtns" }, btn(t("common.tryAgain"), () => startSummary(tr)))
+        )
+      );
+    }
+    const model = v.settings.model;
+    const files = v.models[model];
+    if (files.status !== "ready") {
+      const fetching = files.status === "downloading";
+      box.append(
+        el(
+          "div",
+          { class: "sumneed" },
+          el("div", { class: "l" }, el("b", {}, t("sum.needModel", { name: levelName(model), size: size(files.size) })), el("small", {}, fetching ? t("sum.downloading") : t("sum.needModelNote")), fetching ? bar(files.progress) : null),
+          fetching ? el("span", { class: "pct" }, `${Math.round(files.progress * 100)}%`) : btn(files.status === "failed" ? t("common.tryAgain") : t("settings.download"), () => post({ type: "useModel", model }), "primary")
+        )
+      );
+    }
+    if (tr.summary) box.append(summaryView(tr));
+    if (files.status === "ready") box.append(summaryControls(tr));
+    return box;
+  }
+  function summaryLine(run) {
+    if (run.part < 1 && run.parts <= 1) return t("sum.starting");
+    const now = Date.now();
+    const parts = [run.part > run.parts ? t("sum.joining") : run.part < 1 ? t("sum.starting") : t("sum.working", { part: run.part, parts: run.parts }), t("sum.passed", { time: clock((now - run.started) / 1e3) })];
+    const left = secondsLeft(run.part, run.parts, run.started, now);
+    if (left !== null) parts.push(t("sum.left", { time: clock(left) }));
+    return parts.join(" \xB7 ");
+  }
+  window.setInterval(() => {
+    const stat = document.querySelector(".sumstat");
+    const run = tx.sumBusy ? hooks.view()?.summaries[tx.sumBusy] : void 0;
+    if (stat && run) stat.textContent = summaryLine(run);
+  }, 1e3);
+  function startSummary(tr) {
+    tx.replacing = false;
+    post({ type: "summarize", id: tr.id, template: tx.template, ...tx.template === "own" ? { own: tx.own.slice(0, SUMMARY_OWN_MAX) } : {}, mine: tx.mine });
+  }
+  function summaryControls(tr) {
+    const make = btn(tr.summary ? t("sum.again") : t("sum.make"), () => {
+      if (tr.summary?.edited && !tx.replacing) tx.replacing = true, redrawPage();
+      else startSummary(tr);
+    }, tr.summary ? "" : "primary");
+    const ask = tx.replacing ? el("span", { class: "confirm" }, el("small", {}, t("sum.replaceAsk")), btn(t("sum.replace"), () => startSummary(tr), "danger"), linkBtn(t("common.cancel"), () => (tx.replacing = false, redrawPage()))) : make;
+    const own = el("textarea", { class: "field report about", rows: 3, maxlength: SUMMARY_OWN_MAX, placeholder: t("sum.ownPlaceholder"), "aria-label": t("sum.tOwn") });
+    own.value = tx.own;
+    own.addEventListener("input", () => tx.own = own.value);
+    return el(
+      "div",
+      { class: "sumctl" },
+      el(
+        "div",
+        { class: "sumrow" },
+        select(tx.template, TEMPLATES(), (template) => {
+          tx.template = template;
+          redrawPage();
+        }),
+        el("label", { class: "summine" }, toggleKnob(tx.mine, (on) => tx.mine = on, t("sum.mine")), t("sum.mine")),
+        el("span", { class: "gap" }),
+        ask
+      ),
+      tx.template === "own" ? own : null
+    );
+  }
+  function summaryView(tr) {
+    const sum = tr.summary;
+    const tools = el(
+      "div",
+      { class: "sumtools" },
+      btn([icon("copy"), t("common.copy")], async () => {
+        try {
+          await window.tutorHost.call({ call: "copy", text: tr.summary?.text ?? "" });
+          toast(t("sum.copied"));
+        } catch (error) {
+          fault(error);
+        }
+      }),
+      btn(tx.editing ? t("sum.done") : t("sum.edit"), () => (tx.editing = !tx.editing, redrawPage())),
+      tx.editing ? el("small", {}, t("sum.editHint")) : null
+    );
+    if (!tx.editing) return el("div", { class: "sumbody" }, summaryText(tr, sum.text), tools);
+    const field = el("textarea", { class: "field report sumedit", "aria-label": t("sum.title") });
+    field.value = sum.text;
+    field.rows = Math.min(24, Math.max(8, sum.text.split("\n").length + 1));
+    field.addEventListener("blur", () => void saveSummary(tr, field.value.trim()));
+    return el("div", { class: "sumbody" }, field, tools);
+  }
+  function summaryText(tr, text) {
+    const out = el("div", { class: "sumtext" });
+    for (const raw of text.split("\n")) {
+      const line = raw.trim();
+      if (!line) continue;
+      if (line.startsWith("#")) {
+        out.append(el("h4", {}, line.replace(/^#+\s*/, "")));
+        continue;
+      }
+      const bullet = line.startsWith("- ");
+      const body = bullet ? line.slice(2) : line;
+      const node = el("div", { class: bullet ? "sli" : "sp" });
+      const topic = topicIn(body);
+      if (topic) node.append(topic.before, el("button", { class: "stamp", title: t("sum.seek"), onclick: () => jumpTo(tr, topic.at) }, topic.stamp), topic.after);
+      else node.append(body);
+      out.append(node);
+    }
+    return out;
+  }
+  function jumpTo(tr, at) {
+    seek(at);
+    let found2 = 0;
+    tr.utterances.forEach((u, i) => {
+      if (u.start <= at + 0.3) found2 = i;
+    });
+    document.querySelector(`.utt[data-i="${found2}"]`)?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+  async function saveSummary(tr, text) {
+    if (!tr.summary || !text || text === tr.summary.text) return;
+    const before = tr.summary;
+    const next = { ...before, text, edited: (/* @__PURE__ */ new Date()).toISOString() };
+    tr.summary = next;
+    try {
+      await api("PUT", `/transcripts/${tr.id}/summary`, { summary: next });
+    } catch (error) {
+      tr.summary = before;
+      fault(error);
+    }
+  }
+  async function reloadSummary(id) {
+    try {
+      const r = await api("GET", `/transcripts/${id}`);
+      if (id !== tx.openId) return;
+      tx.row = r.row;
+      tx.transcript = r.transcript ?? tx.transcript;
+      tx.editing = tx.replacing = false;
+      if (hooks.shown()) redrawPage();
+    } catch (error) {
+      fault(error);
+    }
   }
   var audio;
   var audioId = "";
@@ -7708,7 +8103,7 @@
     { class: "side" },
     // The text logo; a narrow sidebar has room for the icon only.
     el("div", { class: "brand" }, logo(), tile(28)),
-    el("label", { class: "find", title: t("search.title") }, lucide("search", "s"), findField, el("span", { class: "key" }, "Ctrl F")),
+    el("label", { class: "find", title: t("search.title") }, lucide("search", "s"), findField, el("span", { class: "key" }, onMac2 ? "\u2318F" : "Ctrl F")),
     tree
   );
   var maxButton = el("button", { class: "icon-btn max", title: t("common.maximize"), "aria-label": t("common.maximize"), onclick: () => post({ type: "window", action: "maximize" }) }, glyph("maximize"));
@@ -7778,6 +8173,7 @@
     { key: "englishKey", title: "dict.english", page: "voice", speech: true },
     { key: "againKey", title: "dictate.againKey", page: "voice", speech: true },
     { key: "noteKey", title: "dict.note", page: "voice", speech: true },
+    { key: "meetingKey", title: "call.record", page: "recordings", speech: true },
     { key: "fixKey", title: "kb.fixKey", page: "layout", section: "act.fixGroup", chain: "fix" },
     { key: "switchKey", title: "kb.switchKey", page: "layout", section: "act.switchGroup" },
     { key: "pauseKey", title: "settings.pauseKey", page: "settings", section: "keys.group" },
@@ -8481,6 +8877,7 @@
     againKey: "keys.useAgain",
     practiceKey: "keys.usePractice",
     talkKey: "keys.useTalk",
+    meetingKey: "keys.useMeeting",
     pauseKey: "keys.usePause",
     windowKey: "keys.useWindow"
   });
@@ -9481,6 +9878,9 @@ ${t("dictate.said", { heard: e.heard })}` : e.text,
       ]),
       ...offer.length ? [grp(t("dictate.engine")), ...offer] : [],
       testOffer(v),
+      installed(v) ? callRow(v) : null,
+      keyRow("meetingKey", t("call.record"), t("call.keyNote"), !v.speech.keysOk.meeting),
+      ...summarySettings(v),
       ...running(v) ? [grp(t("transcribe.new")), ...newRows(v)] : [],
       grp(t("transcribe.setup")),
       meetCard(v),
@@ -9488,6 +9888,51 @@ ${t("dictate.said", { heard: e.heard })}` : e.text,
       dataDir ? card("folder", t("transcribe.keptIn"), [pathNote(dataDir)], linkBtn(t("tray.open"), () => post({ type: "openPath", path: dataDir }))) : null,
       enginePlate([{ title: t("dictate.speechModel"), value: speechValue(v, "transcripts"), open: () => go("models", "forTranscribe") }])
     ].filter((n) => n !== null);
+  }
+  function callRow(v) {
+    const on = v.call.state !== "idle";
+    const label = on ? t("call.stop") : t("call.record");
+    return row(t("call.record"), [t("call.recordNote")], btn([el("i", { class: on ? "dot pulse" : "dot" }), label], () => post({ type: "toggleCall" }), on ? "primary" : "rec"));
+  }
+  function summarySettings(v) {
+    const s = v.settings;
+    const names = [
+      ["general", t("sum.tGeneral")],
+      ["standup", t("sum.tStandup")],
+      ["interview", t("sum.tInterview")],
+      ["lecture", t("sum.tLecture")],
+      ["own", t("sum.tOwn")]
+    ];
+    return [
+      grp(t("sum.title")),
+      toggleCard("sparkles", t("sum.setAuto"), s.callSummaryAuto, (callSummaryAuto) => save({ callSummaryAuto }), t("sum.setAutoNote")),
+      card("file-text", t("sum.setTemplate"), [t("sum.setTemplateNote")], select(s.callTemplate, names, (callTemplate) => save({ callTemplate }))),
+      s.callTemplate === "own" ? el("div", { class: "row add" }, el("div", { class: "l" }, t("sum.tOwn")), summaryOwnField(s.callOwn)) : null,
+      toggleCard("languages", t("sum.mine"), s.callSummaryMine, (callSummaryMine) => save({ callSummaryMine }), t("sum.setMineNote"))
+    ].filter((n) => n !== null);
+  }
+  var summaryOwnTimer;
+  function summaryOwnField(value) {
+    const field = el("textarea", {
+      class: "field report about",
+      rows: 3,
+      maxlength: SUMMARY_OWN_MAX,
+      placeholder: t("sum.ownPlaceholder"),
+      "aria-label": t("sum.tOwn"),
+      "data-live": "callOwn"
+    });
+    field.value = value;
+    const store = () => {
+      window.clearTimeout(summaryOwnTimer);
+      summaryOwnTimer = void 0;
+      if (field.value !== view?.settings.callOwn) save({ callOwn: field.value });
+    };
+    field.addEventListener("input", () => {
+      window.clearTimeout(summaryOwnTimer);
+      summaryOwnTimer = window.setTimeout(store, 600);
+    });
+    field.addEventListener("blur", () => summaryOwnTimer !== void 0 && store());
+    return field;
   }
   function layoutsPage(v) {
     const cycle = cycleOf(v);
@@ -9670,6 +10115,7 @@ ${t("dictate.said", { heard: e.heard })}` : e.text,
     const [typed = "", fixed = ""] = [sample.typed.split(" ")[0], sample.fixed.split(" ")[0]];
     const ownKeys = Object.keys(s.layoutKeys).length;
     const learnedCount = v.learned.alwaysFix.length + v.learned.myWords.length;
+    if (onMac2) return [warn(t("kb.windowsOnly"))];
     const onOff = (on, key, label, has) => has ? el("span", { class: "tgwrap" }, toggleKnob(on, (next) => save({ [key]: next }), label)) : null;
     return [
       tiles([
@@ -10183,7 +10629,7 @@ ${t("dictate.said", { heard: e.heard })}` : e.text,
       event.preventDefault();
       back();
     }
-    if (event.ctrlKey && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "f" && !document.querySelector(".recording") && !root.classList.contains("setup")) {
+    if ((onMac2 ? event.metaKey : event.ctrlKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "f" && !document.querySelector(".recording") && !root.classList.contains("setup")) {
       event.preventDefault();
       findField.focus();
       findField.select();

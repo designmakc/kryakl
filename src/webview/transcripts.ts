@@ -6,8 +6,11 @@
 // engine's work by asking it again every moment and a half; the bar moves in
 // place, so its light keeps running.
 
-import { formatDate, languageName, t } from '../i18n'
+import { formatDate, languageName, levelName, t } from '../i18n'
 import type { AppView } from '../protocol'
+import { SUMMARY_OWN_MAX } from '../settings'
+import type { SummaryTemplate } from '../summary'
+import { secondsLeft, topicIn } from '../summaryflow'
 import { el, icon } from './dom'
 import { caps } from './keycaps'
 import { ChunkRecorder, micTrouble } from './recorder'
@@ -27,6 +30,7 @@ import {
   running,
   showFile,
   SpeechError,
+  size as speechSize,
   speakersMissing,
   toast,
   type Row,
@@ -34,7 +38,7 @@ import {
   type Transcript,
   type Utterance,
 } from './speech'
-import { aside, btn, card, linkBtn, post, row, seg } from './ui'
+import { aside, bar, btn, card, linkBtn, post, row, seg, select, toggleKnob } from './ui'
 
 type Hooks = {
   view: () => AppView | undefined
@@ -53,6 +57,7 @@ const SOURCES: Record<Source, { label: string; icon: string }> = {
   file: { label: t('tr.srcFile'), icon: 'file-media' },
   mic: { label: t('tr.srcMic'), icon: 'mic' },
   meet: { label: 'Google Meet', icon: 'organization' },
+  system: { label: t('tr.srcAllSound'), icon: 'organization' },
   note: { label: t('tr.srcNote'), icon: 'note' },
 }
 const STAGES: [string, string][] = [
@@ -95,15 +100,25 @@ const tx = {
   exporting: false,
   /** "Transcribe again" was tapped once: it asks. */
   redoing: false,
+  // The summary block of the transcript `sumFor`: the template, the person's own instruction, the language, and its two questions.
+  sumFor: '',
+  template: 'general' as SummaryTemplate,
+  own: '',
+  mine: false,
+  editing: false,
+  replacing: false,
+  /** The transcript whose summary was being made when last drawn: it is read again once that is over. */
+  sumBusy: '',
 }
 
 const DATE: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }
 const DAY: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }
 
-function meta(r: { created: string; duration: number; source: Source }, long = false): string {
+function meta(r: { created: string; duration: number; source: Source; app?: string }, long = false): string {
   const parts = [formatDate(new Date(r.created), long ? DAY : DATE)]
   if (r.duration) parts.push(length(r.duration))
-  parts.push(SOURCES[r.source]?.label ?? r.source)
+  // A call is named by its program (Zoom) when the engine says which, else by its source.
+  parts.push((r.source === 'system' && r.app) || (SOURCES[r.source]?.label ?? r.source))
   return parts.join(' · ')
 }
 
@@ -334,7 +349,7 @@ function list(v: AppView): HTMLElement {
           { class: 'ti', onclick: () => openTranscript(r.id) },
           el('span', { class: 'src' }, icon(SOURCES[r.source]?.icon ?? 'file')),
           el('span', { class: 'tm' }, el('b', {}, r.title), el('small', {}, meta(r)), r.snippet ? snippet(r.snippet) : null),
-          statusChip(r),
+          statusChip(r) ?? (r.summarized ? el('span', { class: 'chip lit' }, t('sum.title')) : null),
         ),
       ),
     ),
@@ -437,7 +452,7 @@ function transcriptPage(v: AppView): HTMLElement[] {
     stopPlayer()
     return [head, progressCard(r)]
   }
-  return [head, actions(tr), ...notices(v, r, tr), speakersStrip(tr), utterances(tr), player(v, tr)].filter((n): n is HTMLElement => n !== null)
+  return [head, actions(tr), ...notices(v, r, tr), summaryBlock(v, tr), speakersStrip(tr), utterances(tr), player(v, tr)].filter((n): n is HTMLElement => n !== null)
 }
 
 function progressCard(r: Row): HTMLElement {
@@ -636,6 +651,7 @@ function notices(v: AppView, r: Row, tr: Transcript): HTMLElement[] {
   }
   if (tr.noteError) out.push(aside('info', tr.noteError, ' ', linkBtn(t('tr.chooseFolder'), () => void pickKb())))
   if (r.error) out.push(aside('circle-alert', r.error))
+  if (tr.lost) out.push(aside('info', t('sum.lost', { n: tr.lost })))
   const speakers = speakersNotice(v, tr)
   if (speakers) out.push(speakers)
   return out
@@ -652,7 +668,7 @@ function splitWay(tr: Transcript): 'words' | 'redo' | null {
 function speakersNotice(v: AppView, tr: Transcript): HTMLElement | null {
   if (tr.source === 'note' || tr.speakersStatus === 'ok' || tr.speakersStatus === 'single') return null
   // "Me" is the name the engine gives the microphone's track (stored in the transcript), so it stays as drawn.
-  const meet = tr.source === 'meet' ? ` ${t('tr.meetNote')}` : ''
+  const meet = tr.source === 'meet' || tr.source === 'system' ? ` ${t('tr.meetNote')}` : ''
   const why =
     tr.speakersStatus === 'failed'
       ? t('tr.whyFailed')
@@ -800,6 +816,202 @@ function utterances(tr: Transcript): HTMLElement {
     )
   })
   return list
+}
+
+// ---------------------------------------------------------------- the summary
+
+const TEMPLATES = (): [SummaryTemplate, string][] => [
+  ['general', t('sum.tGeneral')],
+  ['standup', t('sum.tStandup')],
+  ['interview', t('sum.tInterview')],
+  ['lecture', t('sum.tLecture')],
+  ['own', t('sum.tOwn')],
+]
+
+/** The block over a transcript: make a summary, how it goes, the summary itself (editable, copied, made again). */
+function summaryBlock(v: AppView, tr: Transcript): HTMLElement | null {
+  if (tr.source === 'note') return null
+  if (tx.sumFor !== tr.id) {
+    tx.sumFor = tr.id
+    tx.template = tr.summary?.template ?? v.settings.callTemplate
+    tx.own = v.settings.callOwn
+    tx.mine = tr.summary?.mine ?? v.settings.callSummaryMine
+    tx.editing = tx.replacing = false
+  }
+  const run = v.summaries[tr.id]
+  if (run && !run.error) tx.sumBusy = tr.id
+  else if (tx.sumBusy === tr.id) {
+    // Made (or called off): what the engine now keeps is read.
+    tx.sumBusy = ''
+    void reloadSummary(tr.id)
+  }
+  const box = el('div', { class: 'sum' }, el('div', { class: 'sumhead' }, el('b', {}, t('sum.title'))))
+  if (run && !run.error) {
+    const stat = el('small', { class: 'sumstat' }, summaryLine(run))
+    box.append(el('div', { class: 'sumrun' }, stat, bar(run.part / (run.parts + 1)), btn(t('common.cancel'), () => post({ type: 'cancelSummary', id: tr.id }))))
+    return box
+  }
+  if (run?.error) {
+    box.append(
+      el(
+        'div',
+        { class: 'card bad' },
+        el('b', {}, t('sum.failed')),
+        el('small', {}, t('sum.failedNote')),
+        el('div', { class: 'cardbtns' }, btn(t('common.tryAgain'), () => startSummary(tr))),
+      ),
+    )
+  }
+  const model = v.settings.model
+  const files = v.models[model]
+  if (files.status !== 'ready') {
+    const fetching = files.status === 'downloading'
+    box.append(
+      el(
+        'div',
+        { class: 'sumneed' },
+        el('div', { class: 'l' }, el('b', {}, t('sum.needModel', { name: levelName(model), size: speechSize(files.size) })), el('small', {}, fetching ? t('sum.downloading') : t('sum.needModelNote')), fetching ? bar(files.progress) : null),
+        fetching ? el('span', { class: 'pct' }, `${Math.round(files.progress * 100)}%`) : btn(files.status === 'failed' ? t('common.tryAgain') : t('settings.download'), () => post({ type: 'useModel', model }), 'primary'),
+      ),
+    )
+  }
+  if (tr.summary) box.append(summaryView(tr))
+  if (files.status === 'ready') box.append(summaryControls(tr))
+  return box
+}
+
+/** "Making the summary: part 2 of 5 · 0:43 passed · about 1:20 left". */
+function summaryLine(run: { part: number; parts: number; started: number }): string {
+  if (run.part < 1 && run.parts <= 1) return t('sum.starting')
+  const now = Date.now()
+  const parts = [run.part > run.parts ? t('sum.joining') : run.part < 1 ? t('sum.starting') : t('sum.working', { part: run.part, parts: run.parts }), t('sum.passed', { time: clock((now - run.started) / 1000) })]
+  const left = secondsLeft(run.part, run.parts, run.started, now)
+  if (left !== null) parts.push(t('sum.left', { time: clock(left) }))
+  return parts.join(' · ')
+}
+
+// The elapsed time and the time left tick between main's updates.
+window.setInterval(() => {
+  const stat = document.querySelector('.sumstat')
+  const run = tx.sumBusy ? hooks.view()?.summaries[tx.sumBusy] : undefined
+  if (stat && run) stat.textContent = summaryLine(run)
+}, 1000)
+
+function startSummary(tr: Transcript): void {
+  tx.replacing = false
+  post({ type: 'summarize', id: tr.id, template: tx.template, ...(tx.template === 'own' ? { own: tx.own.slice(0, SUMMARY_OWN_MAX) } : {}), mine: tx.mine })
+}
+
+function summaryControls(tr: Transcript): HTMLElement {
+  const make = btn(tr.summary ? t('sum.again') : t('sum.make'), () => {
+    if (tr.summary?.edited && !tx.replacing) (tx.replacing = true), redrawPage()
+    else startSummary(tr)
+  }, tr.summary ? '' : 'primary')
+  const ask = tx.replacing
+    ? el('span', { class: 'confirm' }, el('small', {}, t('sum.replaceAsk')), btn(t('sum.replace'), () => startSummary(tr), 'danger'), linkBtn(t('common.cancel'), () => ((tx.replacing = false), redrawPage())))
+    : make
+  const own = el('textarea', { class: 'field report about', rows: 3, maxlength: SUMMARY_OWN_MAX, placeholder: t('sum.ownPlaceholder'), 'aria-label': t('sum.tOwn') })
+  own.value = tx.own
+  own.addEventListener('input', () => (tx.own = own.value))
+  return el(
+    'div',
+    { class: 'sumctl' },
+    el(
+      'div',
+      { class: 'sumrow' },
+      select(tx.template, TEMPLATES(), template => {
+        tx.template = template
+        redrawPage()
+      }),
+      el('label', { class: 'summine' }, toggleKnob(tx.mine, on => (tx.mine = on), t('sum.mine')), t('sum.mine')),
+      el('span', { class: 'gap' }),
+      ask,
+    ),
+    tx.template === 'own' ? own : null,
+  )
+}
+
+function summaryView(tr: Transcript): HTMLElement {
+  const sum = tr.summary!
+  const tools = el(
+    'div',
+    { class: 'sumtools' },
+    btn([icon('copy'), t('common.copy')], async () => {
+      try {
+        await window.tutorHost.call({ call: 'copy', text: tr.summary?.text ?? '' })
+        toast(t('sum.copied'))
+      } catch (error) {
+        fault(error)
+      }
+    }),
+    btn(tx.editing ? t('sum.done') : t('sum.edit'), () => ((tx.editing = !tx.editing), redrawPage())),
+    tx.editing ? el('small', {}, t('sum.editHint')) : null,
+  )
+  if (!tx.editing) return el('div', { class: 'sumbody' }, summaryText(tr, sum.text), tools)
+  const field = el('textarea', { class: 'field report sumedit', 'aria-label': t('sum.title') })
+  field.value = sum.text
+  field.rows = Math.min(24, Math.max(8, sum.text.split('\n').length + 1))
+  field.addEventListener('blur', () => void saveSummary(tr, field.value.trim()))
+  return el('div', { class: 'sumbody' }, field, tools)
+}
+
+/** The summary's Markdown as headings, lines and bullets; a topic's time is a link to that place in the recording. */
+function summaryText(tr: Transcript, text: string): HTMLElement {
+  const out = el('div', { class: 'sumtext' })
+  for (const raw of text.split('\n')) {
+    const line = raw.trim()
+    if (!line) continue
+    if (line.startsWith('#')) {
+      out.append(el('h4', {}, line.replace(/^#+\s*/, '')))
+      continue
+    }
+    const bullet = line.startsWith('- ')
+    const body = bullet ? line.slice(2) : line
+    const node = el('div', { class: bullet ? 'sli' : 'sp' })
+    const topic = topicIn(body)
+    if (topic) node.append(topic.before, el('button', { class: 'stamp', title: t('sum.seek'), onclick: () => jumpTo(tr, topic.at) }, topic.stamp), topic.after)
+    else node.append(body)
+    out.append(node)
+  }
+  return out
+}
+
+/** A topic's time: the sound goes there and the page to its line. */
+function jumpTo(tr: Transcript, at: number): void {
+  seek(at)
+  let found = 0
+  tr.utterances.forEach((u, i) => {
+    if (u.start <= at + 0.3) found = i
+  })
+  document.querySelector(`.utt[data-i="${found}"]`)?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+}
+
+async function saveSummary(tr: Transcript, text: string): Promise<void> {
+  if (!tr.summary || !text || text === tr.summary.text) return
+  const before = tr.summary
+  const next = { ...before, text, edited: new Date().toISOString() }
+  // Shown at once; put back should the engine refuse.
+  tr.summary = next
+  try {
+    await api('PUT', `/transcripts/${tr.id}/summary`, { summary: next })
+  } catch (error) {
+    tr.summary = before
+    fault(error)
+  }
+}
+
+/** The summary is made: the transcript is read again for it. */
+async function reloadSummary(id: string): Promise<void> {
+  try {
+    const r = await api<{ row: Row; transcript: Transcript | null }>('GET', `/transcripts/${id}`)
+    if (id !== tx.openId) return
+    tx.row = r.row
+    tx.transcript = r.transcript ?? tx.transcript
+    tx.editing = tx.replacing = false
+    if (hooks.shown()) redrawPage()
+  } catch (error) {
+    fault(error)
+  }
 }
 
 // ---------------------------------------------------------------- the sound

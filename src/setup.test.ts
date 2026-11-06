@@ -60,6 +60,7 @@ function view(profile: DeviceProfile, over: Partial<AppView> = {}): AppView {
       keysOk: { dictate: true, note: true, english: true, again: true, practice: true, talk: true, meeting: true },
     },
     call: { state: 'idle', seconds: 0 },
+    summaries: {},
     dictation: { recent: [] },
     translatorState: { status: 'absent', progress: 0, size: 84 },
     translation: { fast: { status: 'absent', progress: 0, size: 84 }, accurate: { status: 'absent', progress: 0, size: 5155 }, most: { status: 'absent', progress: 0, size: 6976 } },

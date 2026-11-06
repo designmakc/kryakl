@@ -3215,3 +3215,122 @@ li + li > .ti::before {
 .field.report.about {
   min-height: 84px;
 }
+
+/* ---------------------------------------------------------------- a transcript's summary */
+
+.sum {
+  margin: 16px 0;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sumhead b {
+  font: 600 var(--t-body) / 1.2 var(--font);
+  color: var(--strong);
+}
+
+.sumrow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sumrow .gap {
+  flex: 1;
+}
+
+.summine {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 400 var(--t-caption) / 1 var(--font);
+  color: var(--muted);
+}
+
+.sumrun {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.sumrun .bar {
+  align-self: stretch;
+}
+
+.sumstat,
+.sumneed small,
+.sumtools small {
+  font: 400 var(--t-caption) / 1.4 var(--font);
+  color: var(--muted);
+}
+
+.sumneed {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sumneed .l {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sumtext h4 {
+  margin: 12px 0 4px;
+  font: 600 var(--t-caption) / 1.3 var(--font);
+  color: var(--strong);
+}
+
+.sumtext h4:first-child {
+  margin-top: 0;
+}
+
+.sumtext .sp,
+.sumtext .sli {
+  font: 400 var(--t-body) / 1.5 var(--font);
+  color: var(--text);
+}
+
+.sumtext .sli {
+  padding-left: 16px;
+  position: relative;
+}
+
+.sumtext .sli::before {
+  content: '•';
+  position: absolute;
+  left: 4px;
+  color: var(--muted);
+}
+
+.sumtext .stamp {
+  padding: 0 2px;
+  border: 0;
+  background: none;
+  font: 500 var(--t-caption) / 1.4 var(--mono);
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-color: var(--link-line);
+  cursor: pointer;
+}
+
+.sumtools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.field.report.sumedit {
+  width: 100%;
+  min-height: 160px;
+}

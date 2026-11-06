@@ -6,6 +6,7 @@ import type { WordTime } from './kokoro'
 import type { Gloss } from './lemma'
 import type { NaturalState } from './natural'
 import type { LlmModel, Settings, TranslationLevel } from './settings'
+import type { SummaryTemplate } from './summary'
 import type { SpeechPackState, SpeechPart } from './speechpack'
 import type { Choice, Feature, FeaturePlan, SpeechPlan } from './speechplan'
 import type { SpeechHealth, SpeechResult, SpeechServiceState } from './speechservice'
@@ -282,6 +283,8 @@ export type AppView = {
   speech: SpeechView
   /** The call recording now, and its seconds recorded (the pauses left out). */
   call: { state: CallState; seconds: number }
+  /** Summaries being made, by transcript id: part `part` of `parts` since `started` (ms); `error` when it failed (kept until tried again). */
+  summaries: Record<string, { part: number; parts: number; started: number; error?: string }>
   /** The phrases dictated lately, newest first (the last 10). */
   dictation: { recent: DictationEntry[] }
   /** The translator for the person's language with its download's progress and size (MB), for the setup's list. */
@@ -577,6 +580,9 @@ export type ToHost =
   | { type: 'captureOpenSettings' }
   /** From the app window's Recordings page: a call recording started, or stopped and saved. */
   | { type: 'toggleCall' }
+  /** Makes (or makes again) a transcript's summary; main saves it in the engine. */
+  | { type: 'summarize'; id: string; template: SummaryTemplate; own?: string; mine: boolean }
+  | { type: 'cancelSummary'; id: string }
   | { type: 'dictationFailed'; message: string }
 
 /** Calls a page makes and waits for (ipcMain.handle), through `window.tutorHost.call`. */

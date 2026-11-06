@@ -7,6 +7,7 @@ import { isUiLanguage, type UiLanguage } from './i18n'
 import { findLanguage, LANGUAGES } from './languages'
 import type { WordHintMode } from './protocol'
 import type { Prefer } from './speechplan'
+import type { SummaryTemplate } from './summary'
 import type { AppPart } from './typist'
 
 /** A program by its .exe name (lower case): the parts of the keyboard helper left out there, and the layout it starts in ('' for none). */
@@ -30,6 +31,9 @@ export type LlmModel = 'accurate' | 'most'
 export type TranslationLevel = 'fast' | LlmModel
 /** The learner's English for Talk, on the common European scale (CEFR): the duck keeps to it (duck.ts LEVELS). */
 export type TalkLevel = 'A2' | 'B1' | 'B2'
+/** The summary's templates (summary.ts) and the longest instruction of the person's own. */
+export const SUMMARY_TEMPLATES: readonly SummaryTemplate[] = ['general', 'standup', 'interview', 'lecture', 'own']
+export const SUMMARY_OWN_MAX = 500
 export const TALK_LEVELS: readonly TalkLevel[] = ['A2', 'B1', 'B2']
 /** Each level's name and what the duck does there, for the Talk page; the model's own rules are duck.ts LEVELS. */
 export const TALK_LEVEL_NAMES: Readonly<Record<TalkLevel, { name: string; note: string }>> = {
@@ -154,6 +158,14 @@ export type Settings = {
   callConsentSeen: boolean
   /** Where the call panel sits, as `dictationBadge` (its own place, not the badge's). */
   callPanelOffset: { dx: number; dy: number }
+  /** A recorded call's summary is made as soon as it is transcribed, when the model is downloaded. */
+  callSummaryAuto: boolean
+  /** The template of a summary made by itself and the first one picked on a page. */
+  callTemplate: SummaryTemplate
+  /** The person's own instruction for the template `own` (SUMMARY_OWN_MAX characters at most). */
+  callOwn: string
+  /** Summaries are written in the person's language instead of the meeting's. */
+  callSummaryMine: boolean
   /** Talk: the duck's answers are read aloud as they come. */
   talkAloud: boolean
   /** The talk window (webview/talk.ts) stays over other windows: its pin. */
@@ -276,6 +288,10 @@ export const DEFAULTS: Settings = {
   meetingKey: '',
   callConsentSeen: false,
   callPanelOffset: { dx: 0, dy: 0 },
+  callSummaryAuto: true,
+  callTemplate: 'general',
+  callOwn: '',
+  callSummaryMine: false,
   talkAloud: true,
   talkOnTop: false,
   talkLevel: 'B1',
@@ -480,6 +496,10 @@ export function normalize(raw: unknown, native = DEFAULTS.native): Settings {
     meetingKey: key(r.meetingKey, DEFAULTS.meetingKey),
     callConsentSeen: flag(r.callConsentSeen, DEFAULTS.callConsentSeen),
     callPanelOffset: badgeOffset(r.callPanelOffset),
+    callSummaryAuto: flag(r.callSummaryAuto, DEFAULTS.callSummaryAuto),
+    callTemplate: SUMMARY_TEMPLATES.includes(r.callTemplate as SummaryTemplate) ? (r.callTemplate as SummaryTemplate) : DEFAULTS.callTemplate,
+    callOwn: typeof r.callOwn === 'string' ? r.callOwn.slice(0, SUMMARY_OWN_MAX) : DEFAULTS.callOwn,
+    callSummaryMine: flag(r.callSummaryMine, DEFAULTS.callSummaryMine),
     talkAloud: flag(r.talkAloud, DEFAULTS.talkAloud),
     talkOnTop: flag(r.talkOnTop, DEFAULTS.talkOnTop),
     talkLevel: TALK_LEVELS.includes(r.talkLevel as TalkLevel) ? (r.talkLevel as TalkLevel) : DEFAULTS.talkLevel,
