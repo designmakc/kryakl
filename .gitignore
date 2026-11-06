@@ -15,5 +15,6 @@ __pycache__/
 site/uk/
 site/ru/
 vendor/ocr-mac
+vendor/clip-mac
 vendor/kbd-mac
 .autopilot/serve.*

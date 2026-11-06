@@ -142,3 +142,7 @@ describe('keys Kryakl presses', () => {
     for (const vk of [0xa4, 0xa2, 0xa0, 0xa1, 0x43, 0x56, 0x08, 0x0d, 0xe8, 0xbf]) expect(isExtendedKey(vk), vk.toString(16)).toBe(false)
   })
 })
+
+test.skipIf(process.platform !== 'darwin')('Mac: Command recorded as Control, so Command+C twice is Control+C*2', () => {
+  expect(record('+MetaLeft', '+KeyC', '-KeyC', '+KeyC')).toEqual(['(Control+C)', 'Control+C*2'])
+})

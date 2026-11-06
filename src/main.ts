@@ -2234,8 +2234,10 @@ async function pasteText(text: string): Promise<void> {
   if (onMac) {
     // No SendInput on a Mac: Cmd+V through System Events, the person's text put back once the program has read it.
     const before = await clipboard.readText()
+    macOwnWrites(300)
     clipboard.writeText(text)
     await macKeystroke('v')
+    macOwnWrites(300)
     setTimeout(() => clipboard.writeText(before), 300)
     return
   }
@@ -2787,7 +2789,8 @@ function afterSettling(read: () => Promise<void>): void {
 
 function onClipboardChange(): void {
   const now = Date.now()
-  if (clipboardBusy || now < ownClipboardUntil || clipGuard.isOurs()) return
+  // ponytail: a Mac has no clipboard sequence number (clipGuard's is 0 there), so its own writes are skipped by time alone (macOwnWrites)
+  if (clipboardBusy || now < ownClipboardUntil || (!onMac && clipGuard.isOurs())) return
   const ctrl = ctrlHeld()
   if (copyWanted && now - copyWanted.since < COPY_WAIT_MS) {
     const { at, purpose, window, field, via } = copyWanted
@@ -2874,14 +2877,22 @@ function selection(purpose: Purpose, via?: string, nothing?: () => void): void {
 async function macSelection(purpose: Purpose, via?: string, nothing?: () => void): Promise<void> {
   const at = screen.getCursorScreenPoint()
   const before = await clipboard.readText()
+  // Kryakl's own Cmd+C is pressed with Command down: never half of a Cmd+C twice.
+  macOwnWrites(150)
   clipboard.writeText('')
   await macKeystroke('c')
+  macOwnWrites(150)
   await new Promise(resolve => setTimeout(resolve, 150))
   const text = (await clipboard.readText()).trim()
   if (text) return showText(text, purpose === 'inPlace' ? 'listen' : purpose, at, undefined, via)
   clipboard.writeText(before)
   if (nothing) nothing()
   else tray?.displayBalloon({ title: t('app.name'), content: t('main.nothingCopied') })
+}
+
+/** A Mac's clipboard changes Kryakl makes in the next `ms` (and the one a moment after), left out of Cmd+C twice. */
+function macOwnWrites(ms: number): void {
+  ownClipboardUntil = Math.max(ownClipboardUntil, Date.now() + ms + OWN_CLIPBOARD_MS)
 }
 
 /** A Cmd+letter sent to the program in front through System Events. */
@@ -4046,7 +4057,7 @@ function start(): void {
   )
   stopWatching = stopRendering
   try {
-    const stopChanges = watchClipboard(card, onClipboardChange)
+    const stopChanges = watchClipboard(card, onClipboardChange, onMac ? unpacked('vendor', 'clip-mac') : undefined)
     stopWatching = () => {
       stopChanges()
       stopRendering()

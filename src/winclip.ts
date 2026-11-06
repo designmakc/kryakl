@@ -3,6 +3,7 @@
 // hears it through the card window's message hook. Whether Ctrl is held is
 // read from the keyboard state at that moment. user32 is called through koffi.
 
+import { spawn } from 'node:child_process'
 import type { BrowserWindow } from 'electron'
 import koffi from 'koffi'
 import { loadLib } from './native'
@@ -24,7 +25,8 @@ export function handleOf(window: BrowserWindow): bigint {
 }
 
 /** Calls `onChange` on every clipboard change until the returned function is called. */
-export function watchClipboard(window: BrowserWindow, onChange: () => void): () => void {
+export function watchClipboard(window: BrowserWindow, onChange: () => void, macHelper?: string): () => void {
+  if (process.platform === 'darwin' && macHelper) return watchClipboardMac(macHelper, onChange)
   if (process.platform !== 'win32') throw new Error('not on this system yet')
   const hwnd = handleOf(window)
   window.hookWindowMessage(WM_CLIPBOARDUPDATE, () => onChange())
@@ -68,7 +70,35 @@ function held(vk: number): boolean {
   return (Number(GetAsyncKeyState(vk)) & 0x8000) !== 0
 }
 
+/** On a Mac: whether Command was held at the last change, as build/clip-mac.swift read it then. */
+let commandAtChange = false
+
+/** A Mac's clipboard changes, from build/clip-mac.swift: one line a change, 1 when Command was held. */
+function watchClipboardMac(exe: string, onChange: () => void): () => void {
+  const child = spawn(exe, [], { stdio: ['pipe', 'pipe', 'ignore'] })
+  let rest = ''
+  child.stdout.on('data', (chunk: Buffer) => {
+    const lines = (rest + chunk.toString()).split('\n')
+    rest = lines.pop() ?? ''
+    for (const line of lines) {
+      commandAtChange = line.trim() === '1'
+      onChange()
+    }
+  })
+  let stopped = false
+  child.on('error', error => console.warn('Kryakl: the clipboard watcher did not start', error))
+  child.on('exit', code => {
+    if (!stopped) console.warn(`Kryakl: the clipboard watcher stopped (${code})`)
+  })
+  return () => {
+    stopped = true
+    child.kill()
+  }
+}
+
+/** Ctrl held now; on a Mac, Command held at the clipboard's last change (its own reading, not the key now). */
 export function ctrlHeld(): boolean {
+  if (process.platform === 'darwin') return commandAtChange
   return held(VK_CONTROL)
 }
 

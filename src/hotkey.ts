@@ -309,8 +309,8 @@ export class HotkeyRecorder {
   }
 
   private withMods(name: string): Recorded | undefined {
-    const mods = sortMods([...this.held].map(c => TAPS.find(t => t.code === c)?.mod).filter((m): m is Mod => !!m))
-    const hotkey = [...mods, name].join('+')
+    const mods = sortMods([...this.held].map(c => TAPS.find(t => t.code === c)?.mod).filter((m): m is Mod => !!m).map(m => (onMac && m === 'Super' ? 'Control' : m)))
+    const hotkey = [...new Set(mods), name].join('+')
     return parseHotkey(hotkey) ? { hotkey } : undefined
   }
 }
