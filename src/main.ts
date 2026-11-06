@@ -3591,6 +3591,7 @@ function createTrayPanel(): BrowserWindow {
       sandbox: true,
       nodeIntegration: false,
       spellcheck: false,
+      backgroundThrottling: false, // a hidden panel keeps painting, so its first show is not blank on a Mac
     },
   })
   frameWindow(win, { corner: 'round', border: borderColor() })
@@ -3624,8 +3625,10 @@ function showTrayPanel(): void {
   refreshTray()
   placeTrayPanel()
   trayShownAt = Date.now()
+  if (process.platform === 'darwin') app.focus({ steal: true }) // an agent app's window is not drawn until the app is active
   trayPanel.show()
   trayPanel.focus()
+  trayPanel.webContents.invalidate()
   if (trayReady) trayPanel.webContents.send('to-view', { type: 'trayShown' } satisfies ToView)
 }
 
