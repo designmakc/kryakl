@@ -77,8 +77,9 @@ from stream import Session, Sessions
 
 VERSION = "0.2.0"
 PORT = 8765
-SOURCES = ("file", "mic", "meet", "note")
-TRACKS = ("main", "mic", "tab")
+SOURCES = ("file", "mic", "meet", "note", "system")
+# "system" is the whole computer's sound in a call (Kryakl's own recorder), taken as the extension's "tab".
+TRACKS = ("main", "mic", "tab", "system")
 MEDIA = {".mp4", ".mkv", ".webm", ".mov", ".avi", ".m4v", ".mp3", ".m4a", ".wav", ".ogg", ".oga", ".opus", ".flac", ".aac", ".wma"}
 
 log = logging.getLogger("kryakl")
@@ -513,6 +514,8 @@ def setup_again():
 
 # Library ------------------------------------------------------------------
 
+SUMMARY_MAX = 100_000
+
 def transcript_or_404(id: str) -> dict:
     try:
         t = state.get_store().transcript(id)
@@ -571,6 +574,32 @@ def patch_transcript(id: str, changes: dict = Body(...)):
     t["edited"] = now_iso()
     store.save(id, t)
     return public(t, id)
+
+
+@app.put("/transcripts/{id}/summary")
+def put_summary(id: str, body: dict = Body(...)):
+    """A call's summary, made by Kryakl's local model: {summary: {text, template, mine, language, made, edited?} | null}."""
+    store = state.get_store()
+    row = store.row(id)
+    if row is None:
+        raise HTTPException(404, "No such transcript")
+    if row["status"] != "done":
+        raise HTTPException(409, "This recording is still being transcribed")
+    t = transcript_or_404(id)
+    summary = body.get("summary")
+    if summary is None:
+        t.pop("summary", None)
+    else:
+        text = summary.get("text") if isinstance(summary, dict) else None
+        if not isinstance(text, str) or len(text) > SUMMARY_MAX:
+            raise HTTPException(400, "A summary's text is needed, 100 000 characters at most")
+        t["summary"] = {"text": text, "template": str(summary.get("template") or ""), "mine": bool(summary.get("mine")),
+                        "language": summary.get("language") if isinstance(summary.get("language"), str) else None,
+                        "made": str(summary.get("made") or now_iso())}
+        if isinstance(summary.get("edited"), str):
+            t["summary"]["edited"] = summary["edited"]
+    store.save(id, t)
+    return {"ok": True}
 
 
 @app.post("/transcripts/{id}/speakers")
@@ -728,18 +757,20 @@ async def body_within(request: Request, limit: int) -> bytes:
 
 @app.post("/recordings")
 def start_recording(request: Request, body: dict = Body(...)):
-    """A recording that arrives in chunks: {source, title?, tracks: {tab|mic|main: {startedAt}}}."""
+    """A recording that arrives in chunks: {source, title?, app?, tracks: {tab|system|mic|main: {startedAt}}}."""
     source = body.get("source")
     tracks = body.get("tracks") or {}
-    if source not in ("mic", "meet", "note") or not tracks or any(t not in TRACKS for t in tracks):
+    if source not in ("mic", "meet", "note", "system") or not tracks or any(t not in TRACKS for t in tracks):
         raise HTTPException(400, "source and tracks are needed")
     if by_extension(request) and source != "meet":
         # The extension starts only meetings (offscreen.js); a note or the microphone is Kryakl's, with the key.
         raise HTTPException(403, "forbidden")
-    title = (body.get("title") or "").strip() or {"mic": "Microphone recording", "meet": "Meeting", "note": "Note"}[source]
+    title = (body.get("title") or "").strip() or {"mic": "Microphone recording", "meet": "Meeting", "note": "Note", "system": "Call"}[source]
     store = state.get_store()
     job = {"kind": source, "tracks": {t: {"startedAt": float(v.get("startedAt", 0))} for t, v in tracks.items()},
            "language": body.get("language") or None, "speakers": body.get("speakers") or None}
+    if isinstance(body.get("app"), str) and body["app"].strip():
+        job["app"] = body["app"].strip()[:80]  # the call's program, as Kryakl found it running
     id = store.create(title, source, "recording", job)
     (store.folder(id) / "incoming").mkdir()
     return {"id": id}
@@ -771,6 +802,9 @@ async def chunk(id: str, track: str, seq: int, request: Request):
 def finish(id: str, request: Request, body: dict = Body(default={})):
     store = state.get_store()
     extension_meeting(request, store.row(id))
+    lost = body.get("lost", 0)
+    if type(lost) is not int or lost < 0:
+        raise HTTPException(400, "lost is a count of chunks")
     _received.pop(id, None)
     if not finish_recording(store, id, body):
         raise HTTPException(409, "Nothing to transcribe")

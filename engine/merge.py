@@ -203,8 +203,9 @@ def meeting(
     mine: list[dict],
     theirs: list[dict],
     turns: list[tuple[float, float, str]] | None,
+    track: str = "tab",
 ) -> tuple[list[dict], list[dict]]:
-    """My microphone's segments as "me", the tab's split by speaker, echo removed, in time order."""
+    """My microphone's segments as "me", the tab's (or a call's "system") split by speaker, echo removed, in time order."""
     my_words = words_of(mine)
     for w in my_words:
         w["speaker"] = ME
@@ -212,7 +213,7 @@ def meeting(
     assign(their_words, turns or [])
     my_words = drop_echo(my_words, their_words)
     stored(my_words, "mic")
-    stored(their_words, "tab")
+    stored(their_words, track)
     kept = index(my_words + their_words)
     utterances = group(my_words) + group(their_words)
     utterances.sort(key=lambda u: (u["start"], u["end"]))

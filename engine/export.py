@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 
 FORMATS = ("txt", "md", "srt", "vtt", "docx", "json")
-SOURCES = {"meet": "Meeting", "file": "File", "mic": "Microphone", "note": "Note"}
+SOURCES = {"meet": "Meeting", "file": "File", "mic": "Microphone", "note": "Note", "system": "Call"}
 MONTHS = ("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
 SENTENCE = re.compile(r"(?<=[.!?…])\s+")
 
@@ -53,8 +53,15 @@ def meta_line(t: dict) -> str:
     return " · ".join([when(t["created"]), length(t.get("duration", 0)), SOURCES.get(t.get("source", ""), "")])
 
 
+def summary_of(t: dict) -> str:
+    """The call's summary (Markdown, made by Kryakl), or nothing."""
+    return ((t.get("summary") or {}).get("text") or "").strip()
+
+
 def to_txt(t: dict) -> str:
     lines = [t.get("title", ""), meta_line(t), ""]
+    if summary_of(t):
+        lines += ["Summary", "", summary_of(t), "", "Transcript", ""]
     lines += [f"[{clock(u['start'])}] {name(t, u['speaker'])}: {u['text']}" for u in t.get("utterances", [])]
     return "\n".join(lines) + "\n"
 
@@ -62,6 +69,8 @@ def to_txt(t: dict) -> str:
 def to_md(t: dict, heading: bool = True) -> str:
     out = [f"# {t.get('title', '')}", ""] if heading else []
     out += [f"*{meta_line(t)}*", ""]
+    if summary_of(t):
+        out += ["## Summary", "", summary_of(t), "", "## Transcript", ""]
     people = participants(t)
     if len(people) > 1:
         out += [f"**Speakers:** {', '.join(people)}", ""]
@@ -112,6 +121,16 @@ def to_docx(t: dict, path) -> None:
     doc.add_heading(t.get("title", ""), level=1)
     meta = doc.add_paragraph(meta_line(t))
     meta.runs[0].font.color.rgb = RGBColor(0x6E, 0x76, 0x81)
+    if summary_of(t):
+        doc.add_heading("Summary", level=2)
+        for line in summary_of(t).splitlines():
+            if line.startswith("#"):
+                doc.add_heading(line.lstrip("#").strip(), level=3)
+            elif line.startswith("- "):
+                doc.add_paragraph(line[2:], style="List Bullet")
+            elif line.strip():
+                doc.add_paragraph(line)
+        doc.add_heading("Transcript", level=2)
     people = participants(t)
     if len(people) > 1:
         doc.add_paragraph(f"Speakers: {', '.join(people)}")

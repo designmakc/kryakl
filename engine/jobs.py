@@ -93,7 +93,7 @@ def finish_recording(store: Store, id: str, options: dict | None = None, interru
         store.delete(id)
         return False
     job["inputs"] = inputs
-    job.update({k: v for k, v in (options or {}).items() if k in ("language", "speakers")})
+    job.update({k: v for k, v in (options or {}).items() if k in ("language", "speakers", "lost")})
     store.update(id, status="queued", job=job, stage="", progress=0, error="The recording was cut off; what arrived is transcribed" if interrupted else "")
     return True
 
@@ -384,15 +384,17 @@ class Worker:
 
         # Loading the model, finding the language and cutting the silence come before the first words.
         progress("words")
-        if kind == "meet" and "mic" in tracks and "tab" in tracks:
+        # A meeting (the extension's tab) or a call (the computer's sound): the microphone is "me", the rest by voice.
+        other = next((t for t in ("tab", "system") if t in tracks), None)
+        if kind in ("meet", "system") and "mic" in tracks and other:
             mine = audio.pad(*tracks["mic"])
-            theirs = audio.pad(*tracks["tab"])
+            theirs = audio.pad(*tracks[other])
             share = len(mine) / max(len(mine) + len(theirs), 1)
             my_segments, my_language = words(mine, (0.0, share))
             their_segments, their_language = words(theirs, (share, 1.0))
             spoken = their_language if their_segments else my_language
             turns, speakers_status = self._speakers(id, theirs, job.get("speakers"), progress)
-            utterances, kept = merge.meeting(my_segments, their_segments, turns)
+            utterances, kept = merge.meeting(my_segments, their_segments, turns, other)
         else:
             segments, spoken = words(mixed)
             turns = None
@@ -419,6 +421,12 @@ class Worker:
             "audio": "audio.ogg",
             "speakersStatus": speakers_status,
         }
+        # A transcript made again keeps what is not made from the sound: the summary, the call's program, its lost chunks.
+        before = store.transcript(id) or {}
+        for key in ("app", "lost", "summary"):
+            value = job.get(key, before.get(key))
+            if value:
+                transcript[key] = value
         if kind == "note":
             transcript["title"] = notes.first_words(" ".join(u["text"] for u in utterances), 8)
             try:
