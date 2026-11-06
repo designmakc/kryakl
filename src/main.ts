@@ -211,6 +211,8 @@ const LINKS = new Set([
   'https://huggingface.co/join',
   'https://huggingface.co/pyannote/speaker-diarization-community-1',
   'https://huggingface.co/settings/tokens',
+  // A Mac's Accessibility settings, for the keyboard helper's tap (the Keyboard layout page).
+  'x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility',
 ])
 
 /** The settings that are Dictate's keys (and Talk's, which listens as dictation does): registered only once the speech engine is installed. */
@@ -469,8 +471,8 @@ function saveSettings(patch: Partial<Settings>): void {
   }
   if ('startWithWindows' in patch) applyLoginItem()
   // A key may be Electron's or the keyboard thread's (hotkey.ts isAccelerator): both learn of any change.
-  if ([...ACTION_KEYS, ...DICTATION_KEYS, 'paused'].some(k => k in patch)) registerShortcuts()
-  if ([...ACTION_KEYS, ...DICTATION_KEYS, ...KEYBOARD_SETTINGS].some(k => k in patch)) applyKeyboard()
+  if ([...ACTION_KEYS, ...DICTATION_KEYS, 'paused', 'dictateHold'].some(k => k in patch)) registerShortcuts()
+  if ([...ACTION_KEYS, ...DICTATION_KEYS, ...KEYBOARD_SETTINGS, 'dictateHold'].some(k => k in patch)) applyKeyboard()
   if ('trayLayout' in patch && !settings.trayLayout) frontLayout = undefined
   // Paused while a phrase is recorded: the phrase is dropped, as Esc would.
   if (patch.paused && settings.paused) dictation?.cancel()
@@ -2934,8 +2936,6 @@ function registerShortcuts(): void {
   const register = (accelerator: string, run: () => void): boolean => {
     if (!accelerator) return true
     if (!isAccelerator(accelerator)) {
-      // A Mac has no keyboard thread to hold it (a double tap, a mouse button, a lone modifier).
-      if (onMac) log(`keys: ${accelerator} is not a key a Mac can hold, skipped`)
       return true
     }
     try {
@@ -2971,7 +2971,8 @@ function registerShortcuts(): void {
     if (!settings.translateKey) register('Control+Shift+Y', () => selection('translate'))
   }
   // Dictate's keys mean nothing before the engine is there; then each starts and stops a phrase.
-  const dictate = (mode: DictationMode, key: string) => (speech?.installed ? register(key, () => dictation.press(mode, key)) : true)
+  // Held to talk, the keys but the note's are the keyboard thread's, which sees them go up (keyboard.ts apply).
+  const dictate = (mode: DictationMode, key: string) => (speech?.installed ? (settings.dictateHold && mode !== 'note') || register(key, () => dictation.press(mode, key)) : true)
   speechKeysOk = {
     dictate: dictate('type', settings.dictateKey),
     english: dictate('english', settings.englishKey),
@@ -3730,6 +3731,7 @@ function setUpSpeechEngine(): void {
     log: dictationLog,
     logged: () => postApp(),
     panel: () => settings.dictationPanel,
+    hold: () => settings.dictateHold,
     trayPoint,
     offset: () => settings.dictationBadge,
     moved: offset => saveSettings({ dictationBadge: offset }),
@@ -3947,6 +3949,7 @@ function start(): void {
       else if (action === 'menu') menuPressed()
       else snip('listen', settings.snipKey)
     },
+    hotkeyUp: () => dictation.release(),
     app: (exe, elevated) => {
       lastApp = exe
       if (elevated) elevatedApp = exe

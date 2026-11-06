@@ -2205,6 +2205,7 @@ function voicePage(v: AppView): HTMLElement[] {
     keyRow('englishKey', t('dict.english'), t('dictate.englishNote', { lang: languageName(s.native) }), !k.english),
     keyRow('againKey', t('dictate.againKey'), t('dictate.againNote'), !k.again),
     keyRow('noteKey', t('dict.note'), t('dictate.noteNote'), !k.note),
+    toggle(t('dictate.hold'), s.dictateHold, dictateHold => save({ dictateHold }), t('dictate.holdNote')),
     toggle(t('dictate.panel'), s.dictationPanel, dictationPanel => save({ dictationPanel }), t('dictate.panelNote')),
     aside('info', t('dictate.escNote')),
     el('p', { class: 'privacy' }, lucide('lock', 's'), t('dictate.privacy')),
@@ -2803,8 +2804,6 @@ function layoutPage(v: AppView): HTMLElement[] {
   const [typed = '', fixed = ''] = [sample.typed.split(' ')[0], sample.fixed.split(' ')[0]]
   const ownKeys = Object.keys(s.layoutKeys).length
   const learnedCount = v.learned.alwaysFix.length + v.learned.myWords.length
-  // The layout helper is a Windows keyboard hook: on a Mac the page says so and nothing else.
-  if (onMac) return [warn(t('kb.windowsOnly'))]
   const onOff = (on: boolean, key: 'switchOn' | 'fixKeyOn', label: string, has: boolean) => (has ? el('span', { class: 'tgwrap' }, toggleKnob(on, next => save({ [key]: next }), label)) : null)
   return [
     tiles([
@@ -2845,7 +2844,12 @@ function layoutPage(v: AppView): HTMLElement[] {
     toggleCard('monitor', t('kb.fullScreen'), s.quietFullScreen, quietFullScreen => save({ quietFullScreen }), t('kb.fullScreenNote')),
     v.rivals.length ? warn(t('kb.rivals', { n: v.rivals.length, names: v.rivals.join(` ${t('common.and')} `) })) : null,
     v.elevatedApp ? warn(t('kb.elevated', { app: v.elevatedApp })) : null,
-    v.keyboardTrouble ? warn(t('kb.trouble', { trouble: v.keyboardTrouble })) : null,
+    // On a Mac the tap waits for Accessibility (kbdmac-worker.ts): said plainly, with the way there.
+    v.keyboardTrouble === 'macAccess'
+      ? warn(t('kb.macAccess'), ' ', linkBtn(t('kb.macAccessOpen'), () => post({ type: 'openLink', url: 'x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility' })))
+      : v.keyboardTrouble
+        ? warn(t('kb.trouble', { trouble: v.keyboardTrouble }))
+        : null,
     othersLine(v),
     el('p', { class: 'privacy' }, lucide('lock', 's'), t('kb.privacy')),
   ].filter((n): n is HTMLElement => n !== null)

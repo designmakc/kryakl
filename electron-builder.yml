@@ -34,6 +34,7 @@ asarUnpack:
   - dist/mt-worker.js
   - dist/voice-worker.js
   - dist/kbd-worker.js
+  - dist/kbdmac-worker.js
   - dist/field-worker.js
   - node_modules/koffi/**
   - vendor/**

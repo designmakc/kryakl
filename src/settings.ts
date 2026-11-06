@@ -189,6 +189,8 @@ export type Settings = {
   dictationBadge: { dx: number; dy: number }
   /** The badge shows while a phrase is dictated; off, only the tray's red dot does, and the badge comes up only to say what went wrong. */
   dictationPanel: boolean
+  /** Hold a dictation key to talk: the release finishes the phrase (a quick tap still toggles). Not the note key. */
+  dictateHold: boolean
   /**
    * Words dictation and transcripts spell as written, one line each as the
    * person typed it: the word, then what it may be heard as in parentheses
@@ -302,6 +304,7 @@ export const DEFAULTS: Settings = {
   talkBounds: null,
   dictationBadge: { dx: 0, dy: 0 },
   dictationPanel: true,
+  dictateHold: false,
   vocabulary: [],
   translationLevel: 'fast',
   model: 'accurate',
@@ -510,6 +513,7 @@ export function normalize(raw: unknown, native = DEFAULTS.native): Settings {
     talkBounds: windowBounds(r.talkBounds),
     dictationBadge: badgeOffset(r.dictationBadge),
     dictationPanel: flag(r.dictationPanel, DEFAULTS.dictationPanel),
+    dictateHold: flag(r.dictateHold, DEFAULTS.dictateHold),
     vocabulary: vocabularyLines(r.vocabulary),
     ...levelAndModel(r.translationLevel, r.model),
     speechPrefer: r.speechPrefer === 'speed' ? 'speed' : 'accuracy',

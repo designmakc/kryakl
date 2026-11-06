@@ -67,6 +67,8 @@ const translator = { ...node, entryPoints: ['src/mt-worker.ts'], outfile: 'dist/
 /** @type {import('esbuild').BuildOptions} */
 const keyboard = { ...node, entryPoints: ['src/kbd-worker.ts'], external: ['koffi'], outfile: 'dist/kbd-worker.js' }
 /** Its thread for asking whether the field typed in is a password (UI Automation). */
+/** Its Mac twin: the keys from vendor/kbd-mac (a CGEventTap) to the same Typist. */
+const keyboardMac = { ...node, entryPoints: ['src/kbdmac-worker.ts'], outfile: 'dist/kbdmac-worker.js' }
 const field = { ...keyboard, entryPoints: ['src/field-worker.ts'], outfile: 'dist/field-worker.js' }
 
 /** @type {import('esbuild').BuildOptions} */
@@ -96,7 +98,7 @@ const talkWindow = { ...card, entryPoints: ['src/webview/talk.ts'], outfile: 'me
 /** The badge's audio thread: the microphone as 16 kHz samples for the engine (an AudioWorklet, loaded by URL). */
 const pcmWorklet = { ...card, entryPoints: ['src/webview/pcm-worklet.ts'], outfile: 'media/pcm-worklet.js' }
 
-const all = [main, preload, voice, translator, keyboard, field, card, appWindow, trayPanel, dictation, menuWindow, talkWindow, captureWindow, pcmWorklet]
+const all = [main, preload, voice, translator, keyboard, keyboardMac, field, card, appWindow, trayPanel, dictation, menuWindow, talkWindow, captureWindow, pcmWorklet]
 if (watch) {
   const contexts = await Promise.all(all.map(o => context(o)))
   await Promise.all(contexts.map(c => c.watch()))

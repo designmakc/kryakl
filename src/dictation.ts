@@ -19,6 +19,7 @@ import { BrowserWindow, globalShortcut, screen, shell } from 'electron'
 import { openable } from './bridge'
 import type { DictationLog } from './dictationlog'
 import { frameWindow } from './dwm'
+import { HoldToTalk } from './holdtalk'
 import { t } from './i18n'
 import { log } from './log'
 import { badgeOffset, flightPoint, placeBadge, type Rect } from './placement'
@@ -82,6 +83,8 @@ export type DictationOptions = {
   trayPoint: () => { x: number; y: number }
   /** Where the person last dropped the badge, from the bottom centre of the work area; and keeping a new place. */
   offset: () => Settings['dictationBadge']
+  /** Hold the key to talk: its release (`release`) finishes a phrase it started by holding. */
+  hold: () => boolean
   moved: (offset: Settings['dictationBadge']) => void
 }
 
@@ -119,13 +122,24 @@ export class Dictation {
   /** The height the page last asked for, kept while the badge cannot take it. */
   private asked: number = BADGE.min
   private flight: NodeJS.Timeout | undefined
+  private holding = new HoldToTalk()
+  /** Let go while the engine was still being asked for a session: finished once it starts. */
+  private finishOnStart = false
 
   constructor(private readonly o: DictationOptions) {}
 
   /** A Dictate key: the first press starts, the next one (any of the three) stops. */
   press(mode: DictationMode, key: string): void {
     if (this.opening) return
+    this.holding.pressed(Date.now(), this.state === 'idle')
     if (this.state === 'idle') void this.start(mode, key)
+    else if (this.state === 'recording') this.stop()
+  }
+
+  /** A dictation key went up (the keyboard thread saw it): held long enough, the phrase it started finishes; a tap stays a toggle. Never a note's. */
+  release(): void {
+    if (!this.o.hold() || !this.holding.released(Date.now()) || this.mode === 'note') return
+    if (this.opening) this.finishOnStart = true
     else if (this.state === 'recording') this.stop()
   }
 
@@ -138,6 +152,7 @@ export class Dictation {
       return
     }
     this.mode = mode
+    this.finishOnStart = false
     if (mode === 'type' || mode === 'english') this.o.warm()
     // The screen to show on is the one with the window the text goes into, taken now, while it is in front.
     this.area = this.workArea()
@@ -164,6 +179,10 @@ export class Dictation {
     else this.present(badge, `session ${session ? 'yes' : 'no'}`)
     this.send({ type: 'dictation', command: 'start', mode, key, ...(session ? { session } : {}), expected })
     globalShortcut.register('Escape', () => this.cancel())
+    if (this.finishOnStart) {
+      this.finishOnStart = false
+      this.stop()
+    }
   }
 
   /** The badge at the person's place on this phrase's screen, on top. */

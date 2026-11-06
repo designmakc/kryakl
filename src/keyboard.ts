@@ -18,6 +18,10 @@ import { RECORD_MS, type KbdConfig, type KbdIn, type KbdOut, type KeyAction, typ
 import type { KeyboardLayout } from './protocol'
 import { myLanguages, type Settings } from './settings'
 import { caretOf, foreground, installedLayouts } from './winkbd'
+import { macKeyboardLayouts } from './kbdmac'
+
+/** The Mac's keyboard helper (build/kbd-mac.swift), beside dist/ in vendor/. */
+let macHelper = ''
 
 const user32 = loadLib('user32.dll')
 const PostThreadMessageW = user32.func('bool __stdcall PostThreadMessageW(uint32 tid, uint32 msg, uintptr w, intptr l)')
@@ -51,6 +55,8 @@ export type KeyboardEvents = {
   selection(cycle: string[], layout: string): void
   /** A key Electron's shortcuts cannot hold, for selecting, snipping or a snip's text, was pressed. */
   hotkey(action: MainAction): void
+  /** A dictation key went up again (hold to talk). */
+  hotkeyUp(action: 'dictate' | 'english' | 'practice'): void
   /** The program in front lately; whether it runs as administrator. */
   app(exe: string, elevated: boolean): void
   /** The layout in front, and Caps Lock (for the tray's icon). */
@@ -68,6 +74,7 @@ export type KeyboardEvents = {
 
 /** Windows' keyboard layouts for the settings: the language's name in English and its short tag. */
 export function keyboardLayouts(): KeyboardLayout[] {
+  if (process.platform === 'darwin') return macKeyboardLayouts(macHelper)
   const names = new Intl.DisplayNames(['en'], { type: 'language' })
   return installedLayouts().map(l => {
     let name = l.tag || l.id
@@ -98,7 +105,9 @@ export class KeyboardHelper {
     /** The sounds, out of the app's archive: Windows plays them from a file of its own. */
     private readonly soundsDir: string,
     private readonly events: KeyboardEvents,
-  ) {}
+  ) {
+    macHelper = path.join(path.dirname(path.dirname(workerPath)), 'vendor', 'kbd-mac')
+  }
 
   /**
    * Starts, configures or ends the thread for these settings: the layout keys
@@ -116,7 +125,8 @@ export class KeyboardHelper {
       if (s.switchKey && s.switchOn) keys.switch = s.switchKey
       if (s.fixKey && s.fixKeyOn) keys.fix = s.fixKey
       // Always the thread's, with a modifier too: Electron's shortcut would end what was typed before the menu's fix item could fix it.
-      if (s.menuKey && !isCopyTwice(s.menuKey)) keys.menu = s.menuKey
+      // On a Mac a key Electron can hold stays Electron's (main.ts registers it): it works without Accessibility.
+      if (s.menuKey && !isCopyTwice(s.menuKey) && !(process.platform === 'darwin' && isAccelerator(s.menuKey))) keys.menu = s.menuKey
       for (const [action, key] of [
         ['select', s.selectKey],
         ['snip', s.snipKey],
@@ -136,7 +146,9 @@ export class KeyboardHelper {
         ['pause', s.pauseKey],
         ['window', s.windowKey],
       ] as const) {
-        if (its(key)) keys[action] = key
+        // Held to talk, a dictation key is the thread's whatever it is: only the thread sees it go up.
+        const held = s.dictateHold && (action === 'dictate' || action === 'english' || action === 'practice') && !!key && !isCopyTwice(key)
+        if (its(key) || held) keys[action] = key
       }
     }
     const on = !s.paused
@@ -239,10 +251,11 @@ export class KeyboardHelper {
   }
 
   private start(): void {
-    // The hooks are Windows': on a Mac no thread starts, and no trouble is reported.
-    if (process.platform === 'darwin') return
     const { port1, port2 } = new MessageChannel()
-    const worker = new Worker(this.workerPath, { workerData: { port: port2 }, transferList: [port2] })
+    // On a Mac the keys come from a CGEventTap (kbdmac-worker.ts), to the same Typist.
+    const mac = process.platform === 'darwin'
+    const file = mac ? path.join(path.dirname(this.workerPath), 'kbdmac-worker.js') : this.workerPath
+    const worker = new Worker(file, { workerData: { port: port2, ...(mac ? { helper: macHelper } : {}) }, transferList: [port2] })
     this.worker = worker
     this.port = port1
     this.tid = 0
@@ -305,6 +318,9 @@ export class KeyboardHelper {
         return
       case 'hotkey':
         this.events.hotkey(message.action)
+        return
+      case 'hotkeyUp':
+        this.events.hotkeyUp(message.action)
         return
       case 'app':
         this.events.app(message.exe, message.elevated)
