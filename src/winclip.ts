@@ -5,13 +5,14 @@
 
 import type { BrowserWindow } from 'electron'
 import koffi from 'koffi'
+import { loadLib } from './native'
 
 import { MAIN_KEYS } from './winkbd'
 
 const WM_CLIPBOARDUPDATE = 0x031d
 const VK_CONTROL = 0x11
 
-const user32 = koffi.load('user32.dll')
+const user32 = loadLib('user32.dll')
 const AddClipboardFormatListener = user32.func('bool __stdcall AddClipboardFormatListener(intptr_t hwnd)')
 const RemoveClipboardFormatListener = user32.func('bool __stdcall RemoveClipboardFormatListener(intptr_t hwnd)')
 const GetAsyncKeyState = user32.func('short __stdcall GetAsyncKeyState(int vKey)')
@@ -24,6 +25,7 @@ export function handleOf(window: BrowserWindow): bigint {
 
 /** Calls `onChange` on every clipboard change until the returned function is called. */
 export function watchClipboard(window: BrowserWindow, onChange: () => void): () => void {
+  if (process.platform !== 'win32') throw new Error('not on this system yet')
   const hwnd = handleOf(window)
   window.hookWindowMessage(WM_CLIPBOARDUPDATE, () => onChange())
   if (!AddClipboardFormatListener(hwnd)) throw new Error('Windows did not let Kryakl watch the clipboard')
@@ -39,6 +41,7 @@ const WM_RENDERALLFORMATS = 0x0306
 
 /** The window owns Kryakl's promised text (winclipboard.ts): `onRead` when a program asks for it, `onGoing` when the window goes first. */
 export function watchRendering(window: BrowserWindow, onRead: () => void, onGoing: () => void): () => void {
+  if (process.platform !== 'win32') return () => {}
   // Called within Windows' message: the text must be handed over before the hook returns.
   window.hookWindowMessage(WM_RENDERFORMAT, () => onRead())
   window.hookWindowMessage(WM_RENDERALLFORMATS, () => onGoing())

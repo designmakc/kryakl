@@ -8,6 +8,7 @@ import * as os from 'node:os'
 
 import type { BrowserWindow } from 'electron'
 import koffi from 'koffi'
+import { loadLib } from './native'
 
 import { handleOf } from './winclip'
 
@@ -23,7 +24,7 @@ type SetAttribute = (hwnd: bigint, attr: number, value: Buffer, size: number) =>
 let setAttribute: SetAttribute | undefined
 /** dwmapi is loaded on the first frame, so other systems never touch it. */
 function dwm(): SetAttribute {
-  return (setAttribute ??= koffi.load('dwmapi.dll').func('int32_t __stdcall DwmSetWindowAttribute(intptr_t hwnd, uint32_t attr, void *value, uint32_t size)'))
+  return (setAttribute ??= loadLib('dwmapi.dll').func('int32_t __stdcall DwmSetWindowAttribute(intptr_t hwnd, uint32_t attr, void *value, uint32_t size)'))
 }
 
 export type Frame = {

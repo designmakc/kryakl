@@ -6,14 +6,15 @@
 import * as path from 'node:path'
 
 import koffi from 'koffi'
+import { loadLib } from './native'
 
 import { isExtendedKey } from './hotkey'
 import { keyId, tableOf, type KeyTable } from './layoutfix'
 
-const user32 = koffi.load('user32.dll')
-const kernel32 = koffi.load('kernel32.dll')
-const advapi32 = koffi.load('advapi32.dll')
-const shell32 = koffi.load('shell32.dll')
+const user32 = loadLib('user32.dll')
+const kernel32 = loadLib('kernel32.dll')
+const advapi32 = loadLib('advapi32.dll')
+const shell32 = loadLib('shell32.dll')
 
 const POINT = koffi.struct('KbdPoint', { x: 'int32', y: 'int32' })
 const RECT = koffi.struct('KbdRect', { left: 'int32', top: 'int32', right: 'int32', bottom: 'int32' })
@@ -204,7 +205,7 @@ export function windowRect(hwnd: bigint): { x: number; y: number; width: number;
 type GetAttribute = (hwnd: bigint | number, attr: number, value: number[], size: number) => number
 let getAttribute: GetAttribute | undefined
 function dwmAttribute(): GetAttribute {
-  return (getAttribute ??= koffi.load('dwmapi.dll').func('int32 __stdcall DwmGetWindowAttribute(intptr hwnd, uint32 attr, _Out_ uint32 *value, uint32 size)'))
+  return (getAttribute ??= loadLib('dwmapi.dll').func('int32 __stdcall DwmGetWindowAttribute(intptr hwnd, uint32 attr, _Out_ uint32 *value, uint32 size)'))
 }
 
 /** Why Windows hides a window it calls visible (another virtual desktop, a suspended app): 0 when it does not. */

@@ -8,14 +8,15 @@
 // their place in the table.
 
 import koffi from 'koffi'
+import { loadLib } from './native'
 
-const ole32 = koffi.load('ole32.dll')
+const ole32 = loadLib('ole32.dll')
 
 const GUID = koffi.struct('UiaGuid', { a: 'uint32', b: 'uint16', c: 'uint16', d: koffi.array('uint8', 8) })
 const CoInitializeEx = ole32.func('int32 __stdcall CoInitializeEx(void *reserved, uint32 flags)')
 const CoCreateInstance = ole32.func('int32 __stdcall CoCreateInstance(UiaGuid *clsid, void *outer, uint32 ctx, UiaGuid *iid, _Out_ void **out)')
 
-const oleaut32 = koffi.load('oleaut32.dll')
+const oleaut32 = loadLib('oleaut32.dll')
 const SysFreeString = oleaut32.func('void __stdcall SysFreeString(void *text)')
 
 const Release = koffi.proto('uint32 __stdcall UiaRelease(void *self)')

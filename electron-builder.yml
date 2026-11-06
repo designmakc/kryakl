@@ -59,3 +59,15 @@ nsis:
 # No publish settings: the release workflow puts the installer in a GitHub release itself, and Kryakl does
 # not update itself (people download new versions from the releases). The installer is not signed
 # (a free app): Windows warns at install.
+# Mac (npm run dist:mac → release/Kryakl-<version>-arm64.dmg): not signed, so the first
+# start is right-click › Open. The Windows keyboard, clipboard and OCR parts are off there.
+mac:
+  target: dmg
+  icon: build/icon.png
+  category: public.app-category.education
+  extendInfo:
+    LSUIElement: true
+    NSAppleEventsUsageDescription: Kryakl copies the selected text to translate it.
+    NSMicrophoneUsageDescription: Kryakl listens when you dictate.
+dmg:
+  artifactName: Kryakl-${version}-${arch}.${ext}

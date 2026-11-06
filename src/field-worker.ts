@@ -7,12 +7,13 @@
 import { workerData, type MessagePort } from 'node:worker_threads'
 
 import koffi from 'koffi'
+import { loadLib } from './native'
 
 import { focusedIsPassword } from './uia'
 
 const { port, tid } = workerData as { port: MessagePort; tid: number }
 
-const user32 = koffi.load('user32.dll')
+const user32 = loadLib('user32.dll')
 const PostThreadMessageW = user32.func('bool __stdcall PostThreadMessageW(uint32 tid, uint32 msg, uintptr w, intptr l)')
 /** The answer is on the port. */
 const WM_APP_FIELD = 0x8002

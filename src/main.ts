@@ -940,9 +940,10 @@ function createCard(): BrowserWindow {
   // A double click on the bar (the drag region, Windows' caption) maximizes or restores it, as a window's title bar does.
   const WM_NCLBUTTONDBLCLK = 0x00a3
   const HTCAPTION = 2
-  win.hookWindowMessage(WM_NCLBUTTONDBLCLK, wParam => {
-    if (wParam.readUInt32LE(0) === HTCAPTION) maximizeCard(!maximizedFrom)
-  })
+  if (process.platform === 'win32')
+    win.hookWindowMessage(WM_NCLBUTTONDBLCLK, wParam => {
+      if (wParam.readUInt32LE(0) === HTCAPTION) maximizeCard(!maximizedFrom)
+    })
   logPageErrors(win, 'card')
   void win.loadFile(path.join(app.getAppPath(), 'media', 'card.html'), pageOptions())
   return win
@@ -3369,6 +3370,21 @@ function runTrayCommand(command: TrayCommand): void {
  * copied text and `--translate` translates it; `--snip` snips to listen,
  * `--text` to translate. True when the arguments held one.
  */
+/**
+ * On a Mac the Windows keyboard hook is off: Cmd+Shift+L listens to the
+ * selection, Cmd+Shift+Y translates it. The selection is copied by a Cmd+C sent
+ * through System Events (macOS asks once for Accessibility access).
+ */
+// ponytail: fixed keys and the clipboard keeps the copy; Settings › Keys and the clipboard given back when the Mac version grows
+function registerMacKeys(): void {
+  const copyThen = (action: 'listen' | 'translate') => () =>
+    execFile('osascript', ['-e', 'tell application "System Events" to keystroke "c" using command down'], () =>
+      setTimeout(() => useClipboard(action), 150),
+    )
+  globalShortcut.register('CommandOrControl+Shift+L', copyThen('listen'))
+  globalShortcut.register('CommandOrControl+Shift+Y', copyThen('translate'))
+}
+
 function runCommand(argv: readonly string[]): boolean {
   if (argv.includes('--clipboard')) {
     afterSettling(() => useClipboard('listen'))
@@ -3767,6 +3783,7 @@ function start(): void {
   void sendHostVoices()
   // The first start opens the window on "How to use".
   if (firstRun) openApp('home')
+  if (process.platform === 'darwin') registerMacKeys()
   runCommand(process.argv)
 }
 

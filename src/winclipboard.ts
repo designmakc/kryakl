@@ -9,9 +9,10 @@
 // go back.
 
 import koffi from 'koffi'
+import { loadLib } from './native'
 
-const user32 = koffi.load('user32.dll')
-const kernel32 = koffi.load('kernel32.dll')
+const user32 = loadLib('user32.dll')
+const kernel32 = loadLib('kernel32.dll')
 const OpenClipboard = user32.func('bool __stdcall OpenClipboard(intptr_t hwnd)')
 const CloseClipboard = user32.func('bool __stdcall CloseClipboard()')
 const EmptyClipboard = user32.func('bool __stdcall EmptyClipboard()')

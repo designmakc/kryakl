@@ -9,6 +9,7 @@ import { MessageChannel, Worker } from 'node:worker_threads'
 
 import { BrowserWindow, screen } from 'electron'
 import koffi from 'koffi'
+import { loadLib } from './native'
 
 import { isAccelerator, isCopyTwice } from './hotkey'
 import type { LearnedConfig } from './learning'
@@ -18,7 +19,7 @@ import type { KeyboardLayout } from './protocol'
 import { myLanguages, type Settings } from './settings'
 import { caretOf, foreground, installedLayouts } from './winkbd'
 
-const user32 = koffi.load('user32.dll')
+const user32 = loadLib('user32.dll')
 const PostThreadMessageW = user32.func('bool __stdcall PostThreadMessageW(uint32 tid, uint32 msg, uintptr w, intptr l)')
 const WM_APP_PORT = 0x8000
 

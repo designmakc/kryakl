@@ -11,6 +11,7 @@ import * as path from 'node:path'
 import { MessageChannel, receiveMessageOnPort, Worker, workerData, type MessagePort } from 'node:worker_threads'
 
 import koffi from 'koffi'
+import { loadLib } from './native'
 
 import { lexiconOf, type KeyTable, type Lexicon } from './layoutfix'
 import { MASK_KEYS, Typist, type KbdConfig, type KbdIn, type KbdOut } from './typist'
@@ -19,9 +20,9 @@ import { capsLockOf, caretOf, elevated, exeOf, foreground, fullScreenNow, instal
 const port = (workerData as { port: MessagePort }).port
 const send = (message: KbdOut) => port.postMessage(message)
 
-const user32 = koffi.load('user32.dll')
-const kernel32 = koffi.load('kernel32.dll')
-const winmm = koffi.load('winmm.dll')
+const user32 = loadLib('user32.dll')
+const kernel32 = loadLib('kernel32.dll')
+const winmm = loadLib('winmm.dll')
 const PlaySoundW = winmm.func('bool __stdcall PlaySoundW(const char16_t *sound, intptr module, uint32 flags)')
 const SND_ASYNC = 0x0001
 const SND_NODEFAULT = 0x0002
