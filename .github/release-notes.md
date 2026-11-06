@@ -1,4 +1,4 @@
-## Tyts 0.17.1
+## Tyts 0.17.2
 
 **Kryakl is now Tyts (Тиць).** A fork of [Kryakl](https://github.com/ikstro/kryakl) by Yevhen Peshynskyi, open source under the MIT license, made by Mykola Onykiichuk. "Тиць" is a quick tap: one key, and it's done.
 

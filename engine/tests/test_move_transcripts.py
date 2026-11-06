@@ -14,7 +14,7 @@ def home(tmp_path, monkeypatch):
     monkeypatch.setattr(engine_settings, "TEST_HOME", None)
     docs = tmp_path / "Documents"
     old = docs / "Altype" / "Transcripts"
-    new = docs / "Kryakl" / "Transcripts"
+    new = docs / "Tyts" / "Transcripts"
     s = store.Store(old)
     id = s.create("T", "file", "done")
     s.save(id, {"title": "T", "duration": 1, "language": "en", "utterances": [{"text": "hello"}]})
@@ -112,7 +112,7 @@ def test_nothing_without_old_folder(tmp_path, monkeypatch):
     old = tmp_path / "Documents" / "Altype" / "Transcripts"
     file.write_text(json.dumps({"dataDir": str(old)}), "utf-8")
     s = engine_settings.Settings(file)
-    assert not engine_settings.move_transcripts(s, old, tmp_path / "Documents" / "Kryakl" / "Transcripts")
+    assert not engine_settings.move_transcripts(s, old, tmp_path / "Documents" / "Tyts" / "Transcripts")
 
 
 def test_kryas_library_moves_from_the_old_names_in_turn(tmp_path, monkeypatch):
@@ -128,8 +128,8 @@ def test_kryas_library_moves_from_the_old_names_in_turn(tmp_path, monkeypatch):
     file.write_text(json.dumps({"dataDir": str(krya)}), "utf-8")
     settings = engine_settings.Settings(file)
     assert engine_settings.move_transcripts(settings)
-    assert (docs / "Kryakl" / "Transcripts" / id).is_dir() and not krya.exists()
-    assert settings["dataDir"] == str(docs / "Kryakl" / "Transcripts")
+    assert (docs / "Tyts" / "Transcripts" / id).is_dir() and not krya.exists()
+    assert settings["dataDir"] == str(docs / "Tyts" / "Transcripts")
     # Altype's is not the library any more: it stays where it is.
     assert (docs / "Altype" / "Transcripts").is_dir()
 
