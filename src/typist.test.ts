@@ -909,6 +909,18 @@ test('a dictation key held to talk says when it goes up; a tapped modifier does 
   ])
 })
 
+test('held to talk, a modifier alone starts dictation as it goes down and says when it goes up', () => {
+  const desk = new Desk({ keys: { dictate: 'RightAlt' }, hold: true })
+  desk.event(0xa5, true)
+  expect(desk.sent.filter(m => m.type === 'hotkey')).toEqual([{ type: 'hotkey', action: 'dictate' }])
+  desk.wait(1500)
+  desk.event(0xa5, false)
+  expect(desk.sent.filter(m => m.type === 'hotkey' || m.type === 'hotkeyUp')).toEqual([
+    { type: 'hotkey', action: 'dictate' },
+    { type: 'hotkeyUp', action: 'dictate' },
+  ])
+})
+
 test('Shift tapped twice is the translate key', () => {
   const desk = new Desk({ keys: { translate: 'LeftShift*2' } })
   desk.tap(0xa0)

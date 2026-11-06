@@ -148,6 +148,22 @@ type HelperEvent =
   | { e: 'm'; t: Parameters<Typist['mouse']>[0]; x: number; y: number; time: number; b: number }
   | { e: 'field'; secret: boolean | null }
 
+// The first keys after the start, counted once for kryakl.log, so a Mac where fixing does nothing says why.
+const seen = { keys: 0, foreign: 0, unknown: 0, asked: 0, secret: 0 }
+function look(event: { c: number; d: boolean; f: boolean; w?: boolean }, vk: number | undefined): void {
+  if (seen.keys > 40 || !event.d) return
+  seen.keys++
+  if (event.f) seen.foreign++
+  if (vk === undefined) seen.unknown++
+  if (event.w) seen.asked++
+  if (seen.keys !== 40) return
+  const langs = typist.cycle().map(id => layouts.get(id)?.lang ?? '?')
+  send({
+    type: 'note',
+    text: `mac keys: ${seen.keys} down, ${seen.foreign} foreign, ${seen.unknown} unknown, ${seen.asked} asked, ${seen.secret} secret fields; source ${layouts.has(source) ? 'known' : 'unknown'} (${source.split('.').pop()}); cycle ${langs.join(' ')}; word lists ${Object.keys(lexicons).join(' ') || 'none'}; autoFix ${config?.autoFix}`,
+  })
+}
+
 function onHelper(event: HelperEvent): void {
   switch (event.e) {
     case 'hello':
@@ -172,6 +188,7 @@ function onHelper(event: HelperEvent): void {
       source = event.id
       return
     case 'field':
+      if (event.secret) seen.secret++
       return typist.fieldIs(event.secret ?? 'unknown')
     case 'm':
       typist.mouse(event.t, event.x, event.y, event.time, event.b)
@@ -180,6 +197,7 @@ function onHelper(event: HelperEvent): void {
       caps = event.caps
       if (event.src) source = event.src
       const vk = MAC_TO_VK[event.c]
+      look(event, vk)
       const keep = vk !== undefined && guarded(false, () => typist.key(vk, event.c, event.d, false, event.f))
       if (event.w) tell({ c: 'r', n: event.n, s: keep })
       return

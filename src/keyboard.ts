@@ -173,6 +173,7 @@ export class KeyboardHelper {
       trayLayout: on && s.trayLayout,
       cycle: s.layouts,
       languages: myLanguages(s),
+      hold: s.dictateHold,
       apps: on ? apps : {},
       keepWords: s.keepWords,
       learn: on && s.learn,
@@ -336,6 +337,9 @@ export class KeyboardHelper {
         return
       case 'menuClosed':
         this.events.menuClosed()
+        return
+      case 'note':
+        console.warn(`Kryakl keyboard: ${message.text}`)
         return
       case 'error':
         this.events.failed(message.message)

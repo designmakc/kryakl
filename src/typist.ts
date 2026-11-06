@@ -130,6 +130,8 @@ export type Learned = { word: string; lang: string }
 export type KbdConfig = {
   /** The key of each action this thread watches for (hotkey.ts); an action left out has none here. */
   keys: Partial<Record<Exclude<KeyAction, 'layout'>, string>>
+  /** Hold to talk (`dictateHold`): a dictation key that is a modifier tapped alone acts as it goes down, so its release can finish the phrase. */
+  hold?: boolean
   /** A key per layout (id → key), for going to that layout at once. */
   layoutKeys: Record<string, string>
   autoFix: boolean
@@ -220,6 +222,8 @@ export type KbdOut =
   /** Another key, a click outside, or another window in front closed the menu; the key or click went on. */
   | { type: 'menuClosed' }
   | { type: 'error'; message: string }
+  /** A line for kryakl.log of how the thread is doing (counts only, never what was typed). */
+  | { type: 'note'; text: string }
 
 export type Caret = { x: number; y: number; h: number }
 export type Front = { hwnd: bigint; tid: number; pid: number }
@@ -407,7 +411,7 @@ export class Typist {
   /** Keys whose press was a hotkey: their release is kept from the program too. */
   private swallowed = new Set<number>()
   /** A modifier pressed alone, and the modifiers pressed together since none was held. */
-  private tap: { vk: number; since: number } | undefined
+  private tap: { vk: number; since: number; held?: boolean } | undefined
   private chord = { mods: new Set<Mod>(), clean: false }
   /** The last tap of a modifier: when it was let go, and the layout before it, if it switched one (a double takes that back). */
   private lastTap: { vk: number; at: number; before?: string } | undefined
@@ -843,6 +847,15 @@ export class Typist {
     if ([...this.held].every(k => k === vk)) {
       this.tap = { vk, since: this.env.now() }
       this.chord = { mods: new Set([mod]), clean: true }
+      // Held to talk: acted on now, as a tap waits for the key-up that is to finish the phrase.
+      // ponytail: a chord with this modifier (Option+letter) starts a phrase too; held keys are the person's pick.
+      const bound = this.config.hold ? this.keyOf('tap', vk) : undefined
+      const action = bound?.action
+      if (bound && (action === 'dictate' || action === 'english' || action === 'practice') && this.allowed(bound)) {
+        this.tap.held = true
+        this.holdKey = { vk, action }
+        this.env.send({ type: 'hotkey', action })
+      }
     } else {
       this.tap = undefined
       this.chord.mods.add(mod)
@@ -854,7 +867,8 @@ export class Typist {
     const t = this.tap
     this.tap = undefined
     let mask = false
-    if (t && t.vk === vk && this.chord.clean && this.env.now() - t.since <= TAP_MS) {
+    if (t?.held) this.lastTap = undefined
+    else if (t && t.vk === vk && this.chord.clean && this.env.now() - t.since <= TAP_MS) {
       // A double's first tap too: it cannot know yet whether a second comes.
       const bound = this.keyOf('tap', vk) ?? this.keyOf('double', vk)
       mask = MENU_KEYS.has(vk) && !!bound && this.allowed(bound)
