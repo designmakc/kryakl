@@ -249,7 +249,9 @@ func startTap() -> Bool {
   return true
 }
 
-emit(["e": "hello", "dbl": Int(NSEvent.doubleClickInterval * 1000), "layouts": layouts()])
+// What macOS lets this process do, told in hello and ready (kryakl.log): keys reach a tap only with Input Monitoring (ListenEvent).
+func access() -> [String: Any] { ["listen": CGPreflightListenEventAccess(), "post": CGPreflightPostEventAccess(), "ax": AXIsProcessTrusted()] }
+emit(["e": "hello", "dbl": Int(NSEvent.doubleClickInterval * 1000), "layouts": layouts(), "access": access()])
 
 // The program in front and the input source, looked at a few times a second; a change is told.
 var front: (Int32, String) = (0, "")
@@ -266,16 +268,30 @@ Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { _ in
   }
 }
 
-// Without Accessibility the tap cannot keep a key: macOS is asked once (its own prompt), then looked at every 2 s.
-if AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue(): true] as CFDictionary), startTap() {
-  emit(["e": "ready"])
+// Without Accessibility the tap cannot keep a key, without Input Monitoring it sees only modifiers:
+// macOS is asked once for each (its own prompts), then looked at every 2 s; the tap is made again once keys are allowed.
+let axAtStart = AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue(): true] as CFDictionary)
+var listening = CGPreflightListenEventAccess()
+if !listening { _ = CGRequestListenEventAccess() }
+func ready() { emit(["e": "ready", "access": access()]) }
+if axAtStart, startTap() {
+  if listening { ready() } else { emit(["e": "noInput", "access": access()]) }
 } else {
-  emit(["e": "denied"])
+  emit(["e": "denied", "access": access()])
+}
+if tap == nil || !listening {
   Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { timer in
-    if AXIsProcessTrusted(), startTap() {
-      timer.invalidate()
-      emit(["e": "ready"])
+    if tap == nil {
+      guard AXIsProcessTrusted(), startTap() else { return }
+      if listening { timer.invalidate(); return ready() }
+      emit(["e": "noInput", "access": access()])
     }
+    guard CGPreflightListenEventAccess() else { return }
+    listening = true
+    timer.invalidate()
+    // ponytail: keyDown filtering may be fixed when the tap is made, so it is made afresh.
+    if let old = tap { CGEvent.tapEnable(tap: old, enable: false); CFMachPortInvalidate(old); tap = nil }
+    if startTap() { ready() }
   }
 }
 

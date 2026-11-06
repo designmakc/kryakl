@@ -1215,6 +1215,8 @@ export const en = {
   'kb.trouble': 'The keyboard helper: {trouble}',
   'kb.macAccess': 'To fix and switch layouts, Kryakl needs Accessibility: System Settings › Privacy & Security › Accessibility, turn Kryakl on.',
   'kb.macAccessOpen': 'Open Accessibility settings',
+  'kb.macInput': 'Kryakl sees only modifier keys: it needs Input Monitoring too. System Settings › Privacy & Security › Input Monitoring, turn Kryakl on (or add it with +), then quit and open Kryakl again.',
+  'kb.macInputOpen': 'Open Input Monitoring settings',
   'kb.windowsOnly': 'The keyboard layout features (switching and fixing) are Windows-only for now.',
   'kb.privacy': 'Kryakl reads your keystrokes only to fix the layout, and sends nothing anywhere. It keeps only the words it learned, on this computer.',
   'words.noSuch': 'No such word.',

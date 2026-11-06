@@ -213,6 +213,7 @@ const LINKS = new Set([
   'https://huggingface.co/settings/tokens',
   // A Mac's Accessibility settings, for the keyboard helper's tap (the Keyboard layout page).
   'x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility',
+  'x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent',
 ])
 
 /** The settings that are Dictate's keys (and Talk's, which listens as dictation does): registered only once the speech engine is installed. */
@@ -300,6 +301,8 @@ let oneKeyMenu: KryaklMenu | undefined
 let keyboardTrouble: string | undefined
 /** On a Mac without Accessibility the keyboard thread sees no key: the dictation keys held to talk go back to Electron's toggle. */
 let keysUnseen = false
+/** Which Mac permission keysUnseen waits for: 'macAccess' (Accessibility) or 'macInput' (Input Monitoring). */
+let macTrouble = 'macAccess'
 let lastApp: string | undefined
 /** A program run as administrator was in front lately: Windows keeps its keys from Kryakl's hooks. */
 let elevatedApp: string | undefined
@@ -3029,7 +3032,7 @@ function registerShortcuts(): void {
 
 function applyKeyboard(): void {
   // The helper says it lacks Accessibility once, when it starts: that stays said until it says otherwise.
-  keyboardTrouble = keysUnseen ? 'macAccess' : undefined
+  keyboardTrouble = keysUnseen ? macTrouble : undefined
   try {
     // Dictate's keys work only once the engine is installed, here as with Electron's shortcuts; paused, the helper keeps the pause key alone.
     keyboard.apply(speech?.installed ? settings : { ...settings, dictateKey: '', englishKey: '', noteKey: '', againKey: '', practiceKey: '', talkKey: '', meetingKey: '' }, learned.forThread())
@@ -3992,7 +3995,9 @@ function start(): void {
     failed: message => {
       keyboardTrouble = message
       // 'macAccess' (kbdmac-worker.ts) until Accessibility is given; '' once the thread sees keys.
-      if ((message === 'macAccess') !== keysUnseen) {
+      const unseen = message === 'macAccess' || message === 'macInput'
+      if (unseen) macTrouble = message
+      if (unseen !== keysUnseen) {
         keysUnseen = !keysUnseen
         registerShortcuts()
       }

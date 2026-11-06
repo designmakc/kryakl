@@ -23,6 +23,7 @@ const send = (message: KbdOut) => port.postMessage(message)
 
 /** The main process shows this as the keyboard helper's trouble, with a way to System Settings (webview/app.ts). */
 const MAC_ACCESS = 'macAccess'
+const MAC_INPUT = 'macInput'
 const TICK_MS = 150
 
 const child = spawn(helper, [], { stdio: ['pipe', 'pipe', 'ignore'] })
@@ -138,15 +139,27 @@ port.on('message', (message: KbdIn) =>
 let pending: KbdConfig | undefined
 
 type HelperEvent =
-  | { e: 'hello'; dbl: number; layouts: MacLayout[] }
+  | { e: 'hello'; dbl: number; layouts: MacLayout[]; access?: Access }
   | { e: 'layouts'; list: MacLayout[] }
-  | { e: 'ready' }
-  | { e: 'denied' }
+  | { e: 'ready'; access?: Access }
+  | { e: 'denied'; access?: Access }
+  | { e: 'noInput'; access?: Access }
   | { e: 'app'; pid: number; name: string }
   | { e: 'src'; id: string }
   | { e: 'k'; n?: number; w?: boolean; c: number; d: boolean; caps: boolean; f: boolean; src?: string }
   | { e: 'm'; t: Parameters<Typist['mouse']>[0]; x: number; y: number; time: number; b: number }
   | { e: 'field'; secret: boolean | null }
+
+type Access = { listen: boolean; post: boolean; ax: boolean }
+// What macOS lets the helper do, into kryakl.log once per change (no characters).
+let accessSaid = ''
+function sayAccess(when: string, a?: Access): void {
+  if (!a) return
+  const text = `mac access (${when}): input monitoring ${a.listen}, post events ${a.post}, accessibility ${a.ax}`
+  if (text.slice(text.indexOf(':')) === accessSaid) return
+  accessSaid = text.slice(text.indexOf(':'))
+  send({ type: 'note', text })
+}
 
 // The first keys after the start, counted once for kryakl.log, so a Mac where fixing does nothing says why.
 const seen = { keys: 0, foreign: 0, unknown: 0, asked: 0, secret: 0 }
@@ -167,6 +180,7 @@ function look(event: { c: number; d: boolean; f: boolean; w?: boolean }, vk: num
 function onHelper(event: HelperEvent): void {
   switch (event.e) {
     case 'hello':
+      sayAccess('hello', event.access)
       env.doubleClickMs = event.dbl
       readLayouts(event.layouts)
       if (pending) configure(pending)
@@ -176,8 +190,14 @@ function onHelper(event: HelperEvent): void {
       if (config) configure(config)
       return
     case 'denied':
+      sayAccess('denied', event.access)
       return send({ type: 'error', message: MAC_ACCESS })
+    case 'noInput':
+      // Accessibility given, Input Monitoring not: only modifiers reach the tap.
+      sayAccess('no input', event.access)
+      return send({ type: 'error', message: MAC_INPUT })
     case 'ready':
+      sayAccess('ready', event.access)
       // The trouble said before is gone (main.ts keeps the last message; empty shows none).
       return send({ type: 'error', message: '' })
     case 'app':

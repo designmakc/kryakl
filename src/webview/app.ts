@@ -2207,8 +2207,8 @@ function voicePage(v: AppView): HTMLElement[] {
     keyRow('noteKey', t('dict.note'), t('dictate.noteNote'), !k.note),
     toggle(t('dictate.hold'), s.dictateHold, dictateHold => save({ dictateHold }), t('dictate.holdNote')),
     // On a Mac only the keyboard thread sees a key go up, and it waits for Accessibility (main.ts keysUnseen).
-    s.dictateHold && v.keyboardTrouble === 'macAccess'
-      ? warn(t('dictate.holdMac'), ' ', linkBtn(t('kb.macAccessOpen'), () => post({ type: 'openLink', url: 'x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility' })))
+    s.dictateHold && (v.keyboardTrouble === 'macAccess' || v.keyboardTrouble === 'macInput')
+      ? warn(t('dictate.holdMac'), ' ', macLink(v.keyboardTrouble))
       : null,
     toggle(t('dictate.panel'), s.dictationPanel, dictationPanel => save({ dictationPanel }), t('dictate.panelNote')),
     aside('info', t('dictate.escNote')),
@@ -2849,8 +2849,8 @@ function layoutPage(v: AppView): HTMLElement[] {
     v.rivals.length ? warn(t('kb.rivals', { n: v.rivals.length, names: v.rivals.join(` ${t('common.and')} `) })) : null,
     v.elevatedApp ? warn(t('kb.elevated', { app: v.elevatedApp })) : null,
     // On a Mac the tap waits for Accessibility (kbdmac-worker.ts): said plainly, with the way there.
-    v.keyboardTrouble === 'macAccess'
-      ? warn(t('kb.macAccess'), ' ', linkBtn(t('kb.macAccessOpen'), () => post({ type: 'openLink', url: 'x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility' })))
+    v.keyboardTrouble === 'macAccess' || v.keyboardTrouble === 'macInput'
+      ? warn(t(v.keyboardTrouble === 'macInput' ? 'kb.macInput' : 'kb.macAccess'), ' ', macLink(v.keyboardTrouble))
       : v.keyboardTrouble
         ? warn(t('kb.trouble', { trouble: v.keyboardTrouble }))
         : null,
@@ -3443,3 +3443,10 @@ setTranscriptHooks({
 })
 
 post({ type: 'appReady' })
+
+/** The link to the Mac permission the keyboard helper waits for. */
+function macLink(trouble: string) {
+  return trouble === 'macInput'
+    ? linkBtn(t('kb.macInputOpen'), () => post({ type: 'openLink', url: 'x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent' }))
+    : linkBtn(t('kb.macAccessOpen'), () => post({ type: 'openLink', url: 'x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility' }))
+}
