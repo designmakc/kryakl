@@ -4086,7 +4086,8 @@ function start(): void {
     log,
   })
   capture.allowCapture(session.defaultSession)
-  applyCallAuto()
+  // On at start (a setting from before, or a backup): the reminder and the screen's permission come now, not in the middle of a call.
+  void callAutoChanged()
   // Asleep, the computer's sound and the microphone stop: what was recorded is saved now.
   powerMonitor.on('suspend', () => {
     if (capture?.busy) void stopCall()
