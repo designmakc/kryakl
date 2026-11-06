@@ -70,7 +70,7 @@ import { cardRoom, sharedReading } from './resources'
 import { MistakeStore } from './mistakes'
 import { log, logTo } from './log'
 import { NATURAL_PREFIX, systemVoiceName, type NaturalState } from './natural'
-import { recognize } from './ocr'
+import { recognize, recognizeMac } from './ocr'
 import { pickLines } from './ocrpick'
 import { adoptLocalFolder, adoptOldFolders, freeFolder, hasToMove, healSpeech, leftIn, moveDownloads, OLD_LOCAL_FOLDERS, partDir, removeOldUpdaterCaches, type LeftPart, type Warn } from './oldfolder'
 import { paragraphsOf } from './ocrtext'
@@ -2081,7 +2081,10 @@ async function recognizeSnip(id: number, png: Buffer): Promise<{ text: string; m
     fs.writeFileSync(file, png)
     const native = langCode(settings.native)
     // Every one of the person's languages Windows reads (their own first), English last; each line from the one that reads it best.
-    const result = await recognize(file, [...new Set([native, ...settings.languages, 'en'].filter(Boolean))])
+    const result =
+      process.platform === 'darwin'
+        ? await recognizeMac(unpacked('vendor', 'ocr-mac'), file, native)
+        : await recognize(file, [...new Set([native, ...settings.languages, 'en'].filter(Boolean))])
     if (result.readings.length === 0) return void setState(id, { status: 'no-ocr' })
     const text = paragraphsOf(pickLines(result.readings, ocrKnown()))
     if (!text.trim()) return void setState(id, { status: 'empty' })
@@ -2507,9 +2510,23 @@ function snip(purpose: Purpose = 'listen', via?: string): void {
   snipFor = purpose
   snipVia = via
   snipSince = Date.now()
+  if (process.platform === 'darwin') return snipMac(purpose, via)
   // The snip lands on the clipboard: what the person had there goes back once it is read.
   clipGuard.hold()
   void shell.openExternal('ms-screenclip:')
+}
+
+/** On a Mac: macOS' own selection (as Cmd+Shift+4) into a file, then read as a Windows snip is. Esc leaves no file. */
+function snipMac(purpose: Purpose, via?: string): void {
+  const file = path.join(app.getPath('temp'), `kryakl-snip-${process.pid}.png`)
+  fs.rmSync(file, { force: true })
+  execFile('screencapture', ['-i', '-x', file], () => {
+    snipSince = 0
+    if (!fs.existsSync(file)) return
+    const png = fs.readFileSync(file)
+    fs.rmSync(file, { force: true })
+    void (purpose === 'translate' ? readScreenText(png, via) : readScreenshot(png, via))
+  })
 }
 
 /** The snip waited for is not coming (a copy without a picture): the clipboard was the person's to change, nothing to put back. */
@@ -3372,7 +3389,7 @@ function runTrayCommand(command: TrayCommand): void {
  */
 /**
  * On a Mac the Windows keyboard hook is off: Cmd+Shift+L listens to the
- * selection, Cmd+Shift+Y translates it. The selection is copied by a Cmd+C sent
+ * selection, Cmd+Shift+Y translates it; the screen's keys (Cmd+Alt+S, Cmd+Alt+T) do the same with a piece of it. The selection is copied by a Cmd+C sent
  * through System Events (macOS asks once for Accessibility access).
  */
 // ponytail: fixed keys and the clipboard keeps the copy; Settings › Keys and the clipboard given back when the Mac version grows
@@ -3383,6 +3400,10 @@ function registerMacKeys(): void {
     )
   globalShortcut.register('CommandOrControl+Shift+L', copyThen('listen'))
   globalShortcut.register('CommandOrControl+Shift+Y', copyThen('translate'))
+  // The screen's keys from the settings, Ctrl read as Cmd (as their labels show it); a key the Mac cannot take is skipped.
+  const mac = (key: string) => key.replace(/\b(Control|Super)\b/, 'Command')
+  for (const [key, purpose] of [[settings.snipKey, 'listen'], [settings.textKey, 'translate']] as const)
+    if (key) globalShortcut.register(mac(key), () => snip(purpose))
 }
 
 function runCommand(argv: readonly string[]): boolean {

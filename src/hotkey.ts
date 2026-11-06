@@ -156,11 +156,14 @@ export function isExtendedKey(vk: number): boolean {
   return EXTENDED.has(vk)
 }
 
+const onMac = typeof process !== 'undefined' && process.platform ? process.platform === 'darwin' : typeof navigator !== 'undefined' && /Mac/.test(navigator.userAgent)
+
 /** A hotkey as Windows writes keys: "Left Ctrl", "Ctrl+Shift", "Left Ctrl twice", "Mouse Back". */
 export function hotkeyLabel(hotkey: string): string {
   // A key pressed twice that is not a modifier tapped: "Ctrl+C twice".
   if (hotkey.endsWith('*2') && hotkey.includes('+')) return t('keys.twice', { key: hotkeyLabel(hotkey.slice(0, -2)) })
-  const name = (mod: string) => (mod === 'Control' ? 'Ctrl' : mod === 'Super' ? 'Win' : mod)
+  // On a Mac, Ctrl is Cmd there (registerMacKeys in main.ts).
+  const name = (mod: string) => (mod === 'Control' ? (onMac ? '⌘' : 'Ctrl') : mod === 'Alt' && onMac ? '⌥' : mod === 'Super' ? 'Win' : mod)
   return hotkey
     .split('+')
     .map(part => {
@@ -175,7 +178,7 @@ export function hotkeyLabel(hotkey: string): string {
       if (part === 'ScrollLock') return 'Scroll Lock'
       if (part === 'MouseBack') return 'Mouse Back'
       if (part === 'MouseForward') return 'Mouse Forward'
-      if (part === 'CommandOrControl' || part === 'CmdOrCtrl') return 'Ctrl'
+      if (part === 'CommandOrControl' || part === 'CmdOrCtrl') return onMac ? '⌘' : 'Ctrl'
       return name(part)
     })
     .join('+')

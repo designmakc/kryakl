@@ -105,7 +105,7 @@ describe('reading keys back', () => {
     expect(isCopyTwice('Control+C')).toBe(false)
   })
 
-  test('shown the Windows way', () => {
+  test.skipIf(process.platform === 'darwin')('shown the Windows way', () => {
     expect(hotkeyLabel('Control+Alt+S')).toBe('Ctrl+Alt+S')
     expect(hotkeyLabel('LeftControl')).toBe('Left Ctrl')
     expect(hotkeyLabel('LeftControl*2')).toBe('Left Ctrl twice')

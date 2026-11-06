@@ -14,3 +14,4 @@ __pycache__/
 # The landing's Ukrainian and Russian pages, made by scripts/build-site.mjs (the Pages workflow makes them before upload)
 site/uk/
 site/ru/
+vendor/ocr-mac

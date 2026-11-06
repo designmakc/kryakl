@@ -5,7 +5,7 @@
 // ocrpick.ts takes each line from the one that reads it best. Small text is
 // scaled up first, as the engines misread it.
 
-import { spawn } from 'node:child_process'
+import { execFile, spawn } from 'node:child_process'
 
 import type { OcrReading } from './ocrpick'
 import type { OcrLine } from './ocrtext'
@@ -109,6 +109,20 @@ export function recognize(image: string, languages: readonly string[]): Promise<
         resolve({ readings, scale: typeof parsed.scale === 'number' ? parsed.scale : 1 })
       } catch {
         reject(new Error(err.trim().split('\n').pop() || `text recognition stopped (${code})`))
+      }
+    })
+  })
+}
+
+/** The same on a Mac: `exe` (build/ocr.swift) reads the PNG at `image` with Vision, which finds the language itself; the reading is named `lang`. */
+export function recognizeMac(exe: string, image: string, lang: string): Promise<OcrResult> {
+  return new Promise((resolve, reject) => {
+    execFile(exe, [image], { timeout: 60_000 }, (error, out) => {
+      if (error) return reject(error)
+      try {
+        resolve({ readings: [{ lang, lines: linesOf(JSON.parse(out)) }], scale: 1 })
+      } catch (e) {
+        reject(e)
       }
     })
   })
