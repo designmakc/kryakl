@@ -60,10 +60,15 @@ nsis:
 # No publish settings: the release workflow puts the installer in a GitHub release itself, and Kryakl does
 # not update itself (people download new versions from the releases). The installer is not signed
 # (a free app): Windows warns at install.
-# Mac (npm run dist:mac → release/Kryakl-<version>-arm64.dmg): not signed, so the first
+# Mac (npm run dist:mac → release/Kryakl-<version>-arm64.dmg): ad-hoc signed only, so the first
 # start is right-click › Open. The Windows keyboard, clipboard and OCR parts are off there.
 mac:
   target: dmg
+  # Ad-hoc signed ("-"), the whole bundle sealed: unsealed (Electron's linker signature alone),
+  # macOS' privacy lists cannot match the app, and Accessibility never takes. No Developer ID,
+  # so the signature changes with each build: the app is added to Accessibility again after a reinstall.
+  identity: "-"
+  hardenedRuntime: false
   icon: build/icon.png
   category: public.app-category.education
   extendInfo:

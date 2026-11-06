@@ -329,7 +329,13 @@ export class Dictation {
     } else this.badge?.hide()
     this.over()
     // A space after it, so the next phrase or word goes on without one typed by hand.
-    await this.o.paste(`${text} `)
+    try {
+      await this.o.paste(`${text} `)
+    } catch (error) {
+      // Said in the badge, never an unhandled rejection; the phrase is still kept in the list below.
+      console.warn('Kryakl: could not type the phrase', error)
+      this.fail(`Could not type it: ${error instanceof Error ? error.message : String(error)}`)
+    }
     if (note) this.hideSoon(NOTE_SHOWN_MS)
     this.o.log.add(mode === 'english' ? { mode, text, heard } : { mode: 'type', text, ...(text === heard.trim() ? {} : { heard }) })
     this.o.logged()

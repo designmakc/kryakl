@@ -3053,6 +3053,8 @@ function tableFor(id: string): KeyTable | undefined {
  */
 async function borrowClipboard<T>(work: () => Promise<T>, after: (result: T | undefined) => number | undefined = () => undefined): Promise<T> {
   snipSince = 0
+  // ponytail: a Mac has no user32 clipboard (winclipboard's calls are stubs there), so the guard is skipped; pasteText's Mac branch keeps and puts back the text itself (text only, a copy made meanwhile is overwritten)
+  if (onMac) return ownClipboard(work)
   clipGuard.hold()
   let result: T | undefined
   try {
@@ -3842,7 +3844,7 @@ function start(): void {
   process.on('warning', w => log(`warning: ${w.name}: ${w.message}`))
   app.on('render-process-gone', (_event, contents, details) => log(`a page's process is gone (${pageOf(contents.getURL())}): ${details.reason}, exit ${details.exitCode}`))
   app.on('child-process-gone', (_event, details) => log(`${details.type}${details.name ? ` (${details.name})` : ''} process is gone: ${details.reason}, exit ${details.exitCode}`))
-  log(`start: Kryakl ${app.getVersion()}, Electron ${process.versions.electron}, Windows ${process.getSystemVersion()}${TEST_HOME ? ', test home' : ''}`)
+  log(`start: Kryakl ${app.getVersion()}, Electron ${process.versions.electron}, ${onMac ? 'macOS' : 'Windows'} ${process.getSystemVersion()}${TEST_HOME ? ', test home' : ''}`)
   // Everything downloaded in one folder (moveLocalFolder): what 0.10.0 and before kept in %APPDATA% moves over too.
   logMoved(adopted)
   const firstRun = !fs.existsSync(settingsFile())
