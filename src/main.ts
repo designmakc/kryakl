@@ -298,6 +298,8 @@ let keyboard: KeyboardHelper
 /** The menu on one key, by the text cursor. */
 let oneKeyMenu: KryaklMenu | undefined
 let keyboardTrouble: string | undefined
+/** On a Mac without Accessibility the keyboard thread sees no key: the dictation keys held to talk go back to Electron's toggle. */
+let keysUnseen = false
 let lastApp: string | undefined
 /** A program run as administrator was in front lately: Windows keeps its keys from Kryakl's hooks. */
 let elevatedApp: string | undefined
@@ -2971,8 +2973,10 @@ function registerShortcuts(): void {
     if (!settings.translateKey) register('Control+Shift+Y', () => selection('translate'))
   }
   // Dictate's keys mean nothing before the engine is there; then each starts and stops a phrase.
-  // Held to talk, the keys but the note's are the keyboard thread's, which sees them go up (keyboard.ts apply).
-  const dictate = (mode: DictationMode, key: string) => (speech?.installed ? (settings.dictateHold && mode !== 'note') || register(key, () => dictation.press(mode, key)) : true)
+  // Held to talk, the keys but the note's are the keyboard thread's, which sees them go up (keyboard.ts apply);
+  // a thread that sees no key leaves them to Electron, a press to start and a press to stop.
+  const dictate = (mode: DictationMode, key: string) =>
+    speech?.installed ? (settings.dictateHold && !keysUnseen && mode !== 'note') || register(key, () => dictation.press(mode, key)) : true
   speechKeysOk = {
     dictate: dictate('type', settings.dictateKey),
     english: dictate('english', settings.englishKey),
@@ -3013,7 +3017,8 @@ function registerShortcuts(): void {
 // ---------------------------------------------------------------- the keyboard
 
 function applyKeyboard(): void {
-  keyboardTrouble = undefined
+  // The helper says it lacks Accessibility once, when it starts: that stays said until it says otherwise.
+  keyboardTrouble = keysUnseen ? 'macAccess' : undefined
   try {
     // Dictate's keys work only once the engine is installed, here as with Electron's shortcuts; paused, the helper keeps the pause key alone.
     keyboard.apply(speech?.installed ? settings : { ...settings, dictateKey: '', englishKey: '', noteKey: '', againKey: '', practiceKey: '', talkKey: '', meetingKey: '' }, learned.forThread())
@@ -3973,6 +3978,11 @@ function start(): void {
     menuClosed: () => oneKeyMenu?.closed(),
     failed: message => {
       keyboardTrouble = message
+      // 'macAccess' (kbdmac-worker.ts) until Accessibility is given; '' once the thread sees keys.
+      if ((message === 'macAccess') !== keysUnseen) {
+        keysUnseen = !keysUnseen
+        registerShortcuts()
+      }
       console.warn(`Kryakl keyboard: ${message}`)
       postApp()
     },

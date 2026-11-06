@@ -28,8 +28,29 @@ export type SummaryJson = {
 const PART_SECONDS = 1200
 const PART_CHARS = 12_000
 const MAX_TOKENS = 1500
+/** One join request's summaries at most, as a part's transcript: room for the instructions and the answer in `-c 8192`. */
+const JOIN_CHARS = 12_000
 /** A part on the processor may take minutes. */
 const REQUEST_MS = 10 * 60_000
+
+/** The summaries' indexes in groups of `budget` characters at most, in order. A group takes two at least, so every round
+ * halves them or better. ponytail: two long answers may pass the budget together; MAX_TOKENS keeps each about half of it or less. */
+function joinGroups(sizes: number[], budget = JOIN_CHARS): number[][] {
+  const groups: number[][] = []
+  let group: number[] = []
+  let used = 0
+  for (const [i, size] of sizes.entries()) {
+    if (group.length >= 2 && used + size > budget) {
+      groups.push(group)
+      group = []
+      used = 0
+    }
+    group.push(i)
+    used += size
+  }
+  if (group.length) groups.push(group)
+  return groups
+}
 
 /** 12:34, or 1:02:03 past an hour, as the engine's export writes times. */
 function clock(seconds: number): string {
@@ -254,8 +275,20 @@ export function createSummarizer(o: { files: LlmFiles; model: () => LlmModel; fe
           onProgress({ part: i + 1, parts: parts.length })
         }
         onProgress({ part: parts.length + 1, parts: parts.length })
-        const joined = summaries.map((s, i) => `<part from="${clock(parts[i]![0]!.start)}">\n${JSON.stringify(s)}\n</part>`).join('\n')
-        return ask(summaryPrompt(options, input.language, 'join'), joined)
+        // Joined in groups that fit one request, then those joined again, until one is left.
+        let level = summaries.map((json, i) => ({ from: parts[i]![0]!.start, json }))
+        for (;;) {
+          const blocks = level.map(p => `<part from="${clock(p.from)}">\n${JSON.stringify(p.json)}\n</part>`)
+          const groups = joinGroups(blocks.map(b => b.length + 1))
+          if (groups.length === 1) return ask(summaryPrompt(options, input.language, 'join'), blocks.join('\n'))
+          const next: typeof level = []
+          for (const group of groups) {
+            next.push(group.length === 1
+              ? level[group[0]!]!
+              : { from: level[group[0]!]!.from, json: await ask(summaryPrompt(options, input.language, 'join'), group.map(i => blocks[i]).join('\n')) })
+          }
+          level = next
+        }
       })
       // The model may still be loading, which no request can stop: a cancel does not wait for it.
       const json = await (signal

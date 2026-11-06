@@ -71,6 +71,8 @@ export function settingsSummary(settings: object): Record<string, unknown> {
   if (typeof out.talkAbout === 'string') out.talkAbout = `${out.talkAbout.length} characters, not shown`
   // Their own instruction for dictated text: the same.
   if (typeof out.dictateEditOwn === 'string') out.dictateEditOwn = `${out.dictateEditOwn.length} characters, not shown`
+  // Their own instruction for a call's summary: the same.
+  if (typeof out.callOwn === 'string') out.callOwn = `${out.callOwn.length} characters, not shown`
   return out
 }
 

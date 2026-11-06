@@ -87,9 +87,13 @@ def test_a_call_is_recorded_from_two_tracks_with_its_program_and_lost_chunks(cli
     row = store.row(id)
     assert row["title"] == "Call" and row["source"] == "system"
     assert row["job"]["app"] == "Zoom" and row["job"]["lost"] == 2
+    # The library names the program while it records and once it is done (the job is cut down then).
+    assert [r["app"] for r in client.get("/transcripts", headers=KEY).json()] == ["Zoom"]
     worker()._transcribe(id, store.row(id))
     t = store.transcript(id)
     assert t["app"] == "Zoom" and t["lost"] == 2
+    assert [r["app"] for r in client.get("/transcripts", headers=KEY).json()] == ["Zoom"]
+    assert [r["app"] for r in client.get("/transcripts", headers=KEY, params={"q": "budget"}).json()] == ["Zoom"]
     # The two-track way: my microphone is "me", the echo of their "hello" is gone from it.
     assert [(u["speaker"], u["text"]) for u in t["utterances"]] == [("me", "unique"), ("S1", "hello budget")]
     assert {x["track"] for x in t["words"]} == {"mic", "system"}
@@ -140,7 +144,7 @@ def test_the_summary_is_kept_searched_and_survives_a_redo(client, fake_sound):
     assert client.get("/transcripts", headers=KEY, params={"q": "approved"}).json() == []
 
 
-def test_an_older_library_gets_the_summarized_column(tmp_path):
+def test_an_older_library_gets_the_new_columns(tmp_path):
     db = sqlite3.connect(tmp_path / "index.db")
     db.executescript("""
         create table transcripts(id text primary key, title text not null, source text not null, created text not null,
@@ -150,7 +154,8 @@ def test_an_older_library_gets_the_summarized_column(tmp_path):
     """)
     db.commit()
     db.close()
-    assert Store(tmp_path).list()[0]["summarized"] == 0
+    row = Store(tmp_path).list()[0]
+    assert row["summarized"] == 0 and row["app"] is None
 
 
 T = {

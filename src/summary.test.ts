@@ -167,6 +167,19 @@ describe('createSummarizer', () => {
     expect(progress).toEqual([{ part: 0, parts: 3 }, { part: 1, parts: 3 }, { part: 2, parts: 3 }, { part: 3, parts: 3 }, { part: 4, parts: 3 }])
   })
 
+  it('joins the parts of a very long meeting in groups, each request within the budget', async () => {
+    // Four hours: 12 parts, each answered with a long summary; all of them in one join would overflow the model.
+    const { summarizer, asked } = setup(() => ({ ...answer, short: 'x'.repeat(2500) }))
+    const fourHours: SummaryInput = { ...long, duration: 4 * 3600, lines: Array.from({ length: 240 }, (_, i) => line(i * 60, 'We talk.')) }
+    const out = await summarizer.summarize(fourHours, { template: 'general', mine: false, native: 'Ukrainian' }, () => {})
+    const joins = asked.filter(a => a.system.startsWith('You join'))
+    expect(asked.length - joins.length).toBe(12)
+    expect(joins.length).toBeGreaterThan(1)
+    expect(joins.every(a => a.user.length <= 12_000)).toBe(true)
+    expect(asked.at(-1)!.system.startsWith('You join')).toBe(true)
+    expect(out.text).toContain('x'.repeat(2500))
+  })
+
   it('wraps the person’s own instruction in the rules', async () => {
     const { summarizer, asked } = setup()
     await summarizer.summarize(short, { template: 'own', own: 'Only the money, please', mine: false, native: 'English' }, () => {})

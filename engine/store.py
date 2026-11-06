@@ -15,8 +15,8 @@ import threading
 from datetime import datetime
 from pathlib import Path
 
-COLUMNS = ("id", "title", "source", "created", "duration", "status", "stage", "progress", "error", "language", "speakers_status", "job", "touched", "summarized")
-LIST_COLUMNS = ("id", "title", "source", "created", "duration", "status", "stage", "progress", "error", "language", "speakers_status", "summarized")
+COLUMNS = ("id", "title", "source", "created", "duration", "status", "stage", "progress", "error", "language", "speakers_status", "job", "touched", "summarized", "app")
+LIST_COLUMNS = ("id", "title", "source", "created", "duration", "status", "stage", "progress", "error", "language", "speakers_status", "summarized", "app")
 
 
 def new_id(now: datetime | None = None) -> str:
@@ -45,10 +45,13 @@ class Store:
             create virtual table if not exists search using fts5(id unindexed, title, body, tokenize='unicode61 remove_diacritics 2');
             """
         )
-        # A library from before summaries gets their column.
-        if "summarized" not in {r["name"] for r in self._db.execute("pragma table_info(transcripts)")}:
-            with self._db:
+        # A library from before summaries and calls gets their columns.
+        have = {r["name"] for r in self._db.execute("pragma table_info(transcripts)")}
+        with self._db:
+            if "summarized" not in have:
                 self._db.execute("alter table transcripts add column summarized integer default 0")
+            if "app" not in have:
+                self._db.execute("alter table transcripts add column app text")
 
     def folder(self, id: str) -> Path:
         # One folder right inside the library: no separators, no "..", no drive ("D:" alone is drive D on Windows).
@@ -61,8 +64,8 @@ class Store:
         self.folder(id).mkdir(parents=True)
         with self._lock, self._db:
             self._db.execute(
-                "insert into transcripts(id, title, source, created, status, job, touched) values(?,?,?,?,?,?,?)",
-                (id, title, source, now_iso(), status, json.dumps(job or {}, ensure_ascii=False), now_iso()),
+                "insert into transcripts(id, title, source, created, status, job, touched, app) values(?,?,?,?,?,?,?,?)",
+                (id, title, source, now_iso(), status, json.dumps(job or {}, ensure_ascii=False), now_iso(), (job or {}).get("app")),
             )
         return id
 
@@ -126,8 +129,8 @@ class Store:
             self._db.execute("delete from search where id=?", (id,))
             self._db.execute("insert into search(id, title, body) values(?,?,?)", (id, transcript.get("title", ""), body))
             self._db.execute(
-                "update transcripts set title=?, duration=?, language=?, summarized=? where id=?",
-                (transcript.get("title", ""), transcript.get("duration", 0), transcript.get("language", ""), int(bool(summary)), id),
+                "update transcripts set title=?, duration=?, language=?, summarized=?, app=coalesce(?, app) where id=?",
+                (transcript.get("title", ""), transcript.get("duration", 0), transcript.get("language", ""), int(bool(summary)), transcript.get("app"), id),
             )
 
     def delete(self, id: str) -> None:

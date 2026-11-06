@@ -2206,6 +2206,10 @@ function voicePage(v: AppView): HTMLElement[] {
     keyRow('againKey', t('dictate.againKey'), t('dictate.againNote'), !k.again),
     keyRow('noteKey', t('dict.note'), t('dictate.noteNote'), !k.note),
     toggle(t('dictate.hold'), s.dictateHold, dictateHold => save({ dictateHold }), t('dictate.holdNote')),
+    // On a Mac only the keyboard thread sees a key go up, and it waits for Accessibility (main.ts keysUnseen).
+    s.dictateHold && v.keyboardTrouble === 'macAccess'
+      ? warn(t('dictate.holdMac'), ' ', linkBtn(t('kb.macAccessOpen'), () => post({ type: 'openLink', url: 'x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility' })))
+      : null,
     toggle(t('dictate.panel'), s.dictationPanel, dictationPanel => save({ dictationPanel }), t('dictate.panelNote')),
     aside('info', t('dictate.escNote')),
     el('p', { class: 'privacy' }, lucide('lock', 's'), t('dictate.privacy')),
