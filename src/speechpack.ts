@@ -62,7 +62,12 @@ export type SpeechPackState = {
  * libraries themselves (speakers-gpu, ~4 GB); a card with too little memory for
  * both models keeps Whisper on it and the speakers on the processor (gpu + speakers).
  */
-export function extrasFor(parts: SpeechPart[], gpuSpeakers = true): string[] {
+export function extrasFor(parts: SpeechPart[], gpuSpeakers = true, platform = `${process.platform}-${process.arch}`): string[] {
+  // A Mac on Apple silicon gets Whisper on its graphics (mlx-whisper) with core: the extra is a few packages and the model is downloaded only when used.
+  return platform === 'darwin-arm64' ? ['mac', ...gpuExtras(parts, gpuSpeakers)] : gpuExtras(parts, gpuSpeakers)
+}
+
+function gpuExtras(parts: SpeechPart[], gpuSpeakers: boolean): string[] {
   const set = new Set(parts)
   if (set.has('speakers')) {
     if (!set.has('gpu')) return ['speakers']

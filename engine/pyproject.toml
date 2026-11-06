@@ -7,6 +7,8 @@
 #   speakers      who spoke when (pyannote, torch for the CPU)        ~0.9 GB
 #   speakers-gpu  the same on an NVIDIA card; its torch also carries
 #                 the CUDA libraries, so it replaces gpu              ~4 GB
+#   mac           Whisper on a Mac's graphics (mlx-whisper, Apple
+#                 silicon only; src/speechpack.ts adds it to core)    size not measured
 
 [project]
 name = "krya-speech"
@@ -30,6 +32,7 @@ dependencies = [
 gpu = ["nvidia-cublas-cu12", "nvidia-cudnn-cu12>=9,<10"]
 speakers = ["pyannote.audio>=4.0", "torch>=2.8"]
 speakers-gpu = ["pyannote.audio>=4.0", "torch>=2.8"]
+mac = ["mlx-whisper>=0.4; sys_platform == 'darwin' and platform_machine == 'arm64'"]
 
 [dependency-groups]
 dev = ["pytest>=8"]

@@ -171,6 +171,7 @@ export class SpeechHost {
       fingerprint: print,
       bench: h?.bench && h.bench.fingerprint === print ? h.bench : undefined,
       cuda: !!h?.parts.gpu && !h.fallback,
+      metal: !!h?.parts.mac,
       speakersCuda: h?.speakersDevice === 'cuda',
       speakers: !!h?.parts.speakers,
       downloaded: h?.downloaded ?? [],

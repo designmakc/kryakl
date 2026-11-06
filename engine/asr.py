@@ -1,4 +1,5 @@
-"""The words: faster-whisper, on an NVIDIA card when the gpu part is there, else on the CPU.
+"""The words: faster-whisper, on an NVIDIA card when the gpu part is there, else on the CPU;
+on a Mac on Apple silicon with the mac part, Whisper turbo on its graphics through mlx-whisper (MlxWhisper).
 
 A long recording gets times for every word; a dictated phrase just its text, fast.
 Which model runs where is Kryakl's plan (settings.py `plan`); this module loads
@@ -12,6 +13,7 @@ import logging
 import os
 import sys
 import threading
+from types import SimpleNamespace
 from pathlib import Path
 from typing import Callable
 
@@ -119,14 +121,34 @@ def backend(name: str) -> str:
     return _MODELS.get(name, {}).get("backend", "")
 
 
+def mlx_ready() -> bool:
+    """A Mac on Apple silicon with the mac part (mlx-whisper) installed: Whisper runs on its graphics (Metal)."""
+    import platform
+
+    return sys.platform == "darwin" and platform.machine() == "arm64" and importlib.util.find_spec("mlx_whisper") is not None
+
+
+def _on_mlx(name: str) -> bool:
+    """This model is kept and run as MLX's copy here (the catalog's `mlx` repo), not faster-whisper's."""
+    return "mlx" in _MODELS.get(name, {}) and mlx_ready()
+
+
+def _mlx_dir(name: str) -> Path:
+    return WHISPER_DIR / "mlx" / name
+
+
 def _cache_dir(name: str) -> Path:
     """Where a model's files are: Hugging Face's models--<owner>--<repo> for Whisper, a folder of its own for Parakeet."""
+    if _on_mlx(name):
+        return _mlx_dir(name)
     if backend(name) == "whisper":
         return WHISPER_DIR / ("models--" + _WHISPER[name]["repo"].replace("/", "--"))
     return MODELS_DIR / name
 
 
 def downloaded(name: str) -> bool:
+    if _on_mlx(name):
+        return any((_mlx_dir(name) / f).is_file() for f in ("weights.safetensors", "weights.npz"))
     if backend(name) == "whisper":
         return any(_cache_dir(name).glob("snapshots/*/model.bin"))
     if backend(name) == "parakeet":
@@ -159,6 +181,24 @@ def fetch(name: str) -> str:
 
                 snapshot_download(_MODELS[name]["repo"], local_dir=str(_cache_dir(name)), allow_patterns=list(PARAKEET_FILES))
             return str(_cache_dir(name))
+        if _on_mlx(name):
+            if not here:
+                from huggingface_hub import snapshot_download
+
+                snapshot_download(_MODELS[name]["mlx"]["repo"], local_dir=str(_mlx_dir(name)))
+            return str(_mlx_dir(name))
+        return _fetch_whisper(name, here)
+    finally:
+        fetching.discard(name)
+
+
+def _fetch_whisper(name: str, here: bool | None = None) -> str:
+    """faster-whisper's copy of the model (a Mac whose MLX failed falls back to it on the processor)."""
+    if here is None:
+        here = any((WHISPER_DIR / ("models--" + _WHISPER[name]["repo"].replace("/", "--"))).glob("snapshots/*/model.bin"))
+    if not here:
+        fetching.add(name)
+    try:
         from faster_whisper.utils import download_model
 
         return download_model(name, cache_dir=str(WHISPER_DIR), local_files_only=here)
@@ -248,7 +288,15 @@ class Transcriber:
             self._model = None
             self._key = None
             self._warm = None
-            path = fetch(name)
+            if device == "metal" or compute == "mlx":
+                # A Mac's graphics through MLX (the plan says so by the processor's entry's compute "mlx").
+                if _on_mlx(name):
+                    self._model = MlxWhisper(name)
+                    self.name, self.device, self.compute, self._key = name, "metal", "mlx", key
+                    return
+                log.warning("%s on Metal is not here (no mlx-whisper or no MLX copy); on the processor", name)
+                device = "cpu"
+            path = _fetch_whisper(name)
             from faster_whisper import WhisperModel
 
             if device == "cuda":
@@ -291,6 +339,8 @@ class Transcriber:
         progress: Callable[[float], None] | None = None,
     ) -> tuple[list[dict], str]:
         """Segments as {start, end, text, words: [{start, end, word}]} and the language spoken (the model loaded first)."""
+        if isinstance(self._model, MlxWhisper):
+            return self._model.transcribe(samples, language, hotwords, progress)
         total = max(len(samples) / RATE, 0.01)
         if language is None:
             try:
@@ -349,6 +399,8 @@ class Transcriber:
         speech = _speech_only(samples)
         if speech is None:
             return "", language or "", 0.0
+        if isinstance(self._model, MlxWhisper):
+            return self._model.dictate(speech, language, expected, hotwords, before, strict)
         try:
             return self._one_pass(speech, language, expected, hotwords, beam, before, strict)
         except (AttributeError, TypeError, KeyError) as error:  # faster-whisper changed underneath
@@ -418,8 +470,104 @@ class Transcriber:
         if self._warm == self._key:
             return
         noise = (np.random.default_rng(0).standard_normal(RATE) * 0.01).astype(np.float32)
+        if isinstance(self._model, MlxWhisper):
+            self._model.run(noise, language="en")
+            self._warm = self._key
+            return
         list(self._model.transcribe(noise, language="en", vad_filter=False, without_timestamps=True)[0])
         self._warm = self._key
+
+
+def _prompt(*parts: str | None) -> str | None:
+    """Whisper's initial prompt: the style, the text before, the words to spell (faster-whisper's hotwords), 400 characters at most."""
+    text = " ".join(p.strip() for p in parts if p and p.strip())
+    return text[-400:] or None
+
+
+class MlxWhisper:
+    """Whisper on a Mac's graphics (Apple silicon, Metal) through mlx-whisper, the MLX copy of the model
+    (the catalog's `mlx` repo). It gives the same segments and words as the faster-whisper path, so
+    phantoms, vocab, merge and the speakers work on it unchanged. What it lacks: no beam (MLX decodes
+    greedily), no hotwords (the words to spell go into the prompt), no VAD before the words.
+    Loaded by Transcriber when the plan says `metal`; mlx_whisper keeps the weights itself after the first call."""
+
+    def __init__(self, name: str):
+        self.name = name
+        self.path = fetch(name)
+
+    def run(self, samples: np.ndarray, **options) -> dict:
+        import mlx_whisper
+
+        return mlx_whisper.transcribe(samples, path_or_hf_repo=self.path, verbose=None, **options)
+
+    def detect(self, speech: np.ndarray) -> dict[str, float] | None:
+        """Every language's chance from the first 30 s, as faster-whisper's one pass gives it; None when
+        mlx-whisper's insides moved (then the caller decides without them)."""
+        try:
+            from mlx_whisper.audio import N_FRAMES, N_SAMPLES, log_mel_spectrogram, pad_or_trim
+            from mlx_whisper.transcribe import ModelHolder
+            import mlx.core as mx
+
+            model = ModelHolder.get_model(self.path, mx.float16)
+            mel = log_mel_spectrogram(speech, n_mels=model.dims.n_mels, padding=N_SAMPLES)
+            _, probs = model.detect_language(pad_or_trim(mel, N_FRAMES, axis=-2).astype(mx.float16))
+            return {k: float(v) for k, v in dict(probs).items()}
+        except Exception as error:
+            log.warning("mlx language detection failed: %s", error)
+            return None
+
+    def transcribe(self, samples: np.ndarray, language: str | None, hotwords: str = "", progress: Callable[[float], None] | None = None) -> tuple[list[dict], str]:
+        out = self.run(
+            samples,
+            language=language,
+            initial_prompt=_prompt(STYLE.get(language or ""), hotwords),
+            word_timestamps=True,
+            condition_on_previous_text=True,
+            hallucination_silence_threshold=2.0,
+        )
+        total = max(len(samples) / RATE, 0.01)
+        segments = []
+        for segment in out.get("segments", []):
+            if progress:
+                progress(min(segment["end"] / total, 1.0))
+            words = [
+                {"start": round(w["start"], 2), "end": round(w["end"], 2), "word": w["word"]}
+                for w in segment.get("words") or []
+                if w["word"].strip()
+            ]
+            kept = phantoms.clean_segment(
+                {"start": round(segment["start"], 2), "end": round(segment["end"], 2), "text": segment["text"].strip(), "words": words},
+                phantoms.Sound(segment["end"] - segment["start"], segment.get("no_speech_prob", 0.0), segment.get("avg_logprob", 0.0)),
+            )
+            if kept:
+                segments.append(kept)
+        return segments, out.get("language") or language or ""
+
+    def dictate(self, speech: np.ndarray, language: str | None, expected=(), hotwords: str = "", before: str = "", strict: bool = False) -> tuple[str, str, float]:
+        """The speech (silences cut already) as a phrase; the language among the expected ones as pick_language
+        decides, when the language's chances can be had; else, `strict`, the person's own (the first expected)."""
+        sure = 1.0
+        if language is None and expected:
+            probs = self.detect(speech)
+            if probs:
+                language = pick_language(probs, expected, strict)
+                sure = probs.get(language, 0.0)
+                _log_pick(language, probs, expected, speech)
+            elif strict:
+                # ponytail: no chances, so no OWN_LEAN: the first expected language always; fix when mlx-whisper's detect_language is reachable for sure.
+                language = expected[0]
+        out = self.run(
+            speech,
+            language=language,
+            initial_prompt=_prompt(STYLE.get(language or ""), before[-150:], hotwords),
+            condition_on_previous_text=False,
+            without_timestamps=True,
+        )
+        segments = [
+            SimpleNamespace(text=s["text"], no_speech_prob=s.get("no_speech_prob", 0.0), avg_logprob=s.get("avg_logprob", 0.0))
+            for s in out.get("segments", [])
+        ]
+        return _said(segments, speech), language or out.get("language", ""), float(sure)
 
 
 class Parakeet:

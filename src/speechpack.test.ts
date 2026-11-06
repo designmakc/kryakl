@@ -8,12 +8,19 @@ import { downloadMb, extrasFor, installedMb, normalizeParts, SpeechPack, UV, typ
 
 describe('parts', () => {
   it('maps parts to extras, speakers on the card replacing gpu', () => {
-    expect(extrasFor(['core'])).toEqual([])
-    expect(extrasFor(['core', 'gpu'])).toEqual(['gpu'])
-    expect(extrasFor(['core', 'speakers'])).toEqual(['speakers'])
-    expect(extrasFor(['core', 'gpu', 'speakers'])).toEqual(['speakers-gpu'])
+    const win = 'win32-x64'
+    expect(extrasFor(['core'], true, win)).toEqual([])
+    expect(extrasFor(['core', 'gpu'], true, win)).toEqual(['gpu'])
+    expect(extrasFor(['core', 'speakers'], true, win)).toEqual(['speakers'])
+    expect(extrasFor(['core', 'gpu', 'speakers'], true, win)).toEqual(['speakers-gpu'])
     // A card too small for both models: Whisper on it, speakers on the processor.
-    expect(extrasFor(['core', 'gpu', 'speakers'], false)).toEqual(['gpu', 'speakers'])
+    expect(extrasFor(['core', 'gpu', 'speakers'], false, win)).toEqual(['gpu', 'speakers'])
+  })
+
+  it('adds the mac extra on Apple silicon only', () => {
+    expect(extrasFor(['core'], true, 'darwin-arm64')).toEqual(['mac'])
+    expect(extrasFor(['core', 'speakers'], true, 'darwin-arm64')).toEqual(['mac', 'speakers'])
+    expect(extrasFor(['core'], true, 'darwin-x64')).toEqual([])
   })
 
   it('counts the download', () => {

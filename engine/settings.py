@@ -265,6 +265,9 @@ def clean_plan(plan: dict) -> dict:
             clean = {"model": entry["model"]}
             if device in runs_on and entry.get("compute") in COMPUTE[device]:
                 clean["compute"] = entry["compute"]
+            # A Mac's graphics (asr.MlxWhisper): the processor's entry with compute "mlx", as jobs.py knows only cpu and cuda plans.
+            if device == "cpu" and "metal" in runs_on and entry.get("compute") == "mlx":
+                clean["compute"] = "mlx"
             if isinstance(entry.get("beam"), int) and 1 <= entry["beam"] <= 10:
                 clean["beam"] = entry["beam"]
             out.setdefault(device, {})[feature] = clean

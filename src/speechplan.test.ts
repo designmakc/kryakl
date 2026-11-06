@@ -35,7 +35,29 @@ function input(over: Partial<PlanInput> = {}): PlanInput {
   }
 }
 
+const m1: DeviceProfile = {
+  cpu: { name: 'Apple M1', cores: 6, threads: 8 },
+  ramGb: 16,
+  gpus: [{ name: 'Apple M1 GPU', vendor: 'other', vramMb: 0, driver: '' }],
+  laptop: true,
+  at: 1,
+}
+
 describe('planSpeech', () => {
+  it('an M1 with the mac part transcribes with turbo on Metal; Parakeet still dictates where it is quicker', () => {
+    const downloaded = ['large-v3-turbo', 'parakeet-tdt-0.6b-v3']
+    const plan = planSpeech(input({ profile: m1, metal: true, downloaded, languages: ['ru', 'en'] }))
+    expect(plan.transcripts.chosen).toMatchObject({ model: 'large-v3-turbo', device: 'metal', compute: 'mlx', basis: 'guess' })
+    expect(plan.engine.cpu.transcripts).toEqual({ model: 'large-v3-turbo', compute: 'mlx' })
+    expect(plan.dictation.chosen.model).toBe('parakeet-tdt-0.6b-v3')
+    expect(testRuns(input({ profile: m1, metal: true, downloaded }), plan)).toContainEqual({ model: 'large-v3-turbo', device: 'metal', compute: 'mlx', beam: 2 })
+    // A measured Metal run is this Mac's own.
+    const bench = { fingerprint: 'fp', runs: { [runKey('large-v3-turbo', 'metal', 'mlx')]: { rtf: 0.04 } } }
+    expect(planSpeech(input({ profile: m1, metal: true, downloaded, bench })).transcripts.chosen.basis).toBe('measured')
+    // Without the part, turbo is the processor's.
+    expect(planSpeech(input({ profile: m1, downloaded })).transcripts.choices.some(c => c.device === 'metal')).toBe(false)
+  })
+
   it('a weak laptop dictates Russian with Parakeet, Kazakh with a quick Whisper', () => {
     const plan = planSpeech(input({ profile: weakLaptop }))
     expect(plan.device).toBe('cpu')

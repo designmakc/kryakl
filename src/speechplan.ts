@@ -16,7 +16,8 @@ import { nvidiaCard, type DeviceProfile } from './hardware'
 import { numberText, t } from './i18n'
 
 export type Feature = 'dictation' | 'transcripts'
-export type Device = 'cpu' | 'cuda'
+/** metal: a Mac's graphics (Apple silicon) through mlx-whisper; the engine gets it as the processor's entry with compute 'mlx'. */
+export type Device = 'cpu' | 'cuda' | 'metal'
 export type Prefer = 'accuracy' | 'speed'
 /** Where an estimate comes from: this model measured here, another model measured here and scaled, or a first guess. */
 export type Basis = 'measured' | 'scaled' | 'guess'
@@ -37,12 +38,14 @@ export type CatalogModel = {
   features: Feature[]
   cpu: Prior
   cuda: Prior
+  /** A Mac's graphics: guesses only, until the speed test runs there. */
+  metal?: Prior
   ramMb: number
   vramMb: { float16: number; int8_float16: number }
 }
 
 export const MODELS = catalog.models as CatalogModel[]
-const SPEAKERS = catalog.speakers as Record<Device, { rtf: number }>
+const SPEAKERS = catalog.speakers as Record<'cpu' | 'cuda', { rtf: number }>
 
 /** Seconds for a 7 s phrase; minutes of words for an hour of sound. */
 export const BUDGET: Record<Feature, Record<Prefer, number>> = {
@@ -65,6 +68,8 @@ export type PlanInput = {
   bench: Bench | undefined
   /** The engine can use the card now: the gpu part is there, a card answered, and it has not failed. */
   cuda: boolean
+  /** The engine runs Whisper on a Mac's graphics (the mac part, mlx-whisper, is there). */
+  metal?: boolean
   /** Speakers run on the card (torch's CUDA build is installed). */
   speakersCuda: boolean
   /** The speakers part is installed: Transcribe's hour includes telling them apart. */
@@ -128,7 +133,7 @@ export type SpeechPlan = {
   /** Worth offering: the graphics card's part (an NVIDIA card that can take Whisper), and speakers on it. */
   offers: { gpu: boolean; speakersGpu: boolean }
   /** Minutes to tell an hour's speakers apart here, on the processor and (when offered) on the card; where it is advised. */
-  speakers: { cpu: number; cuda?: number; advised: Device }
+  speakers: { cpu: number; cuda?: number; advised: 'cpu' | 'cuda' }
   threads: number
 }
 
@@ -185,21 +190,24 @@ function speed(m: CatalogModel, device: Device, compute: string, field: 'phrase'
   let near: { value: number; distance: number } | undefined
   for (const other of MODELS) {
     if (other.name === m.name) continue
-    for (const c of device === 'cpu' ? ['int8'] : ['float16', 'int8_float16']) {
+    for (const c of device === 'cpu' ? ['int8'] : device === 'metal' ? ['mlx'] : ['float16', 'int8_float16']) {
+      const other_ = other[device]
+      if (!other_ || !m[device]) continue
       const v = measuredValue(input.bench, runKey(other.name, device, c), field)
       if (v === undefined) continue
       const distance = Math.abs(Math.log(other.bytes / m.bytes)) + (other.backend === m.backend ? 0 : 1)
-      const value = ((v * m[device][field]) / other[device][field]) * (compute === 'int8_float16' && c !== compute ? 1.1 : 1)
+      const value = ((v * m[device]![field]) / other_[field]) * (compute === 'int8_float16' && c !== compute ? 1.1 : 1)
       if (!near || distance < near.distance) near = { value, distance }
     }
   }
   if (near) return { value: near.value, basis: 'scaled' }
-  const factor = device === 'cpu' ? cpuFactor(input.profile) : cudaFactor(input.profile) * (compute === 'int8_float16' ? 1.1 : 1)
-  return { value: m[device][field] * factor, basis: 'guess' }
+  // ponytail: Metal's guess is not scaled by the chip (an M1 Pro and an M1 alike) until the speed test measures it.
+  const factor = device === 'cpu' ? cpuFactor(input.profile) : device === 'metal' ? 1 : cudaFactor(input.profile) * (compute === 'int8_float16' ? 1.1 : 1)
+  return { value: m[device]![field] * factor, basis: 'guess' }
 }
 
 /** Seconds per second of sound to tell the speakers apart on a device: measured here, else the catalog's guess scaled to this computer. */
-function speakersRtfOn(input: PlanInput, device: Device): number {
+function speakersRtfOn(input: PlanInput, device: 'cpu' | 'cuda'): number {
   const measured = measuredValue(input.bench, `speakers|${device}`, 'rtf')
   return measured ?? SPEAKERS[device].rtf * (device === 'cpu' ? cpuFactor(input.profile) : cudaFactor(input.profile))
 }
@@ -210,9 +218,10 @@ function speakersRtf(input: PlanInput): number {
 
 function choice(m: CatalogModel, feature: Feature, plan: Device, input: PlanInput): Choice {
   // A processor-only model (Parakeet) in the card's plan runs on the processor, beside the card's Whisper.
-  const device: Device = m.devices.includes(plan) ? plan : 'cpu'
+  // On a Mac with the mac part, a model with an MLX copy runs on its graphics in the processor's plan.
+  const device: Device = plan === 'cpu' && input.metal && m.devices.includes('metal') ? 'metal' : m.devices.includes(plan) ? plan : 'cpu'
   let why = ''
-  let compute = device === 'cpu' ? 'int8' : cudaCompute(m, input.profile)
+  let compute = device === 'cpu' ? 'int8' : device === 'metal' ? 'mlx' : cudaCompute(m, input.profile)
   if (device === 'cuda' && !compute) {
     why = 'too big for this graphics card'
     compute = 'int8_float16'
@@ -278,6 +287,11 @@ function decide(feature: Feature, device: Device, input: PlanInput): FeaturePlan
 function forDevice(device: Device, input: PlanInput): Record<Feature, FeaturePlan> {
   const transcripts = decide('transcripts', device, input)
   let dictation = decide('dictation', device, input)
+  if (device === 'cpu' && dictation.chosen.device === 'metal' && !dictation.pinned) {
+    // Metal dictates only where it beats Parakeet on the processor (a guess until the speed test).
+    const parakeet = dictation.choices.find(c => c.device === 'cpu' && !c.why && c.fits && c.downloaded && c.estimate <= dictation.chosen.estimate)
+    if (parakeet) dictation = { ...dictation, chosen: parakeet, better: undefined }
+  }
   if (device !== 'cuda' || dictation.pinned) return { dictation, transcripts }
   // The card is left to the person's programs (2026-10-31, the owner: dictation always on the processor):
   // Parakeet, as accurate as turbo and as quick here, dictates when it suits every language they use;
@@ -297,7 +311,7 @@ const beamOn = (device: Device, input: PlanInput) => (device === 'cuda' ? 5 : in
 const entryOf = (feature: Feature, plan: FeaturePlan, input: PlanInput): EngineEntry => {
   const c = plan.chosen
   const beam = feature === 'dictation' ? { beam: beamOn(c.device, input) } : {}
-  return c.device === 'cuda' ? { model: c.model, compute: c.compute, ...beam } : { model: c.model, ...beam }
+  return c.device === 'cpu' ? { model: c.model, ...beam } : { model: c.model, compute: c.compute, ...beam }
 }
 
 export function planSpeech(input: PlanInput): SpeechPlan {
@@ -335,7 +349,7 @@ export function testRuns(input: PlanInput, plan: SpeechPlan, all = false): { mod
     .filter(c => c.downloaded && !c.why)
     .filter(c => all || measuredValue(input.bench, runKey(c.model, c.device, c.compute), 'phrase') === undefined || measuredValue(input.bench, runKey(c.model, c.device, c.compute), 'rtf') === undefined)
     .sort((a, b) => a.mb - b.mb)
-    .map(c => ({ model: c.model, device: c.device, ...(c.device === 'cuda' ? { compute: c.compute } : {}), beam: beamOn(c.device, input) }))
+    .map(c => ({ model: c.model, device: c.device, ...(c.device !== 'cpu' ? { compute: c.compute } : {}), beam: beamOn(c.device, input) }))
 }
 
 /** What a declined test is remembered by: it is offered again when this changes (another computer, a model added). */

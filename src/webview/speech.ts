@@ -323,7 +323,7 @@ function needsEngine(feature: string): string {
 /** 480 MB, 1.6 GB. */
 export const size = sizeText
 
-const where = (c: Choice) => (c.device === 'cuda' ? t('speech.onCard') : t('speech.onProcessor'))
+const where = (c: Choice) => (c.device === 'cuda' ? t('speech.onCard') : c.device === 'metal' ? t('speech.onMetal') : t('speech.onProcessor'))
 
 /** The model a feature uses now, as the engine has it: downloading shows how far. */
 function liveModel(v: AppView, feature: Feature): SpeechHealth['models']['dictation'] | undefined {
@@ -469,7 +469,8 @@ export function computerRows(v: AppView): HTMLElement[] {
   const d = v.speech.device
   const card = mainCard(d)
   const cpu = [shortCpu(d.cpu.name), t('speech.cores', { n: d.cpu.cores }), t('size.gb', { n: d.ramGb }), d.laptop ? t('speech.laptop') : null].filter(Boolean).join(' · ')
-  const cards = card ? cardText(card) : d.at ? t('speech.noCard') : t('speech.lookingCard')
+  // A card speech cannot use says so (a Mac's graphics: Whisper turbo on Metal, else the processor).
+  const cards = card ? (card.vendor === 'nvidia' ? cardText(card) : cardNote(v)) : d.at ? t('speech.noCard') : t('speech.lookingCard')
   const plan = v.speech.plan
   const tested = plan.measured ? t('speech.measured') : running(v) ? t('speech.guesses') : t('speech.testedLater')
   const work = testWork(v)
@@ -499,7 +500,7 @@ export function heldNow(v: AppView): string {
   }
   for (const m of v.speech.health?.loaded ?? []) {
     const name = m.model === 'speakers' ? t('speech.whoSpoke') : (MODELS.find(c => c.name === m.model)?.label ?? m.model)
-    ;(m.device === 'cuda' ? card : processor).push(name)
+    ;(m.device === 'cuda' || m.device === 'metal' ? card : processor).push(name)
   }
   if (!card.length && !processor.length) return t('speech.nothingLoaded')
   return [
@@ -516,6 +517,8 @@ export function cardNote(v: AppView): string {
   const s = v.speech
   const card = mainCard(s.device)
   const gpuPart = hasPart(v, 'gpu')
+  // A Mac's graphics runs Whisper turbo through MLX: not the processor, though no NVIDIA card.
+  if (s.plan.transcripts.chosen.device === 'metal' || s.plan.dictation.chosen.device === 'metal') return t('speech.cardMetal', { name: card ? cardText(card) : 'Apple' })
   if (!card) return s.device.at ? t('speech.cardNone') : t('speech.looking')
   const name = cardText(card)
   if (card.vendor !== 'nvidia') return t('speech.cardNotNvidia', { name })

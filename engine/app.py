@@ -219,7 +219,7 @@ def health_view() -> dict:
         "ok": True,
         "version": VERSION,
         "device": worker.device,
-        "parts": {"core": True, "gpu": asr.gpu(), "speakers": diarize.installed()},
+        "parts": {"core": True, "gpu": asr.gpu(), "speakers": diarize.installed(), "mac": asr.mlx_ready()},
         "whisper": whisper_status(s["model"]),
         "models": {"transcripts": planned("transcripts"), "dictation": planned("dictation")},
         "downloaded": [m for m in ALL_MODELS if asr.downloaded(m)],

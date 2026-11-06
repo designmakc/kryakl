@@ -25,14 +25,14 @@ export type SpeechTestState = { state: 'idle' | 'waiting' | 'running' | 'done' |
 /** The engine's /health, as much of it as Kryakl reads (the optional parts come from engines of 0.2 on). */
 export type SpeechHealth = {
   version: string
-  device: 'cuda' | 'cpu' | null
-  parts: { core: boolean; gpu: boolean; speakers: boolean }
+  device: 'cuda' | 'cpu' | 'metal' | null
+  parts: { core: boolean; gpu: boolean; speakers: boolean; mac?: boolean }
   /** The model each feature has now, from the plan, and where it runs. */
   models: Record<'transcripts' | 'dictation', { name: string; state: 'ready' | 'missing' | 'downloading'; progress?: number; device?: 'cuda' | 'cpu'; compute?: string }>
   /** The models downloaded (catalog names). */
   downloaded?: string[]
   /** The models in memory now and where ("speakers" for who spoke when). */
-  loaded?: { model: string; device: 'cuda' | 'cpu' }[]
+  loaded?: { model: string; device: 'cuda' | 'cpu' | 'metal' }[]
   /** The Chrome extension last seen (it pings every 15 min; `seen` is Unix seconds). */
   extension?: { id: string; version: string; seen: number } | null
   /** Why the card is not used though it is there. */
