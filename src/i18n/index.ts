@@ -72,7 +72,7 @@ export function t(key: Key, vars?: Record<string, string | number>): string {
     s = (p as Partial<Record<Intl.LDMLPluralRule, string>>)[pluralOf(n)] ?? p.other
   } else s = p
   // ponytail: on a Mac the phrases name macOS in place of Windows; Mac-only phrases when a step there differs (Windows settings paths, OCR)
-  if (onMac && !s.includes('macOS')) s = s.replace(/Windows/g, 'macOS')
+  if (onMac && key !== 'kb.windowsOnly' && !s.includes('macOS')) s = s.replace(/Windows/g, 'macOS')
   if (!vars) return s
   return s.replace(/\{(\w+)\}/g, (whole, name: string) => (name in vars ? String(vars[name]) : whole))
 }

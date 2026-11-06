@@ -37,10 +37,10 @@ export function namesHere(): Names {
 }
 
 /** Kryakl and Windows, in one line of the report, the email and the issue. */
-export type ReportFacts = { version: string; build: string; electron: string; windows: string; arch: string }
+export type ReportFacts = { version: string; build: string; electron: string; windows: string; arch: string; os?: string }
 
 export const factsLine = (f: ReportFacts): string =>
-  `Kryakl ${f.version}${f.build ? ` dev, built ${f.build}` : ''} · Windows ${f.windows} ${f.arch} · Electron ${f.electron}`
+  `Kryakl ${f.version}${f.build ? ` dev, built ${f.build}` : ''} · ${f.os ?? 'Windows'} ${f.windows} ${f.arch} · Electron ${f.electron}`
 
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 /** A name as a whole word, never inside a longer one ("ann" stays in "announce"). */
@@ -136,7 +136,7 @@ function tail(file: string, most: number): string | undefined {
 /** A zip of `files` (names in `dir`) at `out`, by Windows' own tar, which writes zip files too. */
 function zip(dir: string, files: string[], out: string): Promise<void> {
   return new Promise((resolve, reject) =>
-    execFile(system32('tar.exe'), ['-a', '-c', '-f', out, '-C', dir, ...files], { windowsHide: true }, (error, _stdout, stderr) =>
+    execFile(process.platform === 'darwin' ? '/usr/bin/tar' : system32('tar.exe'), ['-a', '-c', '-f', out, '-C', dir, ...files], { windowsHide: true }, (error, _stdout, stderr) =>
       error ? reject(new Error(`Could not make ${path.basename(out)}: ${String(stderr).trim() || error.message}`)) : resolve(),
     ),
   )

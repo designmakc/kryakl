@@ -17,7 +17,7 @@
 // message.
 
 import { NATURAL_PREFIX, NATURAL_VOICES, naturalLabel } from '../natural'
-import { DOUBLE_MS, HotkeyRecorder, hotkeyLabel, type Recorded } from '../hotkey'
+import { DOUBLE_MS, HotkeyRecorder, hotkeyLabel, onMac, type Recorded } from '../hotkey'
 import type { AppTab, AppView, DiffPart, Feature, KeyboardLayout, MistakeEntry, SavedWord, Settings, StorageId, StoragePart, StorageView, ToView, TutorHost } from '../protocol'
 import { LANGUAGES } from '../languages'
 import { translationAdvice, type LevelFit } from '../hardware'
@@ -254,7 +254,7 @@ const side = el(
   { class: 'side' },
   // The text logo; a narrow sidebar has room for the icon only.
   el('div', { class: 'brand' }, logo(), tile(28)),
-  el('label', { class: 'find', title: t('search.title') }, lucide('search', 's'), findField, el('span', { class: 'key' }, 'Ctrl F')),
+  el('label', { class: 'find', title: t('search.title') }, lucide('search', 's'), findField, el('span', { class: 'key' }, onMac ? '⌘F' : 'Ctrl F')),
   tree,
 )
 
@@ -2745,6 +2745,8 @@ function layoutPage(v: AppView): HTMLElement[] {
   const [typed = '', fixed = ''] = [sample.typed.split(' ')[0], sample.fixed.split(' ')[0]]
   const ownKeys = Object.keys(s.layoutKeys).length
   const learnedCount = v.learned.alwaysFix.length + v.learned.myWords.length
+  // The layout helper is a Windows keyboard hook: on a Mac the page says so and nothing else.
+  if (onMac) return [warn(t('kb.windowsOnly'))]
   const onOff = (on: boolean, key: 'switchOn' | 'fixKeyOn', label: string, has: boolean) => (has ? el('span', { class: 'tgwrap' }, toggleKnob(on, next => save({ [key]: next }), label)) : null)
   return [
     tiles([
@@ -3356,7 +3358,7 @@ window.addEventListener('keydown', event => {
     back()
   }
   // Ctrl+F: the search, unless a key is being recorded.
-  if (event.ctrlKey && !event.altKey && !event.shiftKey && event.key.toLowerCase() === 'f' && !document.querySelector('.recording') && !root.classList.contains('setup')) {
+  if ((onMac ? event.metaKey : event.ctrlKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === 'f' && !document.querySelector('.recording') && !root.classList.contains('setup')) {
     event.preventDefault()
     findField.focus()
     findField.select()

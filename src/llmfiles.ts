@@ -5,7 +5,8 @@
 // never load a model each. Nothing is downloaded before the person picks one.
 // The engine is llama.cpp's Vulkan build (any graphics card, or the
 // processor), or its CUDA build for a model that does not fit an NVIDIA card
-// (`engineFor`; hardware.ts translationAdvice), each unpacked once into
+// (`engineFor`; hardware.ts translationAdvice), or on a Mac its Apple silicon
+// build (Metal; never CUDA), each unpacked once into
 // <root>\engine\<build>-<sha256 head> and shared by every model; the models are
 // <root>\models\<sha256 head>-<file>. All pinned with size and SHA-256 in
 // llm-manifest.json. One server (llama.ts) serves them all, one model at a time.
@@ -23,13 +24,20 @@ import type { LlmModel } from './settings'
 export type { LlmModel }
 export type LlmEngine = 'vulkan' | 'cuda'
 
-type Build = { name: string; files: Pinned[] }
+/** `strip`: leading folders the archives' paths start with. `mac`: the build for macOS Apple silicon, where there is one. */
+type Build = { name: string; files: Pinned[]; strip?: number; mac?: Build }
 export type ModelFile = Pinned & { name: string; file: string }
 export type LlmManifest = { engine: Record<LlmEngine, Build>; models: Record<LlmModel, ModelFile>; languages: Record<string, string> }
 
 const MANIFEST = manifest as LlmManifest
 const MODELS: readonly LlmModel[] = ['accurate', 'most']
 const ENGINES: readonly LlmEngine[] = ['vulkan', 'cuda']
+const MAC = process.platform === 'darwin'
+/** The server's file name in a build. */
+const SERVER = process.platform === 'win32' ? 'llama-server.exe' : 'llama-server'
+
+/** A kind's build here: on a Mac its `mac` one (Metal, used by itself) when the manifest has it. */
+const buildOf = (m: LlmManifest, kind: LlmEngine): Build => (MAC && m.engine[kind].mac) || m.engine[kind]
 
 /** Each model, and how it is named. */
 export const LLM_MODELS: Readonly<Record<LlmModel, ModelFile>> = MANIFEST.models
@@ -38,10 +46,10 @@ export const LLM_LANGUAGES: Readonly<Record<string, string>> = MANIFEST.language
 
 /** Where the engines and the models are kept under `root`. */
 export function llmPaths(root: string, m: LlmManifest = MANIFEST) {
-  const engineDir = (kind: LlmEngine) => path.join(root, 'engine', `${kind}-${m.engine[kind].files[0]?.sha256.slice(0, 12)}`)
+  const engineDir = (kind: LlmEngine) => path.join(root, 'engine', `${kind}-${buildOf(m, kind).files[0]?.sha256.slice(0, 12)}`)
   return {
     engineDir,
-    exe: (kind: LlmEngine) => path.join(engineDir(kind), 'llama-server.exe'),
+    exe: (kind: LlmEngine) => path.join(engineDir(kind), SERVER),
     model: (model: LlmModel) => path.join(root, 'models', `${m.models[model].sha256.slice(0, 12)}-${m.models[model].file}`),
   }
 }
@@ -89,11 +97,13 @@ function removePath(target: string): void {
 
 export function createLlmFiles(o: LlmFilesOptions): LlmFiles {
   const m = o.manifest ?? MANIFEST
-  const { engine: builds, models } = m
+  const { models } = m
   const paths = llmPaths(o.root, m)
   const { server } = o
   const open = o.open ?? openStream
-  const engineFor = o.engineFor ?? (() => 'vulkan')
+  // ponytail: no CUDA on a Mac, so every model runs on the Vulkan kind's (Metal) build there.
+  const engineFor = MAC ? () => 'vulkan' as const : (o.engineFor ?? (() => 'vulkan'))
+  const builds = { vulkan: buildOf(m, 'vulkan'), cuda: buildOf(m, 'cuda') }
 
   const buildSize = (kind: LlmEngine) => builds[kind].files.reduce((n, f) => n + f.size, 0)
   const hasEngine = (kind: LlmEngine) => fs.existsSync(paths.exe(kind))
@@ -145,10 +155,11 @@ export function createLlmFiles(o: LlmFilesOptions): LlmFiles {
           onBytes()
         }, open)
         done += file.size
-        await unzip(zip, unpacking)
+        await unzip(zip, unpacking, builds[kind].strip)
         fs.rmSync(zip, { force: true })
       }
-      if (!fs.existsSync(path.join(unpacking, 'llama-server.exe'))) throw new Error('The engine came without its server')
+      if (!fs.existsSync(path.join(unpacking, SERVER))) throw new Error('The engine came without its server')
+      if (MAC) fs.chmodSync(path.join(unpacking, SERVER), 0o755)
       fs.renameSync(unpacking, dir)
       for (const name of fs.readdirSync(base)) if (name.startsWith(`${kind}-`) && name !== path.basename(dir)) fs.rmSync(path.join(base, name), { recursive: true, force: true })
     })().finally(() => {

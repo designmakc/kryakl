@@ -53,7 +53,7 @@ import { openStream } from './download'
 import { frameWindow, WIN11 } from './dwm'
 import { createTranslator, NATIVES } from './engine'
 import { LEVEL_VRAM_MB, translationAdvice } from './hardware'
-import { COPY_TWICE, hotkeyLabel, isAccelerator } from './hotkey'
+import { COPY_TWICE, hotkeyLabel, isAccelerator, onMac } from './hotkey'
 import { levelName, setUiLanguage, t } from './i18n'
 import { engineMessage } from './i18n/engine'
 import { FIX_LANGUAGES, KeyboardHelper, keyboardLayouts } from './keyboard'
@@ -781,7 +781,7 @@ function logPageErrors(win: BrowserWindow, name: string): void {
 
 /** Kryakl and Windows, for a report's first lines. */
 function reportFacts(): ReportFacts {
-  return { version: app.getVersion(), build: app.isPackaged ? '' : buildText(), electron: process.versions.electron, windows: process.getSystemVersion(), arch: process.arch }
+  return { version: app.getVersion(), build: app.isPackaged ? '' : buildText(), electron: process.versions.electron, windows: process.getSystemVersion(), arch: process.arch, ...(process.platform === 'darwin' ? { os: 'macOS' } : {}) }
 }
 
 /** The parts' state at the moment of a report: the speech engine, the translation level and the model loaded. */
@@ -2202,6 +2202,14 @@ async function pasteInto(window: bigint, field: unknown, text: string): Promise<
 
 /** `text` pasted in the program in front: written to paste, Ctrl+V, the guard told. */
 async function pasteText(text: string): Promise<void> {
+  if (onMac) {
+    // No SendInput on a Mac: Cmd+V through System Events, the person's text put back once the program has read it.
+    const before = await clipboard.readText()
+    clipboard.writeText(text)
+    await macKeystroke('v')
+    setTimeout(() => clipboard.writeText(before), 300)
+    return
+  }
   await clipGuard.write(text, true)
   const down = await pressPaste()
   if (down.length > 0) log(`paste: pressed with ${down.join(' and ')} still down`)
@@ -2823,7 +2831,32 @@ function doubleCopyChange(now: number, ctrl: boolean): void {
 }
 
 function selection(purpose: Purpose, via?: string, nothing?: () => void): void {
+  if (onMac) return void macSelection(purpose, via, nothing)
   useSelection(purpose, via, nothing).catch(error => console.warn('Kryakl: could not copy the selection', error))
+}
+
+/**
+ * A Mac's selection: Cmd+C sent through System Events (macOS asks once for
+ * Accessibility access), the clipboard read a moment after. In place has no
+ * window to paste back into here and shows the card instead.
+ */
+// ponytail: the copy is left on the clipboard; snapshot and restore it as pasteText does if people mind
+async function macSelection(purpose: Purpose, via?: string, nothing?: () => void): Promise<void> {
+  const at = screen.getCursorScreenPoint()
+  const before = await clipboard.readText()
+  clipboard.writeText('')
+  await macKeystroke('c')
+  await new Promise(resolve => setTimeout(resolve, 150))
+  const text = (await clipboard.readText()).trim()
+  if (text) return showText(text, purpose === 'inPlace' ? 'listen' : purpose, at, undefined, via)
+  clipboard.writeText(before)
+  if (nothing) nothing()
+  else tray?.displayBalloon({ title: t('app.name'), content: t('main.nothingCopied') })
+}
+
+/** A Cmd+letter sent to the program in front through System Events. */
+function macKeystroke(letter: string): Promise<void> {
+  return new Promise(resolve => execFile('osascript', ['-e', `tell application "System Events" to keystroke "${letter}" using command down`], () => resolve()))
 }
 
 /** How long the badge says there is nothing selected. */
@@ -2873,9 +2906,15 @@ function registerShortcuts(): void {
   globalShortcut.unregisterAll()
   // A key Electron cannot hold (a double tap of Ctrl, a mouse button) is the keyboard thread's: applyKeyboard().
   const register = (accelerator: string, run: () => void): boolean => {
-    if (!accelerator || !isAccelerator(accelerator)) return true
+    if (!accelerator) return true
+    if (!isAccelerator(accelerator)) {
+      // A Mac has no keyboard thread to hold it (a double tap, a mouse button, a lone modifier).
+      if (onMac) log(`keys: ${accelerator} is not a key a Mac can hold, skipped`)
+      return true
+    }
     try {
-      return globalShortcut.register(accelerator, run)
+      // On a Mac Ctrl (and Win) is read as Cmd, as the labels show it (hotkey.ts hotkeyLabel).
+      return globalShortcut.register(onMac ? accelerator.replace(/\b(Control|Super)\b/g, 'Command') : accelerator, run)
     } catch {
       return false
     }
@@ -2897,6 +2936,13 @@ function registerShortcuts(): void {
     typeCheck: register(settings.typeCheckKey, () => typeInto('check', settings.typeCheckKey)),
     pause: register(settings.pauseKey, togglePause),
     window: register(settings.windowKey, () => openApp()),
+  }
+  if (onMac) {
+    // The menu key is the keyboard thread's on Windows; a Mac has none.
+    register(settings.menuKey, menuPressed)
+    // ponytail: Cmd+Shift+L and Cmd+Shift+Y stand in for keys left empty, unchecked against the person's other keys
+    if (!settings.selectKey) register('Control+Shift+L', () => selection('listen'))
+    if (!settings.translateKey) register('Control+Shift+Y', () => selection('translate'))
   }
   // Dictate's keys mean nothing before the engine is there; then each starts and stops a phrase.
   const dictate = (mode: DictationMode, key: string) => (speech?.installed ? register(key, () => dictation.press(mode, key)) : true)
@@ -3387,25 +3433,6 @@ function runTrayCommand(command: TrayCommand): void {
  * copied text and `--translate` translates it; `--snip` snips to listen,
  * `--text` to translate. True when the arguments held one.
  */
-/**
- * On a Mac the Windows keyboard hook is off: Cmd+Shift+L listens to the
- * selection, Cmd+Shift+Y translates it; the screen's keys (Cmd+Alt+S, Cmd+Alt+T) do the same with a piece of it. The selection is copied by a Cmd+C sent
- * through System Events (macOS asks once for Accessibility access).
- */
-// ponytail: fixed keys and the clipboard keeps the copy; Settings › Keys and the clipboard given back when the Mac version grows
-function registerMacKeys(): void {
-  const copyThen = (action: 'listen' | 'translate') => () =>
-    execFile('osascript', ['-e', 'tell application "System Events" to keystroke "c" using command down'], () =>
-      setTimeout(() => useClipboard(action), 150),
-    )
-  globalShortcut.register('CommandOrControl+Shift+L', copyThen('listen'))
-  globalShortcut.register('CommandOrControl+Shift+Y', copyThen('translate'))
-  // The screen's keys from the settings, Ctrl read as Cmd (as their labels show it); a key the Mac cannot take is skipped.
-  const mac = (key: string) => key.replace(/\b(Control|Super)\b/, 'Command')
-  for (const [key, purpose] of [[settings.snipKey, 'listen'], [settings.textKey, 'translate']] as const)
-    if (key) globalShortcut.register(mac(key), () => snip(purpose))
-}
-
 function runCommand(argv: readonly string[]): boolean {
   if (argv.includes('--clipboard')) {
     afterSettling(() => useClipboard('listen'))
@@ -3804,7 +3831,6 @@ function start(): void {
   void sendHostVoices()
   // The first start opens the window on "How to use".
   if (firstRun) openApp('home')
-  if (process.platform === 'darwin') registerMacKeys()
   runCommand(process.argv)
 }
 

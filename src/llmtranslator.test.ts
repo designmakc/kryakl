@@ -8,6 +8,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { LlamaServer, LlamaTarget } from './llama'
 import { createLlmFiles, llmPaths, type LlmEngine, type LlmManifest, type LlmModel } from './llmfiles'
+import { systemTar } from './download'
 import { createLlmTranslators, ModelSlow, translatePrompt } from './llmtranslator'
 
 const sha = (data: Buffer) => createHash('sha256').update(data).digest('hex')
@@ -22,17 +23,19 @@ describe('translatePrompt', () => {
   })
 })
 
+const SERVER = process.platform === 'win32' ? 'llama-server.exe' : 'llama-server'
+
 describe('createLlmTranslators', () => {
   const dirs: string[] = []
   afterEach(() => dirs.splice(0).forEach(d => fs.rmSync(d, { recursive: true, force: true })))
 
-  /** A zip of these files, made by Windows' tar. */
+  /** A zip of these files, made by the system's tar. */
   function zipOf(dir: string, name: string, files: Record<string, string>): Buffer {
     const from = path.join(dir, name)
     fs.mkdirSync(from)
     for (const [file, text] of Object.entries(files)) fs.writeFileSync(path.join(from, file), text)
     const zip = path.join(dir, `${name}.zip`)
-    execFileSync(path.join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe'), ['-a', '-cf', zip, '-C', from, ...Object.keys(files)])
+    execFileSync(systemTar(), ['-a', '-cf', zip, '-C', from, ...Object.keys(files)])
     return fs.readFileSync(zip)
   }
 
@@ -41,8 +44,8 @@ describe('createLlmTranslators', () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'llm-'))
     const src = fs.mkdtempSync(path.join(os.tmpdir(), 'llm-src-'))
     dirs.push(root, src)
-    const vulkan = zipOf(src, 'vulkan', { 'llama-server.exe': 'vulkan server', 'ggml-vulkan.dll': 'v' })
-    const cuda = zipOf(src, 'cuda', { 'llama-server.exe': 'cuda server', 'ggml-cuda.dll': 'c' })
+    const vulkan = zipOf(src, 'vulkan', { [SERVER]: 'vulkan server', 'ggml-vulkan.dll': 'v' })
+    const cuda = zipOf(src, 'cuda', { [SERVER]: 'cuda server', 'ggml-cuda.dll': 'c' })
     const cudart = zipOf(src, 'cudart', { 'cudart64_12.dll': 'rt' })
     const small = Buffer.from('small model'.repeat(100))
     const big = Buffer.from('big model'.repeat(300))
@@ -175,12 +178,13 @@ describe('createLlmTranslators', () => {
     expect(await llm.accurate.hurried(5 * 1.4327142857142856)(['Да.'], 'ru', 'en')).toEqual(['[Да.]'])
   })
 
-  it('a level on CUDA downloads its two zips into one folder and runs every layer on the card', async () => {
+  // A Mac never runs CUDA (llmfiles.ts engineFor), so this one is Windows' and Linux's.
+  it.skipIf(process.platform === 'darwin')('a level on CUDA downloads its two zips into one folder and runs every layer on the card', async () => {
     const { llm, open, asked, paths } = setup()
     expect(llm.most.state('ru')).toMatchObject({ status: 'absent' })
     await llm.most.prepare('ru', () => undefined)
     expect(open.mock.calls.map(c => c[0])).toEqual(['https://x/cuda.zip', 'https://x/cudart.zip', 'https://x/big.gguf'])
-    expect(fs.readdirSync(paths.engineDir('cuda')).sort()).toEqual(['cudart64_12.dll', 'ggml-cuda.dll', 'llama-server.exe'])
+    expect(fs.readdirSync(paths.engineDir('cuda')).sort()).toEqual(['cudart64_12.dll', 'ggml-cuda.dll', SERVER])
     // Accurate stays on Vulkan: its build is still to come.
     expect(llm.accurate.state('ru')).toMatchObject({ status: 'absent' })
     await llm.most.translate(['Hi.'], 'en', 'ru')

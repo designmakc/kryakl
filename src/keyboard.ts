@@ -238,6 +238,8 @@ export class KeyboardHelper {
   }
 
   private start(): void {
+    // The hooks are Windows': on a Mac no thread starts, and no trouble is reported.
+    if (process.platform === 'darwin') return
     const { port1, port2 } = new MessageChannel()
     const worker = new Worker(this.workerPath, { workerData: { port: port2 }, transferList: [port2] })
     this.worker = worker

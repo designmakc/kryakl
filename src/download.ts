@@ -69,12 +69,14 @@ export async function fetchPinned(
   fs.renameSync(part, target)
 }
 
-/** Unpacks a zip into `dir` with Windows' own tar, which reads zip files. */
-export function unzip(zip: string, dir: string): Promise<void> {
-  const tar = path.join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe')
+/** The system's own tar (bsdtar on both), which reads zip and .tar.gz files alike. */
+export const systemTar = () => (process.platform === 'win32' ? path.join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe') : '/usr/bin/tar')
+
+/** Unpacks a zip (or .tar.gz) into `dir`, dropping `strip` leading folders of each path. */
+export function unzip(zip: string, dir: string, strip = 0): Promise<void> {
   fs.mkdirSync(dir, { recursive: true })
   return new Promise((resolve, reject) =>
-    execFile(tar, ['-xf', zip, '-C', dir], { windowsHide: true }, (error, _stdout, stderr) =>
+    execFile(systemTar(), ['-xf', zip, '-C', dir, ...(strip ? ['--strip-components', String(strip)] : [])], { windowsHide: true }, (error, _stdout, stderr) =>
       error ? reject(new Error(`Could not unpack ${path.basename(zip)}: ${String(stderr).trim() || error.message}`)) : resolve(),
     ),
   )

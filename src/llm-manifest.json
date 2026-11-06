@@ -8,7 +8,18 @@
           "size": 37156292,
           "sha256": "5b0bfec979a97102e9d8cacbedc37444c5bb8d1b90b5ecdec92098776097b5bb"
         }
-      ]
+      ],
+      "mac": {
+        "name": "llama.cpp b11929 (Metal)",
+        "strip": 1,
+        "files": [
+          {
+            "url": "https://github.com/ggml-org/llama.cpp/releases/download/b11929/llama-b11929-bin-macos-arm64.tar.gz",
+            "size": 16306378,
+            "sha256": "f5e74fddd486ef39565ef00fa718f68f5068665b8c403598efda7192a63cc741"
+          }
+        ]
+      }
     },
     "cuda": {
       "name": "llama.cpp b11929 (CUDA 12.4)",

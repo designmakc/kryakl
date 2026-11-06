@@ -156,7 +156,7 @@ export function isExtendedKey(vk: number): boolean {
   return EXTENDED.has(vk)
 }
 
-const onMac = typeof process !== 'undefined' && process.platform ? process.platform === 'darwin' : typeof navigator !== 'undefined' && /Mac/.test(navigator.userAgent)
+export const onMac = typeof process !== 'undefined' && process.platform ? process.platform === 'darwin' : typeof navigator !== 'undefined' && /Mac/.test(navigator.userAgent)
 
 /** A hotkey as Windows writes keys: "Left Ctrl", "Ctrl+Shift", "Left Ctrl twice", "Mouse Back". */
 export function hotkeyLabel(hotkey: string): string {
