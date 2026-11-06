@@ -92,19 +92,24 @@ export function renderSummary(json: SummaryJson, language: string | null, lost?:
 const wordsOf = (text: string) => (text.toLowerCase().match(/\p{L}+/gu) ?? []).filter(w => w.length >= 3)
 const numbersOf = (text: string) => text.match(/\d+/g) ?? []
 
-/** What the model made up taken out: a deadline, a name or a number never said, a topic outside the recording. */
-export function checkSummary(json: SummaryJson, input: SummaryInput): SummaryJson {
+/** A word by its first four letters, so another form of it counts as said ("пятницы" for "пятнице"). */
+const stem = (word: string) => word.slice(0, 4)
+
+/**
+ * What the model made up taken out: a deadline, a name or a number never said, a topic outside the recording.
+ * `translated`: the summary is in another language than the meeting (`mine`), so a deadline and a name are checked by their numbers alone.
+ */
+export function checkSummary(json: SummaryJson, input: SummaryInput, translated = false): SummaryJson {
   const said = input.lines.map(l => l.text).join('\n')
-  const words = new Set(wordsOf(said))
+  const words = new Set(wordsOf(said).map(stem))
   const numbers = new Set(numbersOf(said))
   const speakers = new Set(input.lines.map(l => l.speaker.trim().toLowerCase()))
   const numbersSaid = (text: string) => numbersOf(text).every(n => numbers.has(n))
-  // ponytail: whole words as written, so a deadline said in another form ("to Friday" → "Friday's") is dropped too; stems if that loses real ones.
-  const wordsSaid = (text: string) => wordsOf(text).every(w => words.has(w))
+  const wordsSaid = (text: string) => translated || wordsOf(text).every(w => words.has(stem(w)))
   const who = (name: string) => {
     const n = name.trim()
     if (!n) return ''
-    return speakers.has(n.toLowerCase()) || (wordsOf(n).length > 0 && wordsSaid(n)) ? n : ''
+    return speakers.has(n.toLowerCase()) || ((translated || wordsOf(n).length > 0) && numbersSaid(n) && wordsSaid(n)) ? n : ''
   }
   return {
     short: json.short.split(/(?<=[.!?…])\s+/).filter(numbersSaid).join(' '),
@@ -261,7 +266,7 @@ export function createSummarizer(o: { files: LlmFiles; model: () => LlmModel; fe
           })
         : job)
       return {
-        text: renderSummary(checkSummary(json, input), language, input.lost),
+        text: renderSummary(checkSummary(json, input, options.mine && language !== input.language), language, input.lost),
         template: options.template,
         mine: options.mine,
         language,

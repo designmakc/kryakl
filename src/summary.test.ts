@@ -78,6 +78,25 @@ describe('checkSummary', () => {
     expect(out.tasks.map(t => t.due)).toEqual(['by Friday', '', ''])
   })
 
+  it('keeps a deadline said in another form of its words', () => {
+    const ru: SummaryInput = { ...input, language: 'ru', lines: [{ speaker: 'Me', start: 0, text: 'Отчёт к пятнице, бюджет до 15 мая.' }] }
+    const out = checkSummary({ ...empty, tasks: [
+      { who: '', what: 'Отчёт', due: 'до пятницы' },
+      { who: '', what: 'Бюджет', due: '15 мая' },
+      { who: '', what: 'Бюджет', due: '16 мая' },
+    ] }, ru)
+    expect(out.tasks.map(t => t.due)).toEqual(['до пятницы', '15 мая', ''])
+  })
+
+  it('checks a translated deadline and name by their numbers only', () => {
+    const tasks = [
+      { who: 'Ольга', what: 'Надіслати звіт', due: 'п’ятниця' },
+      { who: 'Ольга', what: 'Найняти', due: '20 травня' },
+    ]
+    expect(checkSummary({ ...empty, tasks }, input, true).tasks.map(t => [t.who, t.due])).toEqual([['Ольга', 'п’ятниця'], ['Ольга', '']])
+    expect(checkSummary({ ...empty, tasks }, input).tasks.map(t => [t.who, t.due])).toEqual([['', ''], ['', '']])
+  })
+
   it('keeps "who" only as a speaker or a name said in the meeting', () => {
     const out = checkSummary({ ...empty, tasks: [
       { who: 'Olga', what: 'Send the report', due: '' },
