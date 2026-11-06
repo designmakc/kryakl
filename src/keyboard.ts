@@ -55,6 +55,8 @@ export type KeyboardEvents = {
   selection(cycle: string[], layout: string): void
   /** A key Electron's shortcuts cannot hold, for selecting, snipping or a snip's text, was pressed. */
   hotkey(action: MainAction): void
+  /** A dictation key went up again (hold to talk). */
+  hotkeyUp(action: 'dictate' | 'english' | 'practice'): void
   /** The program in front lately; whether it runs as administrator. */
   app(exe: string, elevated: boolean): void
   /** The layout in front, and Caps Lock (for the tray's icon). */
@@ -143,7 +145,9 @@ export class KeyboardHelper {
         ['pause', s.pauseKey],
         ['window', s.windowKey],
       ] as const) {
-        if (its(key)) keys[action] = key
+        // Held to talk, a dictation key is the thread's whatever it is: only the thread sees it go up.
+        const held = s.dictateHold && (action === 'dictate' || action === 'english' || action === 'practice') && !!key && !isCopyTwice(key)
+        if (its(key) || held) keys[action] = key
       }
     }
     const on = !s.paused
@@ -313,6 +317,9 @@ export class KeyboardHelper {
         return
       case 'hotkey':
         this.events.hotkey(message.action)
+        return
+      case 'hotkeyUp':
+        this.events.hotkeyUp(message.action)
         return
       case 'app':
         this.events.app(message.exe, message.elevated)

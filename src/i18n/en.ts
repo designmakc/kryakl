@@ -1035,6 +1035,8 @@ export const en = {
   'dictate.noteNote': 'into your notes folder',
   'dictate.againKey': 'Type the last phrase again',
   'dictate.againNote': 'repeats it where the cursor is',
+  'dictate.hold': 'Hold the key to talk',
+  'dictate.holdNote': 'speak while holding, release to type; a quick tap still starts and stops',
   'dictate.panel': 'Show the panel while dictating',
   'dictate.panelNote': 'off: the red dot in the tray shows the recording; an error still comes up for a moment',
   'dictate.escNote': 'The words appear as you speak. Esc cancels the phrase before it is typed.',

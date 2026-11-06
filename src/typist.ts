@@ -208,6 +208,8 @@ export type KbdOut =
   | { type: 'app'; exe: string; elevated: boolean }
   /** A key of the main process's was pressed. */
   | { type: 'hotkey'; action: Exclude<KeyAction, 'switch' | 'fix' | 'layout'> }
+  /** A dictation key (not a tap of a modifier) went up again: held to talk, its phrase finishes (holdtalk.ts). */
+  | { type: 'hotkeyUp'; action: 'dictate' | 'english' | 'practice' }
   /** Another program pressed keys by itself, for the first time since the thread started. */
   | { type: 'foreignKeys' }
   /** A key went down or up while a key field waits (`record`), as KeyboardEvent.code names it ('' for a key no hotkey names), at `at` (ms since 1970). */
@@ -429,6 +431,8 @@ export class Typist {
   private menuOpen: { codes: ReadonlySet<string>; rect: Rect | undefined; hwnd: bigint; until: number } | undefined
   /** The left button went down on the menu: its release is the menu's too. */
   private clickInMenu = false
+  /** A dictation key held down: its release is told (hold to talk). */
+  private holdKey: { vk: number; action: 'dictate' | 'english' | 'practice' } | undefined
 
   constructor(private readonly env: TypistEnv) {}
 
@@ -519,6 +523,10 @@ export class Typist {
     }
     if (this.recordKey(vk, down)) return true
     if (down && this.menuKey(vk)) return true
+    if (!down && this.holdKey?.vk === vk) {
+      this.env.send({ type: 'hotkeyUp', action: this.holdKey.action })
+      this.holdKey = undefined
+    }
     // Typed while a fix is on its way: pressed again after it.
     if (this.pending) {
       this.queued.push({ vk, scan, up: !down })
@@ -803,7 +811,10 @@ export class Typist {
     else if (action === 'layout') {
       if (key.layout) this.personSwitch(key.layout)
     } else if (action === 'fix') this.fixKey()
-    else this.env.send({ type: 'hotkey', action })
+    else {
+      if ((action === 'dictate' || action === 'english' || action === 'practice') && key.spec.kind === 'key') this.holdKey = { vk: key.spec.vk, action }
+      this.env.send({ type: 'hotkey', action })
+    }
   }
 
   private resetRun(): void {

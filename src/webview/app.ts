@@ -2201,6 +2201,7 @@ function voicePage(v: AppView): HTMLElement[] {
     keyRow('englishKey', t('dict.english'), t('dictate.englishNote', { lang: languageName(s.native) }), !k.english),
     keyRow('againKey', t('dictate.againKey'), t('dictate.againNote'), !k.again),
     keyRow('noteKey', t('dict.note'), t('dictate.noteNote'), !k.note),
+    toggle(t('dictate.hold'), s.dictateHold, dictateHold => save({ dictateHold }), t('dictate.holdNote')),
     toggle(t('dictate.panel'), s.dictationPanel, dictationPanel => save({ dictationPanel }), t('dictate.panelNote')),
     aside('info', t('dictate.escNote')),
     el('p', { class: 'privacy' }, lucide('lock', 's'), t('dictate.privacy')),

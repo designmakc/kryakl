@@ -889,6 +889,26 @@ describe('keys of the main process', () => {
   })
 })
 
+test('a dictation key held to talk says when it goes up; a tapped modifier does not', () => {
+  const desk = new Desk({ keys: { dictate: 'Control+Space', english: 'F9', note: 'F10' } })
+  desk.event(VK_LCONTROL, true)
+  desk.event(0x20, true)
+  desk.event(0x20, true)
+  desk.event(0x20, false)
+  desk.event(VK_LCONTROL, false)
+  desk.event(0x78, true)
+  desk.event(0x78, false)
+  desk.event(0x79, true)
+  desk.event(0x79, false)
+  expect(desk.sent.filter(m => m.type === 'hotkey' || m.type === 'hotkeyUp')).toEqual([
+    { type: 'hotkey', action: 'dictate' },
+    { type: 'hotkeyUp', action: 'dictate' },
+    { type: 'hotkey', action: 'english' },
+    { type: 'hotkeyUp', action: 'english' },
+    { type: 'hotkey', action: 'note' },
+  ])
+})
+
 test('Shift tapped twice is the translate key', () => {
   const desk = new Desk({ keys: { translate: 'LeftShift*2' } })
   desk.tap(0xa0)
