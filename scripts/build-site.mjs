@@ -9,14 +9,14 @@ import { fileURLToPath } from 'node:url'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const SITE = join(ROOT, 'site')
-const BASE = 'https://ikstro.com/kryakl/'
+const BASE = 'https://designmakc.github.io/tyts/'
 const VERSIONS = [
   { code: 'en', label: 'EN', name: 'English', dir: '' },
-  { code: 'uk', label: 'UA', name: 'Українська', dir: 'uk/', brand: 'Крякл' },
-  { code: 'ru', label: 'RU', name: 'Русский', dir: 'ru/', brand: 'Крякл' },
+  { code: 'uk', label: 'UA', name: 'Українська', dir: 'uk/', brand: 'Тиць' },
+  { code: 'ru', label: 'RU', name: 'Русский', dir: 'ru/', brand: 'Тиць' },
 ]
 // The logo's word as the English page sets it: a translated page sets the name in its own letters (2026-11-03).
-const LOGO_WORD = '>Kryakl <span class="duck"'
+const LOGO_WORD = '>Tyts<span class="dot"'
 const CI = !!process.env.GITHUB_ACTIONS
 
 // The language links as seen from one version: relative, so the page works from a file and under /kryakl/ alike.
@@ -45,7 +45,7 @@ for (const version of VERSIONS.filter(v => v.dir)) {
     [`<meta property="og:url" content="${BASE}">`, `<meta property="og:url" content="${BASE}${version.dir}">`],
     ['<meta property="og:locale" content="en_US">', `<meta property="og:locale" content="${locale}">`],
     [`<meta property="og:image" content="${BASE}og-en.png">`, `<meta property="og:image" content="${BASE}og-${version.code}.png">`],
-    ['<meta property="og:site_name" content="Kryakl">', `<meta property="og:site_name" content="${version.brand}">`],
+    ['<meta property="og:site_name" content="Tyts">', `<meta property="og:site_name" content="${version.brand}">`],
     ['<link rel="stylesheet" href="kryakl.css">', '<link rel="stylesheet" href="../kryakl.css">'],
     ['<script src="kryakl.js"></script>', `<script>window.KRYAKL = ${JSON.stringify({ lang: version.code, text, demo }).replace(/</g, '\\u003c')};</script>\n<script src="../kryakl.js"></script>`],
   ]
@@ -54,16 +54,15 @@ for (const version of VERSIONS.filter(v => v.dir)) {
     page = page.replace(from, to)
   }
   if (!page.includes(LOGO_WORD)) throw new Error(`${version.code}: the English page has no logo ${LOGO_WORD}`)
-  page = page.split(LOGO_WORD).join(`>${version.brand} <span class="duck"`)
-  // The title and og:title name it the same way; the tagline stays English, as in Kryakl.
-  page = page.split('Kryakl. Talk to the duck.').join(`${version.brand}. Talk to the duck.`)
+  page = page.split(LOGO_WORD).join(`>${version.brand.toLowerCase()}<span class="dot"`)
+  // The title and og:title name it the same way; the tagline is translated (scripts/site/<lang>.mjs).
   page = page.replace(/<nav class="langs"[\s\S]*?<\/nav>/, langLinks(version, langLabel))
   mkdirSync(join(SITE, version.dir), { recursive: true })
   writeFileSync(join(SITE, version.dir, 'index.html'), page)
   // A text of the English page no translation names stays English on this page: said, never fatal, so the page still goes up.
   for (const m of missing) console.warn(`${CI ? '::warning::' : ''}${version.code}: not on the English page any more: ${m.slice(0, 90)}`)
   console.log(`site/${version.dir}index.html: ${html.length - missing.length} of ${html.length} texts`)
-  // --check: the texts still in English, to read through (Kryakl's own windows stay English on purpose).
+  // --check: the texts still in English, to read through (Tyts's own windows stay English on purpose).
   if (process.argv.includes('--check')) {
     const body = page.slice(page.indexOf('<body>'), page.indexOf('<script'))
     const left = new Set()

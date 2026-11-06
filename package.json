@@ -1,18 +1,18 @@
 {
-  "name": "kryakl",
-  "productName": "Kryakl",
-  "version": "0.16.0",
-  "description": "Your language. Your shortcut. Listen to English, translate, fix keyboard layouts: offline, from any program.",
+  "name": "tyts",
+  "productName": "Tyts",
+  "version": "0.17.0",
+  "description": "Tyts — and done. Translation, keyboard layouts, voice typing and English practice on one key, on your own computer, no cloud.",
   "author": {
-    "name": "Yevhen Peshynskyi",
-    "url": "https://ikstro.com"
+    "name": "Mykola Onykiichuk",
+    "url": "https://t.me/designmakc"
   },
   "license": "MIT",
   "private": true,
   "main": "dist/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ikstro/kryakl"
+    "url": "https://github.com/designmakc/tyts"
   },
   "scripts": {
     "build": "node esbuild.mjs",

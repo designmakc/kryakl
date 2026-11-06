@@ -278,7 +278,12 @@ async function appShots(theme: 'dark' | 'light', narrow = false): Promise<void> 
   await shot(w, tag('home'))
   // A place from the sidebar, then each second-level page of it (Esc goes back).
   const page = async (name: string, subs: string[] = [], label = name) => {
-    log.push(`${label}: ${await click(w, `.side [data-nav="${name}"]`)}`)
+    // Keys, Models and Disk space live under Settings (2026-11-06): its tiles open them.
+    if (['keys', 'models', 'storage'].includes(name)) {
+      await click(w, '.side [data-nav="settings"]')
+      await sleep(300)
+      log.push(`${label}: ${await click(w, `.tcell[data-sub="${name}"]`)}`)
+    } else log.push(`${label}: ${await click(w, `.side [data-nav="${name}"]`)}`)
     await sleep(500)
     await shot(w, tag(label))
     for (const sub of subs) {
@@ -303,6 +308,7 @@ async function appShots(theme: 'dark' | 'light', narrow = false): Promise<void> 
   if (narrow) {
     await page('layout', ['fixing'])
     await page('settings')
+    await page('keys')
     await page('models')
   } else if (theme === 'dark') {
     // Each action with its lists and its second-level pages, reached as a person reaches them.
@@ -622,6 +628,9 @@ app.whenReady().then(async () => {
     } else if (process.env.SHOTS === 'menu') {
       await menuShots('dark')
       await menuShots('light')
+    } else if (process.env.SHOTS === 'app') {
+      await appShots('light')
+      await appShots('dark', true)
     } else if (process.env.SHOTS === 'daily') {
       await setupShots('dark')
       await trayShots('dark')

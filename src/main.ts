@@ -200,6 +200,12 @@ const KEYBOARD_SETTINGS: readonly (keyof Settings)[] = [
 ]
 /** The links the About tab may open. */
 const LINKS = new Set([
+  'https://t.me/designmakc',
+  'https://github.com/designmakc',
+  'https://github.com/designmakc/tyts',
+  'https://github.com/designmakc/tyts/releases',
+  'https://github.com/designmakc/tyts/blob/main/NOTICE',
+  'mailto:designmakc@gmail.com',
   'https://ikstro.com',
   'https://github.com/ikstro/kryakl',
   'https://github.com/ikstro/kryakl/releases',
@@ -234,7 +240,7 @@ const speechPort = TEST_HOME ? Number(process.env.KRYA_TEST_PORT || process.env.
 const userDir = () => app.getPath('userData')
 const localAppData = () => process.env.LOCALAPPDATA ?? path.join(app.getPath('appData'), '..', 'Local')
 /** %LOCALAPPDATA%\Kryakl: what is big and downloaded (the speech engine, the translation models), never roamed. */
-const localDir = () => TEST_HOME ?? path.join(localAppData(), 'Kryakl')
+const localDir = () => TEST_HOME ?? path.join(localAppData(), 'Tyts')
 /** %LOCALAPPDATA%\Krya and \Altype, the old names' folders, newest first: a part that could not move out of one is used there (oldfolder.ts adoptLocalFolder). */
 const oldLocalDirs = () => (TEST_HOME ? [] : OLD_LOCAL_FOLDERS.map(name => path.join(localAppData(), name)))
 /** A part of localDir (speech, translate), or the old folder's when it is still there. */
@@ -515,10 +521,10 @@ function config(): ViewConfig {
 }
 
 /** What a window shows before its page paints: the card's and the badge's surface, the app window's and the tray's ground (theme.css). */
-const cardColor = () => (nativeTheme.shouldUseDarkColors ? '#2b2b2b' : '#fbfbfb')
-const appColor = () => (nativeTheme.shouldUseDarkColors ? '#202020' : '#f3f3f3')
+const cardColor = () => (nativeTheme.shouldUseDarkColors ? '#242120' : '#fbfaf9')
+const appColor = () => (nativeTheme.shouldUseDarkColors ? '#1a1817' : '#f4f2f1')
 /** The windows' edge, drawn by Windows 11 (dwm.ts): theme.css's `--border`. */
-const borderColor = () => (nativeTheme.shouldUseDarkColors ? '#3d3d3d' : '#e5e5e5')
+const borderColor = () => (nativeTheme.shouldUseDarkColors ? '#3b3633' : '#e7e2df')
 
 /** What a page's address tells it: whether Windows draws its edge (then it draws none of its own), and the interface's language (i18n). */
 const pageQuery = (): Record<string, string> => ({ ...(WIN11 ? { frame: 'dwm' } : {}), lang: settings.uiLanguage })
@@ -821,7 +827,7 @@ function reportStatus(): string[] {
 async function reportProblem(via: 'email' | 'github', text: string): Promise<void> {
   const at = new Date()
   log(`report: made for ${via}`)
-  const out = path.join(app.getPath('documents'), 'Kryakl', 'Reports', reportName(at))
+  const out = path.join(app.getPath('documents'), 'Tyts', 'Reports', reportName(at))
   const facts = reportFacts()
   await makeReport({ dir: userDir(), out, message: text, facts, status: reportStatus(), settings, names: namesHere(), at })
   shell.showItemInFolder(out)
@@ -2417,7 +2423,7 @@ function createTalkWindow(): BrowserWindow {
     maximizable: true,
     fullscreenable: false,
     alwaysOnTop: settings.talkOnTop,
-    title: 'Talk to the duck',
+    title: t('menu.talk'),
     icon: path.join(app.getAppPath(), 'media', 'icon.png'),
     backgroundColor: cardColor(),
     webPreferences: {
@@ -3604,8 +3610,8 @@ function drawLayoutCap(size: number, text: string, caps: boolean, ink: string, d
   return canvas.toDataURL('image/png')
 }
 
-/** The tray's ink and the duck's colour on a light and on a dark taskbar (scripts/icons.mjs `TASKBAR`). */
-const TASKBAR_COLOURS = { light: ['#1b1b1b', '#F2A100'], dark: ['#f2f2f2', '#FFD60A'] } as const
+/** The tray's ink and the dot's coral on a light and on a dark taskbar (scripts/icons.mjs `TASKBAR`). */
+const TASKBAR_COLOURS = { light: ['#1b1b1b', '#FF5A36'], dark: ['#f2f2f2', '#FF7A5C'] } as const
 
 const layoutIcons = new Map<string, Electron.NativeImage>()
 async function layoutIcon(short: string, caps: boolean, dark: boolean): Promise<Electron.NativeImage | undefined> {
@@ -4246,7 +4252,7 @@ if (!theOnlyOne) {
   app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
   // macOS 13+ gives a screen capture the computer's sound (ScreenCaptureKit) only with these: a call's recording takes it.
   if (process.platform === 'darwin') app.commandLine.appendSwitch('enable-features', 'MacLoopbackAudioForScreenShare,MacSckSystemAudioLoopbackOverride')
-  app.setAppUserModelId('com.ikstro.2talker')
+  app.setAppUserModelId('com.designmakc.tyts')
   // Started again, without a command: the window opens.
   app.on('second-instance', (_event, argv) => {
     if (!runCommand(argv)) openApp()

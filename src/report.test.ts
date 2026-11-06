@@ -51,7 +51,7 @@ describe('links', () => {
   it('makes an email that Windows hands over whole, however long the text', () => {
     const url = mailUrl(`Перевод не работает\n${'очень длинный текст '.repeat(200)}`, facts, 'Kryakl report 2026-10-31 14-05.zip')
     expect(url.length).toBeLessThanOrEqual(1800)
-    expect(url.startsWith('mailto:ikstro.design@gmail.com?subject=')).toBe(true)
+    expect(url.startsWith('mailto:designmakc@gmail.com?subject=')).toBe(true)
     const body = decodeURIComponent(url.slice(url.indexOf('&body=') + 6))
     expect(body).toContain('Kryakl 0.11.2 · Windows 10.0.26300 x64')
     expect(body).toContain('please attach "Kryakl report 2026-10-31 14-05.zip"')
@@ -60,7 +60,7 @@ describe('links', () => {
 
   it('makes a GitHub issue with a title from the first line', () => {
     const url = issueUrl('The card stays empty\nafter Ctrl+C twice', facts, 'r.zip')
-    expect(url.startsWith('https://github.com/ikstro/kryakl/issues/new?title=The%20card%20stays%20empty&body=')).toBe(true)
+    expect(url.startsWith('https://github.com/designmakc/tyts/issues/new?title=The%20card%20stays%20empty&body=')).toBe(true)
     expect(decodeURIComponent(url.slice(url.indexOf('&body=') + 6))).toContain('drag `r.zip` here')
   })
 

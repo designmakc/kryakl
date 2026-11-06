@@ -51,9 +51,9 @@ declare global {
 
 const save = (patch: Partial<Settings>) => post({ type: 'saveSettings', patch })
 /** Where new versions are: downloaded by hand, nothing installs itself (main.ts LINKS has it). */
-const RELEASES = 'https://github.com/ikstro/kryakl/releases'
+const RELEASES = 'https://github.com/designmakc/tyts/releases'
 /** Where a problem report goes by email (report.ts writes to it). */
-const REPORT_EMAIL = 'ikstro.design@gmail.com'
+const REPORT_EMAIL = 'designmakc@gmail.com'
 
 /**
  * Phrases read each time they are used, so a constant table follows the
@@ -66,13 +66,16 @@ function phrases<K extends string>(keys: Record<K, Key>): Record<K, string> {
 }
 
 type Action = 'translate' | 'english' | 'voice' | 'recordings' | 'layout'
-type Page = Action | 'words' | 'mistakes' | 'transcripts' | 'translations' | 'phrases' | 'vocabulary' | 'kept' | 'learned' | 'programs' | 'layouts' | 'settings' | 'models' | 'storage' | 'about' | 'report' | 'search'
+type Page = Action | 'keys' | 'words' | 'mistakes' | 'transcripts' | 'translations' | 'phrases' | 'vocabulary' | 'kept' | 'learned' | 'programs' | 'layouts' | 'settings' | 'models' | 'storage' | 'about' | 'report' | 'search'
 
-const ACTIONS: readonly Action[] = ['translate', 'english', 'voice', 'recordings', 'layout']
+const ACTIONS: readonly Action[] = ['layout', 'voice', 'recordings', 'translate', 'english']
 /** Each action's icon, in the sidebar. */
 const ICONS: Record<Action, LucideName> = { translate: 'languages', english: 'graduation-cap', voice: 'mic', recordings: 'audio-lines', layout: 'keyboard' }
 /** The action a list belongs to: the sidebar lights it, the bar names it first. */
-const PARENT: Partial<Record<Page, Action>> = {
+const PARENT: Partial<Record<Page, Action | 'settings'>> = {
+  keys: 'settings',
+  models: 'settings',
+  storage: 'settings',
   translations: 'translate',
   words: 'english',
   mistakes: 'english',
@@ -101,6 +104,7 @@ const TITLES: Record<Page, string> = phrases({
   programs: 'nav.programs',
   layouts: 'nav.layouts',
   settings: 'nav.settings',
+  keys: 'nav.keys',
   models: 'nav.models',
   storage: 'nav.storage',
   about: 'nav.about',
@@ -207,11 +211,7 @@ type NavItem = { page: Page | 'home'; icon: LucideName; title: string; value?: (
 const NAV: NavItem[][] = [
   [{ page: 'home', icon: 'house', title: t('nav.home') }],
   ACTIONS.map(a => ({ page: a, icon: ICONS[a], title: TITLES[a] })),
-  [
-    { page: 'settings', icon: 'settings', title: TITLES.settings },
-    { page: 'models', icon: 'boxes', title: TITLES.models },
-    { page: 'storage', icon: 'hard-drive', title: TITLES.storage, value: v => (v.storage?.parts.length ? speechSize(downloadsMb(v.storage)) : '') },
-  ],
+  [{ page: 'settings', icon: 'settings', title: TITLES.settings }],
   [
     { page: 'about', icon: 'info', title: TITLES.about },
     { page: 'report', icon: 'bug', title: TITLES.report },
@@ -325,10 +325,10 @@ window.setInterval(() => void followMaking(), 3000)
 // ---------------------------------------------------------------- home
 
 /** A key on Home: what it does, the page it is set on and that page's section; `chain` marks the three the moment lights, `speech` the keys that work once the speech engine is here. */
-type HomeKey = { key: KeyName; title: Key; page: Action | 'settings'; section?: Key; chain?: 'listen' | 'translate' | 'fix'; speech?: boolean }
+type HomeKey = { key: KeyName; title: Key; page: Action | 'keys'; section?: Key; chain?: 'listen' | 'translate' | 'fix'; speech?: boolean }
 
 const HOME_KEYS: readonly HomeKey[] = [
-  { key: 'menuKey', title: 'menu.keyTitle', page: 'settings', section: 'keys.group' },
+  { key: 'menuKey', title: 'menu.keyTitle', page: 'keys' },
   { key: 'translateKey', title: 'act.translate', page: 'translate', section: 'act.selected', chain: 'translate' },
   { key: 'selectKey', title: 'act.listen', page: 'translate', section: 'act.selected', chain: 'listen' },
   { key: 'inPlaceKey', title: 'act.inPlace', page: 'translate', section: 'act.selected' },
@@ -347,8 +347,8 @@ const HOME_KEYS: readonly HomeKey[] = [
   { key: 'shotKey', title: 'call.shotKey', page: 'recordings', speech: true },
   { key: 'fixKey', title: 'kb.fixKey', page: 'layout', section: 'act.fixGroup', chain: 'fix' },
   { key: 'switchKey', title: 'kb.switchKey', page: 'layout', section: 'act.switchGroup' },
-  { key: 'pauseKey', title: 'settings.pauseKey', page: 'settings', section: 'keys.group' },
-  { key: 'windowKey', title: 'settings.windowKey', page: 'settings', section: 'keys.group' },
+  { key: 'pauseKey', title: 'settings.pauseKey', page: 'keys' },
+  { key: 'windowKey', title: 'settings.windowKey', page: 'keys' },
 ]
 
 /** How Kryakl stands: ready, or paused until Resume, here or in the tray. */
@@ -1032,6 +1032,8 @@ function bodyOf(v: AppView): HTMLElement[] {
       return layoutsPage(v)
     case 'settings':
       return settingsPage(v)
+    case 'keys':
+      return keysPage(v)
     case 'models':
       return modelsPage(v)
     case 'storage':
@@ -1068,6 +1070,7 @@ const SEARCHED: Place[] = [
   { name: 'programs' },
   { name: 'layouts' },
   { name: 'settings' },
+  { name: 'keys' },
   { name: 'settings', sub: 'languages' },
   { name: 'models' },
   { name: 'models', sub: 'forTranslate' },
@@ -3181,14 +3184,76 @@ function voiceValue(v: AppView): string {
   return voiceOptions(v).find(([value]) => value === v.settings.voice)?.[1] ?? t('settings.automatic')
 }
 
+// ---------------------------------------------------------------- keys
+// Every key in one place (2026-11-06): a keyboard with the keys Tyts holds lit and
+// how many actions each is in, then every action's key, recorded here as on its page.
+
+const KEYBOARD: string[][] = [
+  ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'Pause'],
+  ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
+  ['Tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
+  ['CapsLock', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', "'", 'Enter'],
+  ['LeftShift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'RightShift'],
+  ['LeftControl', 'Super', 'LeftAlt', 'Space', 'RightAlt', 'RightControl'],
+]
+const CAP_LABEL: Record<string, string> = { Escape: 'Esc', Backspace: '⌫', CapsLock: 'Caps', LeftShift: 'Shift', RightShift: 'Shift', LeftControl: 'Ctrl', RightControl: 'Ctrl', Super: 'Win', LeftAlt: 'Alt', RightAlt: 'Alt', Space: '' }
+const CAP_WIDE: Record<string, string> = { Backspace: 'w2', Tab: 'w15', CapsLock: 'w2', Enter: 'w2', LeftShift: 'w25', RightShift: 'w25', LeftControl: 'w15', LeftAlt: 'w15', RightAlt: 'w15', RightControl: 'w15', Space: 'sp' }
+
+/** The caps a key lights: "Control+Shift+T" → LeftControl, RightControl, LeftShift, RightShift, T; "RightAlt*2" → RightAlt. */
+export function capsOf(hotkey: string): string[] {
+  const out: string[] = []
+  for (const part of hotkey.replace(/\*2$/, '').split('+')) {
+    if (part === 'Control' || part === 'Ctrl' || part === 'Command') out.push('LeftControl', 'RightControl')
+    else if (part === 'Shift') out.push('LeftShift', 'RightShift')
+    else if (part === 'Alt' || part === 'Option') out.push('LeftAlt', 'RightAlt')
+    else if (part === 'LeftSuper' || part === 'RightSuper' || part === 'Meta') out.push('Super')
+    else out.push(part.length === 1 ? part.toUpperCase() : part)
+  }
+  return out
+}
+
+function keyboardMap(v: AppView): HTMLElement {
+  const used = new Map<string, number>()
+  for (const k of HOME_KEYS) for (const cap of new Set(capsOf(v.settings[k.key] || ''))) if (v.settings[k.key]) used.set(cap, (used.get(cap) ?? 0) + 1)
+  return el(
+    'div',
+    { class: 'kbmap', 'aria-hidden': 'true' },
+    ...KEYBOARD.map(row =>
+      el(
+        'div',
+        { class: 'kbr' },
+        ...row.map(cap => {
+          const n = used.get(cap)
+          return el('span', { class: ['kbc', CAP_WIDE[cap], n ? 'used' : ''].filter(Boolean).join(' '), 'data-n': n ? String(n) : undefined }, CAP_LABEL[cap] ?? cap)
+        }),
+      ),
+    ),
+  )
+}
+
+function keysPage(v: AppView): HTMLElement[] {
+  const keys = HOME_KEYS.filter(k => !k.speech || installed(v))
+  const pages = [...new Set(keys.map(k => k.page))]
+  const ok: Partial<Record<KeyName, boolean>> = { pauseKey: v.keysOk.pause, windowKey: v.keysOk.window }
+  return [
+    keyboardMap(v),
+    ...pages.flatMap(page => [
+      grp(page === 'keys' ? t('act.general') : TITLES[page]),
+      ...keys.filter(k => k.page === page).map(k => keyRow(k.key, t(k.title), k.section ? t(k.section) : '', ok[k.key] === false)),
+    ]),
+    card('rotate-ccw', t('settings.resetKeys'), [t('settings.resetKeysNote')], linkBtn(t('main.resetKeys'), () => post({ type: 'resetKeys' }))),
+  ]
+}
+
 function settingsPage(v: AppView): HTMLElement[] {
   const s = v.settings
+  const keys = HOME_KEYS.filter(k => !k.speech || installed(v))
   return [
-    grp(t('keys.group')),
-    keyRow('menuKey', t('menu.keyTitle'), t('menu.keyNote')),
-    keyRow('pauseKey', t('settings.pauseKey'), t('settings.pauseKeyNote'), !v.keysOk.pause),
-    keyRow('windowKey', t('settings.windowKey'), t('settings.windowKeyNote'), !v.keysOk.window),
-    card('rotate-ccw', t('settings.resetKeys'), [t('settings.resetKeysNote')], linkBtn(t('main.resetKeys'), () => post({ type: 'resetKeys' }))),
+    tiles([
+      { icon: 'keyboard', title: TITLES.keys, count: keys.filter(k => s[k.key]).length, open: () => go('keys'), id: 'keys' },
+      { icon: 'boxes', title: TITLES.models, open: () => go('models'), id: 'models' },
+      { icon: 'hard-drive', title: TITLES.storage, count: v.storage?.parts.length ? speechSize(downloadsMb(v.storage)) : undefined, open: () => go('storage'), id: 'storage' },
+    ]),
     grp(t('act.general')),
     uiLanguageCard(s.uiLanguage, uiLanguage => save({ uiLanguage })),
     card(
@@ -3241,13 +3306,11 @@ function settingsPage(v: AppView): HTMLElement[] {
 
 /** The author's places, by their own names (main.ts LINKS has each). */
 const AUTHOR_LINKS: [string, string][] = [
-  ['ikstro.com', 'https://ikstro.com'],
-  ['GitHub', 'https://github.com/ikstro'],
-  ['LinkedIn', 'https://linkedin.com/in/ikstro'],
-  ['Telegram', 'https://t.me/ikstrovert'],
-  ['Behance', 'https://behance.net/ikstro'],
+  ['Telegram', 'https://t.me/designmakc'],
+  ['GitHub', 'https://github.com/designmakc'],
+  ['Kryakl (Yevhen Peshynskyi)', 'https://github.com/ikstro/kryakl'],
 ]
-const AUTHOR_MAIL = 'hello@ikstro.com'
+const AUTHOR_MAIL = 'designmakc@gmail.com'
 /** What Kryakl is made of, by the names they go by in any language. */
 const CREDITS =
   'Firefox Translations (Mozilla) · Gemma 4 (Google) · llama.cpp · Whisper (OpenAI) · Parakeet (NVIDIA) · pyannote · Kokoro · eSpeak NG · Windows OCR · WikDict · FrequencyWords · Inter, JetBrains Mono · Electron · Lucide · VS Code icons'
@@ -3262,11 +3325,11 @@ const linkChips = (links: [string, string][]) =>
 
 function aboutPage(v: AppView): HTMLElement[] {
   return [
-    el('div', { class: 'hero' }, tile(48), el('div', { class: 'ht' }, logo(), el('small', {}, 'Talk to the duck'))),
+    el('div', { class: 'hero' }, tile(48), el('div', { class: 'ht' }, logo(), el('small', {}, t('app.tagline')))),
     grp(t('about.story')),
     el('p', { class: 'para' }, t('about.storyText')),
     grp(t('about.authorGroup')),
-    row('Yevhen Peshynskyi', [t('about.role')]),
+    row('Mykola Onykiichuk', [t('about.role')]),
     el('p', { class: 'para' }, t('about.bio')),
     linkChips(AUTHOR_LINKS),
     row(t('about.mail'), [], el('span', { class: 'kchg' }, el('span', { class: 'mail' }, AUTHOR_MAIL), btn(t('about.write'), () => post({ type: 'openLink', url: `mailto:${AUTHOR_MAIL}` })))),
@@ -3278,8 +3341,8 @@ function aboutPage(v: AppView): HTMLElement[] {
     row(t('about.bug'), [isBeta(v.version) ? t('about.bugNote') : null], btn(t('about.report'), () => go('report'))),
     linkChips([
       [t('about.newVersions'), RELEASES],
-      [t('about.source'), 'https://github.com/ikstro/kryakl'],
-      [t('about.licenses'), 'https://github.com/ikstro/kryakl/blob/main/NOTICE'],
+      [t('about.source'), 'https://github.com/designmakc/tyts'],
+      [t('about.licenses'), 'https://github.com/designmakc/tyts/blob/main/NOTICE'],
     ]),
     grp(t('about.thanks')),
     el('p', { class: 'para credits' }, CREDITS),
@@ -3441,7 +3504,7 @@ window.addEventListener('keydown', event => {
     back()
   }
   // Ctrl+F: the search, unless a key is being recorded.
-  if ((onMac ? event.metaKey : event.ctrlKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === 'f' && !document.querySelector('.recording') && !root.classList.contains('setup')) {
+  if ((onMac ? event.metaKey : event.ctrlKey) && !event.altKey && !event.shiftKey && (event.key.toLowerCase() === 'f' || event.key.toLowerCase() === 'k') && !document.querySelector('.recording') && !root.classList.contains('setup')) {
     event.preventDefault()
     findField.focus()
     findField.select()

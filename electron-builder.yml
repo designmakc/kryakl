@@ -1,12 +1,12 @@
-# Windows installer: npm run dist → release/Kryakl-Setup-<version>.exe
-# The id of 2Talker, the app's first name: Kryakl installs over it and over Altype, and updates them.
+# Windows installer: npm run dist → release/Tyts-Setup-<version>.exe
+# Tyts's own id (com.designmakc.tyts, 2026-11-06): a separate program from Kryakl, in its own folders.
 # An update keeps the folder the app was installed in (NSIS reads InstallLocation
 # from the registry key of this id), so Programs\altype stays Altype's old home and
 # the Chrome extension loaded unpacked from it keeps working; a new install goes to
-# Programs\kryakl (package.json's name). The program is Kryakl.exe either way.
-appId: com.ikstro.2talker
-productName: Kryakl
-copyright: Copyright © 2026 Yevhen Peshynskyi
+# Programs\tyts (package.json's name). The program is Tyts.exe.
+appId: com.designmakc.tyts
+productName: Tyts
+copyright: Copyright © 2026 Mykola Onykiichuk; based on Kryakl, Copyright © 2026 Yevhen Peshynskyi
 directories:
   output: release
   buildResources: build
@@ -54,13 +54,13 @@ nsis:
   oneClick: true
   perMachine: false
   runAfterFinish: true
-  artifactName: Kryakl-Setup-${version}.${ext}
+  artifactName: Tyts-Setup-${version}.${ext}
   # Uninstall asks whether the data goes too (build/installer.nsh); an update keeps it.
   include: build/installer.nsh
 # No publish settings: the release workflow puts the installer in a GitHub release itself, and Kryakl does
 # not update itself (people download new versions from the releases). The installer is not signed
 # (a free app): Windows warns at install.
-# Mac (npm run dist:mac → release/Kryakl-<version>-arm64.dmg): ad-hoc signed only, so the first
+# Mac (npm run dist:mac → release/Tyts-<version>-arm64.dmg): ad-hoc signed only, so the first
 # start is right-click › Open. The Windows keyboard, clipboard and OCR parts are off there.
 mac:
   target: dmg
@@ -73,10 +73,10 @@ mac:
   category: public.app-category.education
   extendInfo:
     LSUIElement: true
-    NSAppleEventsUsageDescription: Kryakl copies the selected text to translate it.
-    NSMicrophoneUsageDescription: Kryakl listens when you dictate, and records you in a call you record.
+    NSAppleEventsUsageDescription: Tyts copies the selected text to translate it.
+    NSMicrophoneUsageDescription: Tyts listens when you dictate, and records you in a call you record.
     # A call's recording takes the computer's sound through a screen capture (its picture dropped at once).
-    NSScreenCaptureUsageDescription: Kryakl records the computer's sound in a call you record; the picture is not kept.
-    NSAudioCaptureUsageDescription: Kryakl records the computer's sound in a call you record.
+    NSScreenCaptureUsageDescription: Tyts records the computer's sound in a call you record; the picture is not kept.
+    NSAudioCaptureUsageDescription: Tyts records the computer's sound in a call you record.
 dmg:
-  artifactName: Kryakl-${version}-${arch}.${ext}
+  artifactName: Tyts-${version}-${arch}.${ext}

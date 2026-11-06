@@ -1,4 +1,4 @@
-/* Layout: one 1160px column. The hero sets the tagline the way the logo is set (giant Inter 800 and the mono duck), then the app's own chain line plays on a stage. A full-bleed duck-yellow band holds a live Kryakl card; chapters alternate copy and a working mock on hairlines; a ledger, three keycap steps, a sign-off. */
+/* Layout: one 1160px column. The hero sets the tagline the way the logo is set (giant Inter 800 and the coral dot, the tap), then the app's own chain line plays on a stage. A full-bleed duck-yellow band holds a live Kryakl card; chapters alternate copy and a working mock on hairlines; a ledger, three keycap steps, a sign-off. */
 :root {
   --bg: #f4f4f2;
   --surface: #ffffff;
@@ -10,17 +10,17 @@
   --text: #1c1c1b;
   --muted: #5a5a56;
   --translation: #474744;
-  --accent: #f7c700;
-  --accent-hover: #e8bb00;
-  --on-accent: #1a1500;
-  --accent-text: #0f0f0f;
-  --link-line: #f2a100;
-  --duck: #f2a100;
-  --mark: #f2a100;
-  --hl: rgba(247, 199, 0, 0.45);
-  --band: #ffd60a;
+  --accent: #ff5a36;
+  --accent-hover: #ff6f50;
+  --on-accent: #1d0b05;
+  --accent-text: #b5361a;
+  --link-line: #ff5a36;
+  --duck: #ff5a36;
+  --mark: #ff5a36;
+  --hl: rgba(255, 90, 54, 0.3);
+  --band: #ff5a36;
   --band-ink: #141414;
-  --band-muted: #4a3f00;
+  --band-muted: #4a1a0c;
   --red: #c42b1c;
   --green: #0f7b0f;
   --rec: #e81123;
@@ -45,11 +45,11 @@
     --bg: #141414; --surface: #1e1e1e; --raised: #252525; --sunk: #1a1a1a;
     --line: #2f2f2f; --line-soft: #262626;
     --ink: #ffffff; --text: #e8e8e8; --muted: #9d9d9d; --translation: #b8b8b8;
-    --accent: #ffd60a; --accent-hover: #ffe14d; --on-accent: #1a1500; --accent-text: #ffd60a;
-    --link-line: transparent; --duck: #ffd60a; --mark: #ffd60a; --hl: rgba(255, 214, 10, 0.3);
-    --band: #f5cd0a; --band-ink: #141414; --band-muted: #463c00;
+    --accent: #ff5a36; --accent-hover: #ff7a5c; --on-accent: #1d0b05; --accent-text: #ff8466;
+    --link-line: transparent; --duck: #ff7a5c; --mark: #ff7a5c; --hl: rgba(255, 122, 92, 0.3);
+    --band: #ff5a36; --band-ink: #141414; --band-muted: #4a1a0c;
     --red: #ff99a4; --green: #6ccb5f; --sp1: #4cc2ff; --sp2: #c4a7f5; --sp3: #5ccfc3;
-    --focus: #ffd60a;
+    --focus: #ff8466;
     --shadow: 0 28px 60px -18px rgba(0, 0, 0, 0.75), 0 2px 6px rgba(0, 0, 0, 0.4);
     --shadow-sm: 0 10px 24px -10px rgba(0, 0, 0, 0.7);
     color-scheme: dark;
@@ -59,11 +59,11 @@
   --bg: #141414; --surface: #1e1e1e; --raised: #252525; --sunk: #1a1a1a;
   --line: #2f2f2f; --line-soft: #262626;
   --ink: #ffffff; --text: #e8e8e8; --muted: #9d9d9d; --translation: #b8b8b8;
-  --accent: #ffd60a; --accent-hover: #ffe14d; --on-accent: #1a1500; --accent-text: #ffd60a;
-  --link-line: transparent; --duck: #ffd60a; --mark: #ffd60a; --hl: rgba(255, 214, 10, 0.3);
-  --band: #f5cd0a; --band-ink: #141414; --band-muted: #463c00;
+  --accent: #ff5a36; --accent-hover: #ff7a5c; --on-accent: #1d0b05; --accent-text: #ff8466;
+  --link-line: transparent; --duck: #ff7a5c; --mark: #ff7a5c; --hl: rgba(255, 122, 92, 0.3);
+  --band: #ff5a36; --band-ink: #141414; --band-muted: #4a1a0c;
   --red: #ff99a4; --green: #6ccb5f; --sp1: #4cc2ff; --sp2: #c4a7f5; --sp3: #5ccfc3;
-  --focus: #ffd60a;
+  --focus: #ff8466;
   --shadow: 0 28px 60px -18px rgba(0, 0, 0, 0.75), 0 2px 6px rgba(0, 0, 0, 0.4);
   --shadow-sm: 0 10px 24px -10px rgba(0, 0, 0, 0.7);
   color-scheme: dark;
@@ -103,6 +103,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 /* The logo: "Kryakl" in Inter 800, the duck (')> in JetBrains Mono 700, its eye in the text's colour. */
 .logo { display: inline-flex; align-items: baseline; gap: 0.32em; font: 800 22px/1 var(--font); letter-spacing: -0.03em; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.logo .dot, .display .dot { display: inline-block; width: 0.26em; height: 0.26em; margin-left: 0.07em; border-radius: 50%; background: var(--duck); }
+.logo { gap: 0; }
 .duck { font-family: var(--mono); font-weight: 700; letter-spacing: 0; color: var(--duck); font-variant-ligatures: none; }
 .duck .eye { color: var(--ink); display: inline-block; animation: blink 7s infinite; transform-origin: 50% 40%; }
 @keyframes blink { 0%, 95.5%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
@@ -143,14 +145,15 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .nav.scrolled { border-bottom-color: var(--line-soft); }
 .nav-in { display: flex; align-items: center; gap: 28px; height: 64px; }
 .nav-links { display: flex; gap: 24px; margin-left: 12px; }
-.nav-links a { font-size: 14.5px; font-weight: 500; color: var(--muted); text-decoration: none; }
+.nav-links a { white-space: nowrap; font-size: 14.5px; font-weight: 500; color: var(--muted); text-decoration: none; }
 .nav-links a:hover { color: var(--ink); }
 .nav-cta { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 .langs { display: flex; gap: 2px; margin-right: 4px; }
 .langs a { height: 32px; display: inline-flex; align-items: center; padding: 0 8px; border-radius: 6px; font: 500 12.5px/1 var(--mono); letter-spacing: 0.03em; color: var(--muted); text-decoration: none; }
 .langs a:hover { color: var(--ink); }
 .langs a[aria-current="page"] { color: var(--ink); background: var(--raised); }
-@media (max-width: 860px) { .nav-links { display: none; } }
+@media (max-width: 1120px) { .nav-links { gap: 16px; } .nav-links a { font-size: 14px; } }
+@media (max-width: 1060px) { .nav-links { display: none; } }
 @media (max-width: 460px) {
   .nav-cta .ghost { display: none; }
   /* The header's Download keeps its icon only; the hero's button says it in full. */

@@ -1,17 +1,10 @@
-// Draws Kryakl's pictures. The app icon is K3, the duck {•> on a black rounded
-// tile, white braces and eye and a duck-yellow beak, as the tray on a dark
-// taskbar (build/icon.svg; I1's yellow tile until 2026-10-30): build/icon.png (512 px),
-// build/icon.ico (16, 24, 32, 48, 256: the installer and the program) and
-// media/icon.png (128 px, the window); from 24 px up it is drawn from the SVG's
-// numbers, at 16 the whole picture is set pixel by pixel, the tile's corners too. The tray's icon is T2, {•>
-// without a tile, the braces and the eye in ink and the beak in the duck's
-// colour, for either taskbar: media/tray-light.png (ink on a light taskbar)
-// and tray-dark.png, each with its @2x (32 px), tray-*-paused.png (the same at
-// 45 %, while Kryakl is paused), and tray-recording.png, a red dot, while
-// anything records. The tray's pictures are pixels at 16, each pixel doubled
-// at 32. All of it is drawn on a canvas, whose pixels keep their transparency
-// in an ordinary page; the SVG is copied to media/. Run under Electron:
-// npm run icons.
+// Draws Tyts's pictures (2026-11-06): the app icon is a tap and its ripple, white on a
+// coral rounded tile (build/icon.svg): build/icon.png (512 px), build/icon.ico (16, 24,
+// 32, 48, 256) and media/icon.png (128 px); at 32 px and under one thicker ripple. The
+// tray's icon is the ripple without a tile, the ring in the taskbar's ink and the dot
+// coral: media/tray-light.png, tray-dark.png, each with its @2x, tray-*-paused.png (45 %),
+// and tray-recording.png, a red dot, while anything records. All of it is drawn on a
+// canvas; the SVG is copied to media/. Run under Electron: npm run icons.
 
 import * as fs from 'node:fs'
 import * as path from 'node:path'
@@ -21,41 +14,19 @@ import { app, BrowserWindow } from 'electron'
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 
-/** The tile's black, the drawing's white and the beak's yellow (build/icon.svg); the characters of TILE_16. */
-const TILE = { k: '#141414', w: '#FFFFFF', y: '#FFD60A' }
-/** The tray's colours by the taskbar's theme: the ink of Windows' own glyphs there, and the duck's colour (theme.css `--duck`). */
+/** The tile's coral and the ripple's white (build/icon.svg). */
+const TILE = { k: '#FF5A36', w: '#FFFFFF' }
+/** The tray's colours by the taskbar's theme: the ripple in the ink of Windows' own glyphs there, the dot coral. */
 const TASKBAR = {
-  light: { '#': '#1b1b1b', y: '#F2A100' },
-  dark: { '#': '#f2f2f2', y: '#FFD60A' },
+  light: { ink: '#1b1b1b', dot: '#FF5A36' },
+  dark: { ink: '#f2f2f2', dot: '#FF7A5C' },
 }
 /** Recording: a plain red dot, Windows' own record red; the same as theme.css `--rec` (the dictation badge's dot). */
 const RECORD = { r: '#E81123' }
-
-// K3 at 16 px, pixel by pixel (the lab's K3-16): k the tile, w the braces and the eye, y the beak, . clear.
-const TILE_16 = [
-  '..kkkkkkkkkkkk..',
-  '.kkkkkkkkkkkkkk.',
-  'kkkkkkkkkkkkkkkk',
-  'kkkkwwkkkkkkkkkk',
-  'kkkwwkwwkyykkkkk',
-  'kkkwwkwwkkyykkkk',
-  'kkkwwkkkkkkyykkk',
-  'kkwwkkkkkkkkyykk',
-  'kkwwkkkkkkkkyykk',
-  'kkkwwkkkkkkyykkk',
-  'kkkwwkkkkkyykkkk',
-  'kkkwwkkkkyykkkkk',
-  'kkkkwwkkkkkkkkkk',
-  'kkkkkkkkkkkkkkkk',
-  '.kkkkkkkkkkkkkk.',
-  '..kkkkkkkkkkkk..',
-]
-// T2: {•> without a tile; the brace's point high, the beak's tip level with it, 2 px between the eye and the beak.
-const BARE = ['', '', '....###', '...##.....yy', '...##.##...yy', '...##.##....yy', '..##.........yy', '..##.........yy', '...##.......yy', '...##......yy', '...##.....yy', '...##', '...##', '....###']
 /** A round dot of radius `r` on a `size` grid, as rows. */
 const disc = (size, r) => [...Array(size)].map((_, y) => [...Array(size)].map((_, x) => ((x + 0.5 - size / 2) ** 2 + (y + 0.5 - size / 2) ** 2 <= r * r ? 'r' : '.')).join(''))
 
-/** Runs in the page: the app icon at `size` (24 px and up), as a PNG data URL. */
+/** Runs in the page: the app icon at `size`, as a PNG data URL; at 32 px and under one thicker ripple. */
 function drawTile(size, c) {
   const canvas = document.createElement('canvas')
   canvas.width = canvas.height = size
@@ -64,18 +35,44 @@ function drawTile(size, c) {
   g.scale(size / 256, size / 256)
   g.fillStyle = c.k
   g.beginPath()
-  g.roundRect(16, 16, 224, 224, 52)
+  g.roundRect(16, 16, 224, 224, 56)
   g.fill()
-  g.lineWidth = 18
-  g.lineCap = g.lineJoin = 'round'
-  g.translate(-4, -2)
-  g.strokeStyle = c.w
-  g.stroke(new Path2D('M118 58C92 58 84 68 84 88V96C84 108 78 114 62 114C78 114 84 120 84 132V174C84 194 92 202 118 202'))
-  g.strokeStyle = c.y
-  g.stroke(new Path2D('M166 86L202 114L166 142'))
+  const ring = (r, w, a) => {
+    g.globalAlpha = a
+    g.lineWidth = w
+    g.strokeStyle = c.w
+    g.beginPath()
+    g.arc(128, 128, r, 0, Math.PI * 2)
+    g.stroke()
+  }
+  const small = size <= 32
   g.fillStyle = c.w
   g.beginPath()
-  g.arc(136, 98, 13, 0, Math.PI * 2)
+  g.arc(128, 128, small ? 34 : 25, 0, Math.PI * 2)
+  g.fill()
+  if (small) ring(78, 26, 1)
+  else {
+    ring(57, 11, 1)
+    ring(93, 11, 0.55)
+  }
+  return canvas.toDataURL('image/png')
+}
+
+/** Runs in the page: the tray's ripple without a tile at `size` px, the ring in `c.ink`, the dot in `c.dot`, `alpha` opaque. */
+function drawTray(size, c, alpha) {
+  const canvas = document.createElement('canvas')
+  canvas.width = canvas.height = size
+  const g = canvas.getContext('2d')
+  g.scale(size / 16, size / 16)
+  g.globalAlpha = alpha
+  g.strokeStyle = c.ink
+  g.lineWidth = 1.7
+  g.beginPath()
+  g.arc(8, 8, 5.9, 0, Math.PI * 2)
+  g.stroke()
+  g.fillStyle = c.dot
+  g.beginPath()
+  g.arc(8, 8, 2.5, 0, Math.PI * 2)
   g.fill()
   return canvas.toDataURL('image/png')
 }
@@ -121,21 +118,20 @@ async function main() {
   await win.loadURL('data:text/html,<!DOCTYPE html><html><body></body></html>')
   const png = url => Buffer.from(url.split(',')[1], 'base64')
   const run = async (fn, ...args) => png(await win.webContents.executeJavaScript(`(${fn.toString()})(${args.map(a => JSON.stringify(a)).join(', ')})`))
-  const pad = rows => [...Array(16)].map((_, y) => (rows[y] || '').padEnd(16, '.'))
-  const tile = size => (size === 16 ? run(drawPixels, TILE_16, TILE, 1, 1) : run(drawTile, size, TILE))
+  const tile = size => run(drawTile, size, TILE)
   const pngs = []
   for (const size of [16, 24, 32, 48, 256]) pngs.push([size, await tile(size)])
   fs.writeFileSync(path.join(root, 'build', 'icon.ico'), ico(pngs))
   fs.writeFileSync(path.join(root, 'build', 'icon.png'), await tile(512))
   fs.writeFileSync(path.join(root, 'media', 'icon.png'), await tile(128))
   // The tray: 16 px and its @2x, which Electron takes on a screen at 200 %.
-  const tray = async (name, rows, colours, alpha = 1) => {
-    fs.writeFileSync(path.join(root, 'media', `${name}.png`), await run(drawPixels, rows, colours, 1, alpha))
-    fs.writeFileSync(path.join(root, 'media', `${name}@2x.png`), await run(drawPixels, rows, colours, 2, alpha))
+  const tray = async (name, colours, alpha = 1) => {
+    fs.writeFileSync(path.join(root, 'media', `${name}.png`), await run(drawTray, 16, colours, alpha))
+    fs.writeFileSync(path.join(root, 'media', `${name}@2x.png`), await run(drawTray, 32, colours, alpha))
   }
   for (const [theme, colours] of Object.entries(TASKBAR)) {
-    await tray(`tray-${theme}`, pad(BARE), colours)
-    await tray(`tray-${theme}-paused`, pad(BARE), colours, 0.45)
+    await tray(`tray-${theme}`, colours)
+    await tray(`tray-${theme}-paused`, colours, 0.45)
   }
   // The dot is round at either size: its 32 px picture is drawn on a 32 grid, not doubled.
   fs.writeFileSync(path.join(root, 'media', 'tray-recording.png'), await run(drawPixels, disc(16, 5.5), RECORD, 1, 1))

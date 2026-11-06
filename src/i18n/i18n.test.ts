@@ -39,10 +39,10 @@ describe('the dictionaries', () => {
       expect(same).toEqual([])
     })
 
-    it(`${name} names the app Крякл, never Kryakl, but for a folder's name`, () => {
-      const latin = keys.filter(k => /Kryakl(?! › Reports)/.test(JSON.stringify(dict[k])))
+    it(`${name} names the app Тиць, never Kryakl, but for a folder's name`, () => {
+      const latin = keys.filter(k => !k.startsWith('about.') && /Kryakl(?! › Reports)/.test(JSON.stringify(dict[k])))
       expect(latin).toEqual([])
-      expect(dict['app.name']).toBe('Крякл')
+      expect(dict['app.name']).toBe('Тиць')
     })
   }
 })

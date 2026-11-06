@@ -43,7 +43,7 @@ jobs:
         with:
           name: release
           path: |
-            release/Kryakl-Setup-*.exe
+            release/Tyts-Setup-*.exe
             release/release-notes.md
           if-no-files-found: error
           retention-days: 7
@@ -66,18 +66,18 @@ jobs:
         # A job run again finds its release there and replaces the installer in it.
         run: |
           if gh release view "$TAG" --repo "$REPO" > /dev/null 2>&1; then
-            gh release upload "$TAG" out/Kryakl-Setup-*.exe --repo "$REPO" --clobber
+            gh release upload "$TAG" out/Tyts-Setup-*.exe --repo "$REPO" --clobber
             exit 0
           fi
           prerelease=""
           case "$TAG" in *-*) prerelease="--prerelease" ;; esac
-          # Kryakl is a beta while its version is 0.x: said in the title and on top of the notes, never as a
+          # Tyts is a beta while its version is 0.x: said in the title and on top of the notes, never as a
           # prerelease, which /releases/latest (the landing's Download) would skip.
           beta=""
           case "$TAG" in v0.*)
             beta=" (beta)"
-            { printf '> **Beta.** Kryakl is a test version: some things may still break. Found a bug? Kryakl › Report a problem, or open an issue.\n\n'; cat out/release-notes.md; } > out/notes.md
+            { printf '> **Beta.** Tyts is a test version: some things may still break. Found a bug? Tyts › About Tyts › Report a problem, or open an issue.\n\n'; cat out/release-notes.md; } > out/notes.md
             mv out/notes.md out/release-notes.md ;;
           esac
-          gh release create "$TAG" out/Kryakl-Setup-*.exe --repo "$REPO" --draft $prerelease \
-            --title "Kryakl ${TAG#v}$beta" --notes-file out/release-notes.md
+          gh release create "$TAG" out/Tyts-Setup-*.exe --repo "$REPO" --draft $prerelease \
+            --title "Tyts ${TAG#v}$beta" --notes-file out/release-notes.md

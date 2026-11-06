@@ -15,19 +15,19 @@
 html {
   color-scheme: light;
   /* surfaces, back to front: the window, a card on it, a raised part, an overlay */
-  --bg: #f3f3f3;
-  --surface: #fbfbfb;
-  --raised: #f6f6f6;
-  --overlay: #ededed;
-  --selected: #e6e6e6;
-  --border: #e5e5e5;
-  --border-soft: #ededed;
+  --bg: #f4f2f1;
+  --surface: #fbfaf9;
+  --raised: #f7f5f4;
+  --overlay: #eeeae8;
+  --selected: #e9e5e3;
+  --border: #e7e2df;
+  --border-soft: #efebe9;
   /* text */
-  --text: #1b1b1b;
-  --strong: #0f0f0f;
-  --muted: #616161;
+  --text: #1a1614;
+  --strong: #0d0b0a;
+  --muted: #6b635e;
   /* A translation, under or beside its text: a step quieter than the text, so the two never read as one. */
-  --translation: #474747;
+  --translation: #4a4340;
   /* A quick draft of a translation the accurate model is still replacing, and the soft light passing over it (card.css). */
   --draft: #8f8f8f;
   --shine: #474747;
@@ -42,14 +42,14 @@ html {
      seen (the dictation wave, a spinner, the word being read, a pulsing dot)
      is --mark, the logo's duck. An action that must stand out is the yellow
      fill with --on-accent. */
-  --accent: #f7c700;
-  --accent-hover: #e3b500;
-  --on-accent: #1a1500;
-  --accent-text: #0f0f0f;
-  --link-line: #f2a100;
-  --mark: #f2a100;
+  --accent: #ff5a36;
+  --accent-hover: #ff6f50;
+  --on-accent: #1d0b05;
+  --accent-text: #b5361a;
+  --link-line: #ff5a36;
+  --mark: #ff5a36;
   /* The logo's duck (')>: marigold on light, a logo needs no text contrast. */
-  --duck: #f2a100;
+  --duck: #ff5a36;
   --green: #0f7b0f;
   --red: #c42b1c;
   /* Recording: the one red of a recorder's light, the tray's record dot's too (scripts/icons.mjs RECORD); --red stays for faults. */
@@ -67,8 +67,8 @@ html {
   --coral: #c7503a;
   --coral-soft: #e0785f;
   /* roles */
-  --focus: #0f0f0f;
-  --selection: rgba(247, 199, 0, 0.32);
+  --focus: #b5361a;
+  --selection: rgba(255, 90, 54, 0.22);
   --hover: rgba(0, 0, 0, 0.04);
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.14), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
@@ -76,27 +76,27 @@ html {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
-    --bg: #202020;
-    --surface: #2b2b2b;
-    --raised: #323232;
-    --overlay: #3a3a3a;
-    --selected: #363636;
-    --border: #3d3d3d;
-    --border-soft: #353535;
-    --text: #e8e8e8;
+    --bg: #1a1817;
+    --surface: #242120;
+    --raised: #2a2625;
+    --overlay: #332e2c;
+    --selected: #302b29;
+    --border: #3b3633;
+    --border-soft: #2e2a28;
+    --text: #ece7e4;
     --strong: #ffffff;
-    --muted: #9e9e9e;
-    --translation: #b8b8b8;
+    --muted: #a59d98;
+    --translation: #c2bab5;
     --draft: #7a7a7a;
     --shine: #cfcfcf;
     /* On the dark ground the yellow is text, link, focus and mark as it is (11.54:1 on --bg); a link is underlined only under the pointer. */
-    --accent: #ffd60a;
-    --accent-hover: #ffe14d;
-    --on-accent: #1a1500;
-    --accent-text: #ffd60a;
+    --accent: #ff5a36;
+    --accent-hover: #ff7a5c;
+    --on-accent: #1d0b05;
+    --accent-text: #ff8466;
     --link-line: transparent;
-    --mark: #ffd60a;
-    --duck: #ffd60a;
+    --mark: #ff7a5c;
+    --duck: #ff7a5c;
     --green: #6ccb5f;
     --red: #ff99a4;
     --rec: #e81123;
@@ -109,8 +109,8 @@ html {
     --lilac: #c4a7f5;
     --coral: #f08a72;
     --coral-soft: #f4a08c;
-    --focus: #ffd60a;
-    --selection: rgba(255, 214, 10, 0.24);
+    --focus: #ff8466;
+    --selection: rgba(255, 122, 92, 0.26);
     --hover: rgba(255, 255, 255, 0.06);
     --shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
   }
@@ -194,9 +194,8 @@ html {
   color: var(--accent-text);
 }
 
-/* The logo, as text with no plate or frame: "Kryakl" in Inter 800, then the duck
-   (')> in JetBrains Mono 700 in the font's own spacing, the beak looking right,
-   ligatures off so )> stays two characters. Its size is the place's. */
+/* The logo, as text with no plate or frame (2026-11-06): "тиць" (Tyts in English) in
+   lower case, Inter 800, then a coral dot, the tap. Its size is the place's. */
 .logo {
   display: inline-flex;
   align-items: baseline;
@@ -208,18 +207,13 @@ html {
   color: var(--strong);
 }
 
-.logo .duck {
-  margin-left: 0.22em;
-  font-family: var(--mono);
-  font-weight: 700;
-  letter-spacing: 0;
-  font-variant-ligatures: none;
-  color: var(--duck);
-}
-
-/* The duck's eye ' in the text's colour (E1): white on dark, ink on light. */
-.logo .eye {
-  color: var(--strong);
+.logo .dot {
+  display: inline-block;
+  width: 0.26em;
+  height: 0.26em;
+  margin-left: 0.07em;
+  border-radius: 50%;
+  background: var(--duck);
 }
 
 /* An inline link: on light the ink over a duck-yellow line, on dark the yellow itself. */

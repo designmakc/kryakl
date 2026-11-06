@@ -1,7 +1,7 @@
 ; Kryakl's own part of the installer (electron-builder's NSIS templates include it).
 ;
 ; Install: the login item is Electron's, a value named after the app's id
-; (com.ikstro.2talker) under HKCU's Run key, pointing at the program. Kryakl was
+; (com.designmakc.tyts) under HKCU's Run key, pointing at the program. Kryakl was
 ; Krya until 0.15 (Krya.exe) and Altype until 0.11 (Altype.exe): an update over
 ; either keeps the install folder (the registry's InstallLocation) but brings Kryakl.exe, so a
 ; login item already there is pointed at it now, before Kryakl first starts and
@@ -20,9 +20,9 @@
 ; is not an update.
 
 !macro customInstall
-  ReadRegStr $0 HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "com.ikstro.2talker"
+  ReadRegStr $0 HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "com.designmakc.tyts"
   ${if} $0 != ""
-    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "com.ikstro.2talker" '"$INSTDIR\${APP_EXECUTABLE_FILENAME}"'
+    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "com.designmakc.tyts" '"$INSTDIR\${APP_EXECUTABLE_FILENAME}"'
   ${endIf}
 !macroend
 
@@ -35,11 +35,11 @@
         ReadRegStr $1 HKCU "Software\Krya" "UiLanguage"
       ${endIf}
       ${if} $1 == "uk"
-        StrCpy $2 "Видалити також дані Крякла?$\r$\n$\r$\nТак — видаляє налаштування, збережені слова, словники, перекладач і голос, рушій мовлення з його моделями та розшифровки в Documents\Kryakl.$\r$\n$\r$\nНі — залишає все для наступного встановлення. Нотатки у вашій базі знань залишаються в будь-якому разі."
+        StrCpy $2 "Видалити також дані Тиць?$\r$\n$\r$\nТак — видаляє налаштування, збережені слова, словники, перекладач і голос, рушій мовлення з його моделями та розшифровки в Documents\Tyts.$\r$\n$\r$\nНі — залишає все для наступного встановлення. Нотатки у вашій базі знань залишаються в будь-якому разі."
       ${elseIf} $1 == "ru"
-        StrCpy $2 "Удалить и данные Крякла?$\r$\n$\r$\nДа — удаляет настройки, сохранённые слова, словари, переводчик и голос, движок речи с его моделями и расшифровки в Documents\Kryakl.$\r$\n$\r$\nНет — оставляет всё для следующей установки. Заметки в вашей базе знаний остаются в любом случае."
+        StrCpy $2 "Удалить и данные Тиць?$\r$\n$\r$\nДа — удаляет настройки, сохранённые слова, словари, переводчик и голос, движок речи с его моделями и расшифровки в Documents\Tyts.$\r$\n$\r$\nНет — оставляет всё для следующей установки. Заметки в вашей базе знаний остаются в любом случае."
       ${else}
-        StrCpy $2 "Delete Kryakl's data too?$\r$\n$\r$\nYes removes the settings, the saved words, the dictionaries, the translator and the voice, the speech engine with its models, and the transcripts in Documents\Kryakl.$\r$\n$\r$\nNo keeps all of it for a later install. Notes in your knowledge base stay either way."
+        StrCpy $2 "Delete Tyts's data too?$\r$\n$\r$\nYes removes the settings, the saved words, the dictionaries, the translator and the voice, the speech engine with its models, and the transcripts in Documents\Tyts.$\r$\n$\r$\nNo keeps all of it for a later install. Notes in your knowledge base stay either way."
       ${endIf}
       StrCpy $0 "keep"
       MessageBox MB_YESNO|MB_ICONQUESTION|MB_DEFBUTTON2 "$2" IDNO +2

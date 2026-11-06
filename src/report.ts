@@ -16,8 +16,8 @@ import { t } from './i18n'
 import { oldLog } from './log'
 import { system32 } from './system32'
 
-export const REPORT_EMAIL = 'ikstro.design@gmail.com'
-export const ISSUES = 'https://github.com/ikstro/kryakl/issues/new'
+export const REPORT_EMAIL = 'designmakc@gmail.com'
+export const ISSUES = 'https://github.com/designmakc/tyts/issues/new'
 
 /** The logs a report takes from Kryakl's folder, each with its `.old.log`. */
 export const LOGS = ['kryakl.log', 'speech.log', 'translate.log'] as const

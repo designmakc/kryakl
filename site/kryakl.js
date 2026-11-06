@@ -12,10 +12,10 @@ const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>'
 /* ---------- The page's language: the English page sets nothing; a translated one sets window.KRYAKL before this script ---------- */
 const PAGE = window.KRYAKL || {};
 const merge = (base, over) => { const out = { ...base }; Object.keys(over || {}).forEach((k) => { out[k] = over[k] && typeof over[k] === 'object' && !Array.isArray(over[k]) ? merge(base[k], over[k]) : over[k]; }); return out; };
-// The page's own words. Kryakl's windows drawn on the page (the cards, the talk's lines) stay in English, as in Kryakl.
+// The page's own words. Tyts's windows drawn on the page (the cards, the talk's lines) stay in English, as in Tyts.
 const T = merge({
   closed: '<b>Card closed, voice stopped.</b> Select a sentence and press {mod}+C twice to open it again.',
-  freeNote: 'Kryakl would translate this on your computer. This page carries translations of the duck story only.',
+  freeNote: 'Tyts would translate this on your computer. This page carries translations of the duck story only.',
   pressKey: 'press a key…',
   yourKey: 'your key',
   eg: 'e.g.',
@@ -25,13 +25,13 @@ const T = merge({
   taken: '{k} is taken: it would {act}.',
   setTranslate: 'Set. Select a line on this page and press {k}.',
   setTalk: 'Set. Press {k} to say your line to the duck, and again to send it.',
-  setOther: 'Set. In Kryakl, {k} would {act}.',
+  setOther: 'Set. In Tyts, {k} would {act}.',
   selectFirst: 'Select a line first, then press your key.',
-  wouldNow: 'In Kryakl, {k} would now {act}.',
+  wouldNow: 'In Tyts, {k} would now {act}.',
   selectSentence: 'select a sentence first',
   onceMore: 'once more',
   fixed: 'fixed',
-  acts: { menu: "open Kryakl's menu", translate: 'translate the selected text', inplace: 'translate the selected text in place', check: 'check your English', dictate: 'start dictating', english: 'dictate and type English', note: 'dictate a note', talk: 'talk to the duck' },
+  acts: { menu: "open Tyts's menu", translate: 'translate the selected text', inplace: 'translate the selected text in place', check: 'check your English', dictate: 'start dictating', english: 'dictate and type English', note: 'dictate a note', talk: 'talk to the duck' },
   levels: { fast: 'About 85 MB for a language pair, quick on any processor.', accurate: '5.2 GB, 0.7 s a sentence on an RTX 2080 SUPER. Recommended for most computers.', most: '7 GB, the best wording. For graphics cards from about 12 GB.' },
   tkLevels: {
     A2: ['A2 · Elementary', 'short sentences of everyday words, simple tenses, no idioms. About 7 words a sentence.'],
@@ -125,7 +125,7 @@ const onScroll = () => nav.classList.toggle('scrolled', scrollY > 8);
 addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
-/* ---------- The stage: the chain line, Kryakl's opening moment ---------- */
+/* ---------- The stage: the chain line, Tyts's opening moment ---------- */
 const TYPED = DEMO.typed;
 const FIXED = DEMO.fixed;
 const main = $('#lineMain');
@@ -232,7 +232,7 @@ if (!reduce) {
   } else playStage(false);
 }
 
-/* ---------- The duck story and Kryakl's card ---------- */
+/* ---------- The duck story and Tyts's card ---------- */
 const STORY = [
   'Every morning, an old duck crossed the street to the bakery.',
   'Nobody knew where it lived, but the baker always kept a warm crust for it.',
@@ -304,7 +304,7 @@ function renderCard(c, pop) {
   const el = document.createElement('div');
   el.className = 'kcard' + (pop ? ' pop' : '');
   el.setAttribute('role', 'dialog');
-  el.setAttribute('aria-label', 'Kryakl card: ' + c.kind);
+  el.setAttribute('aria-label', 'Tyts card: ' + c.kind);
   const listen = c.kind === 'Listen';
   el.innerHTML = `
     <div class="kc-head">
@@ -447,7 +447,7 @@ function closeCard(c) {
   $$('#story .s').forEach((s) => s.classList.remove('picked'));
   slot.innerHTML = `<div class="closed-note">${t(T.closed, { mod: MOD })}</div>`;
 }
-// A text in the band opens the band's card; any other text, a card by the selection, as Kryakl opens it by the pointer.
+// A text in the band opens the band's card; any other text, a card by the selection, as Tyts opens it by the pointer.
 function openCard(mode, data, opts = {}) {
   hush(); quietCards();
   const c = opts.rect ? floatCard : bandCard;
@@ -471,7 +471,7 @@ function openCard(mode, data, opts = {}) {
     if (r.top < 64 || r.bottom > innerHeight) slot.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: r.height > innerHeight - 80 ? 'start' : 'center' });
   }
 }
-// A click elsewhere hides the card by the selection, as Kryakl's card hides when it is not pinned.
+// A click elsewhere hides the card by the selection, as Tyts's card hides when it is not pinned.
 addEventListener('pointerdown', (e) => { if (floatCard.el && !floatCard.el.contains(e.target)) closeCard(floatCard); }, { capture: true });
 
 /* ---------- Keys the visitor sets: a dashed cap records the next key pressed ---------- */
@@ -526,7 +526,7 @@ document.addEventListener('click', (e) => {
   recording = recording === b.dataset.act ? null : b.dataset.act; tapMod = null; renderKeys();
 });
 
-// Ctrl+C twice: two copies 40–650 ms apart, as Kryakl counts them.
+// Ctrl+C twice: two copies 40–650 ms apart, as Tyts counts them.
 const more = $('#more');
 const hintKeys = $$('#hintKeys .key');
 let lastCopy = 0;
@@ -615,7 +615,7 @@ async function playKb() {
     }
   }
 }
-// The badge sits just after the caret, as Kryakl's does; at the right edge it drops under the caret.
+// The badge sits just after the caret, as Tyts's does; at the right edge it drops under the caret.
 function placeAt(b, c) {
   const lh = c.offsetHeight || 24;
   const right = c.offsetLeft + 10;
@@ -675,7 +675,7 @@ function sizeCanvas() {
   canvas.width = Math.max(1, Math.round(r.width * dpr));
   canvas.height = Math.max(1, Math.round(r.height * dpr));
 }
-function markColor() { return getComputedStyle(document.documentElement).getPropertyValue('--mark').trim() || '#f2a100'; }
+function markColor() { return getComputedStyle(document.documentElement).getPropertyValue('--mark').trim() || '#ff5a36'; }
 let color = markColor();
 const repaint = () => { color = markColor(); drawWave(); };
 try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', repaint); } catch (e) {}
@@ -748,8 +748,8 @@ if (!reduce && 'IntersectionObserver' in window) {
   io.observe(canvas);
 }
 
-/* ---------- Talk to the duck: the visitor says three lines; the duck's answers and the marks were recorded from Kryakl's model ---------- */
-// Recorded 2026-11-01 with Kryakl's own instructions (src/duck.ts, src/checker.ts) on Gemma 4 E4B, RTX 2080 SUPER: an answer and the seconds it took.
+/* ---------- Talk to the duck: the visitor says three lines; the duck's answers and the marks were recorded from Tyts's model ---------- */
+// Recorded 2026-11-01 with Tyts's own instructions (src/duck.ts, src/checker.ts) on Gemma 4 E4B, RTX 2080 SUPER: an answer and the seconds it took.
 const TALK = {"free":{"opener":"Hey there! How is your day going so far?","lines":[{"text":"Pretty good! I started running last week, but my legs is still sore.","marks":[["same","Pretty good! I started running last week, but my legs "],["del","is"],["ins","are"],["same"," still sore."]],"notes":{"uk":"is → are: дієслово має узгоджуватися з підметом, 'legs' (множина) вимагає 'are'.","de":"legs is → legs are, weil 'legs' Plural ist und das Verb entsprechend konjugiert werden muss.","es":"El error fue en la concordancia sujeto-verbo: 'legs is' debe ser 'legs are' porque 'legs' es plural.","fr":"Le verbe 'to be' au pluriel est 'are' et non 'is' pour le sujet 'legs'.","it":"Il verbo 'to be' al plurale è 'are' e non 'is'.","pl":"Błąd w zgodzie podmiotu i orzeczenia: 'legs is' powinno być 'legs are', ponieważ 'legs' jest w liczbie mnogiej.","ru":"is → are: подлежащее 'legs' во множественном числе требует глагола 'are'."}},{"text":"How many times a week I should run as a beginner?","marks":[["same","How many times a week "],["del","I"],["same"," should "],["ins","I"],["same"," run as a beginner?"]],"notes":{"uk":"Порядок слів у питанні: допоміжне дієслово (should) ставиться перед підметом (I).","de":"Die Satzstellung ist falsch: 'I should run' wird zu 'should I run' in einer Frage.","es":"El orden de las palabras en la pregunta es incorrecto; el auxiliar 'should' va antes del sujeto 'I'.","fr":"L'ordre des mots est incorrect : 'should' doit venir avant le sujet 'I'.","it":"L'ordine delle parole è sbagliato: 'should' va prima del soggetto 'I'.","pl":"Zmiana szyku zdania: 'I should run' na 'should I run' w pytaniach.","ru":"Порядок слов в вопросе: вспомогательный глагол (should) ставится перед подлежащим (I)."}},{"text":"I run in a park near my house. It is quiet there in the morning.","marks":null}],"answers":{"A2":[["Running is great exercise for your body. Sore legs happen when you start a new activity. I hope you feel better soon.",0.7],["You should start with two or three times a week. Your body needs time to get used to the running. Are you going to run in the park or somewhere else?",0.9],["Parks are a very nice place to run. The trees and fresh air can make exercise feel good. I like walking in big green places too.",0.9]],"B1":[["Running is great for your health. Sore muscles can happen when you start a new workout. It is important to rest your legs a bit after you exercise.",0.8],["I think you should try running three times a week at first. This gives your body time to recover between workouts. Are you enjoying the feeling of running outside?",0.9],["Parks are wonderful places for a run. The quiet in the morning lets you really focus on your breathing. I find that the fresh air helps me think of new ideas.",1]],"B2":[["Running is great for getting some fresh air and feeling good. Those first few days can really put a strain on your muscles. You might want to ease into it slowly to let your legs recover properly.",1.1],["Most experts suggest starting with three times a week when you are just beginning a running routine. It gives your body enough time to adapt to the impact without getting overwhelmed. Are you planning on running outside or on a treadmill?",1.1],["There's something so peaceful about a quiet park at sunrise, isn't there? Those early morning runs can really set a positive tone for the whole day. I always find that the cooler air makes the miles feel a bit easier to tackle.",1.2]]}},"cafe":{"opener":"Hi, welcome in! What can I get for you today?","lines":[{"text":"I would like a large latte with oat milk, please.","marks":null},{"text":"Here, please. How much it costs?","marks":[["same","Here, please. How much "],["ins","does"],["same"," it "],["del","costs"],["ins","cost"],["same","?"]],"notes":{"uk":"How much it costs → How much does it cost: у питальних реченнях з дієсловом 'to cost' потрібно використовувати допоміжне дієслово 'does'.","de":"Das Verb 'cost' benötigt im Englischen bei dieser Frage das Hilfsverb 'does' und die korrekte Satzstellung.","es":"Se usa 'does' para formar preguntas en presente simple.","fr":"Il faut utiliser l'auxiliaire 'does' pour former une question au présent.","it":"Si usa 'does' con il verbo 'cost' in domande al presente semplice.","pl":"Brak czasownika 'does' w pytaniu, poprawnie: How much does it cost?","ru":"How much it costs → How much does it cost: в вопросах в английском языке вспомогательный глагол (does) ставится перед подлежащим."}},{"text":"Okay, and I take one cheesecake too.","marks":[["same","Okay, and "],["del","I"],["ins","I'll"],["same"," take one cheesecake too."]],"notes":{"uk":"take → 'll take: тут потрібна форма майбутнього часу, щоб висловити намір.","de":"Das fehlende Hilfsverb 'will' (I'll) ist notwendig, um die Absicht auszudrücken.","es":"Se agregó 'll para indicar futuro, ya que se está haciendo un pedido.","fr":"Le verbe 'take' au futur est 'will take' ou 'I'll take' pour exprimer une intention.","it":"Ho aggiunto 'll' (will) per indicare che l'azione è futura.","pl":"Dodano 'll (will) dla poprawnego czasu przyszłego.","ru":"I take → I'll take: здесь нужно использовать будущее время (will take) для выражения намерения."}}],"answers":{"A2":[["Sure, we have oat milk. Would you like that to go or drink it here?",0.7],["Okay, that will be four dollars. Can you pay with cash or a card?",0.6],["A cheesecake sounds good. Would you like that with your coffee? We have a chocolate one.",0.7]],"B1":[["Sure thing! A large latte with oat milk it is. Would you like to have that for here or to go?",0.7],["It will be five fifty for here. Would you like to add a pastry with your drink?",0.7],["A cheesecake sounds yummy! So that is one large latte with oat milk and one cheesecake for here. Your total comes to eight fifty. Will you be paying with cash or card?",0.9]],"B2":[["A large latte with oat milk, got it. Would you like to have that here in the cozy corner or take it to go?",0.7],["It'll be six fifty for the large oat milk latte to have in. Anything else you fancy, maybe a croissant or a muffin to go with your coffee?",0.9],["A cheesecake sounds like a lovely treat. Would you prefer a slice of plain cheesecake or one with some toppings?",0.8]]}},"interview":{"opener":"Thanks for coming in today. Could you tell me a little about yourself?","lines":[{"text":"I am product designer. I work in a small studio for five years, and now I want to grow in a bigger team.","marks":[["same","I am "],["ins","a"],["same"," product designer. I "],["del","work"],["ins","have worked"],["same"," in a small studio for five years, and now I want to grow in a bigger team."]],"notes":{"uk":"I am product designer → I am a product designer: перед професією в однині потрібен артикль.","de":"Fehlendes 'a' bei 'product designer' und 'have worked' statt 'work' für eine abgeschlossene Zeitspanne.","es":"Falta el artículo 'a' antes de 'product designer' y se usa el presente perfecto 'have worked' para indicar una acción que comenzó en el pasado y continúa hasta el presente.","fr":"Il manquait l'article 'a' avant 'product designer' et le temps 'have worked' est plus approprié que 'work' pour une action qui a commencé dans le passé et continue jusqu'au présent.","it":"Ho aggiunto l'articolo 'a' prima di 'product designer' e ho cambiato 'I work' in 'I have worked' per indicare un'azione iniziata nel passato e che continua nel presente.","pl":"Brakuje rodzajowego przedimka 'a' przed 'product designer' oraz czas 'have worked' zamiast 'work' dla opisu trwającego stanu.","ru":"I am product designer → I am a product designer: перед профессией нужен артикль."}},{"text":"Mostly mobile apps. I like talking to users and making complex things simple.","marks":null},{"text":"Last year our users didn't found the search button, so we moved it to the top of the screen.","marks":[["same","Last year our users didn't "],["del","found"],["ins","find"],["same"," the search button, so we moved it to the top of the screen."]],"notes":{"uk":"didn't found → didn't find: після допоміжних дієслів (did, didn't) основне дієслово стоїть у початковій формі.","de":"didn't found → didn't find, nach 'did' oder 'didn't' folgt immer die Grundform des Verbs.","es":"El pasado se usa 'find' en lugar de 'found' porque después de 'didn't' el verbo va en infinitivo.","fr":"didn't found → didn't find, après 'did' ou 'didn't', on utilise le verbe à l'infinitif sans 'to'.","it":"Il verbo 'find' al passato con 'didn't' è 'find', non 'found'.","pl":"Błąd w czasowniku 'find' w czasie przeszłym po 'didn't' – po 'did/didn't' używamy formy podstawowej czasownika.","ru":"didn't found → didn't find: после вспомогательного глагола (did/didn't) основной глагол всегда стоит в начальной форме."}}],"answers":{"A2":[["That sounds like a very interesting job. What kind of products do you design?",0.7],["That is very useful in design. Can you tell me about a time you solved a hard problem for a user?",0.8],["That sounds like a big change. How did the users feel about the new search button?",0.7]],"B1":[["That is interesting. What kind of products do you usually design in your work?",0.7],["That sounds like a great skill to have. Can you tell me about a time you solved a difficult problem for a user?",0.8],["That must have been frustrating for the users. How did you know that the search button was causing problems for them?",0.8]],"B2":[["That's really interesting. What kind of product design work have you been doing in your five years at the studio?",0.8],["It sounds like you have a real talent for simplifying complicated ideas, which is a valuable skill. Can you tell me about a particular project where you successfully took something very complex and made it easy for users to understand?",1.1],["That must have been a real pain for users if they couldn't find the main search button. What was the process like when you decided to move it, and what feedback did you get after making that change?",1.2]]}}};
 const TK_LEVEL = T.tkLevels;
 const tkFeed = $('#tkFeed');
@@ -846,7 +846,7 @@ function tkReset() {
   tkFeed.innerHTML = tkDuck(TALK[tk.topic].opener, -1);
   tkDraw();
 }
-// The line is said aloud by a woman's voice and heard word by word, as Kryakl shows it in a dashed line while you speak.
+// The line is said aloud by a woman's voice and heard word by word, as Tyts shows it in a dashed line while you speak.
 async function tkListen() {
   quietCard(); hush();
   const run = ++tk.run; const alive = () => run === tk.run;
@@ -871,7 +871,7 @@ async function tkListen() {
   };
   speak(text, { who: 'her', onword: upTo, onend: () => { upTo(text.length); stopped(); } });
 }
-// Sent: Kryakl checks the line and the duck thinks at once; the marks come first, then the answer, read aloud.
+// Sent: Tyts checks the line and the duck thinks at once; the marks come first, then the answer, read aloud.
 async function tkSend() {
   const run = ++tk.run; const alive = () => run === tk.run;
   const i = tk.step; const el = tk.live; tk.live = null;
@@ -898,7 +898,7 @@ function tkShow(i, voice) {
   speak(tkAnswer(i)[0], { who: 'him', onword: (at) => tkLight(spans, at), onend: () => { if (run !== tk.run || tk.phase !== 'speaking') return; tkUnlight(); tkSettle(); tkDraw(); } });
   tk.sid = speakId; tk.phase = 'speaking'; tkDraw();
 }
-// A press while the duck thinks shows its answer at once, as a press in Kryakl does not wait for it.
+// A press while the duck thinks shows its answer at once, as a press in Tyts does not wait for it.
 function tkHurry() {
   tk.run++;
   const i = tk.step;
@@ -960,7 +960,7 @@ const quack = $('#quack');
 quack.addEventListener('click', () => {
   quietCard();
   quack.classList.add('talk');
-  if (pickVoice(DEMO.quack)) speak('Кря!', { lang: DEMO.quack }); else speak('Krya!');
+  if (pickVoice(DEMO.quack)) speak('Тиць!', { lang: DEMO.quack }); else speak('Tyts!');
   setTimeout(() => quack.classList.remove('talk'), 260);
   setTimeout(() => quack.classList.add('talk'), 380);
   setTimeout(() => quack.classList.remove('talk'), 640);

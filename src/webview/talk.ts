@@ -112,7 +112,7 @@ const header = el(
   { class: 'bar' },
   historyButton,
   tile(18),
-  el('span', { class: 'head-name' }, 'Talk to the duck'),
+  el('span', { class: 'head-name' }, t('menu.talk')),
   keyCaps,
   modelChip,
   el('span', { class: 'grow' }),
@@ -389,7 +389,7 @@ function drawEmpty(): void {
   const stop = !!block?.stop
   empty.replaceChildren(
     tile(48),
-    el('h2', {}, 'Talk to the duck'),
+    el('h2', {}, t('menu.talk')),
     el('p', {}, t('talk.intro')),
     el('div', { class: 'topics' }, ...TOPICS.map(topic => el('button', { class: 'chip topic', disabled: stop, onclick: () => post({ type: 'talkStart', topic: topic.id }) }, topicName(topic.id)))),
     el('small', {}, block?.deaf ? t('talk.orTypeHello') : t('talk.orSayHello')),

@@ -379,7 +379,7 @@ svg.glyph {
 /* A narrow window: the sidebar keeps its icons, each named in its tooltip. */
 @media (max-width: 760px) {
   .win {
-    --sw: 60px;
+    --sw: 84px;
   }
 
   .side {
@@ -404,7 +404,6 @@ svg.glyph {
   .brand .logo,
   .find input,
   .find .key,
-  .it .lb,
   .it .v:not(.live) {
     display: none;
   }
@@ -420,11 +419,23 @@ svg.glyph {
     margin: 7px auto;
   }
 
+  /* Narrow: each place keeps its name under its icon (the owner, 2026-11-06: icons alone say nothing). */
   .it {
     position: relative;
+    flex-direction: column;
     justify-content: center;
-    width: 40px;
-    padding: 0;
+    gap: 3px;
+    width: 76px;
+    height: auto;
+    min-height: 48px;
+    padding: 6px 2px;
+  }
+
+  .it .lb {
+    font-size: 10.5px;
+    line-height: 1.15;
+    white-space: normal;
+    text-align: center;
   }
 
   .it .v.live {
@@ -3393,4 +3404,49 @@ li + li > .ti::before {
 .field.report.sumedit {
   width: 100%;
   min-height: 160px;
+}
+
+/* Settings › Keys: the keyboard with the keys Tyts holds (2026-11-06). */
+.kbmap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px;
+  margin-bottom: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  overflow-x: auto;
+}
+.kbr {
+  display: flex;
+  gap: 4px;
+}
+.kbc {
+  flex: none;
+  width: 34px;
+  height: 32px;
+  padding: 3px 5px;
+  border: 1px solid var(--border);
+  border-bottom-width: 3px;
+  border-radius: 5px;
+  font: 500 10px/1 var(--mono);
+  color: var(--muted);
+  position: relative;
+}
+.kbc.w15 { width: 52px; }
+.kbc.w2 { width: 70px; }
+.kbc.w25 { width: 86px; }
+.kbc.sp { width: 200px; }
+.kbc.used {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent-text);
+}
+.kbc.used::after {
+  content: attr(data-n);
+  position: absolute;
+  right: 4px;
+  bottom: 2px;
+  font-weight: 700;
 }

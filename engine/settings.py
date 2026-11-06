@@ -25,9 +25,9 @@ log = logging.getLogger("kryakl.settings")
 
 # A test run gives its own folders; the real ones are Kryakl's. ALTYPE_SPEECH_HOME is the old name's.
 TEST_HOME = os.environ.get("KRYA_SPEECH_HOME") or os.environ.get("ALTYPE_SPEECH_HOME")
-APP_DIR = Path(TEST_HOME or Path(os.environ.get("APPDATA", Path.home())) / "Kryakl")
+APP_DIR = Path(TEST_HOME or Path(os.environ.get("APPDATA", Path.home())) / "Tyts")
 # Kryakl says where the engine is installed: %LOCALAPPDATA%\Kryakl\speech, or an old name's when it could not move.
-SPEECH_DIR = Path(os.environ.get("KRYA_SPEECH_DIR") or Path(os.environ.get("LOCALAPPDATA", Path.home())) / "Kryakl" / "speech")
+SPEECH_DIR = Path(os.environ.get("KRYA_SPEECH_DIR") or Path(os.environ.get("LOCALAPPDATA", Path.home())) / "Tyts" / "speech")
 MODELS_DIR = SPEECH_DIR / "models"
 SETTINGS_FILE = APP_DIR / "speech.json"
 
@@ -71,7 +71,7 @@ def default_data_dir() -> Path:
 
     Krya's and Altype's (Documents\Krya\Transcripts, Documents\Altype\Transcripts) move there at a real start
     (move_transcripts)."""
-    return documents_dir() / "Kryakl" / "Transcripts"
+    return documents_dir() / "Tyts" / "Transcripts"
 
 
 def old_data_dirs() -> list[Path]:
