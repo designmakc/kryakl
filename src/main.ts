@@ -219,7 +219,7 @@ const LINKS = new Set([
 ])
 
 /** The settings that are Dictate's keys (and Talk's, which listens as dictation does): registered only once the speech engine is installed. */
-const DICTATION_KEYS: readonly (keyof Settings)[] = ['dictateKey', 'englishKey', 'noteKey', 'againKey', 'practiceKey', 'talkKey', 'meetingKey']
+const DICTATION_KEYS: readonly (keyof Settings)[] = ['dictateKey', 'englishKey', 'noteKey', 'againKey', 'practiceKey', 'talkKey', 'meetingKey', 'shotKey']
 
 // One Kryakl at a time, whichever folder it keeps its things in: the lock is taken on Kryakl's own
 // folder first, before a test run moves to its own. A second copy (another start, `npm start`, a test
@@ -288,7 +288,7 @@ let appWin: BrowserWindow | undefined
 let appReady = false
 let quitting = false
 let keysOk = { snip: true, select: true, translate: true, text: true, inPlace: true, check: true, type: true, typeCheck: true, pause: true, window: true }
-let speechKeysOk = { dictate: true, note: true, english: true, again: true, practice: true, talk: true, meeting: true }
+let speechKeysOk = { dictate: true, note: true, english: true, again: true, practice: true, talk: true, meeting: true, shot: true }
 let speech: SpeechHost
 let dictation: Dictation
 /** The call recording (capture.ts): the computer's sound and the microphone, in its own panel. */
@@ -2970,7 +2970,7 @@ function registerShortcuts(): void {
   // Paused: no key but the pause key, and none is "taken".
   if (settings.paused) {
     keysOk = { snip: true, select: true, translate: true, text: true, inPlace: true, check: true, type: true, typeCheck: true, pause: register(settings.pauseKey, togglePause), window: true }
-    speechKeysOk = { dictate: true, english: true, note: true, again: true, practice: true, talk: true, meeting: true }
+    speechKeysOk = { dictate: true, english: true, note: true, again: true, practice: true, talk: true, meeting: true, shot: true }
     return
   }
   keysOk = {
@@ -3005,6 +3005,8 @@ function registerShortcuts(): void {
     practice: dictate('check', settings.practiceKey),
     talk: speech?.installed ? register(settings.talkKey, talkPressed) : true,
     meeting: speech?.installed ? register(settings.meetingKey, toggleCall) : true,
+    // ponytail: Electron's keys only, the keyboard thread knows no 'shot' action (typist.ts KeyAction); a double tap or a mouse button is refused
+    shot: speech?.installed && settings.shotKey ? isAccelerator(settings.shotKey) && register(settings.shotKey, () => capture?.shot()) : true,
   }
   const taken = [
     !keysOk.snip && settings.snipKey,
@@ -3024,6 +3026,7 @@ function registerShortcuts(): void {
     !speechKeysOk.practice && settings.practiceKey,
     !speechKeysOk.talk && settings.talkKey,
     !speechKeysOk.meeting && settings.meetingKey,
+    !speechKeysOk.shot && settings.shotKey,
   ].filter((k): k is string => !!k)
   // The settings window shows the trouble itself; the balloon is for a start without it.
   if (taken.length > 0 && !(appWin?.isVisible() ?? false)) {
@@ -3255,7 +3258,7 @@ export async function startCall(auto?: { app: string; title: string | null }): P
   // Without the microphone the others are still recorded (the panel says so).
   if (onMac) await systemPreferences.askForMediaAccess('microphone').catch(() => false)
   const known = auto?.app ?? callApp(await runningProcessNames())
-  capture.start(auto?.title ?? callTitle(known, new Date()), known ?? undefined, !!auto)
+  capture.start(auto?.title ?? callTitle(known, new Date()), known ?? undefined, !!auto, settings.callShots)
 }
 
 // ---------------------------------------------------------------- a call that starts by itself

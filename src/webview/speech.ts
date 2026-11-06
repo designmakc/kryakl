@@ -35,6 +35,8 @@ export type Row = {
   snippet?: string
 }
 
+import type { Shot } from '../shots'
+
 export type Utterance = { speaker: string; start: number; end: number; text: string; edited?: boolean }
 
 export type Transcript = {
@@ -56,6 +58,8 @@ export type Transcript = {
   app?: string
   lost?: number
   summary?: SummaryRecord
+  /** A call's screenshots (shots.ts): the transcript shows the person's and the key ones. */
+  shots?: Shot[]
 }
 
 /** A summary as the engine keeps it (PUT /transcripts/{id}/summary): Markdown with `[mm:ss]` topics. */

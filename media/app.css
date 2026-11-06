@@ -3031,6 +3031,46 @@ li + li > .ti::before {
   margin: 4px -8px 0;
 }
 
+/* A call's screenshots between the lines, at their time; a click shows one large (.shotbig, Esc closes). */
+.shots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 8px 6px 72px;
+}
+
+.shot {
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  background: var(--overlay);
+  cursor: zoom-in;
+}
+
+.shot img {
+  display: block;
+  height: 72px;
+  width: auto;
+}
+
+.shotbig {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgb(0 0 0 / 0.75);
+  cursor: zoom-out;
+}
+
+.shotbig img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--r-sm);
+}
+
 .utt {
   position: relative;
   display: grid;

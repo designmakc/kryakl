@@ -344,6 +344,7 @@ const HOME_KEYS: readonly HomeKey[] = [
   { key: 'againKey', title: 'dictate.againKey', page: 'voice', speech: true },
   { key: 'noteKey', title: 'dict.note', page: 'voice', speech: true },
   { key: 'meetingKey', title: 'call.record', page: 'recordings', speech: true },
+  { key: 'shotKey', title: 'call.shotKey', page: 'recordings', speech: true },
   { key: 'fixKey', title: 'kb.fixKey', page: 'layout', section: 'act.fixGroup', chain: 'fix' },
   { key: 'switchKey', title: 'kb.switchKey', page: 'layout', section: 'act.switchGroup' },
   { key: 'pauseKey', title: 'settings.pauseKey', page: 'settings', section: 'keys.group' },
@@ -1236,6 +1237,7 @@ type KeyName =
   | 'practiceKey'
   | 'talkKey'
   | 'meetingKey'
+  | 'shotKey'
   | 'pauseKey'
   | 'windowKey'
 
@@ -1258,6 +1260,7 @@ const KEY_USE: Record<KeyName, string> = phrases({
   practiceKey: 'keys.usePractice',
   talkKey: 'keys.useTalk',
   meetingKey: 'keys.useMeeting',
+  shotKey: 'keys.useShot',
   pauseKey: 'keys.usePause',
   windowKey: 'keys.useWindow',
 })
@@ -2531,6 +2534,8 @@ function recordingsPage(v: AppView): HTMLElement[] {
     installed(v) ? callRow(v) : null,
     installed(v) ? callAutoRow(v) : null,
     keyRow('meetingKey', t('call.record'), t('call.keyNote'), !v.speech.keysOk.meeting),
+    installed(v) ? toggleCard('camera', t('call.shots'), v.settings.callShots, callShots => save({ callShots }), t('call.shotsNote')) : null,
+    keyRow('shotKey', t('call.shotKey'), t('call.shotKeyNote'), !v.speech.keysOk.shot),
     ...summarySettings(v),
     ...(running(v) ? [grp(t('transcribe.new')), ...newRows(v)] : []),
     grp(t('transcribe.setup')),

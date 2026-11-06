@@ -15,6 +15,7 @@ import gc
 import logging
 import os
 import queue
+import re
 import shutil
 import threading
 import time
@@ -96,6 +97,25 @@ def finish_recording(store: Store, id: str, options: dict | None = None, interru
     job.update({k: v for k, v in (options or {}).items() if k in ("language", "speakers", "lost")})
     store.update(id, status="queued", job=job, stage="", progress=0, error="The recording was cut off; what arrived is transcribed" if interrupted else "")
     return True
+
+
+# A call's screenshots (PUT /recordings/{id}/shots/{ms}): shots/<ms from the start>[-m].jpg, -m for one the person took.
+SHOT_NAME = re.compile(r"(\d{1,9})(-m)?\.jpg")
+
+
+def shots_in(folder: Path, before: list | None = None) -> list[dict]:
+    """The recording's screenshots by time, as transcript.json keeps them; `key` (set by the summary's pass) kept from `before`."""
+    keys = {s.get("file") for s in before or [] if isinstance(s, dict) and s.get("key")}
+    out = []
+    for path in sorted((folder / "shots").glob("*.jpg"), key=lambda p: int(SHOT_NAME.fullmatch(p.name).group(1)) if SHOT_NAME.fullmatch(p.name) else -1):
+        m = SHOT_NAME.fullmatch(path.name)
+        if not m:
+            continue
+        shot = {"at": int(m.group(1)) / 1000, "file": path.name, "manual": bool(m.group(2))}
+        if path.name in keys:
+            shot["key"] = True
+        out.append(shot)
+    return out
 
 
 class Worker:
@@ -427,6 +447,9 @@ class Worker:
             value = job.get(key, before.get(key))
             if value:
                 transcript[key] = value
+        shots = shots_in(store.folder(id), before.get("shots"))
+        if shots:
+            transcript["shots"] = shots
         if kind == "note":
             transcript["title"] = notes.first_words(" ".join(u["text"] for u in utterances), 8)
             try:

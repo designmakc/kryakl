@@ -78,6 +78,7 @@ export const LUCIDE = {
   "x": "<path d=\"M18 6 6 18\" /> <path d=\"m6 6 12 12\" />",
   "minus": "<path d=\"M5 12h14\" />",
   "square": "<rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" />",
+  "camera": "<path d=\"M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z\" /> <circle cx=\"12\" cy=\"13\" r=\"3\" />",
   "chevron-right": "<path d=\"m9 18 6-6-6-6\" />",
   "chevron-left": "<path d=\"m15 18-6-6 6-6\" />",
   "chevron-down": "<path d=\"m6 9 6 6 6-6\" />",

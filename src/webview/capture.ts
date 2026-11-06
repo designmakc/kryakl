@@ -5,11 +5,15 @@
 // (tracks `system` and `mic`); a chunk that never goes is counted as `lost`.
 // The panel: a red dot, "Call", the time, Pause, Stop and a chevron that hides
 // it, the recording going on; under them the source, or what is wrong.
+// Screenshots: the picture getDisplayMedia gives is kept while a call records;
+// with `callShots` a frame every 4 s is sent when it changed (shots.ts), and the
+// camera button or the shot key sends one always, marked manual.
 
 import { t } from '../i18n'
 import { onMac } from '../hotkey'
 import type { CallState, SpeechResult, ToHost, ToView, TutorHost } from '../protocol'
 import { TrackSender } from '../capturesend'
+import { changed, frameHash, SHOT_SIDE } from '../shots'
 import { el } from './dom'
 import { lucide } from './lucide'
 import { micTrouble } from './recorder'
@@ -49,6 +53,15 @@ let since = 0
 let started = 0
 let listening: number | undefined
 let ticking: number | undefined
+/** The screen's picture while a call records, the shots' times from `startedAt`, every 4 s with `periodic`. */
+let video: MediaStreamTrack | undefined
+let startedAt = 0
+let periodic = false
+let shooting: number | undefined
+let lastShot: Uint8Array | undefined
+let shotsSent: Promise<unknown> = Promise.resolve()
+const SHOT_EVERY = 4000
+const SHOT_WIDTH = 1280
 let meter: { context: AudioContext; analyser: AnalyserNode; samples: Float32Array<ArrayBuffer> } | undefined
 
 const speech = <T>(method: string, route: string, body?: unknown) => host.call({ call: 'speech', method, route, body }) as Promise<SpeechResult<T>>
@@ -106,6 +119,7 @@ function draw(): void {
     el('span', { class: 'gap' }),
     ...(state === 'recording' || state === 'paused'
       ? [
+          ...(state === 'recording' && video ? [button('camera', t('call.shot'), () => void shot(true))] : []),
           state === 'paused' ? button('play', t('call.resume'), resume) : button('pause', t('call.pause'), pause),
           button('square', t('call.stopShort'), () => void stop(), 'stop'),
         ]
@@ -125,17 +139,54 @@ function draw(): void {
   root.replaceChildren(head, note)
 }
 
-/** The computer's sound: main answers with the screen's loopback sound; the picture goes at once. */
-async function computerSound(): Promise<MediaStream> {
+/** The computer's sound: main answers with the screen's loopback sound; the picture is kept for the screenshots, a frame a second. */
+async function computerSound(): Promise<{ sound: MediaStream; picture?: MediaStreamTrack }> {
   const display = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
-  for (const v of display.getVideoTracks()) v.stop()
+  const [picture, ...rest] = display.getVideoTracks()
+  for (const v of rest) v.stop()
   const audio = display.getAudioTracks()
-  if (audio.length === 0) throw new Error(t('call.noSound'))
-  return new MediaStream(audio)
+  if (audio.length === 0) {
+    picture?.stop()
+    throw new Error(t('call.noSound'))
+  }
+  void picture?.applyConstraints({ frameRate: 1 }).catch(() => undefined)
+  return { sound: new MediaStream(audio), ...(picture ? { picture } : {}) }
 }
 
-async function start(title: string, app?: string, byItself = false): Promise<void> {
+/**
+ * One frame of the screen to the engine (shots/<ms>[-m].jpg in the recording's folder), 1280 px wide:
+ * `manual` always, else only when it changed since the last one kept. Nothing about the picture is logged.
+ */
+async function shot(manual: boolean): Promise<void> {
+  if (state !== 'recording' || !video || video.readyState !== 'live' || !id) return
+  const ms = Date.now() - startedAt
+  const recording = id
+  try {
+    // Chromium's ImageCapture has grabFrame; the DOM types know only takePhoto.
+    const frame = await (new ImageCapture(video) as ImageCapture & { grabFrame(): Promise<ImageBitmap> }).grabFrame()
+    const small = new OffscreenCanvas(SHOT_SIDE, SHOT_SIDE).getContext('2d', { willReadFrequently: true })!
+    small.drawImage(frame, 0, 0, SHOT_SIDE, SHOT_SIDE)
+    const hash = frameHash(small.getImageData(0, 0, SHOT_SIDE, SHOT_SIDE).data)
+    if (!manual && !changed(lastShot, hash)) return frame.close()
+    lastShot = hash
+    const scale = Math.min(1, SHOT_WIDTH / frame.width)
+    const canvas = new OffscreenCanvas(Math.round(frame.width * scale), Math.round(frame.height * scale))
+    canvas.getContext('2d')!.drawImage(frame, 0, 0, canvas.width, canvas.height)
+    frame.close()
+    const bytes = new Uint8Array(await (await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.7 })).arrayBuffer())
+    const sent = speech('PUT', `/recordings/${recording}/shots/${ms}${manual ? '?manual=1' : ''}`, bytes)
+    shotsSent = Promise.all([shotsSent, sent])
+    const answer = await sent
+    if (!answer.ok) console.warn(`call: a screenshot was not kept (${answer.status ?? ''})`)
+  } catch (e) {
+    console.warn(`call: no screenshot (${e instanceof Error ? e.name : 'error'})`)
+  }
+}
+
+async function start(title: string, app?: string, byItself = false, shots = false): Promise<void> {
   if (state !== 'idle') return
+  periodic = shots
+  lastShot = undefined
   asking = null
   auto = byItself
   error = ''
@@ -147,7 +198,9 @@ async function start(title: string, app?: string, byItself = false): Promise<voi
   set('starting')
   let system: MediaStream
   try {
-    system = await computerSound()
+    const got = await computerSound()
+    system = got.sound
+    video = got.picture
   } catch (e) {
     error = t('call.failed', { why: e instanceof Error && e.message ? e.message : String(e) })
     return set('idle')
@@ -159,7 +212,7 @@ async function start(title: string, app?: string, byItself = false): Promise<voi
     console.warn(`call: no microphone (${micTrouble(e)})`)
     micMissing = true
   }
-  const startedAt = Date.now()
+  startedAt = Date.now()
   const opened = await speech<{ id: string }>('POST', '/recordings', {
     source: 'system',
     title,
@@ -168,6 +221,8 @@ async function start(title: string, app?: string, byItself = false): Promise<voi
   })
   if (!opened.ok) {
     for (const s of [system, mic]) for (const track of s?.getTracks() ?? []) track.stop()
+    video?.stop()
+    video = undefined
     error = t('call.failed', { why: opened.error })
     return set('idle')
   }
@@ -191,6 +246,7 @@ async function start(title: string, app?: string, byItself = false): Promise<voi
   started = Date.now()
   since = started
   ticking = window.setInterval(draw, 1000)
+  if (periodic && video) shooting = window.setInterval(() => void shot(false), SHOT_EVERY)
   set('recording')
 }
 
@@ -257,8 +313,13 @@ async function stop(drop = false): Promise<void> {
   set('stopping')
   window.clearInterval(ticking)
   window.clearInterval(listening)
+  window.clearInterval(shooting)
+  video?.stop()
+  video = undefined
   await Promise.all(tracks.map(track => stopped(track.recorder)))
   await Promise.all(tracks.map(track => track.sender.done()))
+  // The engine takes shots only while the call records: every one sent goes before finish.
+  await shotsSent.catch(() => undefined)
   const lost = tracks.reduce((n, track) => n + track.sender.lost, 0)
   for (const track of tracks) for (const s of track.stream.getTracks()) s.stop()
   void meter?.context.close()
@@ -284,7 +345,8 @@ const discard = () => stop(true)
 window.addEventListener('message', event => {
   const message = event.data as ToView
   if (event.source !== window || message?.type !== 'capture') return
-  if (message.command === 'start') void start(message.title ?? '', message.app, !!message.auto)
+  if (message.command === 'start') void start(message.title ?? '', message.app, !!message.auto, !!message.shots)
+  else if (message.command === 'shot') void shot(true)
   else if (message.command === 'stop') void stop()
   else if (message.command === 'discard') void discard()
   else if (message.command === 'ask') {

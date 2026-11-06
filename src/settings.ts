@@ -158,6 +158,10 @@ export type Settings = {
   talkKey: string
   /** Records a call (capture.ts): all of the computer's sound and the microphone; pressed again, stops and saves. None by default. */
   meetingKey: string
+  /** A screenshot of the screen now, while a call records (marked manual, always kept). None by default; Electron's keys only (no double taps). */
+  shotKey: string
+  /** While a call records, a screenshot every 4 s when the screen changed, beside the sound. Off by default. */
+  callShots: boolean
   /** The reminder that the others' consent is needed was shown once, before the first call recording. */
   callConsentSeen: boolean
   /** A known call program holding the microphone 10 s (callwatch.ts): nothing, a question, or a recording at once. Off by default. */
@@ -294,6 +298,8 @@ export const DEFAULTS: Settings = {
   practiceKey: '',
   talkKey: '',
   meetingKey: '',
+  shotKey: '',
+  callShots: false,
   callConsentSeen: false,
   callAuto: 'off',
   callPanelOffset: { dx: 0, dy: 0 },
@@ -504,6 +510,8 @@ export function normalize(raw: unknown, native = DEFAULTS.native): Settings {
     practiceKey: key(r.practiceKey, DEFAULTS.practiceKey),
     talkKey: key(r.talkKey, DEFAULTS.talkKey),
     meetingKey: key(r.meetingKey, DEFAULTS.meetingKey),
+    shotKey: key(r.shotKey, DEFAULTS.shotKey),
+    callShots: flag(r.callShots, DEFAULTS.callShots),
     callConsentSeen: flag(r.callConsentSeen, DEFAULTS.callConsentSeen),
     callAuto: CALL_AUTO.includes(r.callAuto as CallAuto) ? (r.callAuto as CallAuto) : DEFAULTS.callAuto,
     callPanelOffset: badgeOffset(r.callPanelOffset),

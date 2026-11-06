@@ -57,14 +57,19 @@ export class CallCapture {
     return Math.round(seconds + (this.state === 'recording' && at ? (Date.now() - at) / 1000 : 0))
   }
 
-  /** `auto`: started by itself (callwatch.ts); the panel says so and offers not to record. */
-  start(title: string, app?: string, auto = false): void {
+  /** `auto`: started by itself (callwatch.ts); the panel says so and offers not to record. `shots`: a screenshot every 4 s when the screen changed. */
+  start(title: string, app?: string, auto = false, shots = false): void {
     if (this.busy) return
     clearTimeout(this.hiding)
     this.state = 'starting'
     this.o.onChange()
-    this.send({ type: 'capture', command: 'start', title, ...(app ? { app } : {}), ...(auto ? { auto } : {}) })
+    this.send({ type: 'capture', command: 'start', title, ...(app ? { app } : {}), ...(auto ? { auto } : {}), ...(shots ? { shots } : {}) })
     this.show()
+  }
+
+  /** A screenshot now (the shot key), kept whatever it shows; only while the call records. */
+  shot(): void {
+    if (this.state === 'recording') this.send({ type: 'capture', command: 'shot' })
   }
 
   /** "Record the call?" on the panel, while nothing records; answered through `answered`. */
@@ -97,7 +102,12 @@ export class CallCapture {
     return done
   }
 
-  /** The page asks main for the computer's sound: only this window gets it, the screen's loopback sound with the screen (the page drops the picture). */
+  /**
+   * The page asks main for the computer's sound: only this window gets it, the screen's loopback sound with
+   * the whole screen, whose picture the page keeps for the screenshots. The call program's window alone is
+   * not given: a window source's title rarely names the program, a minimized one gives black frames, and
+   * whether the loopback sound comes with a window source on a Mac is not known.
+   */
   allowCapture(session: Session): void {
     session.setDisplayMediaRequestHandler((request, callback) => {
       const frame = request.frame

@@ -183,3 +183,46 @@ def test_exports_put_the_summary_on_top(tmp_path):
 def test_exports_without_a_summary_are_as_before():
     plain = {k: v for k, v in T.items() if k != "summary"}
     assert "Summary" not in export.to_md(plain) and "Summary" not in export.to_txt(plain)
+
+
+JPEG = b"\xff\xd8\xff\xe0frame"
+
+
+def test_screenshots_are_kept_beside_the_sound_and_listed_by_time(client, fake_sound):
+    started = client.post("/recordings", headers=KEY, json={"source": "system", "tracks": {"system": {"startedAt": 0}}})
+    id = started.json()["id"]
+    client.request("PUT", f"/recordings/{id}/system/0", headers=KEY, content=b"webm")
+    assert client.request("PUT", f"/recordings/{id}/shots/12000", headers=KEY, content=JPEG).status_code == 204
+    assert client.request("PUT", f"/recordings/{id}/shots/4000", headers=KEY, content=JPEG, params={"manual": "1"}).status_code == 204
+    # Not a JPEG, too large, a time out of range, no key, the extension's Origin: refused.
+    assert client.request("PUT", f"/recordings/{id}/shots/1", headers=KEY, content=b"png").status_code == 415
+    assert client.request("PUT", f"/recordings/{id}/shots/1", headers=KEY, content=b"\xff\xd8" + b"x" * (2 << 20)).status_code == 413
+    assert client.request("PUT", f"/recordings/{id}/shots/-1", headers=KEY, content=JPEG).status_code == 400
+    assert client.request("PUT", f"/recordings/{id}/shots/1", content=JPEG).status_code == 401
+    assert client.request("PUT", f"/recordings/{id}/shots/1", headers={"origin": engine.auth.EXTENSION_ORIGIN}, content=JPEG).status_code == 403
+    assert client.post(f"/recordings/{id}/finish", headers=KEY, json={}).status_code == 200
+    # The call has ended: no more.
+    assert client.request("PUT", f"/recordings/{id}/shots/20000", headers=KEY, content=JPEG).status_code == 409
+    store = engine.state.get_store()
+    worker()._transcribe(id, store.row(id))
+    t = store.transcript(id)
+    assert t["shots"] == [{"at": 4.0, "file": "4000-m.jpg", "manual": True}, {"at": 12.0, "file": "12000.jpg", "manual": False}]
+    got = client.get(f"/transcripts/{id}/shots/4000-m.jpg", headers=KEY)
+    assert got.status_code == 200 and got.content == JPEG
+    assert client.get(f"/transcripts/{id}/shots/..%2Fspeech.json", headers=KEY).status_code in (400, 404)
+    assert client.get(f"/transcripts/{id}/shots/audio.ogg", headers=KEY).status_code == 400
+    # A shot marked key by the summary's pass stays so when the call is transcribed again.
+    t["shots"][1]["key"] = True
+    store.save(id, t)
+    store.update(id, status="queued", job={"kind": "system", "task": "redo", "keepAudio": True,
+                                           "inputs": [{"path": str(store.folder(id) / "audio.ogg"), "track": "main", "offset": 0, "temp": False}]})
+    worker()._transcribe(id, store.row(id))
+    assert store.transcript(id)["shots"][1] == {"at": 12.0, "file": "12000.jpg", "manual": False, "key": True}
+    # Deleted with the recording.
+    assert client.request("DELETE", f"/transcripts/{id}", headers=KEY).status_code == 200
+    assert not (store.folder(id) / "shots").exists()
+
+
+def test_a_microphone_recording_takes_no_screenshots(client):
+    id = client.post("/recordings", headers=KEY, json={"source": "mic", "tracks": {"main": {"startedAt": 0}}}).json()["id"]
+    assert client.request("PUT", f"/recordings/{id}/shots/1", headers=KEY, content=JPEG).status_code == 409

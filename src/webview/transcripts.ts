@@ -10,6 +10,7 @@ import { formatDate, languageName, levelName, t } from '../i18n'
 import type { AppView } from '../protocol'
 import { SUMMARY_OWN_MAX } from '../settings'
 import type { SummaryTemplate } from '../summary'
+import { shownShots } from '../shots'
 import { secondsLeft, topicIn } from '../summaryflow'
 import { el, icon } from './dom'
 import { caps } from './keycaps'
@@ -452,7 +453,7 @@ function transcriptPage(v: AppView): HTMLElement[] {
     stopPlayer()
     return [head, progressCard(r)]
   }
-  return [head, actions(tr), ...notices(v, r, tr), summaryBlock(v, tr), speakersStrip(tr), utterances(tr), player(v, tr)].filter((n): n is HTMLElement => n !== null)
+  return [head, actions(tr), ...notices(v, r, tr), summaryBlock(v, tr), speakersStrip(tr), utterances(v, tr), player(v, tr)].filter((n): n is HTMLElement => n !== null)
 }
 
 function progressCard(r: Row): HTMLElement {
@@ -779,10 +780,38 @@ function speakerMenu(tr: Transcript, i: number, label: HTMLElement): void {
   window.setTimeout(() => document.addEventListener('click', () => menu.remove(), { once: true }))
 }
 
-function utterances(tr: Transcript): HTMLElement {
+/** A call's screenshot from the engine (main adds the key to the app window's requests), large on a click. */
+function shotImage(v: AppView, tr: Transcript, file: string): string {
+  return `http://127.0.0.1:${v.speech.port}/transcripts/${encodeURIComponent(tr.id)}/shots/${encodeURIComponent(file)}`
+}
+
+function showShot(src: string): void {
+  const close = () => (box.remove(), window.removeEventListener('keydown', esc, true))
+  const esc = (event: KeyboardEvent) => event.key === 'Escape' && (event.preventDefault(), event.stopPropagation(), close())
+  const box = el('div', { class: 'shotbig', onclick: close }, el('img', { src, alt: '' }))
+  window.addEventListener('keydown', esc, true)
+  document.body.append(box)
+}
+
+function utterances(v: AppView, tr: Transcript): HTMLElement {
   const many = Object.keys(tr.speakers).length > 1
   const list = el('div', { class: 'utts' })
+  // The screenshots go in at their time, each before the first line said after it.
+  const shots = shownShots(tr.shots)
+  let next = 0
+  const shotsUntil = (at: number) => {
+    const due = []
+    while (next < shots.length && shots[next]!.at < at) due.push(shots[next++]!)
+    if (due.length === 0) return
+    list.append(
+      el('div', { class: 'shots' }, ...due.map(s => {
+        const src = shotImage(v, tr, s.file)
+        return el('button', { class: 'shot', title: clock(s.at), onclick: () => showShot(src) }, el('img', { src, alt: '', loading: 'lazy' }))
+      })),
+    )
+  }
   tr.utterances.forEach((u: Utterance, i: number) => {
+    shotsUntil(u.start)
     const first = i === 0 || tr.utterances[i - 1]?.speaker !== u.speaker
     const text = el('div', {
       class: 'ut',
@@ -815,6 +844,7 @@ function utterances(tr: Transcript): HTMLElement {
       ),
     )
   })
+  shotsUntil(Infinity)
   return list
 }
 

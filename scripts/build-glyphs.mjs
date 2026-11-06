@@ -19,7 +19,7 @@ const NAMES = [
   // the tray panel (P1, 2026-10-30): an icon of its own on every row
   'pencil-line', 'monitor-speaker', 'scan-text', 'text-cursor', 'panel-bottom',
   // controls
-  'plus', 'x', 'minus', 'square', 'chevron-right', 'chevron-left', 'chevron-down', 'arrow-up', 'arrow-down',
+  'plus', 'x', 'minus', 'square', 'camera', 'chevron-right', 'chevron-left', 'chevron-down', 'arrow-up', 'arrow-down',
 ]
 
 const here = fileURLToPath(new URL('.', import.meta.url))

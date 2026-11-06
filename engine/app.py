@@ -70,7 +70,7 @@ import numpy as np
 import vocab
 
 from bench import Calibrator
-from jobs import Worker, finish_recording
+from jobs import SHOT_NAME, Worker, finish_recording
 from settings import ALL_MODELS, APP_DIR, Settings, adopt_altscribe, move_transcripts
 from store import Store, now_iso
 from stream import Session, Sessions
@@ -774,6 +774,41 @@ def start_recording(request: Request, body: dict = Body(...)):
     id = store.create(title, source, "recording", job)
     (store.folder(id) / "incoming").mkdir()
     return {"id": id}
+
+
+# A call's screenshot (capture.ts): a JPEG of 2 MB at most, while the call records; Kryakl's own, never the extension's.
+SHOT_MAX = 2 << 20
+SHOT_MS_MAX = 48 * 3600_000
+
+
+@app.put("/recordings/{id}/shots/{ms}")
+async def shot(id: str, ms: int, request: Request, manual: str = ""):
+    if by_extension(request):
+        raise HTTPException(403, "forbidden")
+    store = state.get_store()
+    row = store.row(id)
+    if row is None or row["status"] != "recording" or row["source"] != "system":
+        raise HTTPException(409, "The call has ended")
+    if not 0 <= ms < SHOT_MS_MAX:
+        raise HTTPException(400, "ms is the time from the start")
+    data = await body_within(request, SHOT_MAX)
+    if not data.startswith(b"\xff\xd8"):
+        raise HTTPException(415, "A JPEG is needed")
+    folder = store.folder(id) / "shots"
+    folder.mkdir(exist_ok=True)
+    (folder / f"{ms}{'-m' if truthy(manual) else ''}.jpg").write_bytes(data)
+    return Response(status_code=204)
+
+
+@app.get("/transcripts/{id}/shots/{file}")
+def get_shot(id: str, file: str):
+    if not SHOT_NAME.fullmatch(file):
+        raise HTTPException(400, "No such screenshot")
+    transcript_or_404(id)
+    path = state.get_store().folder(id) / "shots" / file
+    if not path.exists():
+        raise HTTPException(404, "No such screenshot")
+    return Response(path.read_bytes(), media_type="image/jpeg")
 
 
 @app.put("/recordings/{id}/{track}/{seq}")

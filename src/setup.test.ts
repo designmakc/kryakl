@@ -57,7 +57,7 @@ function view(profile: DeviceProfile, over: Partial<AppView> = {}): AppView {
       device: profile,
       plan,
       test: { offer: false, agreed: false, runs: 0 },
-      keysOk: { dictate: true, note: true, english: true, again: true, practice: true, talk: true, meeting: true },
+      keysOk: { dictate: true, note: true, english: true, again: true, practice: true, talk: true, meeting: true, shot: true },
     },
     call: { state: 'idle', seconds: 0 },
     summaries: {},

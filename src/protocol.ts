@@ -204,7 +204,7 @@ export type SpeechView = {
   /** The speed test: offered now (the person has not agreed, and something is still unmeasured), agreed once, models it would measure. */
   test: { offer: boolean; agreed: boolean; runs: number }
   /** The dictation keys are registered (false: another program holds one). */
-  keysOk: { dictate: boolean; note: boolean; english: boolean; again: boolean; practice: boolean; talk: boolean; meeting: boolean }
+  keysOk: { dictate: boolean; note: boolean; english: boolean; again: boolean; practice: boolean; talk: boolean; meeting: boolean; shot: boolean }
 }
 
 /**
@@ -409,8 +409,8 @@ export type ToView =
   /** The phrase is with the local model (text editing). */
   | { type: 'dictationEditing' }
   | { type: 'dictationError'; message: string }
-  /** The call recording's panel (capture.ts): record, under `title` (`app`: the call program running, for the engine), stop and save, pause or go on. */
-  | { type: 'capture'; command: 'start' | 'stop' | 'pause' | 'resume' | 'discard' | 'ask' | 'unask'; title?: string; app?: string; auto?: boolean }
+  /** The call recording's panel (capture.ts): record, under `title` (`app`: the call program running, for the engine; `shots`: a screenshot every 4 s when the screen changed), stop and save, pause or go on, take a screenshot now. */
+  | { type: 'capture'; command: 'start' | 'stop' | 'pause' | 'resume' | 'discard' | 'ask' | 'unask' | 'shot'; title?: string; app?: string; auto?: boolean; shots?: boolean }
   /** The tray's panel was just shown: focus its first command. */
   | { type: 'trayShown' }
   /** Kryakl's menu on one key: what it draws now. */
