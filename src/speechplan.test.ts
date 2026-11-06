@@ -199,4 +199,16 @@ describe('the numbers as said', () => {
     expect(cpuFactor(weakLaptop)).toBeCloseTo(1.98, 2)
     expect(cpuFactor(i9)).toBe(1)
   })
+  it('an Apple silicon Mac transcribes with turbo, not the tiny it happens to have, and dictates with Parakeet', () => {
+    for (const mac of [
+      { cpu: { name: 'Apple M1', cores: 6, threads: 8 }, ramGb: 8, gpus: [{ name: 'Apple M1 GPU', vendor: 'other' as const, vramMb: 0, driver: '' }], laptop: true, at: 1 },
+      { cpu: { name: 'Apple M2 Pro', cores: 8, threads: 10 }, ramGb: 16, gpus: [], laptop: true, at: 1 },
+    ]) {
+      for (const downloaded of [[], ['tiny'], ['tiny', 'parakeet-tdt-0.6b-v3']]) {
+        const plan = planSpeech(input({ profile: mac, downloaded, languages: ['ru', 'en'], previous: { transcripts: 'tiny' } }))
+        expect(plan.transcripts.chosen.model).toBe('large-v3-turbo')
+        expect(plan.dictation.chosen.model).toBe('parakeet-tdt-0.6b-v3')
+      }
+    }
+  })
 })

@@ -12,6 +12,7 @@ import {
   nextModelSpeed,
   nextVoiceSpeed,
   parseNvidiaSmi,
+  parseMac,
   parseWindows,
   quickProfile,
   saveModelSpeeds,
@@ -24,6 +25,17 @@ import { translationAdvice, type DeviceProfile } from './hardware'
 const base = { cpu: { name: 'node cpu', cores: 8, threads: 16 }, ramGb: 32, gpus: [], laptop: false, at: 0 }
 
 describe('device profile', () => {
+  it('reads a Mac from sysctl: Apple silicon cores, memory, a MacBook, the chip with no card memory', () => {
+    const text = ['machdep.cpu.brand_string: Apple M1', 'hw.physicalcpu: 8', 'hw.logicalcpu: 8', 'hw.memsize: 8589934592', 'hw.model: MacBookAir10,1', 'hw.perflevel0.physicalcpu: 4', 'hw.perflevel1.physicalcpu: 4'].join('\n')
+    const p = parseMac(text, base)
+    expect(p.cpu).toEqual({ name: 'Apple M1', cores: 6, threads: 8 })
+    expect(p.ramGb).toBe(8)
+    expect(p.laptop).toBe(true)
+    expect(p.gpus).toEqual([{ name: 'Apple M1 GPU', vendor: 'other', vramMb: 0, driver: '' }])
+    expect(translationAdvice(p).advised).toBe('fast')
+    // An Intel Mac: no perflevel keys, the physical cores as they are.
+    expect(parseMac('machdep.cpu.brand_string: Intel(R) Core(TM) i7\nhw.physicalcpu: 4\nhw.logicalcpu: 8\nhw.model: Macmini8,1', base)).toMatchObject({ cpu: { cores: 4, threads: 8 }, gpus: [], laptop: false })
+  })
   it('reads Windows: the real memory of each card from its driver key, not WMI’s 4 GB', () => {
     const answer = JSON.stringify({
       cpu: 'Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz',

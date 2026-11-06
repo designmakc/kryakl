@@ -258,13 +258,17 @@ function decide(feature: Feature, device: Device, input: PlanInput): FeaturePlan
   if (usable.length === 0) return pick(choices[0]!)
   const words = (c: Choice) => (feature === 'dictation' ? c.estimate : c.estimate - (input.speakers ? 60 * speakersRtf(input) : 0) - 60 * OVERHEAD_RTF)
   const fits = usable.filter(c => c.fits)
-  const kept = usable.find(c => c.model === input.previous?.[feature] && c.downloaded && words(c) <= budget * KEEP)
+  const first = fits.find(c => c.mb <= AUTO_DOWNLOAD_MB)
+  // A rough model (tiny, base) that happens to be here does not hold a recording back from a much
+  // better one within the budget that downloads by itself (2026-11-06: a Mac kept transcribing calls
+  // with tiny, its only Whisper, while turbo fitted and Parakeet dictated better).
+  const settled = (c: Choice) => rankOf(c.model) > 2 || !first || rankOf(first.model) <= 2
+  const kept = usable.find(c => c.model === input.previous?.[feature] && c.downloaded && words(c) <= budget * KEEP && settled(c))
   const best = fits[0]
-  const here = fits.find(c => c.downloaded)
+  const here = fits.find(c => c.downloaded && settled(c))
   if (kept && (!here || rankOf(here.model) <= rankOf(kept.model))) return pick(kept, false, best && best !== kept && !best.downloaded && rankOf(best.model) > rankOf(kept.model) ? best : undefined)
   if (here) return pick(here, false, best && best !== here ? best : undefined)
   // Nothing within the budget is here yet: the best that downloads by itself (a big one is only offered).
-  const first = fits.find(c => c.mb <= AUTO_DOWNLOAD_MB)
   if (first) return pick(first, false, best && best !== first ? best : undefined)
   if (best) return pick(best)
   // Nothing within the budget: the quickest, with its honest time.

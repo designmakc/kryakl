@@ -178,9 +178,46 @@ function nvidiaSmi(): Promise<string> {
   return ask('name,memory.total,driver_version,compute_cap').then(text => text || ask('name,memory.total,driver_version'))
 }
 
-/** This computer as Windows and NVIDIA's driver describe it; what Node knows when they do not answer. */
+const SYSCTL_KEYS = ['machdep.cpu.brand_string', 'hw.physicalcpu', 'hw.logicalcpu', 'hw.memsize', 'hw.model', 'hw.perflevel0.physicalcpu', 'hw.perflevel1.physicalcpu']
+
+/**
+ * A Mac as sysctl describes it (`sysctl` with SYSCTL_KEYS, "key: value" lines). The graphics is
+ * Apple's chip, sharing the computer's memory and no CUDA, so it is named and counted as no card's
+ * memory: speech and the models run on the processor.
+ */
+export function parseMac(text: string, base: DeviceProfile = quickProfile()): DeviceProfile {
+  const v: Record<string, string> = {}
+  for (const line of text.split(/\r?\n/)) {
+    const at = line.indexOf(':')
+    if (at > 0) v[line.slice(0, at).trim()] = line.slice(at + 1).trim()
+  }
+  const n = (key: string) => Number(v[key]) || 0
+  const threads = n('hw.logicalcpu') || base.cpu.threads
+  // ponytail: an efficiency core counted as half a performance core (an M1's 4 + 4 as 6), a guess
+  // for cpuFactor; the speed test (POST /calibrate) replaces it with this Mac's own numbers.
+  const p = n('hw.perflevel0.physicalcpu')
+  const cores = p ? p + Math.floor(n('hw.perflevel1.physicalcpu') / 2) : n('hw.physicalcpu') || base.cpu.cores
+  const name = v['machdep.cpu.brand_string'] || base.cpu.name
+  return {
+    cpu: { name, cores, threads },
+    ramGb: n('hw.memsize') ? Math.round(n('hw.memsize') / 2 ** 30) : base.ramGb,
+    gpus: /^apple/i.test(name) ? [{ name: `${name} GPU`, vendor: 'other', vramMb: 0, driver: '' }] : [],
+    laptop: /^macbook/i.test(v['hw.model'] ?? ''),
+    at: Date.now(),
+  }
+}
+
+function sysctl(): Promise<string> {
+  return new Promise(resolve =>
+    // Unknown keys (perflevel on an Intel Mac) are skipped by -i; the known ones still answer.
+    execFile('/usr/sbin/sysctl', ['-i', ...SYSCTL_KEYS], { timeout: 10_000 }, (_error, stdout) => resolve(stdout ?? '')),
+  )
+}
+
+/** This computer as Windows and NVIDIA's driver (or a Mac's sysctl) describe it; what Node knows when they do not answer. */
 export async function probeDevice(): Promise<DeviceProfile> {
   const base = quickProfile()
+  if (process.platform === 'darwin') return parseMac(await sysctl(), base)
   if (process.platform !== 'win32') return base
   let profile = base
   try {
