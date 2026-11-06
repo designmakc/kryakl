@@ -410,7 +410,7 @@ export type ToView =
   | { type: 'dictationEditing' }
   | { type: 'dictationError'; message: string }
   /** The call recording's panel (capture.ts): record, under `title` (`app`: the call program running, for the engine), stop and save, pause or go on. */
-  | { type: 'capture'; command: 'start' | 'stop' | 'pause' | 'resume'; title?: string; app?: string }
+  | { type: 'capture'; command: 'start' | 'stop' | 'pause' | 'resume' | 'discard' | 'ask' | 'unask'; title?: string; app?: string; auto?: boolean }
   /** The tray's panel was just shown: focus its first command. */
   | { type: 'trayShown' }
   /** Kryakl's menu on one key: what it draws now. */
@@ -578,6 +578,8 @@ export type ToHost =
   | { type: 'captureDone'; id: string | null; lost: number }
   | { type: 'captureHide' }
   | { type: 'captureOpenSettings' }
+  /** The question "Record the call?" answered (callAuto 'ask'). */
+  | { type: 'captureAnswer'; record: boolean }
   /** From the app window's Recordings page: a call recording started, or stopped and saved. */
   | { type: 'toggleCall' }
   /** Makes (or makes again) a transcript's summary; main saves it in the engine. */

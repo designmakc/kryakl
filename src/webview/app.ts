@@ -21,7 +21,7 @@ import { DOUBLE_MS, HotkeyRecorder, hotkeyLabel, onMac, type Recorded } from '..
 import type { AppTab, AppView, DiffPart, Feature, KeyboardLayout, MistakeEntry, SavedWord, Settings, StorageId, StoragePart, StorageView, ToView, TutorHost } from '../protocol'
 import { LANGUAGES } from '../languages'
 import { translationAdvice, type LevelFit } from '../hardware'
-import { COPY_TWICE_KEYS, DEFAULTS, EDIT_OWN_MAX, EDIT_STYLES, keptForm, myLanguages, RATES, SUMMARY_OWN_MAX, SWITCH_SOUNDS, TALK_ABOUT_MAX, TALK_LEVELS, type AppRule, type LlmModel, type TalkLevel, type ThemeMode, type TranslationLevel } from '../settings'
+import { COPY_TWICE_KEYS, DEFAULTS, EDIT_OWN_MAX, EDIT_STYLES, keptForm, myLanguages, RATES, SUMMARY_OWN_MAX, SWITCH_SOUNDS, TALK_ABOUT_MAX, TALK_LEVELS, type AppRule, type CallAuto, type LlmModel, type TalkLevel, type ThemeMode, type TranslationLevel } from '../settings'
 import type { AppPart } from '../typist'
 // app.ts has a languageName of its own (a code's English name); the interface's is langName here.
 import { formatDate, languageName as langName, levelName, setUiLanguage, t, uiLanguage, type Key } from '../i18n'
@@ -2529,6 +2529,7 @@ function recordingsPage(v: AppView): HTMLElement[] {
     ...(offer.length ? [grp(t('dictate.engine')), ...offer] : []),
     testOffer(v),
     installed(v) ? callRow(v) : null,
+    installed(v) ? callAutoRow(v) : null,
     keyRow('meetingKey', t('call.record'), t('call.keyNote'), !v.speech.keysOk.meeting),
     ...summarySettings(v),
     ...(running(v) ? [grp(t('transcribe.new')), ...newRows(v)] : []),
@@ -2545,6 +2546,16 @@ function callRow(v: AppView): HTMLElement {
   const on = v.call.state !== 'idle'
   const label = on ? t('call.stop') : t('call.record')
   return row(t('call.record'), [t('call.recordNote')], btn([el('i', { class: on ? 'dot pulse' : 'dot' }), label], () => post({ type: 'toggleCall' }), on ? 'primary' : 'rec'))
+}
+
+/** A known call program on the microphone: nothing, a question, or a recording at once (callwatch.ts). */
+function callAutoRow(v: AppView): HTMLElement {
+  const names: [CallAuto, string][] = [
+    ['off', t('call.autoOff')],
+    ['ask', t('call.autoAsk')],
+    ['record', t('call.autoRecord')],
+  ]
+  return card('sparkles', t('call.auto'), [t('call.autoNote')], select(v.settings.callAuto, names, callAuto => save({ callAuto })))
 }
 
 /** What a call's summary does by itself: made right away or not, the template, the language. */

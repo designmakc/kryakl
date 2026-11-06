@@ -39,6 +39,10 @@ let micMissing = false
 let silent = false
 let heard = false
 let error = ''
+/** Started by itself (callwatch.ts): the panel says so and offers not to record. */
+let auto = false
+/** "Record the call?" asked for this program, while nothing records. */
+let asking: string | null = null
 /** Seconds recorded before the last pause, and since when the time runs again. */
 let before = 0
 let since = 0
@@ -75,7 +79,23 @@ function button(icon: Parameters<typeof lucide>[0], label: string, onclick: () =
   return el('button', { class: `pb ${cls}`, title: label, 'aria-label': label, onclick }, lucide(icon, 's'))
 }
 
+const link = (label: string, onclick: () => void) => el('button', { class: 'link', onclick }, label)
+
+function answer(record: boolean): void {
+  asking = null
+  post({ type: 'captureAnswer', record })
+  draw()
+}
+
 function draw(): void {
+  if (asking && state === 'idle') {
+    root.className = 'panel asking'
+    root.replaceChildren(
+      el('div', { class: 'line' }, el('i', { class: 'dot still' }), el('span', { class: 'what' }, t('call.askTitle')), el('span', { class: 'gap' }), button('chevron-down', t('call.hide'), () => post({ type: 'captureHide' }), 'tuck')),
+      el('div', { class: 'note' }, t('call.askNote', { app: asking }), link(t('call.askRecord'), () => answer(true)), link(t('call.askLater'), () => answer(false))),
+    )
+    return
+  }
   const busy = state === 'starting' || state === 'stopping'
   const head = el(
     'div',
@@ -98,7 +118,9 @@ function draw(): void {
       ? el('div', { class: 'note warn' }, t('call.silent'))
       : micMissing
         ? el('div', { class: 'note warn' }, t('call.noMic'))
-        : el('div', { class: 'note' }, busy ? '' : t('call.allSound'))
+        : auto && state !== 'stopping'
+          ? el('div', { class: 'note' }, t('call.autoStarted'), link(t('call.dontRecord'), () => void discard()))
+          : el('div', { class: 'note' }, busy ? '' : t('call.allSound'))
   root.className = `panel ${state}`
   root.replaceChildren(head, note)
 }
@@ -112,8 +134,10 @@ async function computerSound(): Promise<MediaStream> {
   return new MediaStream(audio)
 }
 
-async function start(title: string, app?: string): Promise<void> {
+async function start(title: string, app?: string, byItself = false): Promise<void> {
   if (state !== 'idle') return
+  asking = null
+  auto = byItself
   error = ''
   micMissing = false
   silent = false
@@ -216,14 +240,14 @@ function resume(): void {
 const stopped = (recorder: MediaRecorder) =>
   recorder.state === 'inactive' ? Promise.resolve() : new Promise<void>(resolve => (recorder.addEventListener('stop', () => resolve(), { once: true }), recorder.stop()))
 
-/** Stops both tracks, sends what is left and hands the recording to the engine; says its id and the chunks lost. */
-async function stop(): Promise<void> {
+/** Stops both tracks, sends what is left and hands the recording to the engine; says its id and the chunks lost. `drop`: deleted instead, nothing transcribed. */
+async function stop(drop = false): Promise<void> {
   if (state === 'starting') {
     // Started still: it stops as soon as it records.
     const wait = window.setInterval(() => {
       if (state === 'starting') return
       window.clearInterval(wait)
-      void stop()
+      void stop(drop)
     }, 200)
     return
   }
@@ -240,18 +264,36 @@ async function stop(): Promise<void> {
   void meter?.context.close()
   meter = undefined
   tracks = []
-  const finished = await speech('POST', `/recordings/${id}/finish`, { lost })
-  if (!finished.ok) console.warn(`call: the engine did not take the recording (${finished.status ?? ''})`)
-  post({ type: 'captureDone', id: finished.ok ? (id ?? null) : null, lost })
+  auto = false
+  if (drop) {
+    // The engine deletes a recording only while it is still recording: before any finish.
+    const gone = await speech('DELETE', `/recordings/${id}`)
+    if (!gone.ok) console.warn(`call: the engine did not delete the recording (${gone.status ?? ''})`)
+    post({ type: 'captureDone', id: null, lost: 0 })
+  } else {
+    const finished = await speech('POST', `/recordings/${id}/finish`, { lost })
+    if (!finished.ok) console.warn(`call: the engine did not take the recording (${finished.status ?? ''})`)
+    post({ type: 'captureDone', id: finished.ok ? (id ?? null) : null, lost })
+  }
   id = undefined
   set('idle')
 }
 
+const discard = () => stop(true)
+
 window.addEventListener('message', event => {
   const message = event.data as ToView
   if (event.source !== window || message?.type !== 'capture') return
-  if (message.command === 'start') void start(message.title ?? '', message.app)
+  if (message.command === 'start') void start(message.title ?? '', message.app, !!message.auto)
   else if (message.command === 'stop') void stop()
+  else if (message.command === 'discard') void discard()
+  else if (message.command === 'ask') {
+    asking = message.app ?? ''
+    draw()
+  } else if (message.command === 'unask') {
+    asking = null
+    draw()
+  }
   else if (message.command === 'pause') pause()
   else if (message.command === 'resume') resume()
 })

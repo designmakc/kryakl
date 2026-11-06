@@ -31,11 +31,16 @@ const CALL_APPS: Record<string, string> = {
 export function callApp(processNames: string[]): string | null {
   const found = new Set<string>()
   for (const name of processNames) {
-    const own = (name.trim().split(/[\\/]/).pop() ?? '').toLowerCase().replace(/\.exe$/, '')
-    const app = CALL_APPS[own]
+    const app = appOf(name)
     if (app) found.add(app)
   }
   return found.size === 1 ? [...found][0]! : null
+}
+
+/** The call program a process is (by its path or name), or null. */
+export function appOf(processName: string): string | null {
+  const own = (processName.trim().split(/[\\/]/).pop() ?? '').toLowerCase().replace(/\.exe$/, '')
+  return CALL_APPS[own] ?? null
 }
 
 /** "Call 6 November 14:30", or "Zoom · 6 November 14:30", in the interface's language. */

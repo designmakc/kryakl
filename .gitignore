@@ -17,4 +17,5 @@ site/ru/
 vendor/ocr-mac
 vendor/clip-mac
 vendor/kbd-mac
+vendor/mic-mac
 .autopilot/serve.*

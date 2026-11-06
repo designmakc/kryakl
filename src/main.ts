@@ -41,6 +41,8 @@ import { app, BrowserWindow, clipboard, desktopCapturer, dialog, globalShortcut,
 import { backupSummary, makeBackup, readBackup, type BackupRead } from './backup'
 import { callAllowed, messageAllowed, openable, pageOf, patchAllowed, type Page } from './bridge'
 import { callApp, callTitle, runningProcessNames } from './callapps'
+import { answer as answerCall, idleWatch, keepRecording, step as stepCall, type CallAct, type MicUser } from './callwatch'
+import { watchMic } from './micwatch'
 import { CallCapture } from './capture'
 import { createChecker, type Checker } from './checker'
 import { createSummarizer, type SummaryTemplate } from './summary'
@@ -486,6 +488,7 @@ function saveSettings(patch: Partial<Settings>): void {
   // The speech models are chosen from these (speechplan.ts), and the words to spell go with the plan: sent to the engine again.
   if (speech && (['native', 'speechPrefer', 'dictationModel', 'transcriptsModel', 'speechTestAgreed', 'vocabulary'] as const).some(k => k in patch)) speech.replan()
   if ('talkOnTop' in patch) talkWin?.setAlwaysOnTop(settings.talkOnTop)
+  if ('callAuto' in patch) void callAutoChanged()
   refreshTray()
   if (shown) postCard()
   postApp()
@@ -3225,29 +3228,84 @@ async function screenAllowed(): Promise<boolean> {
   return false
 }
 
-/** Starts a call recording, once the others' consent was mentioned and the system lets Kryakl have the sound; named after the call program running, if one is. */
-export async function startCall(): Promise<void> {
+/** The reminder that the others must agree to be recorded, once: before the first recording, or when recording by itself is turned on. */
+async function consentOnce(): Promise<boolean> {
+  if (settings.callConsentSeen) return true
+  const { response } = await dialog.showMessageBox({
+    type: 'info',
+    title: t('app.name'),
+    message: t('call.consentAsk'),
+    detail: t('call.consentDetail'),
+    buttons: [t('call.consentRecord'), t('common.cancel')],
+    defaultId: 0,
+    cancelId: 1,
+  })
+  if (response !== 0) return false
+  saveSettings({ callConsentSeen: true })
+  return true
+}
+
+/** Starts a call recording, once the others' consent was mentioned and the system lets Kryakl have the sound; named after the call program running, if one is. `auto`: started by itself for this call (callwatch.ts). */
+export async function startCall(auto?: { app: string; title: string | null }): Promise<void> {
   if (!capture || capture.busy) return
   // No engine to record into: its page offers it.
   if (!speech?.installed) return openApp('recordings')
-  if (!settings.callConsentSeen) {
-    const { response } = await dialog.showMessageBox({
-      type: 'info',
-      title: t('app.name'),
-      message: t('call.consentAsk'),
-      detail: t('call.consentDetail'),
-      buttons: [t('call.consentRecord'), t('common.cancel')],
-      defaultId: 0,
-      cancelId: 1,
-    })
-    if (response !== 0) return
-    saveSettings({ callConsentSeen: true })
-  }
+  if (!(await consentOnce())) return
   if (!(await screenAllowed())) return
   // Without the microphone the others are still recorded (the panel says so).
   if (onMac) await systemPreferences.askForMediaAccess('microphone').catch(() => false)
-  const known = callApp(await runningProcessNames())
-  capture.start(callTitle(known, new Date()), known ?? undefined)
+  const known = auto?.app ?? callApp(await runningProcessNames())
+  capture.start(auto?.title ?? callTitle(known, new Date()), known ?? undefined, !!auto)
+}
+
+// ---------------------------------------------------------------- a call that starts by itself
+
+let callWatch = idleWatch()
+let stopMicWatch: (() => void) | undefined
+
+/** Watches the microphone while `callAuto` is on; turned on, the consent reminder (once) and, on a Mac, the screen's permission first. */
+async function callAutoChanged(): Promise<void> {
+  if (settings.callAuto !== 'off' && !(await consentOnce())) return saveSettings({ callAuto: 'off' })
+  if (settings.callAuto !== 'off') await screenAllowed()
+  applyCallAuto()
+}
+
+function applyCallAuto(): void {
+  const want = settings.callAuto !== 'off' && (onMac || process.platform === 'win32')
+  if (want && !stopMicWatch) {
+    stopMicWatch = watchMic(onMac ? unpacked('vendor', 'mic-mac') : undefined, onMicUsers, log)
+    log(`call watch: on (${settings.callAuto})`)
+  } else if (!want && stopMicWatch) {
+    stopMicWatch()
+    stopMicWatch = undefined
+    callWatch = idleWatch()
+    log('call watch: off')
+  }
+}
+
+function onMicUsers(users: MicUser[] | null): void {
+  if (!capture) return
+  const blocked = settings.paused || !speech?.installed || dictation?.state !== 'idle' || micRecording || !!speech?.meeting
+  const [next, act] = stepCall(callWatch, { users, now: Date.now(), mode: settings.callAuto, blocked, recording: capture.busy, own: { pid: process.pid, exe: process.execPath } })
+  callWatch = next
+  callAct(act)
+}
+
+/** What the watch decided; only the program's name and numbers are logged, never a window's title. */
+function callAct(act: CallAct): void {
+  if (!capture || act.do === 'none') return
+  log(`call watch: ${act.do}${'app' in act ? ` (${act.app})` : ''}`)
+  if (act.do === 'start') void startCall({ app: act.app, title: act.title })
+  else if (act.do === 'ask') capture.ask(act.app)
+  else if (act.do === 'unask') capture.unask()
+  else if (act.do === 'stop') {
+    const seconds = capture.seconds
+    if (keepRecording(seconds)) void stopCall()
+    else {
+      log(`call watch: ${seconds} s only, deleted`)
+      void capture.discard()
+    }
+  }
 }
 
 /** Stops and saves the call: its transcript's id once the engine has it, null when there was none. */
@@ -4020,9 +4078,15 @@ function start(): void {
     },
     finish: id => speech.call('POST', `/recordings/${id}/finish`, {}),
     openSettings: openScreenSettings,
+    answered: record => {
+      const [next, act] = answerCall(callWatch, record, Date.now())
+      callWatch = next
+      callAct(act)
+    },
     log,
   })
   capture.allowCapture(session.defaultSession)
+  applyCallAuto()
   // Asleep, the computer's sound and the microphone stop: what was recorded is saved now.
   powerMonitor.on('suspend', () => {
     if (capture?.busy) void stopCall()
@@ -4112,7 +4176,7 @@ if (!theOnlyOne) {
       ['shortcuts', () => globalShortcut.unregisterAll()],
       ['speech', () => speech?.dispose()],
       ['dictation', () => dictation?.dispose()],
-      ['call', () => capture?.dispose()],
+      ['call', () => (stopMicWatch?.(), capture?.dispose())],
       ['clipboard', () => stopWatching?.()],
       ['voice', () => natural?.dispose()],
       ['translator', () => translator?.dispose()],

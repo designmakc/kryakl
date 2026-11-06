@@ -10,6 +10,10 @@ import type { Prefer } from './speechplan'
 import type { SummaryTemplate } from './summary'
 import type { AppPart } from './typist'
 
+/** A call recording by itself (callwatch.ts): off, asked, or at once. */
+export type CallAuto = 'off' | 'ask' | 'record'
+const CALL_AUTO: readonly CallAuto[] = ['off', 'ask', 'record']
+
 /** A program by its .exe name (lower case): the parts of the keyboard helper left out there, and the layout it starts in ('' for none). */
 export type AppRule = { exe: string; off: AppPart[]; layout: string }
 
@@ -156,6 +160,8 @@ export type Settings = {
   meetingKey: string
   /** The reminder that the others' consent is needed was shown once, before the first call recording. */
   callConsentSeen: boolean
+  /** A known call program holding the microphone 10 s (callwatch.ts): nothing, a question, or a recording at once. Off by default. */
+  callAuto: CallAuto
   /** Where the call panel sits, as `dictationBadge` (its own place, not the badge's). */
   callPanelOffset: { dx: number; dy: number }
   /** A recorded call's summary is made as soon as it is transcribed, when the model is downloaded. */
@@ -289,6 +295,7 @@ export const DEFAULTS: Settings = {
   talkKey: '',
   meetingKey: '',
   callConsentSeen: false,
+  callAuto: 'off',
   callPanelOffset: { dx: 0, dy: 0 },
   callSummaryAuto: true,
   callTemplate: 'general',
@@ -498,6 +505,7 @@ export function normalize(raw: unknown, native = DEFAULTS.native): Settings {
     talkKey: key(r.talkKey, DEFAULTS.talkKey),
     meetingKey: key(r.meetingKey, DEFAULTS.meetingKey),
     callConsentSeen: flag(r.callConsentSeen, DEFAULTS.callConsentSeen),
+    callAuto: CALL_AUTO.includes(r.callAuto as CallAuto) ? (r.callAuto as CallAuto) : DEFAULTS.callAuto,
     callPanelOffset: badgeOffset(r.callPanelOffset),
     callSummaryAuto: flag(r.callSummaryAuto, DEFAULTS.callSummaryAuto),
     callTemplate: SUMMARY_TEMPLATES.includes(r.callTemplate as SummaryTemplate) ? (r.callTemplate as SummaryTemplate) : DEFAULTS.callTemplate,

@@ -85,7 +85,7 @@ const TALK_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>([
 const MENU_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>(['menuReady', 'menuHeight', 'menuHover', 'menuPick'])
 
 /** Messages only the call recording's panel sends, and the only ones it may: how its recording goes. */
-const CAPTURE_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>(['captureState', 'captureDone', 'captureHide', 'captureOpenSettings'])
+const CAPTURE_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>(['captureState', 'captureDone', 'captureHide', 'captureOpenSettings', 'captureAnswer'])
 
 export function messageAllowed(page: Page, type: string): boolean {
   if (page === 'other') return false

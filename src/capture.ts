@@ -27,10 +27,12 @@ export type CaptureOptions = {
   finish: (id: string) => Promise<unknown>
   /** The person asked for the system's settings from the panel. */
   openSettings: () => void
+  /** "Record the call?" answered on the panel. */
+  answered: (record: boolean) => void
   log: (line: string) => void
 }
 
-type CaptureMessage = Extract<ToHost, { type: 'captureState' | 'captureDone' | 'captureHide' | 'captureOpenSettings' }>
+type CaptureMessage = Extract<ToHost, { type: 'captureState' | 'captureDone' | 'captureHide' | 'captureOpenSettings' | 'captureAnswer' }>
 
 export class CallCapture {
   state: CallState = 'idle'
@@ -55,13 +57,36 @@ export class CallCapture {
     return Math.round(seconds + (this.state === 'recording' && at ? (Date.now() - at) / 1000 : 0))
   }
 
-  start(title: string, app?: string): void {
+  /** `auto`: started by itself (callwatch.ts); the panel says so and offers not to record. */
+  start(title: string, app?: string, auto = false): void {
     if (this.busy) return
     clearTimeout(this.hiding)
     this.state = 'starting'
     this.o.onChange()
-    this.send({ type: 'capture', command: 'start', title, ...(app ? { app } : {}) })
+    this.send({ type: 'capture', command: 'start', title, ...(app ? { app } : {}), ...(auto ? { auto } : {}) })
     this.show()
+  }
+
+  /** "Record the call?" on the panel, while nothing records; answered through `answered`. */
+  ask(app: string): void {
+    if (this.busy) return
+    clearTimeout(this.hiding)
+    this.send({ type: 'capture', command: 'ask', app })
+    this.show()
+  }
+
+  /** The call ended unanswered: the question goes. */
+  unask(): void {
+    this.send({ type: 'capture', command: 'unask' })
+    if (!this.busy) this.hideSoon(0)
+  }
+
+  /** Stops and deletes the recording, nothing transcribed (an auto-started one under a minute). */
+  discard(): Promise<void> {
+    if (!this.busy) return Promise.resolve()
+    const done = new Promise<void>(resolve => this.stopped.push(() => resolve()))
+    this.send({ type: 'capture', command: 'discard' })
+    return done
   }
 
   /** Stops and saves; the transcript's id once the engine has it, null when nothing was recorded. */
@@ -124,6 +149,11 @@ export class CallCapture {
         return
       case 'captureOpenSettings':
         this.o.openSettings()
+        return
+      case 'captureAnswer':
+        this.o.log(`call: asked, ${m.record ? 'record' : 'not now'}`)
+        if (!m.record) this.hideSoon(0)
+        this.o.answered(m.record)
         return
     }
   }
