@@ -207,6 +207,8 @@ const LINKS = new Set([
   'https://huggingface.co/join',
   'https://huggingface.co/pyannote/speaker-diarization-community-1',
   'https://huggingface.co/settings/tokens',
+  // A Mac's Accessibility settings, for the keyboard helper's tap (the Keyboard layout page).
+  'x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility',
 ])
 
 /** The settings that are Dictate's keys (and Talk's, which listens as dictation does): registered only once the speech engine is installed. */
@@ -2908,8 +2910,6 @@ function registerShortcuts(): void {
   const register = (accelerator: string, run: () => void): boolean => {
     if (!accelerator) return true
     if (!isAccelerator(accelerator)) {
-      // A Mac has no keyboard thread to hold it (a double tap, a mouse button, a lone modifier).
-      if (onMac) log(`keys: ${accelerator} is not a key a Mac can hold, skipped`)
       return true
     }
     try {

@@ -1210,6 +1210,8 @@ export const en = {
   'kb.rivals': { one: '{names} is running: turn off its layout switching, or words get fixed twice.', other: '{names} are running: turn off its layout switching, or words get fixed twice.' },
   'kb.elevated': '{app} runs as administrator: Windows keeps its keys from Kryakl, so nothing is fixed or switched there.',
   'kb.trouble': 'The keyboard helper: {trouble}',
+  'kb.macAccess': 'To fix and switch layouts, Kryakl needs Accessibility: System Settings › Privacy & Security › Accessibility, turn Kryakl on.',
+  'kb.macAccessOpen': 'Open Accessibility settings',
   'kb.windowsOnly': 'The keyboard layout features (switching and fixing) are Windows-only for now.',
   'kb.privacy': 'Kryakl reads your keystrokes only to fix the layout, and sends nothing anywhere. It keeps only the words it learned, on this computer.',
   'words.noSuch': 'No such word.',

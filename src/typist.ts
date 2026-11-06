@@ -108,6 +108,16 @@ export const UNLEARNED_APPS: ReadonlySet<string> = new Set([
   'enpass.exe',
   'dashlane.exe',
   'proton pass.exe',
+  // A Mac's, by the program's own name.
+  'terminal',
+  'iterm2',
+  'ghostty',
+  'alacritty',
+  'kitty',
+  'wezterm-gui',
+  '1password',
+  'bitwarden',
+  'keepassxc',
 ])
 
 /** The keys that start and stop a dictation; the menu's starts one from its items. */
