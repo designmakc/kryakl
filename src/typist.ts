@@ -67,6 +67,7 @@ export type KeyAction =
   | 'again'
   | 'practice'
   | 'talk'
+  | 'meeting'
   | 'pause'
   | 'window'
   | 'menu'

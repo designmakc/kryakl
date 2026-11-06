@@ -9,9 +9,9 @@ import * as path from 'node:path'
 
 import type { HostCall, ToHost } from './protocol'
 
-export type Page = 'app' | 'card' | 'tray' | 'dictation' | 'talk' | 'menu' | 'other'
+export type Page = 'app' | 'card' | 'tray' | 'dictation' | 'talk' | 'menu' | 'capture' | 'other'
 
-const PAGES: Record<string, Page> = { 'app.html': 'app', 'card.html': 'card', 'tray.html': 'tray', 'dictation.html': 'dictation', 'talk.html': 'talk', 'menu.html': 'menu' }
+const PAGES: Record<string, Page> = { 'app.html': 'app', 'card.html': 'card', 'tray.html': 'tray', 'dictation.html': 'dictation', 'talk.html': 'talk', 'menu.html': 'menu', 'capture.html': 'capture' }
 
 /** The page a window shows, by its file (media/<page>.html, with or without a query); 'other' for anything else. */
 export function pageOf(url: string): Page {
@@ -57,6 +57,7 @@ const APP_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>([
   'openLink',
   'micRecording',
   'talkOpen',
+  'toggleCall',
   'reportProblem',
   'openLogs',
   // The keyboard thread keeps every key from Windows while a key field waits: only the settings may ask.
@@ -81,10 +82,15 @@ const TALK_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>([
 /** Messages only the menu on one key sends, and the only ones it may: it is drawn over any program, so it asks for nothing but its own items. */
 const MENU_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>(['menuReady', 'menuHeight', 'menuHover', 'menuPick'])
 
+/** Messages only the call recording's panel sends, and the only ones it may: how its recording goes. */
+const CAPTURE_ONLY: ReadonlySet<ToHost['type']> = new Set<ToHost['type']>(['captureState', 'captureDone', 'captureHide', 'captureOpenSettings'])
+
 export function messageAllowed(page: Page, type: string): boolean {
   if (page === 'other') return false
   if (MENU_ONLY.has(type as ToHost['type'])) return page === 'menu'
   if (page === 'menu') return false
+  if (CAPTURE_ONLY.has(type as ToHost['type'])) return page === 'capture'
+  if (page === 'capture') return false
   if (TALK_ONLY.has(type as ToHost['type'])) return page === 'talk'
   // The talk window listens too: the tray shows the red dot meanwhile.
   if (type === 'micRecording') return page === 'app' || page === 'talk'
@@ -113,11 +119,13 @@ function reached(route: string): string {
   }
 }
 
-/** The dictation badge dictates and records a note; the talk window only dictates; the app window does everything; the others call nothing. */
+/** The dictation badge dictates and records a note; the call panel only records; the app window does everything; the others call nothing. */
 export function callAllowed(page: Page, request: HostCall): boolean {
   if (page === 'app') return true
   const dictating = /^\/(dictate|recordings)([/?]|$)/
   if (page === 'dictation') return request.call === 'speech' && dictating.test(request.route) && dictating.test(reached(request.route))
+  const recording = /^\/recordings([/?]|$)/
+  if (page === 'capture') return request.call === 'speech' && recording.test(request.route) && recording.test(reached(request.route))
   const hearing = /^\/dictate([/?]|$)/
   if (page === 'talk') return request.call === 'speech' && hearing.test(request.route) && hearing.test(reached(request.route))
   return false

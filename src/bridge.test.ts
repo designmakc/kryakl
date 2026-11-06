@@ -129,3 +129,25 @@ describe('what a page may open with the system', () => {
     ).toBe(false)
   })
 })
+
+describe('the call recording\'s panel', () => {
+  test('is a page of its own, the only one that says how its recording goes', () => {
+    expect(pageOf(at('capture.html'))).toBe('capture')
+    for (const type of ['captureState', 'captureDone', 'captureHide', 'captureOpenSettings']) {
+      expect(messageAllowed('capture', type), type).toBe(true)
+      for (const page of ['app', 'card', 'tray', 'dictation', 'talk', 'menu'] as const) expect(messageAllowed(page, type), `${page} ${type}`).toBe(false)
+    }
+    for (const type of ['saveSettings', 'openLink', 'copyText', 'installSpeech', 'micRecording']) expect(messageAllowed('capture', type), type).toBe(false)
+  })
+  test('reaches the engine\'s recordings and nothing else', () => {
+    expect(callAllowed('capture', { call: 'speech', method: 'POST', route: '/recordings' })).toBe(true)
+    expect(callAllowed('capture', { call: 'speech', method: 'PUT', route: '/recordings/abc/system/3' })).toBe(true)
+    expect(callAllowed('capture', { call: 'speech', method: 'POST', route: '/dictate' })).toBe(false)
+    expect(callAllowed('capture', { call: 'speech', method: 'DELETE', route: '/recordings/../transcripts/abc' })).toBe(false)
+    expect(callAllowed('capture', { call: 'copy', text: 'x' })).toBe(false)
+  })
+  test('the app window starts and stops a call', () => {
+    expect(messageAllowed('app', 'toggleCall')).toBe(true)
+    for (const page of ['card', 'tray', 'dictation', 'talk', 'capture'] as const) expect(messageAllowed(page, 'toggleCall'), page).toBe(false)
+  })
+})

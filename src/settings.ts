@@ -148,6 +148,12 @@ export type Settings = {
   practiceKey: string
   /** Talk to the duck (talk.ts): opens the window on Talk and listens; pressed again, sends what was said; while the duck speaks, stops it and listens. */
   talkKey: string
+  /** Records a call (capture.ts): all of the computer's sound and the microphone; pressed again, stops and saves. None by default. */
+  meetingKey: string
+  /** The reminder that the others' consent is needed was shown once, before the first call recording. */
+  callConsentSeen: boolean
+  /** Where the call panel sits, as `dictationBadge` (its own place, not the badge's). */
+  callPanelOffset: { dx: number; dy: number }
   /** Talk: the duck's answers are read aloud as they come. */
   talkAloud: boolean
   /** The talk window (webview/talk.ts) stays over other windows: its pin. */
@@ -267,6 +273,9 @@ export const DEFAULTS: Settings = {
   againKey: '',
   practiceKey: '',
   talkKey: '',
+  meetingKey: '',
+  callConsentSeen: false,
+  callPanelOffset: { dx: 0, dy: 0 },
   talkAloud: true,
   talkOnTop: false,
   talkLevel: 'B1',
@@ -468,6 +477,9 @@ export function normalize(raw: unknown, native = DEFAULTS.native): Settings {
     againKey: key(r.againKey, DEFAULTS.againKey),
     practiceKey: key(r.practiceKey, DEFAULTS.practiceKey),
     talkKey: key(r.talkKey, DEFAULTS.talkKey),
+    meetingKey: key(r.meetingKey, DEFAULTS.meetingKey),
+    callConsentSeen: flag(r.callConsentSeen, DEFAULTS.callConsentSeen),
+    callPanelOffset: badgeOffset(r.callPanelOffset),
     talkAloud: flag(r.talkAloud, DEFAULTS.talkAloud),
     talkOnTop: flag(r.talkOnTop, DEFAULTS.talkOnTop),
     talkLevel: TALK_LEVELS.includes(r.talkLevel as TalkLevel) ? (r.talkLevel as TalkLevel) : DEFAULTS.talkLevel,

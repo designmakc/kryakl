@@ -224,6 +224,7 @@ function render(v: TrayView): void {
       command('listenScreen', 'monitor-speaker', t('tray.listenScreen'), 'listenScreen', v.keys.snipListen),
       command('translateScreen', 'scan-text', t('tray.translateScreen'), 'translateScreen', v.keys.snipTranslate),
       v.speech.installed ? command('note', 'notebook-pen', v.speech.recording ? t('tray.saveNote') : t('tray.newNote'), 'note', v.speech.noteKey) : null,
+      v.speech.installed ? command('call', 'video', v.call ? t('call.stop') : t('call.record'), 'call', v.keys.call) : null,
       v.speech.installed ? command('transcripts', 'file-text', t('tray.transcripts'), 'transcripts') : null,
     ),
     group(

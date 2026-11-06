@@ -68,6 +68,9 @@ mac:
   extendInfo:
     LSUIElement: true
     NSAppleEventsUsageDescription: Kryakl copies the selected text to translate it.
-    NSMicrophoneUsageDescription: Kryakl listens when you dictate.
+    NSMicrophoneUsageDescription: Kryakl listens when you dictate, and records you in a call you record.
+    # A call's recording takes the computer's sound through a screen capture (its picture dropped at once).
+    NSScreenCaptureUsageDescription: Kryakl records the computer's sound in a call you record; the picture is not kept.
+    NSAudioCaptureUsageDescription: Kryakl records the computer's sound in a call you record.
 dmg:
   artifactName: Kryakl-${version}-${arch}.${ext}

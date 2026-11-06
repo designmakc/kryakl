@@ -203,7 +203,7 @@ export type SpeechView = {
   /** The speed test: offered now (the person has not agreed, and something is still unmeasured), agreed once, models it would measure. */
   test: { offer: boolean; agreed: boolean; runs: number }
   /** The dictation keys are registered (false: another program holds one). */
-  keysOk: { dictate: boolean; note: boolean; english: boolean; again: boolean; practice: boolean; talk: boolean }
+  keysOk: { dictate: boolean; note: boolean; english: boolean; again: boolean; practice: boolean; talk: boolean; meeting: boolean }
 }
 
 /**
@@ -241,6 +241,9 @@ export type TalkWindowView = {
 /** The talks (talks.ts): the one going on and those put away, newest first, for the talk window's history. */
 export type TalksView = { current?: TalkSummary; past: TalkSummary[] }
 
+/** A call recording (capture.ts): getting the sound, recording, paused, being saved, or none. */
+export type CallState = 'idle' | 'starting' | 'recording' | 'paused' | 'stopping'
+
 /** Everything the app window shows, sent whole whenever any of it changes. */
 export type AppView = {
   settings: Settings
@@ -277,6 +280,8 @@ export type AppView = {
   /** Some program pressed keys by itself since the keyboard helper started; Kryakl ignores those. */
   foreignKeys: boolean
   speech: SpeechView
+  /** The call recording now, and its seconds recorded (the pauses left out). */
+  call: { state: CallState; seconds: number }
   /** The phrases dictated lately, newest first (the last 10). */
   dictation: { recent: DictationEntry[] }
   /** The translator for the person's language with its download's progress and size (MB), for the setup's list. */
@@ -324,7 +329,7 @@ export type OldFolder = { dir: string; why?: string; moving: boolean }
 /** What the tray's panel shows, sent whole whenever any of it changes. */
 export type TrayView = {
   /** The keys of its commands, hotkey.ts notation ("Control+C*2" for Ctrl+C twice); empty when there is none. */
-  keys: { listenCopied: string; typeToTranslate: string; checkEnglish: string; talk: string; snipListen: string; snipTranslate: string; switch: string }
+  keys: { listenCopied: string; typeToTranslate: string; checkEnglish: string; talk: string; snipListen: string; snipTranslate: string; switch: string; call: string }
   /** The quick settings' switches: fixing as one types, the switch key, the badge, the layout in the tray's icon, Kryakl paused. */
   autoFix: boolean
   switchOn: boolean
@@ -335,6 +340,8 @@ export type TrayView = {
   keep: { on: boolean; word: string; fixed: string }
   /** The speech engine is installed: a note can be started from here; one is being recorded now. */
   speech: { installed: boolean; recording: boolean; noteKey: string }
+  /** A call is being recorded: its row stops it. */
+  call: boolean
   /** The translator between English and the person's language (as `AppView.translator`). */
   translator: AppView['translator']
   native: string
@@ -344,7 +351,7 @@ export type TrayView = {
 }
 
 /** What the tray's panel can do; each puts the panel away first. */
-export type TrayCommand = 'listenCopied' | 'translateCopied' | 'typeToTranslate' | 'checkEnglish' | 'talk' | 'listenScreen' | 'translateScreen' | 'note' | 'transcripts' | 'vocabulary' | 'kept' | 'settings' | 'report' | 'open' | 'quit'
+export type TrayCommand = 'listenCopied' | 'translateCopied' | 'typeToTranslate' | 'checkEnglish' | 'talk' | 'listenScreen' | 'translateScreen' | 'note' | 'call' | 'transcripts' | 'vocabulary' | 'kept' | 'settings' | 'report' | 'open' | 'quit'
 
 /**
  * Why a word has no meanings: no dictionary exists for the person's language,
@@ -399,6 +406,8 @@ export type ToView =
   /** The phrase is with the local model (text editing). */
   | { type: 'dictationEditing' }
   | { type: 'dictationError'; message: string }
+  /** The call recording's panel (capture.ts): record, under `title` (`app`: the call program running, for the engine), stop and save, pause or go on. */
+  | { type: 'capture'; command: 'start' | 'stop' | 'pause' | 'resume'; title?: string; app?: string }
   /** The tray's panel was just shown: focus its first command. */
   | { type: 'trayShown' }
   /** Kryakl's menu on one key: what it draws now. */
@@ -559,6 +568,15 @@ export type ToHost =
   /** The person folded the badge away for this phrase; `fly`: into the tray, or at once where motion is reduced. */
   | { type: 'dictationTuck'; fly: boolean }
   | { type: 'dictationCancelled' }
+  // The call recording's panel: how the recording goes (`seconds` recorded; `silent`: no sound from the computer yet in its first minute;
+  // `micMissing`: the others alone; `error`: the computer's sound could not be had), its end (`id` null when nothing was recorded),
+  // hidden by its chevron, or the system's settings asked for (macOS' Screen & System Audio Recording).
+  | { type: 'captureState'; state: CallState; id?: string; seconds?: number; silent?: boolean; micMissing?: boolean; error?: string }
+  | { type: 'captureDone'; id: string | null; lost: number }
+  | { type: 'captureHide' }
+  | { type: 'captureOpenSettings' }
+  /** From the app window's Recordings page: a call recording started, or stopped and saved. */
+  | { type: 'toggleCall' }
   | { type: 'dictationFailed'; message: string }
 
 /** Calls a page makes and waits for (ipcMain.handle), through `window.tutorHost.call`. */

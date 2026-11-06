@@ -36,10 +36,12 @@ import * as path from 'node:path'
 
 import { execFile, execFileSync } from 'node:child_process'
 
-import { app, BrowserWindow, clipboard, dialog, globalShortcut, ipcMain, nativeImage, nativeTheme, screen, session, shell, Tray, type Rectangle } from 'electron'
+import { app, BrowserWindow, clipboard, desktopCapturer, dialog, globalShortcut, ipcMain, nativeImage, nativeTheme, powerMonitor, screen, session, shell, systemPreferences, Tray, type Rectangle } from 'electron'
 
 import { backupSummary, makeBackup, readBackup, type BackupRead } from './backup'
 import { callAllowed, messageAllowed, openable, pageOf, patchAllowed, type Page } from './bridge'
+import { callApp, callTitle, runningProcessNames } from './callapps'
+import { CallCapture } from './capture'
 import { createChecker, type Checker } from './checker'
 import { createEditor, type Editor } from './dictedit'
 import { openInChrome } from './chrome'
@@ -210,7 +212,7 @@ const LINKS = new Set([
 ])
 
 /** The settings that are Dictate's keys (and Talk's, which listens as dictation does): registered only once the speech engine is installed. */
-const DICTATION_KEYS: readonly (keyof Settings)[] = ['dictateKey', 'englishKey', 'noteKey', 'againKey', 'practiceKey', 'talkKey']
+const DICTATION_KEYS: readonly (keyof Settings)[] = ['dictateKey', 'englishKey', 'noteKey', 'againKey', 'practiceKey', 'talkKey', 'meetingKey']
 
 // One Kryakl at a time, whichever folder it keeps its things in: the lock is taken on Kryakl's own
 // folder first, before a test run moves to its own. A second copy (another start, `npm start`, a test
@@ -279,9 +281,13 @@ let appWin: BrowserWindow | undefined
 let appReady = false
 let quitting = false
 let keysOk = { snip: true, select: true, translate: true, text: true, inPlace: true, check: true, type: true, typeCheck: true, pause: true, window: true }
-let speechKeysOk = { dictate: true, note: true, english: true, again: true, practice: true, talk: true }
+let speechKeysOk = { dictate: true, note: true, english: true, again: true, practice: true, talk: true, meeting: true }
 let speech: SpeechHost
 let dictation: Dictation
+/** The call recording (capture.ts): the computer's sound and the microphone, in its own panel. */
+let capture: CallCapture | undefined
+/** Quitting asked about the call being recorded, and it is being saved: the next quit goes through. */
+let callQuitAsked = false
 /** What a click on the tray's balloon does, for the balloon shown last. */
 let balloonClick: (() => void) | undefined
 let keyboard: KeyboardHelper
@@ -1289,6 +1295,7 @@ function appView(): AppView {
     keyboardApps,
     foreignKeys,
     speech: speech.view(speechKeysOk),
+    call: { state: capture?.state ?? 'idle', seconds: capture?.seconds ?? 0 },
     dictation: { recent: dictationLog.list(10) },
   }
 }
@@ -1757,6 +1764,15 @@ function onMessage(message: ToHost, page: Page): void {
     case 'micRecording':
       micRecording = message.on
       refreshTray()
+      return
+    case 'captureState':
+    case 'captureDone':
+    case 'captureHide':
+    case 'captureOpenSettings':
+      capture?.message(message)
+      return
+    case 'toggleCall':
+      toggleCall()
       return
     case 'talkStart':
       // A topic starts a new talk: the one going on, if any, is put away first.
@@ -2922,7 +2938,7 @@ function registerShortcuts(): void {
   // Paused: no key but the pause key, and none is "taken".
   if (settings.paused) {
     keysOk = { snip: true, select: true, translate: true, text: true, inPlace: true, check: true, type: true, typeCheck: true, pause: register(settings.pauseKey, togglePause), window: true }
-    speechKeysOk = { dictate: true, english: true, note: true, again: true, practice: true, talk: true }
+    speechKeysOk = { dictate: true, english: true, note: true, again: true, practice: true, talk: true, meeting: true }
     return
   }
   keysOk = {
@@ -2953,6 +2969,7 @@ function registerShortcuts(): void {
     again: speech?.installed ? register(settings.againKey, () => dictation.typeAgain()) : true,
     practice: dictate('check', settings.practiceKey),
     talk: speech?.installed ? register(settings.talkKey, talkPressed) : true,
+    meeting: speech?.installed ? register(settings.meetingKey, toggleCall) : true,
   }
   const taken = [
     !keysOk.snip && settings.snipKey,
@@ -2971,6 +2988,7 @@ function registerShortcuts(): void {
     !speechKeysOk.again && settings.againKey,
     !speechKeysOk.practice && settings.practiceKey,
     !speechKeysOk.talk && settings.talkKey,
+    !speechKeysOk.meeting && settings.meetingKey,
   ].filter((k): k is string => !!k)
   // The settings window shows the trouble itself; the balloon is for a start without it.
   if (taken.length > 0 && !(appWin?.isVisible() ?? false)) {
@@ -2987,7 +3005,7 @@ function applyKeyboard(): void {
   keyboardTrouble = undefined
   try {
     // Dictate's keys work only once the engine is installed, here as with Electron's shortcuts; paused, the helper keeps the pause key alone.
-    keyboard.apply(speech?.installed ? settings : { ...settings, dictateKey: '', englishKey: '', noteKey: '', againKey: '', practiceKey: '', talkKey: '' }, learned.forThread())
+    keyboard.apply(speech?.installed ? settings : { ...settings, dictateKey: '', englishKey: '', noteKey: '', againKey: '', practiceKey: '', talkKey: '', meetingKey: '' }, learned.forThread())
   } catch (error) {
     keyboardTrouble = messageOf(error)
   }
@@ -3133,6 +3151,92 @@ function findRivals(): void {
   })
 }
 
+// ---------------------------------------------------------------- a call
+
+/** The call recording: started by its key, the tray or the Recordings page; pressed again, stopped and saved. */
+export function toggleCall(): void {
+  if (!capture) return
+  if (capture.state === 'idle') void startCall()
+  else if (capture.state !== 'stopping') void stopCall()
+}
+
+/** macOS' Screen & System Audio Recording, where Kryakl is let have the computer's sound. */
+function openScreenSettings(): void {
+  if (onMac) void shell.openExternal('x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture')
+}
+
+/**
+ * macOS gives the computer's sound only with "Screen & System Audio Recording":
+ * without it, Kryakl says why it wants it and opens that place; asked about
+ * for the first time, macOS lists Kryakl there once something asks for the screen.
+ */
+async function screenAllowed(): Promise<boolean> {
+  if (!onMac) return true
+  const status = systemPreferences.getMediaAccessStatus('screen')
+  if (status === 'granted') return true
+  log(`call: the screen's permission is ${status}`)
+  if (status === 'not-determined') await desktopCapturer.getSources({ types: ['screen'] }).catch(() => undefined)
+  if (systemPreferences.getMediaAccessStatus('screen') === 'granted') return true
+  const { response } = await dialog.showMessageBox({
+    type: 'info',
+    title: t('app.name'),
+    message: t('call.screenAsk'),
+    detail: t('call.screenDetail'),
+    buttons: [t('call.openSettings'), t('common.cancel')],
+    defaultId: 0,
+    cancelId: 1,
+  })
+  if (response === 0) openScreenSettings()
+  return false
+}
+
+/** Starts a call recording, once the others' consent was mentioned and the system lets Kryakl have the sound; named after the call program running, if one is. */
+export async function startCall(): Promise<void> {
+  if (!capture || capture.busy) return
+  // No engine to record into: its page offers it.
+  if (!speech?.installed) return openApp('recordings')
+  if (!settings.callConsentSeen) {
+    const { response } = await dialog.showMessageBox({
+      type: 'info',
+      title: t('app.name'),
+      message: t('call.consentAsk'),
+      detail: t('call.consentDetail'),
+      buttons: [t('call.consentRecord'), t('common.cancel')],
+      defaultId: 0,
+      cancelId: 1,
+    })
+    if (response !== 0) return
+    saveSettings({ callConsentSeen: true })
+  }
+  if (!(await screenAllowed())) return
+  // Without the microphone the others are still recorded (the panel says so).
+  if (onMac) await systemPreferences.askForMediaAccess('microphone').catch(() => false)
+  const known = callApp(await runningProcessNames())
+  capture.start(callTitle(known, new Date()), known ?? undefined)
+}
+
+/** Stops and saves the call: its transcript's id once the engine has it, null when there was none. */
+export function stopCall(): Promise<string | null> {
+  return capture?.stop() ?? Promise.resolve(null)
+}
+
+/** Quitting while a call is recorded asks first; stopped, it is saved before Kryakl goes. */
+async function quitDuringCall(): Promise<void> {
+  const { response } = await dialog.showMessageBox({
+    type: 'question',
+    title: t('app.name'),
+    message: t('call.quitAsk'),
+    buttons: [t('call.quitStop'), t('common.cancel')],
+    defaultId: 0,
+    cancelId: 1,
+  })
+  if (response !== 0) return
+  callQuitAsked = true
+  // Saved within half a minute, or Kryakl goes anyway: the engine closes a recording left open by itself.
+  await Promise.race([stopCall(), new Promise(resolve => setTimeout(resolve, 30_000))])
+  app.quit()
+}
+
 // ---------------------------------------------------------------- tray
 
 function keyLabel(hotkey: string): string {
@@ -3150,6 +3254,7 @@ function trayView(): TrayView {
       snipListen: settings.snipKey,
       snipTranslate: settings.textKey,
       switch: settings.switchKey,
+      call: settings.meetingKey,
     },
     autoFix: settings.autoFix,
     switchOn: settings.switchOn,
@@ -3161,6 +3266,7 @@ function trayView(): TrayView {
       ...(lastAutoFix && !settings.keepWords.includes(lastAutoFix.word) ? lastAutoFix : { word: '', fixed: '' }),
     },
     speech: { installed: speech?.installed ?? false, recording: dictation?.state === 'recording', noteKey: settings.noteKey },
+    call: capture?.busy ?? false,
     translator: activeTranslator().state(langCode(settings.native)).status,
     native: settings.native,
     version: app.getVersion(),
@@ -3181,7 +3287,6 @@ function sendTrayView(): void {
   if (trayPanel && trayReady && !trayPanel.isDestroyed()) trayPanel.webContents.send('to-view', { type: 'tray', view: trayView() } satisfies ToView)
 }
 
-/** Something records now: dictation listening (any of its keys), the microphone on the Transcribe page, or a meeting through the Chrome extension. */
 /** The middle of the tray icon; Windows gives no place for one kept among the hidden icons: the corner of the screen by them. */
 function trayPoint(): { x: number; y: number } {
   const icon = tray?.getBounds()
@@ -3190,8 +3295,9 @@ function trayPoint(): { x: number; y: number } {
   return { x: x + width, y: y + height }
 }
 
+/** Something records now: dictation listening (any of its keys), the microphone on the Transcribe page, a call, or a meeting through the Chrome extension. */
 function recordingNow(): boolean {
-  return dictation?.state === 'recording' || micRecording || !!speech?.meeting
+  return dictation?.state === 'recording' || micRecording || !!capture?.busy || !!speech?.meeting
 }
 
 /** The taskbar's theme, which the tray's icon follows (not the app's theme setting). */
@@ -3403,6 +3509,9 @@ function runTrayCommand(command: TrayCommand): void {
     case 'note':
       // A note, not typing: the panel took the focus, so there is no cursor to type at.
       dictation.press('note', settings.noteKey)
+      return
+    case 'call':
+      toggleCall()
       return
     case 'transcripts':
       openApp('transcripts')
@@ -3742,6 +3851,7 @@ function start(): void {
       else if (action === 'again') dictation.typeAgain()
       else if (action === 'practice') dictation.press('check', settings.practiceKey)
       else if (action === 'talk') talkPressed()
+      else if (action === 'meeting') toggleCall()
       else if (action === 'select') selection('listen', settings.selectKey)
       else if (action === 'translate') selection('translate', settings.translateKey)
       else if (action === 'inPlace') selection('inPlace', settings.inPlaceKey)
@@ -3779,6 +3889,25 @@ function start(): void {
       console.warn(`Kryakl keyboard: ${message}`)
       postApp()
     },
+  })
+  capture = new CallCapture({
+    page: path.join(app.getAppPath(), 'media', 'capture.html'),
+    preload: path.join(__dirname, 'preload.js'),
+    query: pageQuery,
+    offset: () => settings.callPanelOffset,
+    moved: offset => saveSettings({ callPanelOffset: offset }),
+    onChange: () => {
+      refreshTray()
+      postApp()
+    },
+    finish: id => speech.call('POST', `/recordings/${id}/finish`, {}),
+    openSettings: openScreenSettings,
+    log,
+  })
+  capture.allowCapture(session.defaultSession)
+  // Asleep, the computer's sound and the microphone stop: what was recorded is saved now.
+  powerMonitor.on('suspend', () => {
+    if (capture?.busy) void stopCall()
   })
   oneKeyMenu = new KryaklMenu({
     page: path.join(app.getAppPath(), 'media', 'menu.html'),
@@ -3839,12 +3968,20 @@ if (!theOnlyOne) {
 } else {
   // The card reads aloud as soon as a translation is in, before anyone touches it.
   app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
+  // macOS 13+ gives a screen capture the computer's sound (ScreenCaptureKit) only with these: a call's recording takes it.
+  if (process.platform === 'darwin') app.commandLine.appendSwitch('enable-features', 'MacLoopbackAudioForScreenShare,MacSckSystemAudioLoopbackOverride')
   app.setAppUserModelId('com.ikstro.2talker')
   // Started again, without a command: the window opens.
   app.on('second-instance', (_event, argv) => {
     if (!runCommand(argv)) openApp()
   })
-  app.on('before-quit', () => {
+  app.on('before-quit', event => {
+    // A call being recorded: asked first, and saved before Kryakl goes.
+    if (capture?.busy && !callQuitAsked) {
+      event.preventDefault()
+      void quitDuringCall()
+      return
+    }
     quitting = true
     // Quitting within a paste's moment: what the person had goes back now, while the card's window can still own the clipboard.
     clipGuard.flush()
@@ -3857,6 +3994,7 @@ if (!theOnlyOne) {
       ['shortcuts', () => globalShortcut.unregisterAll()],
       ['speech', () => speech?.dispose()],
       ['dictation', () => dictation?.dispose()],
+      ['call', () => capture?.dispose()],
       ['clipboard', () => stopWatching?.()],
       ['voice', () => natural?.dispose()],
       ['translator', () => translator?.dispose()],

@@ -342,6 +342,7 @@ const HOME_KEYS: readonly HomeKey[] = [
   { key: 'englishKey', title: 'dict.english', page: 'voice', speech: true },
   { key: 'againKey', title: 'dictate.againKey', page: 'voice', speech: true },
   { key: 'noteKey', title: 'dict.note', page: 'voice', speech: true },
+  { key: 'meetingKey', title: 'call.record', page: 'recordings', speech: true },
   { key: 'fixKey', title: 'kb.fixKey', page: 'layout', section: 'act.fixGroup', chain: 'fix' },
   { key: 'switchKey', title: 'kb.switchKey', page: 'layout', section: 'act.switchGroup' },
   { key: 'pauseKey', title: 'settings.pauseKey', page: 'settings', section: 'keys.group' },
@@ -1233,6 +1234,7 @@ type KeyName =
   | 'againKey'
   | 'practiceKey'
   | 'talkKey'
+  | 'meetingKey'
   | 'pauseKey'
   | 'windowKey'
 
@@ -1254,6 +1256,7 @@ const KEY_USE: Record<KeyName, string> = phrases({
   againKey: 'keys.useAgain',
   practiceKey: 'keys.usePractice',
   talkKey: 'keys.useTalk',
+  meetingKey: 'keys.useMeeting',
   pauseKey: 'keys.usePause',
   windowKey: 'keys.useWindow',
 })
@@ -2519,6 +2522,8 @@ function recordingsPage(v: AppView): HTMLElement[] {
     ]),
     ...(offer.length ? [grp(t('dictate.engine')), ...offer] : []),
     testOffer(v),
+    installed(v) ? callRow(v) : null,
+    keyRow('meetingKey', t('call.record'), t('call.keyNote'), !v.speech.keysOk.meeting),
     ...(running(v) ? [grp(t('transcribe.new')), ...newRows(v)] : []),
     grp(t('transcribe.setup')),
     meetCard(v),
@@ -2526,6 +2531,13 @@ function recordingsPage(v: AppView): HTMLElement[] {
     dataDir ? card('folder', t('transcribe.keptIn'), [pathNote(dataDir)], linkBtn(t('tray.open'), () => post({ type: 'openPath', path: dataDir }))) : null,
     enginePlate([{ title: t('dictate.speechModel'), value: speechValue(v, 'transcripts'), open: () => go('models', 'forTranscribe') }]),
   ].filter((n): n is HTMLElement => n !== null)
+}
+
+/** A call recorded: all of the computer's sound and the microphone, started and stopped here as by its key. */
+function callRow(v: AppView): HTMLElement {
+  const on = v.call.state !== 'idle'
+  const label = on ? t('call.stop') : t('call.record')
+  return row(t('call.record'), [t('call.recordNote')], btn([el('i', { class: on ? 'dot pulse' : 'dot' }), label], () => post({ type: 'toggleCall' }), on ? 'primary' : 'rec'))
 }
 
 /** Windows' layouts in the order the keys go through them: each moved earlier or later, left out, another added. */

@@ -132,6 +132,7 @@ export class KeyboardHelper {
         ['again', s.againKey],
         ['practice', s.practiceKey],
         ['talk', s.talkKey],
+        ['meeting', s.meetingKey],
         ['pause', s.pauseKey],
         ['window', s.windowKey],
       ] as const) {
