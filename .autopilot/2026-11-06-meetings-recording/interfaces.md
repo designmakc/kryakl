@@ -61,3 +61,13 @@ Errors: throws `Error` with an English message; main maps to the UI.
 
 ## What finished tickets built
 (appended as tickets land)
+
+### T01 (ab653d4, 95c7f2c)
+- Engine as contracted. `merge.meeting(mine, theirs, turns, track="tab")`. Export headings: md `## Summary` then `## Transcript`; summary.ts renders its sections as `### …` so they sit under it.
+- `src/summary.ts` exactly as contracted, plus `summaryPrompt(options, language, step)`; `checkSummary(json, input, translated = false)` — words of `due`/`who` match the transcript by 4-letter stem; `translated` (= `mine` and language differs, or unknown) checks them by numbers only. `TOPIC_TIME` group 1 is "mm:ss"/"h:mm:ss". `Summary.language` when `mine` = the native language's code from `LLM_LANGUAGES`, or null.
+
+### T02 (2f58996)
+- `src/callapps.ts`: `callApp(processNames)`, `callTitle(app, at)`, `runningProcessNames()`.
+- `src/capture.ts` `CallCapture` (`state`, `id`, `busy`, `seconds`, `start(title, app?)`, `stop()`, `allowCapture(session)`, `message(m)`, `dispose()`); `src/capturesend.ts` `TrackSender`.
+- main.ts exports `startCall()`, `stopCall(): Promise<string|null>`, `toggleCall()`. protocol: `CallState`, `AppView.call {state, seconds}`, `TrayView.call`, `TrayView.keys.call`, `TrayCommand 'call'`, `SpeechView.keysOk.meeting`, ToView `{type:'capture', command, title?, app?}`, ToHost `captureState`/`captureDone`/`captureHide`/`captureOpenSettings` (capture page), `toggleCall` (app window). Page `'capture'` → `/recordings…` only. Settings `meetingKey`, `callConsentSeen`, `callPanelOffset`; KeyAction `'meeting'`.
+- Main does not yet watch a finished call to make its summary: that is T03's (`stopCall()` resolves the transcript id).
