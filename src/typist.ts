@@ -186,6 +186,8 @@ export type KbdIn =
   | { type: 'menu'; on: boolean; codes?: string[]; rect?: Rect }
   /** The fix key's action, asked by the menu's item. */
   | { type: 'fix' }
+  /** A Mac: Cmd+V pressed by the helper itself, marked as Kryakl's, so its tap lets it through. */
+  | { type: 'paste' }
   | { type: 'quit' }
 
 export type KbdOut =

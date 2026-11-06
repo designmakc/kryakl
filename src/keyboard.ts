@@ -238,6 +238,13 @@ export class KeyboardHelper {
     this.post({ type: 'fix' })
   }
 
+  /** A Mac: Cmd+V through the running helper; false when it does not run. */
+  paste(): boolean {
+    if (!this.worker) return false
+    this.post({ type: 'paste' })
+    return true
+  }
+
   /** Switches the window in front to a layout. */
   switchTo(layout: string): void {
     this.post({ type: 'switchTo', layout })

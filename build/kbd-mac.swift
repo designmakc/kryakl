@@ -133,8 +133,10 @@ func post(_ code: Int, _ down: Bool, mark: Int64, text: String? = nil, flags: CG
 func press(_ keys: [[String: Any]]) {
   for key in keys {
     if let code = key["k"] as? Int {
-      post(code, true, mark: OWN)
-      post(code, false, mark: OWN)
+      // `cmd`: Cmd held with it (Kryakl's own Cmd+V, never seen by the tap as the person's).
+      let flags: CGEventFlags = (key["cmd"] as? Bool ?? false) ? .maskCommand : []
+      post(code, true, mark: OWN, flags: flags)
+      post(code, false, mark: OWN, flags: flags)
     } else if let text = key["t"] as? String {
       for ch in text {
         post(0, true, mark: OWN, text: String(ch))

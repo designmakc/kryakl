@@ -131,6 +131,8 @@ port.on('message', (message: KbdIn) =>
     if (message.type === 'record') return typist.record(message.on, BigInt(process.pid))
     if (message.type === 'menu') return typist.menu(message.on, message.codes, message.rect)
     if (message.type === 'fix') return typist.fixNow()
+    // 9: V's key code.
+    if (message.type === 'paste') return tell({ c: 'press', keys: [{ k: 9, cmd: true }] })
     // A config before the helper said hello waits for its layouts.
     pending = message.config
     if (layouts.size) configure(message.config)

@@ -2239,7 +2239,10 @@ async function pasteText(text: string): Promise<void> {
     const before = await clipboard.readText()
     macOwnWrites(300)
     clipboard.writeText(text)
-    await macKeystroke('v')
+    const at = Date.now()
+    // The helper's own Cmd+V: its tap would take System Events' for the person's key.
+    const method = keyboard?.paste() ? 'helper' : (await macKeystroke('v'), 'osascript')
+    log(`paste: ${method} in ${Date.now() - at} ms`)
     macOwnWrites(300)
     setTimeout(() => clipboard.writeText(before), 300)
     return
